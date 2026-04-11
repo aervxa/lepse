@@ -1,10 +1,9 @@
 import type { Data } from '@lepse/minos/data'
 
-const token = useCookie('auth_token')
-const user = useState<Data.User | undefined>('user', () => undefined)
-
 export const useAuth = () => {
   const { $minos } = useNuxtApp()
+  const token = useCookie('auth_token')
+  const user = useState<Data.User | undefined>('user', () => undefined)
 
   const login = async (email: string, password: string) => {
     const { data } = await $minos.api.auth.accessToken.store({ body: { email, password } })
