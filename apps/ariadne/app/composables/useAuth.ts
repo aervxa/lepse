@@ -5,6 +5,24 @@ export const useAuth = () => {
   const token = useCookie('auth_token')
   const user = useState<Data.User | undefined>('user', () => undefined)
 
+  const signup = async (
+    fullName: string,
+    email: string,
+    password: string,
+    passwordConfirmation: string
+  ) => {
+    const [payload, error] = await $minos.api.auth.newAccount
+      .store({ body: { fullName, email, password, passwordConfirmation } })
+      .safe()
+    if (payload) {
+      token.value = payload.data.token
+      user.value = payload.data.user
+    } else {
+      console.error(error)
+      return error
+    }
+  }
+
   const login = async (email: string, password: string) => {
     const [payload, error] = await $minos.api.auth.accessToken
       .store({ body: { email, password } })
@@ -29,5 +47,5 @@ export const useAuth = () => {
     user.value = data
   }
 
-  return { user, login, logout, token, refreshUser }
+  return { user, signup, login, logout, token, refreshUser }
 }
