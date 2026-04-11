@@ -73,7 +73,7 @@ const onSubmit = handleSubmit(async (values) => {
           <form @submit="onSubmit">
             <FieldGroup>
               <!-- Full Name -->
-              <VeeField v-slot="{ field, errors }" name="fullName" :validate-on-input="false">
+              <VeeField v-slot="{ field, errors }" name="fullName">
                 <Field :data-invalid="!!errors.length">
                   <FieldLabel for="fullName">Full Name</FieldLabel>
                   <Input
@@ -87,7 +87,7 @@ const onSubmit = handleSubmit(async (values) => {
               </VeeField>
 
               <!-- Email -->
-              <VeeField v-slot="{ field, errors }" name="email" :validate-on-input="false">
+              <VeeField v-slot="{ field, errors }" name="email">
                 <Field :data-invalid="!!errors.length">
                   <FieldLabel for="email">Email</FieldLabel>
                   <Input
@@ -105,7 +105,7 @@ const onSubmit = handleSubmit(async (values) => {
               <!-- Passwords -->
               <Field>
                 <div class="grid grid-cols-2 gap-4 @max-xs:grid-cols-1">
-                  <VeeField v-slot="{ field, errors }" name="password" :validate-on-input="false">
+                  <VeeField v-slot="{ field, errors }" name="password">
                     <Field :data-invalid="!!errors.length">
                       <FieldLabel for="password">Password</FieldLabel>
                       <Input
@@ -118,11 +118,7 @@ const onSubmit = handleSubmit(async (values) => {
                     </Field>
                   </VeeField>
 
-                  <VeeField
-                    v-slot="{ field, errors }"
-                    name="passwordConfirmation"
-                    :validate-on-input="false"
-                  >
+                  <VeeField v-slot="{ field, errors }" name="passwordConfirmation">
                     <Field :data-invalid="!!errors.length">
                       <FieldLabel for="passwordConfirmation">Confirm Password</FieldLabel>
                       <Input

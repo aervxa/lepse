@@ -58,11 +58,12 @@ const onSubmit = handleSubmit(async (values) => {
           <form @submit="onSubmit">
             <FieldGroup>
               <!-- Email -->
-              <VeeField v-slot="{ field, errors }" name="email" :validate-on-input="false">
+              <VeeField v-slot="{ field, errors }" name="email">
                 <Field :data-invalid="!!errors.length">
                   <FieldLabel for="email">Email</FieldLabel>
                   <Input
                     id="email"
+                    type="email"
                     v-bind="field"
                     autocomplete="username"
                     placeholder="me@gmail.com"
@@ -73,7 +74,7 @@ const onSubmit = handleSubmit(async (values) => {
               </VeeField>
 
               <!-- Password -->
-              <VeeField v-slot="{ field, errors }" name="password" :validate-on-input="false">
+              <VeeField v-slot="{ field, errors }" name="password">
                 <Field :data-invalid="!!errors.length">
                   <FieldLabel for="password">Password</FieldLabel>
                   <Input
