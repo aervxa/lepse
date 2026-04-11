@@ -6,9 +6,16 @@ export const useAuth = () => {
   const user = useState<Data.User | undefined>('user', () => undefined)
 
   const login = async (email: string, password: string) => {
-    const { data } = await $minos.api.auth.accessToken.store({ body: { email, password } })
-    token.value = data.token
-    user.value = data.user
+    const [payload, error] = await $minos.api.auth.accessToken
+      .store({ body: { email, password } })
+      .safe()
+    if (payload) {
+      token.value = payload.data.token
+      user.value = payload.data.user
+    } else {
+      console.error(error)
+      return error
+    }
   }
 
   const logout = async () => {
