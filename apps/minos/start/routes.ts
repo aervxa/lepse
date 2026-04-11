@@ -31,7 +31,7 @@ router
         router.get('/profile', [controllers.Profile, 'show'])
       })
       .prefix('account')
-      .as('profile')
+      .as('account')
       .use(middleware.auth())
   })
   .prefix('/api/v1')
