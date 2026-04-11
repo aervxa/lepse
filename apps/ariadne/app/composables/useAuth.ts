@@ -18,5 +18,10 @@ export const useAuth = () => {
     user.value = undefined
   }
 
-  return { user, login, logout }
+  const refreshUser = async () => {
+    const { data } = await $minos.api.account.profile.show({})
+    user.value = data
+  }
+
+  return { user, login, logout, token, refreshUser }
 }
