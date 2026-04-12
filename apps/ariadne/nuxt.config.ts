@@ -13,7 +13,14 @@ export default defineNuxtConfig({
   components: [{ path: '~/components/ui', extensions: ['.vue'] }],
   css: ['./app/assets/css/main.css'],
   devtools: { enabled: true },
-  modules: ['vue-sonner/nuxt'],
+  fonts: {
+    defaults: {
+      weights: ['100 900'],
+      styles: ['normal', 'italic'],
+    },
+    families: [{ name: 'Outfit' }, { name: 'DM Mono' }],
+  },
+  modules: ['vue-sonner/nuxt', '@nuxt/fonts'],
   runtimeConfig: {
     public: {
       apiUrl: process.env.NUXT_PUBLIC_API_URL || 'http://localhost:3333',
