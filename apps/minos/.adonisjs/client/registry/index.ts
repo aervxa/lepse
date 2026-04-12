@@ -30,6 +30,24 @@ const routes = {
     tokens: [{"old":"/api/v1/account/profile","type":0,"val":"api","end":""},{"old":"/api/v1/account/profile","type":0,"val":"v1","end":""},{"old":"/api/v1/account/profile","type":0,"val":"account","end":""},{"old":"/api/v1/account/profile","type":0,"val":"profile","end":""}],
     types: placeholder as Registry['account.profile.show']['types'],
   },
+  'focus_sessions.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/session/show',
+    tokens: [{"old":"/api/v1/session/show","type":0,"val":"api","end":""},{"old":"/api/v1/session/show","type":0,"val":"v1","end":""},{"old":"/api/v1/session/show","type":0,"val":"session","end":""},{"old":"/api/v1/session/show","type":0,"val":"show","end":""}],
+    types: placeholder as Registry['focus_sessions.show']['types'],
+  },
+  'focus_sessions.update': {
+    methods: ["PATCH"],
+    pattern: '/api/v1/session/update',
+    tokens: [{"old":"/api/v1/session/update","type":0,"val":"api","end":""},{"old":"/api/v1/session/update","type":0,"val":"v1","end":""},{"old":"/api/v1/session/update","type":0,"val":"session","end":""},{"old":"/api/v1/session/update","type":0,"val":"update","end":""}],
+    types: placeholder as Registry['focus_sessions.update']['types'],
+  },
+  'focus_sessions.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/session/reset',
+    tokens: [{"old":"/api/v1/session/reset","type":0,"val":"api","end":""},{"old":"/api/v1/session/reset","type":0,"val":"v1","end":""},{"old":"/api/v1/session/reset","type":0,"val":"session","end":""},{"old":"/api/v1/session/reset","type":0,"val":"reset","end":""}],
+    types: placeholder as Registry['focus_sessions.destroy']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

@@ -16,4 +16,9 @@ export interface ApiDefinition {
       show: typeof routes['account.profile.show']
     }
   }
+  focusSessions: {
+    show: typeof routes['focus_sessions.show']
+    update: typeof routes['focus_sessions.update']
+    destroy: typeof routes['focus_sessions.destroy']
+  }
 }

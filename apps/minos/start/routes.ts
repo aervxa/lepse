@@ -33,5 +33,14 @@ router
       .prefix('account')
       .as('account')
       .use(middleware.auth())
+
+    router
+      .group(() => {
+        router.get('show', [controllers.FocusSessions, 'show'])
+        router.patch('update', [controllers.FocusSessions, 'update'])
+        router.delete('reset', [controllers.FocusSessions, 'destroy'])
+      })
+      .prefix('session')
+      .use(middleware.auth())
   })
   .prefix('/api/v1')
