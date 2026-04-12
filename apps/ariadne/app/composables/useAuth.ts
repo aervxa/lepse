@@ -2,7 +2,7 @@ import type { Data } from '@lepse/minos/data'
 
 export const useAuth = () => {
   const { $minos } = useNuxtApp()
-  const token = useCookie('auth_token')
+  const token = useCookie('auth_token', { maxAge: 60 * 60 * 24 * 365 /* one  year */ })
   const user = useState<Data.User | undefined>('user', () => undefined)
 
   const signup = async (
