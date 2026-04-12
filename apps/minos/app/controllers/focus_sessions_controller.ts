@@ -4,13 +4,13 @@ import FocusSessionTransformer from '#transformers/focus_session_transformer'
 import { focusSessionValidator } from '#validators/focus_session'
 
 export default class FocusSessionsController {
-  async show({ auth, response }: HttpContext) {
+  async show({ auth, serialize }: HttpContext) {
     const session = await FocusSession.getToday(auth.getUserOrFail().id)
 
-    return response.ok(FocusSessionTransformer.transform(session))
+    return serialize(FocusSessionTransformer.transform(session))
   }
 
-  async update({ request, auth, response }: HttpContext) {
+  async update({ request, auth, serialize }: HttpContext) {
     const { pomoCount = 0, stopwatchMs = 0 } = await request.validateUsing(focusSessionValidator)
 
     const session = await FocusSession.getToday(auth.getUserOrFail().id)
@@ -18,7 +18,7 @@ export default class FocusSessionsController {
     session.stopwatchMs = stopwatchMs
     await session.save()
 
-    return response.ok(FocusSessionTransformer.transform(session))
+    return serialize(FocusSessionTransformer.transform(session))
   }
 
   async destroy({ auth, response }: HttpContext) {
