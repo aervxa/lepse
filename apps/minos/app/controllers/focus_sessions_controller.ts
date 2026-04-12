@@ -11,11 +11,10 @@ export default class FocusSessionsController {
   }
 
   async update({ request, auth, serialize }: HttpContext) {
-    const { pomoCount = 0, stopwatchMs = 0 } = await request.validateUsing(focusSessionValidator)
+    const data = await request.validateUsing(focusSessionValidator)
 
     const session = await FocusSession.getToday(auth.getUserOrFail().id)
-    session.pomoCount = pomoCount
-    session.stopwatchMs = stopwatchMs
+    session.merge(data)
     await session.save()
 
     return serialize(FocusSessionTransformer.transform(session))
