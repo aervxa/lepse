@@ -26,6 +26,7 @@ export default defineNuxtConfig({
       apiUrl: process.env.NUXT_PUBLIC_API_URL || 'http://localhost:3333',
     },
   },
+  ssr: false,
   vite: {
     plugins: [tailwindcss()],
   },
