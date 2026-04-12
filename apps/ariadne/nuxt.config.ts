@@ -10,7 +10,7 @@ export default defineNuxtConfig({
     },
   },
   compatibilityDate: '2025-07-15',
-  components: [{ path: '~/components/ui', extensions: ['.vue'] }],
+  components: [{ path: '~/components' }, { path: '~/components/ui', extensions: ['.vue'] }],
   css: ['./app/assets/css/main.css'],
   devtools: { enabled: true },
   fonts: {
