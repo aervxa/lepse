@@ -35,7 +35,7 @@ export default class TasksController {
       ...payload,
     })
 
-    return response.created(serialize(TaskTransformer.transform(task)))
+    return response.created(await serialize(TaskTransformer.transform(task)))
   }
 
   /**
