@@ -21,4 +21,13 @@ export interface ApiDefinition {
     update: typeof routes['focus_sessions.update']
     destroy: typeof routes['focus_sessions.destroy']
   }
+  tasks: {
+    index: typeof routes['tasks.index']
+    create: typeof routes['tasks.create']
+    store: typeof routes['tasks.store']
+    show: typeof routes['tasks.show']
+    edit: typeof routes['tasks.edit']
+    update: typeof routes['tasks.update']
+    destroy: typeof routes['tasks.destroy']
+  }
 }

@@ -8,4 +8,5 @@ export const controllers = {
   FocusSessions: () => import('#controllers/focus_sessions_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
   Profile: () => import('#controllers/profile_controller'),
+  Tasks: () => import('#controllers/tasks_controller'),
 }

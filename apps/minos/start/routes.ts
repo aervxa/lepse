@@ -42,5 +42,7 @@ router
       })
       .prefix('session')
       .use(middleware.auth())
+
+    router.resource('tasks', controllers.Tasks)
   })
   .prefix('/api/v1')
