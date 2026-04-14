@@ -6,7 +6,7 @@ export const createTaskValidator = vine.create(
     description: vine.string().maxLength(2500).trim().optional(),
     urgency: vine.enum(['none', 'low', 'medium', 'high']).optional(),
     status: vine.enum(['todo', 'in_progress', 'complete']).optional(),
-    timeEstimateMin: vine.number().min(1).optional(),
+    timeEstimateMin: vine.number().min(0).optional(),
     deadline: vine.date().optional(),
   })
 )
