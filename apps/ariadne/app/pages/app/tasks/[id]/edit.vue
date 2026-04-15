@@ -138,13 +138,10 @@ const onSubmit = handleSubmit(async (values) => {
             <VeeField v-slot="{ field, errors }" name="deadline">
               <Field :data-invalid="!!errors.length">
                 <FieldLabel for="deadline">Deadline</FieldLabel>
-                <Input
+                <DatePicker
                   id="deadline"
-                  v-bind="field"
                   :model-value="field.value"
-                  type="date"
-                  class="h-10"
-                  :aria-invalid="!!errors.length"
+                  @update:model-value="field.onChange"
                 />
                 <FieldError v-if="errors.length" :errors="errors" />
               </Field>
