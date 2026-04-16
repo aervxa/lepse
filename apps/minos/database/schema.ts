@@ -65,13 +65,13 @@ export class TaskSchema extends BaseModel {
   @column()
   declare name: string
   @column()
-  declare pomoCount: number | null
+  declare pomoCount: number
   @column()
-  declare priority: string | null
+  declare priority: string
   @column()
-  declare status: string | null
+  declare status: string
   @column()
-  declare stopwatchMs: number | null
+  declare stopwatchMs: number
   @column()
   declare timeEstimateMin: number | null
   @column.dateTime({ autoCreate: true, autoUpdate: true })
