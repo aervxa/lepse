@@ -34,6 +34,7 @@ export default class TasksController {
       userId: user.id,
       ...payload,
     })
+    await task.refresh()
 
     return response.created(await serialize(TaskTransformer.transform(task)))
   }
