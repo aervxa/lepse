@@ -7,12 +7,13 @@ export default class TaskTransformer extends BaseTransformer<Task> {
       'id',
       'name',
       'description',
-      'urgency',
+      'priority',
       'status',
       'timeEstimateMin',
       'pomoCount',
       'stopwatchMs',
       'deadline',
+      'createdAt',
     ])
   }
 }

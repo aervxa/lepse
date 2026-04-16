@@ -10,8 +10,8 @@ export default class extends BaseSchema {
       table.integer('user_id').unsigned().notNullable().references('users.id').onDelete('CASCADE')
       table.string('name').notNullable()
       table.text('description').nullable()
-      table.enum('urgency', ['none', 'low', 'medium', 'high']).defaultTo('none')
-      table.enum('status', ['todo', 'in_progress', 'complete']).defaultTo('todo')
+      table.enum('priority', ['none', 'low', 'medium', 'high', 'urgent']).defaultTo('none')
+      table.enum('status', ['todo', 'in_progress', 'done', 'canceled']).defaultTo('todo')
       table.integer('time_estimate_min').nullable()
       table.timestamp('deadline').nullable()
 

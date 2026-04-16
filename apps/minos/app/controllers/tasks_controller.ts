@@ -12,7 +12,7 @@ export default class TasksController {
     const user = auth.getUserOrFail()
     const tasks = await Task.query()
       .where('user_id', user.id)
-      .orderBy('urgency', 'desc')
+      .orderBy('priority', 'desc')
       .orderBy('created_at', 'asc')
 
     return serialize(TaskTransformer.transform(tasks))
