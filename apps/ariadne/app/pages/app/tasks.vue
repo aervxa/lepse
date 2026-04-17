@@ -2,29 +2,10 @@
 import { Plus, Clock, ClockFading } from 'lucide-vue-next'
 import { formatDate } from '@vueuse/core'
 import { formatDuration } from '~/lib/time'
-import { toast } from 'vue-sonner'
 
 const route = useRoute()
-const { tasks, fetchTasks, updateTask } = useTasks()
+const { tasks, fetchTasks } = useTasks()
 await fetchTasks()
-
-const setStatus = async (
-  taskId: number,
-  status: NonNullable<Parameters<typeof updateTask>[1]>['status']
-) => {
-  const error = await updateTask(taskId, { status })
-  if (error) toast.error('Failed to update status.')
-  else toast.success('Task status updated.')
-}
-
-const setPriority = async (
-  taskId: number,
-  priority: NonNullable<Parameters<typeof updateTask>[1]>['priority']
-) => {
-  const error = await updateTask(taskId, { priority })
-  if (error) toast.error('Failed to update priority.')
-  else toast.success('Task priority updated.')
-}
 </script>
 
 <template>
@@ -75,50 +56,12 @@ const setPriority = async (
       >
         <div class="flex items-center gap-2">
           <!-- Priority Dropdown -->
-          <DropdownMenu>
-            <DropdownMenuTrigger as-child>
-              <Button variant="ghost" size="icon-sm" :title="`priority: ${task.priority}`">
-                <TaskPriorityIcon :priority="task.priority" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              <DropdownMenuCheckboxItem
-                v-for="p in ['none', 'urgent', 'high', 'medium', 'low'] as const"
-                :key="p"
-                :model-value="task.priority === p"
-                @click="setPriority(task.id, p)"
-              >
-                <TaskPriorityIcon :priority="p" />
-                {{ p.replace('_', ' ') }}
-              </DropdownMenuCheckboxItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <TaskPriorityDropdown :id="task.id" :priority="task.priority" />
 
           <Separator orientation="vertical" />
 
           <!-- Status Dropdown -->
-          <DropdownMenu>
-            <DropdownMenuTrigger as-child>
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                :title="`status: ${task.status.replace('_', ' ')}`"
-              >
-                <TaskStatusIcon :status="task.status" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              <DropdownMenuCheckboxItem
-                v-for="s in ['todo', 'in_progress', 'done', 'canceled'] as const"
-                :key="s"
-                :model-value="task.status === s"
-                @click="setStatus(task.id, s)"
-              >
-                <TaskStatusIcon :status="s" />
-                {{ s.replace('_', ' ') }}
-              </DropdownMenuCheckboxItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <TaskStatusDropdown :id="task.id" :status="task.status" />
 
           <p class="font-semibold">{{ task.name }}</p>
         </div>
