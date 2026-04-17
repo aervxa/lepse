@@ -1,49 +1,42 @@
 <script setup lang="ts">
-import {
-  Plus,
-  MoreVertical,
-  Trash2,
-  Edit2,
-  Clock,
-  Timer,
-  Calendar,
-  CheckCircle2,
-  Circle,
-  PlayCircle,
-} from 'lucide-vue-next'
+import { Plus, Clock, ClockFading } from 'lucide-vue-next'
 import { formatDate } from '@vueuse/core'
 import { formatDuration } from '~/lib/time'
 import { toast } from 'vue-sonner'
 
-const { tasks, fetchTasks, destroyTask } = useTasks()
-
+const route = useRoute()
+const { tasks, fetchTasks, updateTask } = useTasks()
 await fetchTasks()
 
-// Delete confirmation state
-const pendingDeleteId = ref<number | null>(null)
-
-const confirmDelete = (id: number) => {
-  pendingDeleteId.value = id
+const setStatus = async (
+  taskId: number,
+  status: NonNullable<Parameters<typeof updateTask>[1]>['status']
+) => {
+  const error = await updateTask(taskId, { status })
+  if (error) toast.error('Failed to update status.')
+  else toast.success('Task status updated.')
 }
 
-const handleDelete = async () => {
-  if (pendingDeleteId.value === null) return
-  const error = await destroyTask(pendingDeleteId.value)
-  pendingDeleteId.value = null
-  if (error) {
-    toast.error('Failed to delete task.')
-  } else {
-    toast.success('Task deleted.')
-  }
+const setPriority = async (
+  taskId: number,
+  priority: NonNullable<Parameters<typeof updateTask>[1]>['priority']
+) => {
+  const error = await updateTask(taskId, { priority })
+  if (error) toast.error('Failed to update priority.')
+  else toast.success('Task priority updated.')
 }
 </script>
 
 <template>
-  <div class="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-8 overflow-auto p-8">
+  <!-- Remove nested "layout" if nested is set to false -->
+  <div
+    v-if="route.meta.nested !== false"
+    class="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-8 overflow-auto p-8"
+  >
     <!-- Header -->
     <div class="flex items-center justify-between">
       <div>
-        <h1 class="text-3xl font-bold tracking-tight">Tasks</h1>
+        <p class="text-3xl font-bold">Tasks</p>
         <p class="text-muted-foreground">Manage your focus and productivity.</p>
       </div>
       <Button as-child>
@@ -73,117 +66,92 @@ const handleDelete = async () => {
     </Empty>
 
     <!-- Task List -->
-    <div v-else class="space-y-3">
-      <div
+    <div v-else class="flex flex-col gap-2">
+      <NuxtLink
         v-for="task in tasks"
+        :to="`/app/tasks/${task.id}`"
         :key="task.id"
-        class="group bg-card relative flex items-center gap-4 rounded-xl border p-4 transition-all hover:shadow-md"
-        :class="{ 'opacity-60': task.status === 'complete' }"
+        class="group/task relative flex items-center justify-between rounded-xl border p-2 hover:bg-muted/50 focus-within:bg-muted/50"
       >
-        <!-- Status Icon -->
-        <div class="shrink-0">
-          <CheckCircle2 v-if="task.status === 'complete'" class="text-primary size-6" />
-          <PlayCircle
-            v-else-if="task.status === 'in_progress'"
-            class="text-primary size-6 animate-pulse"
-          />
-          <Circle v-else class="text-muted-foreground size-6" />
+        <div class="flex items-center gap-2">
+          <!-- Priority Dropdown -->
+          <DropdownMenu>
+            <DropdownMenuTrigger as-child>
+              <Button variant="ghost" size="icon-sm" :title="`priority: ${task.priority}`">
+                <TaskPriorityIcon :priority="task.priority" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuCheckboxItem
+                v-for="p in ['none', 'urgent', 'high', 'medium', 'low'] as const"
+                :key="p"
+                :model-value="task.priority === p"
+                @click="setPriority(task.id, p)"
+              >
+                <TaskPriorityIcon :priority="p" />
+                {{ p.replace('_', ' ') }}
+              </DropdownMenuCheckboxItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <Separator orientation="vertical" />
+
+          <!-- Status Dropdown -->
+          <DropdownMenu>
+            <DropdownMenuTrigger as-child>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                :title="`status: ${task.status.replace('_', ' ')}`"
+              >
+                <TaskStatusIcon :status="task.status" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuCheckboxItem
+                v-for="s in ['todo', 'in_progress', 'done', 'canceled'] as const"
+                :key="s"
+                :model-value="task.status === s"
+                @click="setStatus(task.id, s)"
+              >
+                <TaskStatusIcon :status="s" />
+                {{ s.replace('_', ' ') }}
+              </DropdownMenuCheckboxItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <p class="font-semibold">{{ task.name }}</p>
         </div>
 
-        <!-- Content -->
-        <div class="min-w-0 flex-1">
-          <div class="mb-0.5 flex items-center gap-2">
-            <NuxtLink
-              :to="`/app/tasks/${task.id}`"
-              class="truncate font-semibold underline-offset-4 hover:underline"
-            >
-              {{ task.name }}
-            </NuxtLink>
-            <Badge
-              :variant="
-                task.urgency === 'high'
-                  ? 'destructive'
-                  : task.urgency === 'medium'
-                    ? 'default'
-                    : task.urgency === 'low'
-                      ? 'secondary'
-                      : 'outline'
-              "
-              class="h-5 shrink-0 px-2 text-xs uppercase tracking-wider"
-            >
-              {{ task.urgency }}
-            </Badge>
-          </div>
-
-          <div class="text-muted-foreground flex flex-wrap items-center gap-4 font-mono text-xs">
-            <div v-if="task.deadline" class="flex items-center gap-1">
-              <Calendar class="size-3" />
-              {{ formatDate(new Date(task.deadline), 'dd MMM') }}
-            </div>
-            <div v-if="task.timeEstimateMin" class="flex items-center gap-1">
-              <Timer class="size-3" />
+        <!-- Additional info -->
+        <div
+          class="flex items-center justify-end min-w-0 gap-3 px-4 text-xs leading-none text-muted-foreground whitespace-nowrap"
+        >
+          <div class="flex items-center gap-1.5" title="time worked">
+            <Clock class="size-3" />
+            <p>
               {{
-                formatDuration(task.timeEstimateMin * 60 * 1000, { format: 'hhh mmm', pad: false })
+                formatDuration(task.stopwatchMs, {
+                  format: 'hhh mmm',
+                  pad: false,
+                })
               }}
-            </div>
-            <div class="flex items-center gap-1">
-              <Clock class="size-3" />
-              {{ formatDuration(task.stopwatchMs || 0, { format: 'hh:mm' }) }}
-            </div>
-            <div class="flex items-center gap-1">
-              <span class="opacity-60">Pomos:</span>
-              {{ task.pomoCount }}
-            </div>
+            </p>
           </div>
+          <div class="flex items-center gap-1.5" title="pomos completed">
+            <ClockFading class="size-3" />
+            <p>{{ task.pomoCount }} pomos</p>
+          </div>
+          <Separator orientation="vertical" />
+          <p
+            v-if="task.createdAt"
+            :title="`created: ${formatDate(new Date(task.createdAt), 'MMM D YYYY, h:mm:ss A')}`"
+          >
+            {{ formatDate(new Date(task.createdAt), 'MMM D') }}
+          </p>
         </div>
-
-        <!-- Actions -->
-        <DropdownMenu>
-          <DropdownMenuTrigger as-child>
-            <Button
-              variant="ghost"
-              size="icon"
-              class="opacity-0 transition-opacity group-hover:opacity-100"
-            >
-              <MoreVertical class="size-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" class="w-40">
-            <DropdownMenuItem as-child>
-              <NuxtLink :to="`/app/tasks/${task.id}/edit`">
-                <Edit2 class="size-4" />
-                Edit
-              </NuxtLink>
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              class="text-destructive cursor-pointer"
-              @click="confirmDelete(task.id)"
-            >
-              <Trash2 class="size-4" />
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+      </NuxtLink>
     </div>
-
-    <!-- Delete Confirmation Dialog -->
-    <AlertDialog :open="pendingDeleteId !== null">
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Delete Task</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. The task will be permanently deleted.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction variant="destructive" @click="handleDelete()">
-            Delete
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
   </div>
 
   <!-- Nested routes used for modals -->
