@@ -1,4 +1,8 @@
 <script setup lang="ts">
+definePageMeta({
+  layout: 'app',
+})
+
 import { Plus, Clock, ClockFading } from 'lucide-vue-next'
 import { formatDate } from '@vueuse/core'
 import { formatDuration } from '~/lib/time'
