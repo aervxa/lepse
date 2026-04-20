@@ -1,6 +1,8 @@
 <template>
   <main class="flex h-dvh flex-col">
-    <NuxtPage />
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
   </main>
   <Sonner position="top-center" richColors />
 </template>
