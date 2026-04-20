@@ -40,6 +40,7 @@ export const useAuth = () => {
     await $minos.api.auth.accessToken.destroy({})
     token.value = null
     user.value = undefined
+    navigateTo('/')
   }
 
   const refreshUser = async () => {
