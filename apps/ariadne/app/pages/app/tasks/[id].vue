@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { formatDate } from '@vueuse/core'
-import { Calculator, Clock, ClockFading, Hourglass, Pencil } from 'lucide-vue-next'
+import { Calculator, Clock, ClockFading, Hourglass, Pencil, Focus } from 'lucide-vue-next'
 import { formatDuration } from '~/lib/time'
 
 definePageMeta({
@@ -19,12 +19,20 @@ const task = computed(() => tasks.value.find((t) => t.id === Number(route.params
       <div class="flex flex-col gap-1">
         <div class="flex justify-between">
           <p class="text-3xl font-semibold">{{ task.name }}</p>
-          <Button variant="outline" as-child>
-            <NuxtLink :to="`/app/tasks/${task.id}/edit`">
-              <Pencil />
-              Edit
-            </NuxtLink>
-          </Button>
+          <div class="flex gap-2">
+            <Button variant="outline" as-child>
+              <NuxtLink :to="`/app/tasks/${task.id}/edit`">
+                <Pencil />
+                Edit
+              </NuxtLink>
+            </Button>
+            <Button as-child>
+              <NuxtLink :to="`/app/focus?focus&task=${task.id}`">
+                <Focus />
+                Focus
+              </NuxtLink>
+            </Button>
+          </div>
         </div>
         <div class="flex gap-2">
           <!-- Priority and status -->

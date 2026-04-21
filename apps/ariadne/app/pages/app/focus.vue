@@ -2,6 +2,7 @@
 import type { Data } from '@lepse/minos/data'
 import { useNow } from '@vueuse/core'
 import {
+  ChevronsUpDown,
   Clock,
   ClockFading,
   FastForward,
@@ -19,6 +20,22 @@ import logoSrc from '~/assets/images/logo.png'
 
 const { $minos } = useNuxtApp()
 const { user } = useAuth()
+const route = useRoute()
+const { tasks, fetchTasks } = useTasks()
+
+// ─── Task ────────────────────────────────────────────────────────────────────
+
+!tasks.value.length && fetchTasks()
+const task = computed(() =>
+  tasks.value.find((t) => t.id === (selectedTaskId.value ?? Number(route.query.task)))
+)
+const selectedTaskId = ref<number | null>(null)
+const selectTaskOpen = ref(false)
+const selectTaskId = (id: number) => {
+  resetControls()
+  selectedTaskId.value = id
+  selectTaskOpen.value = false
+}
 
 // ─── Session Totals ──────────────────────────────────────────────────────────
 
@@ -45,7 +62,7 @@ const nowStr = computed(() => now.value.toLocaleTimeString([], { timeStyle: 'sho
 
 // ─── Focus State ──────────────────────────────────────────────────────────────
 
-const inFocus = ref(false)
+const inFocus = ref('focus' in route.query)
 type FocusMethod = 'stopwatch' | 'pomodoro'
 const focusMethod = ref<FocusMethod>('stopwatch')
 
@@ -123,12 +140,19 @@ watch([focusMethod, inFocus], () => {
 
 const resetting = ref(false)
 
-const resetSessions = async () => {
-  resetting.value = true
+// Only resets the controls (pomo and stopwatch)
+const resetControls = () => {
   stopwatch.reset()
   pomoStopwatch.reset()
   pomoState.value = 'work'
   pomoCount.value = 0
+}
+
+// Resets daily session total count
+const resetSessions = async () => {
+  resetting.value = true
+
+  resetControls()
 
   const [, err] = await $minos.api.focusSessions.destroy({}).safe()
   if (!err) await reloadTotals()
@@ -138,6 +162,7 @@ const resetSessions = async () => {
 // ─── Derived helpers ──────────────────────────────────────────────────────────
 
 const hasActivity = computed(() => totalPomoCount.value > 0 || stopwatch.elapsed.value > 0)
+const inActicity = computed(() => stopwatch.running.value || pomoStopwatch.running.value)
 </script>
 
 <template>
@@ -313,18 +338,53 @@ const hasActivity = computed(() => totalPomoCount.value > 0 || stopwatch.elapsed
     <!-- Footer -->
     <div class="flex h-32 items-end justify-between">
       <template v-if="inFocus">
-        <div class="flex flex-col gap-3">
+        <div class="flex flex-col gap-3 max-w-2/5">
           <div class="flex flex-col gap-2">
             <p class="font-mono text-xs tracking-widest uppercase opacity-60">working on</p>
-            <p class="line-clamp-1 text-2xl font-extralight italic">Building AFK screen</p>
+            <div class="flex items-center">
+              <p
+                class="truncate text-2xl pr-[1ch]"
+                :class="[task ? 'font-light' : 'font-extralight italic']"
+              >
+                {{ task?.name ?? 'No task selected' }}
+              </p>
+              <!-- Change task popover -->
+              <Popover v-model:open="selectTaskOpen">
+                <PopoverTrigger as-child :disabled="inActicity">
+                  <Button variant="ghost" size="icon-sm">
+                    <ChevronsUpDown />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent align="start" class="p-0">
+                  <Command highlight-on-hover>
+                    <CommandInput placeholder="Search tasks..." />
+                    <CommandList>
+                      <CommandEmpty>No tasks found.</CommandEmpty>
+                      <CommandGroup>
+                        <CommandItem
+                          v-for="t in tasks"
+                          :key="t.id"
+                          :value="t.id"
+                          :data-checked="t.id === task?.id"
+                          @select="selectTaskId(t.id)"
+                        >
+                          {{ t.name }}
+                        </CommandItem>
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </div>
           </div>
+          <!-- TODO: Goals
           <span class="bg-muted h-px w-16" />
           <div class="flex items-center gap-2">
             <Link class="size-3 opacity-60" />
             <p class="truncate font-mono text-xs tracking-wider uppercase opacity-60">
               Build Lepse
             </p>
-          </div>
+          </div> -->
         </div>
       </template>
 
