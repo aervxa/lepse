@@ -90,6 +90,48 @@ const routes = {
     tokens: [{"old":"/api/v1/tasks/:id","type":0,"val":"api","end":""},{"old":"/api/v1/tasks/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/tasks/:id","type":0,"val":"tasks","end":""},{"old":"/api/v1/tasks/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['tasks.destroy']['types'],
   },
+  'goals.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/goals',
+    tokens: [{"old":"/api/v1/goals","type":0,"val":"api","end":""},{"old":"/api/v1/goals","type":0,"val":"v1","end":""},{"old":"/api/v1/goals","type":0,"val":"goals","end":""}],
+    types: placeholder as Registry['goals.index']['types'],
+  },
+  'goals.create': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/goals/create',
+    tokens: [{"old":"/api/v1/goals/create","type":0,"val":"api","end":""},{"old":"/api/v1/goals/create","type":0,"val":"v1","end":""},{"old":"/api/v1/goals/create","type":0,"val":"goals","end":""},{"old":"/api/v1/goals/create","type":0,"val":"create","end":""}],
+    types: placeholder as Registry['goals.create']['types'],
+  },
+  'goals.store': {
+    methods: ["POST"],
+    pattern: '/api/v1/goals',
+    tokens: [{"old":"/api/v1/goals","type":0,"val":"api","end":""},{"old":"/api/v1/goals","type":0,"val":"v1","end":""},{"old":"/api/v1/goals","type":0,"val":"goals","end":""}],
+    types: placeholder as Registry['goals.store']['types'],
+  },
+  'goals.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/goals/:id',
+    tokens: [{"old":"/api/v1/goals/:id","type":0,"val":"api","end":""},{"old":"/api/v1/goals/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/goals/:id","type":0,"val":"goals","end":""},{"old":"/api/v1/goals/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['goals.show']['types'],
+  },
+  'goals.edit': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/goals/:id/edit',
+    tokens: [{"old":"/api/v1/goals/:id/edit","type":0,"val":"api","end":""},{"old":"/api/v1/goals/:id/edit","type":0,"val":"v1","end":""},{"old":"/api/v1/goals/:id/edit","type":0,"val":"goals","end":""},{"old":"/api/v1/goals/:id/edit","type":1,"val":"id","end":""},{"old":"/api/v1/goals/:id/edit","type":0,"val":"edit","end":""}],
+    types: placeholder as Registry['goals.edit']['types'],
+  },
+  'goals.update': {
+    methods: ["PUT","PATCH"],
+    pattern: '/api/v1/goals/:id',
+    tokens: [{"old":"/api/v1/goals/:id","type":0,"val":"api","end":""},{"old":"/api/v1/goals/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/goals/:id","type":0,"val":"goals","end":""},{"old":"/api/v1/goals/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['goals.update']['types'],
+  },
+  'goals.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/goals/:id',
+    tokens: [{"old":"/api/v1/goals/:id","type":0,"val":"api","end":""},{"old":"/api/v1/goals/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/goals/:id","type":0,"val":"goals","end":""},{"old":"/api/v1/goals/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['goals.destroy']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

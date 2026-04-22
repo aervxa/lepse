@@ -175,4 +175,88 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/tasks_controller').default['destroy']>>>
     }
   }
+  'goals.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/goals'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/goals_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/goals_controller').default['index']>>>
+    }
+  }
+  'goals.create': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/goals/create'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/goals_controller').default['create']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/goals_controller').default['create']>>>
+    }
+  }
+  'goals.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/goals'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/goal').createGoalValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/goal').createGoalValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/goals_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/goals_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'goals.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/goals/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/goals_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/goals_controller').default['show']>>>
+    }
+  }
+  'goals.edit': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/goals/:id/edit'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/goals_controller').default['edit']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/goals_controller').default['edit']>>>
+    }
+  }
+  'goals.update': {
+    methods: ["PUT","PATCH"]
+    pattern: '/api/v1/goals/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/goal').updateGoalValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/goal').updateGoalValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/goals_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/goals_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'goals.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/goals/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/goals_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/goals_controller').default['destroy']>>>
+    }
+  }
 }

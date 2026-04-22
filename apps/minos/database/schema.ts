@@ -51,6 +51,25 @@ export class FocusSessionSchema extends BaseModel {
   declare userId: number
 }
 
+export class GoalSchema extends BaseModel {
+  static $columns = ['createdAt', 'description', 'id', 'name', 'status', 'updatedAt', 'userId'] as const
+  $columns = GoalSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column()
+  declare description: string | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare name: string
+  @column()
+  declare status: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
+}
+
 export class TaskSchema extends BaseModel {
   static $columns = ['createdAt', 'deadline', 'description', 'id', 'name', 'pomoCount', 'priority', 'status', 'stopwatchMs', 'timeEstimateMin', 'updatedAt', 'userId'] as const
   $columns = TaskSchema.$columns

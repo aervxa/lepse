@@ -44,5 +44,6 @@ router
       .use(middleware.auth())
 
     router.resource('tasks', controllers.Tasks)
+    router.resource('goals', controllers.Goals)
   })
   .prefix('/api/v1')
