@@ -12,6 +12,7 @@ import {
   Pause,
   Play,
   RefreshCw,
+  X,
 } from 'lucide-vue-next'
 import { computed, ref, watch } from 'vue'
 import { getDailyQuote } from '~/lib/quotes'
@@ -391,6 +392,15 @@ const inActivity = computed(() => stopwatch.running.value || pomoStopwatch.runni
                     <CommandInput placeholder="Search tasks..." />
                     <CommandList>
                       <CommandEmpty>No tasks found.</CommandEmpty>
+                      <template v-if="task">
+                        <CommandGroup>
+                          <CommandItem key="unselect" :value="null" @select="selectTaskId(-1)">
+                            <X />
+                            Clear
+                          </CommandItem>
+                        </CommandGroup>
+                        <CommandSeparator />
+                      </template>
                       <CommandGroup>
                         <CommandItem
                           v-for="t in tasks"
