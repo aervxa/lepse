@@ -92,7 +92,7 @@ fetchTasks().then(() => {
         v-for="task in tasks"
         :to="`/app/tasks/${task.id}`"
         :key="task.id"
-        class="group/task relative flex items-center justify-between rounded-xl border p-2 hover:bg-muted/50 focus-within:bg-muted/50"
+        class="flex items-center justify-between rounded-xl border p-2 hover:bg-muted/50 focus-within:bg-muted/50"
       >
         <div class="flex items-center gap-2">
           <!-- Priority Dropdown -->

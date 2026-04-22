@@ -48,7 +48,7 @@ const onSubmit = handleSubmit(async (values) => {
     toast.error('Something went wrong', { description: error.message })
   } else {
     toast.success('Task ' + (task.value ? 'updated' : 'created'))
-    useRouter().back()
+    navigateTo('/app/tasks')
   }
 })
 </script>
