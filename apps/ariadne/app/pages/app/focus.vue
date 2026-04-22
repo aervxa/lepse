@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Data } from '@lepse/minos/data'
-import { useNow } from '@vueuse/core'
+import { useDebounceFn, useIntervalFn, useNow } from '@vueuse/core'
 import {
   ChevronsUpDown,
   Clock,
@@ -21,7 +21,7 @@ import logoSrc from '~/assets/images/logo.png'
 const { $minos } = useNuxtApp()
 const { user } = useAuth()
 const route = useRoute()
-const { tasks, fetchTasks } = useTasks()
+const { tasks, fetchTasks, updateTask } = useTasks()
 
 // ─── Task ────────────────────────────────────────────────────────────────────
 
@@ -78,12 +78,32 @@ const toggleFocusMethod = () => {
 
 // ─── Stopwatch ────────────────────────────────────────────────────────────────
 
+const syncStopwatch = useDebounceFn(() => {
+  // Update task
+  if (task.value) {
+    const elapsed = stopwatch.elapsed.value // capture elapsed
+    updateTask(task.value.id, {
+      // Old value + (elapsed - synced time) to avoid double-counting from elapsed
+      stopwatchMs: task.value.stopwatchMs + (elapsed - stopwatchSyncedMs),
+    }).then(() => {
+      stopwatchSyncedMs = elapsed // set synced time to upto how much was synced
+    })
+  }
+
+  // Update focus session
+  $minos.api.focusSessions.update({
+    body: { stopwatchMs: (sessionTotals.value?.stopwatchMs ?? 0) + stopwatch.elapsed.value },
+  })
+}, 1_000)
+
+useIntervalFn(() => {
+  if (stopwatch.running.value === true) syncStopwatch()
+}, 10_000)
+
+let stopwatchSyncedMs = 0
 const stopwatch = new Stopwatch({
   onStop: () => {
-    if (!sessionTotals.value) return
-    $minos.api.focusSessions.update({
-      body: { stopwatchMs: sessionTotals.value.stopwatchMs + stopwatch.elapsed.value },
-    })
+    syncStopwatch()
   },
 })
 
@@ -121,7 +141,12 @@ const formattedPomoTime = computed(() => {
 function skipPomo() {
   if (pomoState.value === 'work') {
     pomoCount.value++
+
+    // Update task
+    if (task.value) updateTask(task.value.id, { pomoCount: task.value.pomoCount + 1 })
+    // Update focus session
     $minos.api.focusSessions.update({ body: { pomoCount: totalPomoCount.value } })
+
     pomoState.value = pomoCount.value % 4 === 0 ? 'long-break' : 'break'
   } else {
     pomoState.value = 'work'
@@ -161,8 +186,14 @@ const resetSessions = async () => {
 
 // ─── Derived helpers ──────────────────────────────────────────────────────────
 
-const hasActivity = computed(() => totalPomoCount.value > 0 || stopwatch.elapsed.value > 0)
-const inActicity = computed(() => stopwatch.running.value || pomoStopwatch.running.value)
+const hasActivity = computed(
+  () =>
+    (sessionTotals.value?.pomoCount ?? 0 > 0) ||
+    totalPomoCount.value > 0 ||
+    (sessionTotals.value?.stopwatchMs ?? 0 > 0) ||
+    stopwatch.elapsed.value > 0
+)
+const inActivity = computed(() => stopwatch.running.value || pomoStopwatch.running.value)
 </script>
 
 <template>
@@ -350,7 +381,7 @@ const inActicity = computed(() => stopwatch.running.value || pomoStopwatch.runni
               </p>
               <!-- Change task popover -->
               <Popover v-model:open="selectTaskOpen">
-                <PopoverTrigger as-child :disabled="inActicity">
+                <PopoverTrigger as-child :disabled="inActivity">
                   <Button variant="ghost" size="icon-sm">
                     <ChevronsUpDown />
                   </Button>
