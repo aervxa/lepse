@@ -201,7 +201,9 @@ const inActivity = computed(() => stopwatch.running.value || pomoStopwatch.runni
   <div class="flex flex-1 flex-col p-8">
     <!-- Header -->
     <div class="flex h-16 items-start justify-between">
-      <img :src="logoSrc" class="h-12 not-dark:invert" />
+      <NuxtLink to="/app" class="-mx-3 px-3 -my-2 py-2 w-fit">
+        <img :src="logoSrc" class="h-12 not-dark:invert" />
+      </NuxtLink>
 
       <!-- Session Totals -->
       <div class="flex flex-col items-end gap-2">
