@@ -12,7 +12,6 @@ import {
   Pause,
   Play,
   RefreshCw,
-  X,
 } from 'lucide-vue-next'
 import { computed, ref, watch } from 'vue'
 import { getDailyQuote } from '~/lib/quotes'
@@ -31,11 +30,9 @@ const task = computed(() =>
   tasks.value.find((t) => t.id === (selectedTaskId.value ?? Number(route.query.task)))
 )
 const selectedTaskId = ref<number | null>(null)
-const selectTaskOpen = ref(false)
 const selectTaskId = (id: number) => {
   resetControls()
   selectedTaskId.value = id
-  selectTaskOpen.value = false
 }
 
 // ─── Session Totals ──────────────────────────────────────────────────────────
@@ -383,41 +380,21 @@ const inActivity = computed(() => stopwatch.running.value || pomoStopwatch.runni
                 {{ task?.name ?? 'No task selected' }}
               </p>
               <!-- Change task popover -->
-              <Popover v-model:open="selectTaskOpen">
-                <PopoverTrigger as-child :disabled="inActivity">
-                  <Button variant="ghost" size="icon-sm">
-                    <ChevronsUpDown />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent align="start" class="p-0">
-                  <Command highlight-on-hover>
-                    <CommandInput placeholder="Search tasks..." />
-                    <CommandList>
-                      <CommandEmpty>No tasks found.</CommandEmpty>
-                      <template v-if="task">
-                        <CommandGroup>
-                          <CommandItem key="unselect" :value="null" @select="selectTaskId(-1)">
-                            <X />
-                            Clear
-                          </CommandItem>
-                        </CommandGroup>
-                        <CommandSeparator />
-                      </template>
-                      <CommandGroup>
-                        <CommandItem
-                          v-for="t in tasks"
-                          :key="t.id"
-                          :value="t.id"
-                          :data-checked="t.id === task?.id"
-                          @select="selectTaskId(t.id)"
-                        >
-                          {{ t.name }}
-                        </CommandItem>
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
+              <Combobox
+                :items="tasks"
+                :checked-item-id="task?.id"
+                empty="No tasks found."
+                placeholder="Select a task..."
+                @select="
+                  (item) => {
+                    selectTaskId(item.id)
+                  }
+                "
+              >
+                <Button variant="ghost" size="icon-sm" :disabled="inActivity">
+                  <ChevronsUpDown />
+                </Button>
+              </Combobox>
             </div>
           </div>
           <!-- TODO: Goals
