@@ -14,6 +14,7 @@ export default class TaskTransformer extends BaseTransformer<Task> {
       'stopwatchMs',
       'deadline',
       'createdAt',
+      'goalId',
     ])
   }
 }

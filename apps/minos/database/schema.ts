@@ -71,7 +71,7 @@ export class GoalSchema extends BaseModel {
 }
 
 export class TaskSchema extends BaseModel {
-  static $columns = ['createdAt', 'deadline', 'description', 'id', 'name', 'pomoCount', 'priority', 'status', 'stopwatchMs', 'timeEstimateMin', 'updatedAt', 'userId'] as const
+  static $columns = ['createdAt', 'deadline', 'description', 'goalId', 'id', 'name', 'pomoCount', 'priority', 'status', 'stopwatchMs', 'timeEstimateMin', 'updatedAt', 'userId'] as const
   $columns = TaskSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
@@ -79,6 +79,8 @@ export class TaskSchema extends BaseModel {
   declare deadline: DateTime | null
   @column()
   declare description: string | null
+  @column()
+  declare goalId: number | null
   @column({ isPrimary: true })
   declare id: number
   @column()

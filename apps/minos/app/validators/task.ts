@@ -10,6 +10,7 @@ export const createTaskValidator = vine.create(
     deadline: vine.date({ formats: ['iso8601'] }).optional(),
     pomoCount: vine.number().min(0).optional(),
     stopwatchMs: vine.number().min(0).optional(),
+    goalId: vine.number().min(0).optional(),
   })
 )
 
