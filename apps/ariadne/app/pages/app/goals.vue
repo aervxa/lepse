@@ -54,7 +54,10 @@ fetchGoals().then(() => {
     </Empty>
 
     <!-- Goal List -->
-    <div v-else class="grid grid-cols-3 gap-4">
+    <div
+      v-else
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(256px,1fr))] gap-4"
+    >
       <div
         v-if="goals.length === 0 && loadingGoals"
         v-for="i in 5"
