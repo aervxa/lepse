@@ -84,7 +84,12 @@ fetchGoals().then(() => {
       >
         <div class="flex flex-col gap-2 p-4">
           <p class="text-xl font-medium line-clamp-2">{{ goal.name }}</p>
-          <p class="text-sm text-muted-foreground line-clamp-3">{{ goal.description }}</p>
+          <p
+            class="text-sm text-muted-foreground line-clamp-3"
+            :class="goal.description ? '' : 'italic'"
+          >
+            {{ goal.description ?? 'No description provided.' }}
+          </p>
         </div>
         <Separator class="mt-auto" />
         <div class="flex items-center gap-2 justify-between p-3">
