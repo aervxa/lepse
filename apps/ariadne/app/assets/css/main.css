@@ -124,7 +124,7 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50 leading-normal;
+    @apply border-border outline-ring/50;
   }
   html {
     @apply overflow-hidden;
@@ -135,6 +135,9 @@
   button:not(:disabled),
   [role='button']:not(:disabled) {
     cursor: pointer;
+  }
+  p {
+    @apply leading-normal;
   }
 }
 
