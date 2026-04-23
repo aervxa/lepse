@@ -44,9 +44,22 @@ export const useAuth = () => {
   }
 
   const refreshUser = async () => {
-    const { data } = await $minos.api.account.profile.show({})
-    user.value = data
+    if (token.value) {
+      const [payload, error] = await $minos.api.account.profile.show({}).safe()
+      if (payload) {
+        user.value = payload.data
+      } else {
+        // If user is not authorized (user doesn't exist in the server)
+        if (error.isStatus(401)) {
+          token.value = null
+          user.value = undefined
+          navigateTo('/')
+        }
+        console.error(error)
+        return error
+      }
+    }
   }
 
-  return { user, signup, login, logout, token, refreshUser }
+  return { user, signup, login, logout, refreshUser }
 }

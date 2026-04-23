@@ -4,10 +4,7 @@ export default defineNuxtPlugin({
   name: 'auth',
   dependsOn: ['minos'],
   async setup() {
-    const { token, refreshUser } = useAuth()
-
-    if (token.value) {
-      await refreshUser()
-    }
+    const { refreshUser } = useAuth()
+    await refreshUser()
   },
 })
