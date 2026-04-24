@@ -17,8 +17,6 @@ const task = computed(() => tasks.value.find((t) => t.id === props.taskId))
 const schema = z.object({
   name: z.string().min(1, 'Name is required').max(255),
   description: z.string().max(2500).optional(),
-  priority: z.enum(['none', 'low', 'medium', 'high', 'urgent']).optional(),
-  status: z.enum(['todo', 'in_progress', 'done', 'canceled']).optional(),
   timeEstimateMin: z.coerce.number().min(0).optional(),
   deadline: z.string().optional(),
 })
@@ -28,10 +26,6 @@ const { handleSubmit, setFieldError, isSubmitting, resetForm, meta } = useForm({
   initialValues: {
     name: task.value?.name,
     description: task.value?.description || undefined,
-    // @ts-expect-error | type is set as string due to json serialization from server
-    priority: task.value?.priority || 'none',
-    // @ts-expect-error | type is set as string due to json serialization from server
-    status: task.value?.status || 'todo',
     deadline: task.value?.deadline || undefined,
     timeEstimateMin: task.value?.timeEstimateMin || undefined,
   },
@@ -94,46 +88,6 @@ const onSubmit = handleSubmit(async (values) => {
           <FieldError v-if="errors.length" :errors="errors" />
         </Field>
       </VeeField>
-
-      <!-- Priority + Status -->
-      <FieldGroup class="flex-row @max-xs:contents">
-        <VeeField v-slot="{ field, errors }" name="priority">
-          <Field :data-invalid="!!errors.length">
-            <FieldLabel for="priority">Priority</FieldLabel>
-            <Select :model-value="field.value" @update:model-value="field.onChange">
-              <SelectTrigger id="priority" class="h-10" :aria-invalid="!!errors.length">
-                <SelectValue placeholder="Select priority" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">None</SelectItem>
-                <SelectItem value="low">Low</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="high">High</SelectItem>
-                <SelectItem value="urgent">Urgent</SelectItem>
-              </SelectContent>
-            </Select>
-            <FieldError v-if="errors.length" :errors="errors" />
-          </Field>
-        </VeeField>
-
-        <VeeField v-slot="{ field, errors }" name="status">
-          <Field :data-invalid="!!errors.length">
-            <FieldLabel for="status">Status</FieldLabel>
-            <Select :model-value="field.value" @update:model-value="field.onChange">
-              <SelectTrigger id="status" class="h-10" :aria-invalid="!!errors.length">
-                <SelectValue placeholder="Select status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="todo">Todo</SelectItem>
-                <SelectItem value="in_progress">In Progress</SelectItem>
-                <SelectItem value="done">Done</SelectItem>
-                <SelectItem value="canceled">Canceled</SelectItem>
-              </SelectContent>
-            </Select>
-            <FieldError v-if="errors.length" :errors="errors" />
-          </Field>
-        </VeeField>
-      </FieldGroup>
 
       <!-- Deadline + Estimate -->
       <FieldGroup class="flex-row @max-xs:contents">

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Pencil } from 'lucide-vue-next'
+
 definePageMeta({
   nested: false,
 })

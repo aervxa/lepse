@@ -17,7 +17,6 @@ const goal = computed(() => goals.value.find((g) => g.id === props.goalId))
 const schema = z.object({
   name: z.string().min(1, 'Name is required').max(255),
   description: z.string().max(2500).optional(),
-  status: z.enum(['active', 'completed', 'abandoned']).optional(),
 })
 
 const { handleSubmit, setFieldError, isSubmitting, resetForm, meta } = useForm({
@@ -25,8 +24,6 @@ const { handleSubmit, setFieldError, isSubmitting, resetForm, meta } = useForm({
   initialValues: {
     name: goal.value?.name,
     description: goal.value?.description || undefined,
-    // @ts-expect-error | type is set as string due to json serialization from server
-    status: goal.value?.status || 'active',
   },
 })
 
@@ -84,24 +81,6 @@ const onSubmit = handleSubmit(async (values) => {
             placeholder="Add context..."
             :aria-invalid="!!errors.length"
           />
-          <FieldError v-if="errors.length" :errors="errors" />
-        </Field>
-      </VeeField>
-
-      <!-- Priority + Status -->
-      <VeeField v-if="goal" v-slot="{ field, errors }" name="status">
-        <Field :data-invalid="!!errors.length">
-          <FieldLabel for="status">Status</FieldLabel>
-          <Select :model-value="field.value" @update:model-value="field.onChange">
-            <SelectTrigger id="status" class="h-10" :aria-invalid="!!errors.length">
-              <SelectValue placeholder="Select status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="active">Active</SelectItem>
-              <SelectItem value="completed">Completed</SelectItem>
-              <SelectItem value="abandoned">Abandoned</SelectItem>
-            </SelectContent>
-          </Select>
           <FieldError v-if="errors.length" :errors="errors" />
         </Field>
       </VeeField>
