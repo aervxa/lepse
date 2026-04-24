@@ -14,6 +14,10 @@ export const useGoals = () => {
     }
   }
 
+  if (goals.value.length === 0) {
+    fetchGoals()
+  }
+
   const createGoal = async (body: Parameters<typeof $minos.api.goals.store>['0']['body']) => {
     const [payload, error] = await $minos.api.goals.store({ body }).safe()
     if (payload) {

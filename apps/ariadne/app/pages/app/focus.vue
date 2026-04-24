@@ -21,11 +21,10 @@ import logoSrc from '~/assets/images/logo.png'
 const { $minos } = useNuxtApp()
 const { user } = useAuth()
 const route = useRoute()
-const { tasks, fetchTasks, updateTask } = useTasks()
+const { tasks, updateTask } = useTasks()
 
 // ─── Task ────────────────────────────────────────────────────────────────────
 
-!tasks.value.length && fetchTasks()
 const task = computed(() =>
   tasks.value.find((t) => t.id === (selectedTaskId.value ?? Number(route.query.task)))
 )

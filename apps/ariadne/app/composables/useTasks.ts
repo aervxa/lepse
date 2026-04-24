@@ -14,6 +14,10 @@ export const useTasks = () => {
     }
   }
 
+  if (tasks.value.length === 0) {
+    fetchTasks()
+  }
+
   const createTask = async (body: Parameters<typeof $minos.api.tasks.store>['0']['body']) => {
     const [payload, error] = await $minos.api.tasks.store({ body }).safe()
     if (payload) {
