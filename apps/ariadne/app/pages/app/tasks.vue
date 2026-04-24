@@ -3,13 +3,10 @@ definePageMeta({
   layout: 'app',
 })
 
-import { Plus, Clock, ClockFading, ChevronRight } from 'lucide-vue-next'
-import { formatDate } from '@vueuse/core'
-import { formatDuration } from '~/lib/time'
+import { Plus } from 'lucide-vue-next'
 
 const route = useRoute()
 const { tasks, fetchTasks } = useTasks()
-const { goals } = useGoals()
 
 const loadingTasks = ref(true)
 fetchTasks().then(() => {
@@ -56,92 +53,9 @@ fetchTasks().then(() => {
     </Empty>
 
     <!-- Task List -->
-    <div v-else class="flex flex-col gap-2">
-      <div
-        v-if="tasks.length === 0 && loadingTasks"
-        v-for="i in 4"
-        :key="i"
-        class="flex items-center justify-between rounded-xl border p-2 hover:bg-muted/50"
-      >
-        <div class="flex items-center gap-2">
-          <!-- Priority -->
-          <Skeleton class="size-4 m-2" />
-          <Separator orientation="vertical" />
-          <!-- Status -->
-          <Skeleton class="size-4 m-2" />
-          <!-- Name -->
-          <Skeleton class="h-4 w-32" />
-        </div>
-
-        <!-- Additional info -->
-        <div class="flex items-center justify-end min-w-0 gap-3 px-4">
-          <div class="flex items-center gap-1.5">
-            <Skeleton class="size-3" />
-            <Skeleton class="h-3 w-12" />
-          </div>
-          <div class="flex items-center gap-1.5">
-            <Skeleton class="size-3" />
-            <Skeleton class="h-3 w-14" />
-          </div>
-          <Separator orientation="vertical" />
-          <Skeleton class="h-3 w-10" />
-        </div>
-      </div>
-
-      <NuxtLink
-        v-else
-        v-for="task in tasks"
-        :to="`/app/tasks/${task.id}`"
-        :key="task.id"
-        class="flex items-center justify-between rounded-xl border p-2 hover:bg-muted/50 focus-within:bg-muted/50"
-      >
-        <div class="flex items-center gap-2">
-          <!-- Priority Dropdown -->
-          <TaskPriorityDropdown :id="task.id" :priority="task.priority" />
-
-          <Separator orientation="vertical" />
-
-          <!-- Status Dropdown -->
-          <TaskStatusDropdown :id="task.id" :status="task.status" />
-
-          <p class="font-semibold">{{ task.name }}</p>
-
-          <template v-if="task.goalId">
-            <ChevronRight class="size-3 -mr-0.5 text-muted-foreground" />
-            <p class="text-xs font-medium text-muted-foreground">
-              {{ goals.find((goal) => goal.id === task.goalId)?.name }}
-            </p>
-          </template>
-        </div>
-
-        <!-- Additional info -->
-        <div
-          class="flex items-center justify-end min-w-0 gap-3 px-4 text-xs leading-none text-muted-foreground whitespace-nowrap"
-        >
-          <div class="flex items-center gap-1.5" title="time worked">
-            <Clock class="size-3" />
-            <p>
-              {{
-                formatDuration(task.stopwatchMs, {
-                  format: 'hhh mmm',
-                  pad: false,
-                })
-              }}
-            </p>
-          </div>
-          <div class="flex items-center gap-1.5" title="pomos completed">
-            <ClockFading class="size-3" />
-            <p>{{ task.pomoCount }} pomos</p>
-          </div>
-          <Separator orientation="vertical" />
-          <p
-            v-if="task.createdAt"
-            :title="`created: ${formatDate(new Date(task.createdAt), 'MMM D YYYY, h:mm:ss A')}`"
-          >
-            {{ formatDate(new Date(task.createdAt), 'MMM D') }}
-          </p>
-        </div>
-      </NuxtLink>
+    <div class="flex flex-col gap-2">
+      <NuxtItemSkeleton v-if="tasks.length === 0 && loadingTasks" v-for="i in 4" :key="i" />
+      <TaskItem v-else v-for="task in tasks" :key="task.id" :task="task" />
     </div>
   </div>
 
