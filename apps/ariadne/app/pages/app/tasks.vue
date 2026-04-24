@@ -3,12 +3,13 @@ definePageMeta({
   layout: 'app',
 })
 
-import { Plus, Clock, ClockFading } from 'lucide-vue-next'
+import { Plus, Clock, ClockFading, ChevronRight } from 'lucide-vue-next'
 import { formatDate } from '@vueuse/core'
 import { formatDuration } from '~/lib/time'
 
 const route = useRoute()
 const { tasks, fetchTasks } = useTasks()
+const { goals } = useGoals()
 
 const loadingTasks = ref(true)
 fetchTasks().then(() => {
@@ -104,6 +105,13 @@ fetchTasks().then(() => {
           <TaskStatusDropdown :id="task.id" :status="task.status" />
 
           <p class="font-semibold">{{ task.name }}</p>
+
+          <template v-if="task.goalId">
+            <ChevronRight class="size-3 -mr-0.5 text-muted-foreground" />
+            <p class="text-xs font-medium text-muted-foreground">
+              {{ goals.find((goal) => goal.id === task.goalId)?.name }}
+            </p>
+          </template>
         </div>
 
         <!-- Additional info -->
