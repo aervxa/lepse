@@ -1,13 +1,12 @@
-<script setup lang="ts">
-type item = { id: number; name: string }
+<script setup lang="ts" generic="T extends { id: number; name: string }">
 const props = defineProps<{
-  items?: item[]
-  checkedItemId?: item['id']
+  items?: T[]
+  checkedItemId?: T['id']
   empty?: string
   placeholder?: string
 }>()
 const emit = defineEmits<{
-  (e: 'select', item: item): void
+  (e: 'select', item: T): void
 }>()
 const open = defineModel<boolean>('open')
 
