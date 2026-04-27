@@ -54,7 +54,7 @@ fetchTasks().then(() => {
 
     <!-- Task List -->
     <div class="flex flex-col gap-2">
-      <NuxtItemSkeleton v-if="tasks.length === 0 && loadingTasks" v-for="i in 4" :key="i" />
+      <Skeleton v-if="tasks.length === 0 && loadingTasks" v-for="i in 4" :key="i" />
       <TaskItem v-else v-for="task in tasks" :key="task.id" :task="task" />
     </div>
   </div>
