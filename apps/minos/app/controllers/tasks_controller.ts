@@ -3,6 +3,7 @@ import Task from '#models/task'
 import TaskPolicy from '#policies/task_policy'
 import TaskTransformer from '#transformers/task_transformer'
 import { createTaskValidator, updateTaskValidator } from '#validators/task'
+import TaskDay from '#models/task_day'
 
 export default class TasksController {
   /**
@@ -64,6 +65,15 @@ export default class TasksController {
     const payload = await request.validateUsing(updateTaskValidator)
     task.merge(payload)
     await task.save()
+
+    // Update the day task of the client's date if provided
+    const clientDate = request.header('x-client-date')
+    if (clientDate && task.$dirty.status) {
+      await TaskDay.query()
+        .where('taskId', task.id)
+        .where('date', clientDate)
+        .update({ status: task.status })
+    }
 
     return serialize(TaskTransformer.transform(task))
   }

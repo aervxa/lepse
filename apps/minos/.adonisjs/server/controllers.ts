@@ -10,4 +10,5 @@ export const controllers = {
   NewAccount: () => import('#controllers/new_account_controller'),
   Profile: () => import('#controllers/profile_controller'),
   Tasks: () => import('#controllers/tasks_controller'),
+  TaskDays: () => import('#controllers/task_days_controller'),
 }

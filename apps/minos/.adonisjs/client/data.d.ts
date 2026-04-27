@@ -9,6 +9,7 @@ import type FocusSessionTransformer from '#transformers/focus_session_transforme
 import type GoalTransformer from '#transformers/goal_transformer'
 import type TaskTransformer from '#transformers/task_transformer'
 import type UserTransformer from '#transformers/user_transformer'
+import type TaskDayTransformer from '#transformers/task_day_transformer'
 
 export namespace Data {
   export type FocusSession = InferData<FocusSessionTransformer>
@@ -26,5 +27,9 @@ export namespace Data {
   export type User = InferData<UserTransformer>
   export namespace User {
     export type Variants = InferVariants<UserTransformer>
+  }
+  export type TaskDay = InferData<TaskDayTransformer>
+  export namespace TaskDay {
+    export type Variants = InferVariants<TaskDayTransformer>
   }
 }

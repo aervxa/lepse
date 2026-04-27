@@ -70,6 +70,23 @@ export class GoalSchema extends BaseModel {
   declare userId: number
 }
 
+export class TaskDaySchema extends BaseModel {
+  static $columns = ['createdAt', 'date', 'id', 'status', 'taskId', 'updatedAt'] as const
+  $columns = TaskDaySchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column.date()
+  declare date: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare status: string
+  @column()
+  declare taskId: number | null
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
 export class TaskSchema extends BaseModel {
   static $columns = ['createdAt', 'deadline', 'description', 'goalId', 'id', 'name', 'pomoCount', 'priority', 'status', 'stopwatchMs', 'timeEstimateMin', 'updatedAt', 'userId'] as const
   $columns = TaskSchema.$columns

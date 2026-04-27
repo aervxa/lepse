@@ -91,6 +91,42 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/focus_sessions_controller').default['destroy']>>>
     }
   }
+  'day.task_days.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/day/:date/tasks'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { date: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/task_days_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/task_days_controller').default['index']>>>
+    }
+  }
+  'day.task_days.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/day/:date/tasks'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/task_day').createTaskDayValidator)>>
+      paramsTuple: [ParamValue]
+      params: { date: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/task_day').createTaskDayValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/task_days_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/task_days_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'day.task_days.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/day/:date/tasks/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue, ParamValue]
+      params: { date: ParamValue; id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/task_days_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/task_days_controller').default['destroy']>>>
+    }
+  }
   'tasks.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/tasks'
