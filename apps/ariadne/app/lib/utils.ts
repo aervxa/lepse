@@ -9,3 +9,11 @@ export function cn(...inputs: ClassValue[]) {
 export function mapErrors<T extends { field: string }>(errors: T[]) {
   return Object.fromEntries(errors.map((e) => [e.field, e]))
 }
+
+export function getClientDate(date?: string | null) {
+  const d = date ? new Date(date.includes('T') ? date : date + 'T00:00') : new Date()
+  const yyyy = d.getFullYear()
+  const mm = String(d.getMonth() + 1).padStart(2, '0')
+  const dd = String(d.getDate()).padStart(2, '0')
+  return `${yyyy}-${mm}-${dd}`
+}

@@ -1,5 +1,6 @@
 import { createTuyau } from '@tuyau/core/client'
 import { registry } from '@lepse/minos/registry'
+import { getClientDate } from '~/lib/utils'
 
 export default defineNuxtPlugin({
   name: 'minos',
@@ -16,6 +17,7 @@ export default defineNuxtPlugin({
             if (token.value) {
               request.headers.set('Authorization', `Bearer ${token.value}`)
             }
+            request.headers.set('x-client-date', getClientDate())
           },
         ],
       },
