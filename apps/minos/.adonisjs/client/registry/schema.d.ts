@@ -91,7 +91,7 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/focus_sessions_controller').default['destroy']>>>
     }
   }
-  'day.task_days.index': {
+  'day.tasks.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/day/:date/tasks'
     types: {
@@ -103,7 +103,7 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/task_days_controller').default['index']>>>
     }
   }
-  'day.task_days.store': {
+  'day.tasks.store': {
     methods: ["POST"]
     pattern: '/api/v1/day/:date/tasks'
     types: {
@@ -115,7 +115,7 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/task_days_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
-  'day.task_days.destroy': {
+  'day.tasks.destroy': {
     methods: ["DELETE"]
     pattern: '/api/v1/day/:date/tasks/:id'
     types: {

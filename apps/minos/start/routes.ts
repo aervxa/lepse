@@ -45,13 +45,13 @@ router
 
     router
       .group(() => {
-        router.get('tasks', [controllers.TaskDays, 'index'])
-        router.post('tasks', [controllers.TaskDays, 'store'])
-        router.delete('tasks/:id', [controllers.TaskDays, 'destroy'])
+        router.get('tasks', [controllers.TaskDays, 'index']).as('index')
+        router.post('tasks', [controllers.TaskDays, 'store']).as('store')
+        router.delete('tasks/:id', [controllers.TaskDays, 'destroy']).as('destroy')
       })
       .prefix('day/:date')
       .where('date', { match: /^\d{4}-\d{2}-\d{2}$/ })
-      .as('day')
+      .as('day.tasks')
       .use(middleware.auth())
 
     router.resource('tasks', controllers.Tasks)

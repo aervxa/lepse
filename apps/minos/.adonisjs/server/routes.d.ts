@@ -11,9 +11,9 @@ export type ScannedRoutes = {
     'focus_sessions.show': { paramsTuple?: []; params?: {} }
     'focus_sessions.update': { paramsTuple?: []; params?: {} }
     'focus_sessions.destroy': { paramsTuple?: []; params?: {} }
-    'day.task_days.index': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
-    'day.task_days.store': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
-    'day.task_days.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'date': ParamValue,'id': ParamValue} }
+    'day.tasks.index': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
+    'day.tasks.store': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
+    'day.tasks.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'date': ParamValue,'id': ParamValue} }
     'tasks.index': { paramsTuple?: []; params?: {} }
     'tasks.create': { paramsTuple?: []; params?: {} }
     'tasks.store': { paramsTuple?: []; params?: {} }
@@ -32,7 +32,7 @@ export type ScannedRoutes = {
   GET: {
     'account.profile.show': { paramsTuple?: []; params?: {} }
     'focus_sessions.show': { paramsTuple?: []; params?: {} }
-    'day.task_days.index': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
+    'day.tasks.index': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'tasks.index': { paramsTuple?: []; params?: {} }
     'tasks.create': { paramsTuple?: []; params?: {} }
     'tasks.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -45,7 +45,7 @@ export type ScannedRoutes = {
   HEAD: {
     'account.profile.show': { paramsTuple?: []; params?: {} }
     'focus_sessions.show': { paramsTuple?: []; params?: {} }
-    'day.task_days.index': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
+    'day.tasks.index': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'tasks.index': { paramsTuple?: []; params?: {} }
     'tasks.create': { paramsTuple?: []; params?: {} }
     'tasks.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -59,7 +59,7 @@ export type ScannedRoutes = {
     'auth.new_account.store': { paramsTuple?: []; params?: {} }
     'auth.access_token.store': { paramsTuple?: []; params?: {} }
     'auth.access_token.destroy': { paramsTuple?: []; params?: {} }
-    'day.task_days.store': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
+    'day.tasks.store': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'tasks.store': { paramsTuple?: []; params?: {} }
     'goals.store': { paramsTuple?: []; params?: {} }
   }
@@ -70,7 +70,7 @@ export type ScannedRoutes = {
   }
   DELETE: {
     'focus_sessions.destroy': { paramsTuple?: []; params?: {} }
-    'day.task_days.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'date': ParamValue,'id': ParamValue} }
+    'day.tasks.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'date': ParamValue,'id': ParamValue} }
     'tasks.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'goals.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }

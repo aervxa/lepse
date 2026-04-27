@@ -22,10 +22,10 @@ export interface ApiDefinition {
     destroy: typeof routes['focus_sessions.destroy']
   }
   day: {
-    taskDays: {
-      index: typeof routes['day.task_days.index']
-      store: typeof routes['day.task_days.store']
-      destroy: typeof routes['day.task_days.destroy']
+    tasks: {
+      index: typeof routes['day.tasks.index']
+      store: typeof routes['day.tasks.store']
+      destroy: typeof routes['day.tasks.destroy']
     }
   }
   tasks: {

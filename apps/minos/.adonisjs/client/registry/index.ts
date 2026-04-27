@@ -48,23 +48,23 @@ const routes = {
     tokens: [{"old":"/api/v1/session/reset","type":0,"val":"api","end":""},{"old":"/api/v1/session/reset","type":0,"val":"v1","end":""},{"old":"/api/v1/session/reset","type":0,"val":"session","end":""},{"old":"/api/v1/session/reset","type":0,"val":"reset","end":""}],
     types: placeholder as Registry['focus_sessions.destroy']['types'],
   },
-  'day.task_days.index': {
+  'day.tasks.index': {
     methods: ["GET","HEAD"],
     pattern: '/api/v1/day/:date/tasks',
     tokens: [{"old":"/api/v1/day/:date/tasks","type":0,"val":"api","end":""},{"old":"/api/v1/day/:date/tasks","type":0,"val":"v1","end":""},{"old":"/api/v1/day/:date/tasks","type":0,"val":"day","end":""},{"old":"/api/v1/day/:date/tasks","type":1,"val":"date","end":""},{"old":"/api/v1/day/:date/tasks","type":0,"val":"tasks","end":""}],
-    types: placeholder as Registry['day.task_days.index']['types'],
+    types: placeholder as Registry['day.tasks.index']['types'],
   },
-  'day.task_days.store': {
+  'day.tasks.store': {
     methods: ["POST"],
     pattern: '/api/v1/day/:date/tasks',
     tokens: [{"old":"/api/v1/day/:date/tasks","type":0,"val":"api","end":""},{"old":"/api/v1/day/:date/tasks","type":0,"val":"v1","end":""},{"old":"/api/v1/day/:date/tasks","type":0,"val":"day","end":""},{"old":"/api/v1/day/:date/tasks","type":1,"val":"date","end":""},{"old":"/api/v1/day/:date/tasks","type":0,"val":"tasks","end":""}],
-    types: placeholder as Registry['day.task_days.store']['types'],
+    types: placeholder as Registry['day.tasks.store']['types'],
   },
-  'day.task_days.destroy': {
+  'day.tasks.destroy': {
     methods: ["DELETE"],
     pattern: '/api/v1/day/:date/tasks/:id',
     tokens: [{"old":"/api/v1/day/:date/tasks/:id","type":0,"val":"api","end":""},{"old":"/api/v1/day/:date/tasks/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/day/:date/tasks/:id","type":0,"val":"day","end":""},{"old":"/api/v1/day/:date/tasks/:id","type":1,"val":"date","end":""},{"old":"/api/v1/day/:date/tasks/:id","type":0,"val":"tasks","end":""},{"old":"/api/v1/day/:date/tasks/:id","type":1,"val":"id","end":""}],
-    types: placeholder as Registry['day.task_days.destroy']['types'],
+    types: placeholder as Registry['day.tasks.destroy']['types'],
   },
   'tasks.index': {
     methods: ["GET","HEAD"],
