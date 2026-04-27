@@ -9,6 +9,6 @@ export const controllers = {
   Goals: () => import('#controllers/goals_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
   Profile: () => import('#controllers/profile_controller'),
-  Tasks: () => import('#controllers/tasks_controller'),
   TaskDays: () => import('#controllers/task_days_controller'),
+  Tasks: () => import('#controllers/tasks_controller'),
 }
