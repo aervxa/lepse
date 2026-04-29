@@ -65,7 +65,7 @@ const logout = async () => {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem v-for="item in group.items" :key="item.label">
-                <SidebarMenuButton as-child :is-active="route.path === item.route">
+                <SidebarMenuButton as-child :is-active="route.path.startsWith(item.route)">
                   <NuxtLink :to="item.route">
                     <component :is="item.icon" />
                     {{ item.label }}
