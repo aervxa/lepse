@@ -1,9 +1,5 @@
-<script setup lang="ts"></script>
+<script setup></script>
 
 <template>
-  <Dialog :open="true" @update:open="useRouter().back()">
-    <DialogContent>
-      <GoalForm />
-    </DialogContent>
-  </Dialog>
+  <GoalFormDialog />
 </template>

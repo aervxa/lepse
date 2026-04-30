@@ -1,11 +1,5 @@
-<script setup lang="ts">
-const route = useRoute()
-</script>
+<script setup></script>
 
 <template>
-  <Dialog :open="true" @update:open="useRouter().back()">
-    <DialogContent>
-      <TaskForm :task-id="Number(route.params.id)" />
-    </DialogContent>
-  </Dialog>
+  <TaskFormDialog :task-id="Number(useRoute().params.id)" />
 </template>

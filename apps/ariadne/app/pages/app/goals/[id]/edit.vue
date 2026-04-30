@@ -1,11 +1,5 @@
-<script setup lang="ts">
-const route = useRoute()
-</script>
+<script setup></script>
 
 <template>
-  <Dialog :open="true" @update:open="useRouter().back()">
-    <DialogContent>
-      <GoalForm :goal-id="Number(route.params.id)" />
-    </DialogContent>
-  </Dialog>
+  <GoalFormDialog :goal-id="Number(useRoute().params.id)" />
 </template>
