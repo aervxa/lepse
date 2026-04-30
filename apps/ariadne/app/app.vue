@@ -4,5 +4,5 @@
       <NuxtPage />
     </NuxtLayout>
   </main>
-  <Sonner position="top-center" richColors />
+  <Toaster position="top-center" richColors />
 </template>
