@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CircleAlert, Ellipsis, SignalHigh, SignalLow, SignalMedium } from 'lucide-vue-next'
+import { CircleAlert, CircleSlash, SignalHigh, SignalLow, SignalMedium } from 'lucide-vue-next'
 
 defineProps<{
   priority: string
@@ -11,5 +11,5 @@ defineProps<{
   <SignalMedium v-else-if="priority === 'medium'" />
   <SignalHigh v-else-if="priority === 'high'" />
   <CircleAlert v-else-if="priority === 'urgent'" />
-  <Ellipsis v-else />
+  <CircleSlash v-else />
 </template>
