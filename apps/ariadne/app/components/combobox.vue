@@ -1,10 +1,16 @@
 <script setup lang="ts" generic="T extends { id: number; name: string }">
-const props = defineProps<{
-  items?: T[]
-  checkedItemId?: T['id']
-  empty?: string
-  placeholder?: string
-}>()
+import type { PopoverContentProps } from 'reka-ui'
+
+const props = withDefaults(
+  defineProps<{
+    items?: T[]
+    checkedItemId?: T['id']
+    empty?: string
+    placeholder?: string
+    align?: PopoverContentProps['align']
+  }>(),
+  { align: 'start' }
+)
 const emit = defineEmits<{
   (e: 'select', item: T): void
 }>()
@@ -21,7 +27,7 @@ if (!slots.default) {
     <PopoverTrigger as-child>
       <slot />
     </PopoverTrigger>
-    <PopoverContent align="start" class="p-0">
+    <PopoverContent :align class="p-0">
       <Command highlight-on-hover>
         <CommandInput :placeholder="props.placeholder" />
         <CommandList>

@@ -5,6 +5,7 @@ defineProps<{
   id: number
   priority: string
   text?: boolean
+  disabled?: boolean
 }>()
 
 const { updateTask } = useTasks()
@@ -21,7 +22,7 @@ const setPriority = async (
 
 <template>
   <DropdownMenu>
-    <DropdownMenuTrigger as-child :title="`priority: ${priority}`">
+    <DropdownMenuTrigger as-child :title="`priority: ${priority}`" :disabled>
       <slot>
         <Button variant="ghost" size="icon-sm">
           <TaskPriorityIcon :priority="priority" />

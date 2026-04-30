@@ -4,6 +4,7 @@ import { toast } from 'vue-sonner'
 defineProps<{
   id: number
   status: string
+  disabled?: boolean
 }>()
 
 const { updateTask } = useTasks()
@@ -20,7 +21,7 @@ const setStatus = async (
 
 <template>
   <DropdownMenu>
-    <DropdownMenuTrigger as-child :title="`status: ${status}`">
+    <DropdownMenuTrigger as-child :title="`status: ${status}`" :disabled>
       <slot>
         <Button variant="ghost" size="icon-sm">
           <TaskStatusIcon :status="status" />

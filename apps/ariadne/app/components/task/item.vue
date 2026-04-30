@@ -7,6 +7,7 @@ import { formatDuration } from '~/lib/time'
 defineProps<{
   task: Data.Task
   sub?: boolean
+  disableControls?: boolean
 }>()
 
 const { goals } = useGoals()
@@ -21,12 +22,12 @@ const { goals } = useGoals()
     <div class="flex items-center gap-2">
       <!-- Priority Dropdown -->
       <template v-if="!sub">
-        <TaskPriorityDropdown :id="task.id" :priority="task.priority" />
+        <TaskPriorityDropdown :id="task.id" :priority="task.priority" :disabled="disableControls" />
         <Separator orientation="vertical" />
       </template>
 
       <!-- Status Dropdown -->
-      <TaskStatusDropdown :id="task.id" :status="task.status" />
+      <TaskStatusDropdown :id="task.id" :status="task.status" :disabled="disableControls" />
 
       <p :class="sub ? 'text-sm font-medium' : 'font-semibold'">{{ task.name }}</p>
 
