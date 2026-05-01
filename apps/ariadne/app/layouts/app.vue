@@ -1,12 +1,10 @@
-<script setup>
+<script setup lang="ts">
+import { useLocalStorage } from '@vueuse/core'
 import {
-  BarChart3,
   CalendarDays,
   ListTodo,
   NotebookPen,
-  PenLine,
   Repeat2,
-  Sun,
   Target,
   Timer,
   Loader,
@@ -19,8 +17,8 @@ const groups = [
     label: null,
     items: [
       { label: 'Calendar', icon: CalendarDays, route: '/app/calendar' },
-      { label: 'Today', icon: Sun, route: '/app/today' },
       { label: 'Focus', icon: Timer, route: '/app/focus' },
+      { label: 'Journal', icon: NotebookPen, route: '/app/journal' },
     ],
   },
   {
@@ -29,13 +27,6 @@ const groups = [
       { label: 'Goals', icon: Target, route: '/app/goals' },
       { label: 'Tasks', icon: ListTodo, route: '/app/tasks' },
       { label: 'Habits', icon: Repeat2, route: '/app/habits' },
-    ],
-  },
-  {
-    label: 'Reflect',
-    items: [
-      { label: 'Journal', icon: NotebookPen, route: '/app/journal' },
-      { label: 'Scribbles', icon: PenLine, route: '/app/scribbles' },
     ],
   },
 ]
@@ -48,19 +39,24 @@ const logout = async () => {
   await useAuth().logout()
   loggingOut.value = false
 }
+
+const sidebarKind = useLocalStorage<'inset' | 'floating'>('sidebar_kind', 'floating')
+const toggleSidebarKind = () => {
+  sidebarKind.value = sidebarKind.value === 'inset' ? 'floating' : 'inset'
+}
 </script>
 
 <template>
   <SidebarProvider>
-    <Sidebar variant="inset">
-      <SidebarHeader>
+    <Sidebar :variant="sidebarKind" collapsible="icon">
+      <SidebarHeader v-if="sidebarKind === 'inset'">
         <NuxtLink to="/app" class="px-3 py-2 w-fit">
           <img :src="logoSrc" class="h-10 not-dark:invert" />
         </NuxtLink>
       </SidebarHeader>
 
       <SidebarContent>
-        <SidebarGroup v-for="group in groups" :key="group.label">
+        <SidebarGroup v-for="group in groups" :key="group.label ?? 'none'">
           <SidebarGroupLabel v-if="group.label">{{ group.label }}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -78,7 +74,12 @@ const logout = async () => {
       </SidebarContent>
 
       <SidebarFooter>
-        <div class="flex justify-end">
+        <div class="flex justify-between flex-wrap gap-2">
+          <SidebarKindToggle
+            @click="toggleSidebarKind"
+            :expandSidebar="sidebarKind === 'floating'"
+          />
+
           <AlertDialog>
             <AlertDialogTrigger as-child>
               <Button variant="outline" size="icon-sm">

@@ -18,6 +18,10 @@ import { getDailyQuote } from '~/lib/quotes'
 import { formatDuration, Stopwatch } from '~/lib/time'
 import logoSrc from '~/assets/images/logo.png'
 
+definePageMeta({
+  layout: 'app',
+})
+
 const { $minos } = useNuxtApp()
 const { user } = useAuth()
 const route = useRoute()
