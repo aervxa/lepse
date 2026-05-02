@@ -36,22 +36,27 @@ router
 
     router
       .group(() => {
-        router.get('show', [controllers.FocusSessions, 'show'])
-        router.patch('update', [controllers.FocusSessions, 'update'])
-        router.delete('reset', [controllers.FocusSessions, 'destroy'])
-      })
-      .prefix('session')
-      .use(middleware.auth())
+        router
+          .group(() => {
+            router.get('', [controllers.TaskDays, 'index']).as('index')
+            router.post('', [controllers.TaskDays, 'store']).as('store')
+            router.delete(':id', [controllers.TaskDays, 'destroy']).as('destroy')
+          })
+          .prefix('tasks')
+          .as('tasks')
 
-    router
-      .group(() => {
-        router.get('tasks', [controllers.TaskDays, 'index']).as('index')
-        router.post('tasks', [controllers.TaskDays, 'store']).as('store')
-        router.delete('tasks/:id', [controllers.TaskDays, 'destroy']).as('destroy')
+        router
+          .group(() => {
+            router.get('', [controllers.FocusSessions, 'show']).as('show')
+            router.patch('', [controllers.FocusSessions, 'update']).as('update')
+            router.delete('', [controllers.FocusSessions, 'destroy']).as('destroy')
+          })
+          .prefix('session')
+          .as('session')
       })
       .prefix('day/:date')
       .where('date', { match: /^\d{4}-\d{2}-\d{2}$/ })
-      .as('day.tasks')
+      .as('day')
       .use(middleware.auth())
 
     router.resource('tasks', controllers.Tasks)

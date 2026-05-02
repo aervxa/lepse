@@ -55,42 +55,6 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/profile_controller').default['show']>>>
     }
   }
-  'focus_sessions.show': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/session/show'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/focus_sessions_controller').default['show']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/focus_sessions_controller').default['show']>>>
-    }
-  }
-  'focus_sessions.update': {
-    methods: ["PATCH"]
-    pattern: '/api/v1/session/update'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/focus_session').focusSessionValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/focus_session').focusSessionValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/focus_sessions_controller').default['update']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/focus_sessions_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'focus_sessions.destroy': {
-    methods: ["DELETE"]
-    pattern: '/api/v1/session/reset'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/focus_sessions_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/focus_sessions_controller').default['destroy']>>>
-    }
-  }
   'day.tasks.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/day/:date/tasks'
@@ -125,6 +89,42 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/task_days_controller').default['destroy']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/task_days_controller').default['destroy']>>>
+    }
+  }
+  'day.session.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/day/:date/session'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { date: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/focus_sessions_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/focus_sessions_controller').default['show']>>>
+    }
+  }
+  'day.session.update': {
+    methods: ["PATCH"]
+    pattern: '/api/v1/day/:date/session'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/focus_session').focusSessionValidator)>>
+      paramsTuple: [ParamValue]
+      params: { date: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/focus_session').focusSessionValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/focus_sessions_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/focus_sessions_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'day.session.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/day/:date/session'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { date: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/focus_sessions_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/focus_sessions_controller').default['destroy']>>>
     }
   }
   'tasks.index': {

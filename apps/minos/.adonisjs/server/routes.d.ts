@@ -8,12 +8,12 @@ export type ScannedRoutes = {
     'auth.access_token.store': { paramsTuple?: []; params?: {} }
     'auth.access_token.destroy': { paramsTuple?: []; params?: {} }
     'account.profile.show': { paramsTuple?: []; params?: {} }
-    'focus_sessions.show': { paramsTuple?: []; params?: {} }
-    'focus_sessions.update': { paramsTuple?: []; params?: {} }
-    'focus_sessions.destroy': { paramsTuple?: []; params?: {} }
     'day.tasks.index': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'day.tasks.store': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'day.tasks.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'date': ParamValue,'id': ParamValue} }
+    'day.session.show': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
+    'day.session.update': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
+    'day.session.destroy': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'tasks.index': { paramsTuple?: []; params?: {} }
     'tasks.create': { paramsTuple?: []; params?: {} }
     'tasks.store': { paramsTuple?: []; params?: {} }
@@ -31,8 +31,8 @@ export type ScannedRoutes = {
   }
   GET: {
     'account.profile.show': { paramsTuple?: []; params?: {} }
-    'focus_sessions.show': { paramsTuple?: []; params?: {} }
     'day.tasks.index': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
+    'day.session.show': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'tasks.index': { paramsTuple?: []; params?: {} }
     'tasks.create': { paramsTuple?: []; params?: {} }
     'tasks.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -44,8 +44,8 @@ export type ScannedRoutes = {
   }
   HEAD: {
     'account.profile.show': { paramsTuple?: []; params?: {} }
-    'focus_sessions.show': { paramsTuple?: []; params?: {} }
     'day.tasks.index': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
+    'day.session.show': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'tasks.index': { paramsTuple?: []; params?: {} }
     'tasks.create': { paramsTuple?: []; params?: {} }
     'tasks.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -63,16 +63,16 @@ export type ScannedRoutes = {
     'tasks.store': { paramsTuple?: []; params?: {} }
     'goals.store': { paramsTuple?: []; params?: {} }
   }
-  PATCH: {
-    'focus_sessions.update': { paramsTuple?: []; params?: {} }
-    'tasks.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'goals.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-  }
   DELETE: {
-    'focus_sessions.destroy': { paramsTuple?: []; params?: {} }
     'day.tasks.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'date': ParamValue,'id': ParamValue} }
+    'day.session.destroy': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'tasks.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'goals.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+  }
+  PATCH: {
+    'day.session.update': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
+    'tasks.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'goals.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   PUT: {
     'tasks.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

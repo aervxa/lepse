@@ -16,16 +16,16 @@ export interface ApiDefinition {
       show: typeof routes['account.profile.show']
     }
   }
-  focusSessions: {
-    show: typeof routes['focus_sessions.show']
-    update: typeof routes['focus_sessions.update']
-    destroy: typeof routes['focus_sessions.destroy']
-  }
   day: {
     tasks: {
       index: typeof routes['day.tasks.index']
       store: typeof routes['day.tasks.store']
       destroy: typeof routes['day.tasks.destroy']
+    }
+    session: {
+      show: typeof routes['day.session.show']
+      update: typeof routes['day.session.update']
+      destroy: typeof routes['day.session.destroy']
     }
   }
   tasks: {
