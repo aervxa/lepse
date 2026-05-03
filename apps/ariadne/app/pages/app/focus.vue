@@ -17,15 +17,20 @@ import { computed, ref, watch } from 'vue'
 import { getDailyQuote } from '~/lib/quotes'
 import { formatDuration, Stopwatch } from '~/lib/time'
 import logoSrc from '~/assets/images/logo.png'
+import { getClientDate } from '~/lib/utils'
 
 definePageMeta({
   layout: 'app',
 })
 
-const { $minos } = useNuxtApp()
 const { user } = useAuth()
 const route = useRoute()
 const { tasks, updateTask } = useTasks()
+
+// ─── Day ─────────────────────────────────────────────────────────────────────
+
+const { focusSession, fetchFocusSession, updateFocusSession, destroyFocusSession } =
+  useDay(getClientDate())
 
 // ─── Task ────────────────────────────────────────────────────────────────────
 
@@ -46,12 +51,12 @@ const loading = ref(true)
 const { refresh: reloadTotals } = await useAsyncData(
   'focus-session',
   async () => {
-    const [payload] = await $minos.api.focusSessions.show({}).safe()
-    if (payload) {
-      sessionTotals.value = payload.data
+    await fetchFocusSession()
+    if (focusSession.value) {
+      sessionTotals.value = focusSession.value
     }
     loading.value = false
-    return payload?.data ?? null
+    return focusSession.value ?? null
   },
   { server: false }
 )
@@ -92,8 +97,8 @@ const syncStopwatch = useDebounceFn(() => {
   }
 
   // Update focus session
-  $minos.api.focusSessions.update({
-    body: { stopwatchMs: (sessionTotals.value?.stopwatchMs ?? 0) + stopwatch.elapsed.value },
+  updateFocusSession({
+    stopwatchMs: (sessionTotals.value?.stopwatchMs ?? 0) + stopwatch.elapsed.value,
   })
 }, 1_000)
 
@@ -146,7 +151,7 @@ function skipPomo() {
     // Update task
     if (task.value) updateTask(task.value.id, { pomoCount: task.value.pomoCount + 1 })
     // Update focus session
-    $minos.api.focusSessions.update({ body: { pomoCount: totalPomoCount.value } })
+    updateFocusSession({ pomoCount: totalPomoCount.value })
 
     pomoState.value = pomoCount.value % 4 === 0 ? 'long-break' : 'break'
   } else {
@@ -180,7 +185,7 @@ const resetSessions = async () => {
 
   resetControls()
 
-  const [, err] = await $minos.api.focusSessions.destroy({}).safe()
+  const err = await destroyFocusSession()
   if (!err) await reloadTotals()
   resetting.value = false
 }

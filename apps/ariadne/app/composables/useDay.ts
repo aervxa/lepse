@@ -4,6 +4,9 @@ import { getClientDate } from '~/lib/utils'
 export const useDay = (date?: string) => {
   date = date ?? getClientDate()
   const { $minos } = useNuxtApp()
+
+  // ─── Tasks ────────────────────────────────────────────────────────────────
+
   const dayTasks = useState<Data.TaskDay[]>('dayTasks', () => [])
   const filteredDayTasks = computed(() => dayTasks.value.filter((dt) => dt.date?.startsWith(date)))
 
@@ -53,5 +56,55 @@ export const useDay = (date?: string) => {
     dayTasks.value = dayTasks.value.filter((t) => t.id !== id)
   }
 
-  return { dayTasks: filteredDayTasks, fetchDayTasks, createDayTask, destroyDayTask }
+  const taskReturns = { dayTasks: filteredDayTasks, fetchDayTasks, createDayTask, destroyDayTask }
+
+  // ─── Session ────────────────────────────────────────────────────────────────
+
+  const focusSession = useState<Data.FocusSession | undefined>('focusSession', () => undefined)
+
+  const fetchFocusSession = async () => {
+    const [payload, error] = await $minos.api.day.session
+      .show({
+        params: { date },
+      })
+      .safe()
+    if (payload) {
+      focusSession.value = payload.data
+    } else {
+      console.error(error)
+      return error
+    }
+  }
+
+  const updateFocusSession = async (
+    body: Parameters<typeof $minos.api.day.session.update>['0']['body']
+  ) => {
+    const [payload, error] = await $minos.api.day.session.update({ params: { date }, body }).safe()
+    if (payload) {
+      focusSession.value = payload.data
+    } else {
+      console.error(error)
+      return error
+    }
+  }
+
+  const destroyFocusSession = async () => {
+    const [, error] = await $minos.api.day.session.destroy({ params: { date } }).safe()
+    if (error) {
+      console.error(error)
+      return error
+    }
+    focusSession.value = undefined
+  }
+
+  const sessionReturns = {
+    focusSession,
+    fetchFocusSession,
+    updateFocusSession,
+    destroyFocusSession,
+  }
+
+  // ─── Returns ──────────────────────────────────────────────────────────────
+
+  return { ...taskReturns, ...sessionReturns }
 }
