@@ -8,9 +8,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 export default class TaskDaysController {
   async index({ auth, params, serialize }: HttpContext) {
     const user = auth.getUserOrFail()
-    const dayTasks = await TaskDay.query()
-      .where('date', params.date)
-      .whereHas('task', (q) => q.where('user_id', user.id))
+    const dayTasks = await TaskDay.query().where('userId', user.id).where('date', params.date)
 
     return serialize(TaskDayTransformer.transform(dayTasks))
   }
@@ -21,6 +19,7 @@ export default class TaskDaysController {
     await bouncer.with(TaskDayPolicy).authorize('store', task)
 
     const dayTask = await TaskDay.firstOrCreate({
+      userId: task.userId,
       taskId: task.id,
       date: params.date,
       status: task.status,

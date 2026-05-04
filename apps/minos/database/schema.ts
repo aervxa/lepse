@@ -71,7 +71,7 @@ export class GoalSchema extends BaseModel {
 }
 
 export class TaskDaySchema extends BaseModel {
-  static $columns = ['createdAt', 'date', 'id', 'status', 'taskId', 'updatedAt'] as const
+  static $columns = ['createdAt', 'date', 'id', 'status', 'taskId', 'updatedAt', 'userId'] as const
   $columns = TaskDaySchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
@@ -85,6 +85,8 @@ export class TaskDaySchema extends BaseModel {
   declare taskId: number | null
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
 }
 
 export class TaskSchema extends BaseModel {

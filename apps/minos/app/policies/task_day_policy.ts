@@ -14,7 +14,6 @@ export default class TaskDayPolicy extends BasePolicy {
    * Only the task owner can delete the day task
    */
   delete(user: User, dayTask: TaskDay) {
-    dayTask.load('task')
-    return dayTask.task.userId === user.id
+    return dayTask.userId === user.id
   }
 }
