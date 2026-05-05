@@ -83,7 +83,7 @@ export default class TasksController {
    */
   async destroy({ params, bouncer, response }: HttpContext) {
     const task = await Task.findOrFail(params.id)
-    await bouncer.with(TaskPolicy).authorize('delete', task)
+    await bouncer.with(TaskPolicy).authorize('destroy', task)
 
     await task.delete()
 

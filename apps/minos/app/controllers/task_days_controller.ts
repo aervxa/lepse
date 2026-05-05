@@ -31,7 +31,7 @@ export default class TaskDaysController {
 
   async destroy({ params, bouncer, response }: HttpContext) {
     const dayTask = await TaskDay.findOrFail(params.id)
-    await bouncer.with(TaskDayPolicy).authorize('delete', dayTask)
+    await bouncer.with(TaskDayPolicy).authorize('destroy', dayTask)
 
     await dayTask.delete()
 

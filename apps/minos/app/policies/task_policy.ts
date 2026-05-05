@@ -4,16 +4,9 @@ import { BasePolicy } from '@adonisjs/bouncer'
 
 export default class TaskPolicy extends BasePolicy {
   /**
-   * Only the task owner can delete their task
+   * Only the task owner can view their task
    */
   show(user: User, task: Task) {
-    return task.userId === user.id
-  }
-
-  /**
-   * Only the task owner can edit their task
-   */
-  edit(user: User, task: Task) {
     return task.userId === user.id
   }
 
@@ -27,7 +20,7 @@ export default class TaskPolicy extends BasePolicy {
   /**
    * Only the task owner can delete their task
    */
-  delete(user: User, task: Task) {
+  destroy(user: User, task: Task) {
     return task.userId === user.id
   }
 }

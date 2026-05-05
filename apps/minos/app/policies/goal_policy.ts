@@ -4,16 +4,9 @@ import { BasePolicy } from '@adonisjs/bouncer'
 
 export default class GoalPolicy extends BasePolicy {
   /**
-   * Only the goal owner can delete their goal
+   * Only the goal owner can view their goal
    */
   show(user: User, goal: Goal) {
-    return goal.userId === user.id
-  }
-
-  /**
-   * Only the goal owner can edit their goal
-   */
-  edit(user: User, goal: Goal) {
     return goal.userId === user.id
   }
 
@@ -25,9 +18,9 @@ export default class GoalPolicy extends BasePolicy {
   }
 
   /**
-   * Only the goal owner can delete their goal
+   * Only the goal owner can destroy their goal
    */
-  delete(user: User, goal: Goal) {
+  destroy(user: User, goal: Goal) {
     return goal.userId === user.id
   }
 }

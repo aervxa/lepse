@@ -70,7 +70,7 @@ export default class GoalsController {
    */
   async destroy({ params, bouncer, response }: HttpContext) {
     const goal = await Goal.findOrFail(params.id)
-    await bouncer.with(GoalPolicy).authorize('delete', goal)
+    await bouncer.with(GoalPolicy).authorize('destroy', goal)
 
     await goal.delete()
 
