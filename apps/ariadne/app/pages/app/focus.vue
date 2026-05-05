@@ -29,8 +29,7 @@ const { tasks, updateTask } = useTasks()
 
 // ─── Day ─────────────────────────────────────────────────────────────────────
 
-const { focusSession, fetchFocusSession, updateFocusSession, destroyFocusSession } =
-  useDay(getClientDate())
+const { focusSession, fetchFocusSession, updateFocusSession } = useDay(getClientDate())
 
 // ─── Task ────────────────────────────────────────────────────────────────────
 
@@ -185,7 +184,7 @@ const resetSessions = async () => {
 
   resetControls()
 
-  const err = await destroyFocusSession()
+  const err = await updateFocusSession({ pomoCount: 0, stopwatchMs: 0 })
   if (!err) await reloadTotals()
   resetting.value = false
 }
