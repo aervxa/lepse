@@ -19,11 +19,4 @@ export default class FocusSessionsController {
 
     return serialize(FocusSessionTransformer.transform(session))
   }
-
-  async destroy({ auth, params, response }: HttpContext) {
-    const session = await FocusSession.getDay(auth.getUserOrFail().id, params.date as string)
-    await session.delete()
-
-    return response.noContent()
-  }
 }

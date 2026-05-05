@@ -49,7 +49,6 @@ router
           .group(() => {
             router.get('', [controllers.FocusSessions, 'show']).as('show')
             router.patch('', [controllers.FocusSessions, 'update']).as('update')
-            router.delete('', [controllers.FocusSessions, 'destroy']).as('destroy')
           })
           .prefix('session')
           .as('session')

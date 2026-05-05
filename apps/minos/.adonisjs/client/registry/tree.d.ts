@@ -25,7 +25,6 @@ export interface ApiDefinition {
     session: {
       show: typeof routes['day.session.show']
       update: typeof routes['day.session.update']
-      destroy: typeof routes['day.session.destroy']
     }
     journal: {
       show: typeof routes['day.journal.show']
