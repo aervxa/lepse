@@ -70,6 +70,25 @@ export class GoalSchema extends BaseModel {
   declare userId: number
 }
 
+export class JournalSchema extends BaseModel {
+  static $columns = ['body', 'createdAt', 'date', 'id', 'mood', 'updatedAt', 'userId'] as const
+  $columns = JournalSchema.$columns
+  @column()
+  declare body: string | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column.date()
+  declare date: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare mood: number | null
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
+}
+
 export class TaskDaySchema extends BaseModel {
   static $columns = ['createdAt', 'date', 'id', 'status', 'taskId', 'updatedAt', 'userId'] as const
   $columns = TaskDaySchema.$columns

@@ -127,6 +127,30 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/focus_sessions_controller').default['destroy']>>>
     }
   }
+  'day.journal.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/day/:date/journal'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { date: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/journals_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/journals_controller').default['show']>>>
+    }
+  }
+  'day.journal.update': {
+    methods: ["PATCH"]
+    pattern: '/api/v1/day/:date/journal'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/journal').updateJournalValidator)>>
+      paramsTuple: [ParamValue]
+      params: { date: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/journal').updateJournalValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/journals_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/journals_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'tasks.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/tasks'

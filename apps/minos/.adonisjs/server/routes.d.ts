@@ -14,6 +14,8 @@ export type ScannedRoutes = {
     'day.session.show': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'day.session.update': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'day.session.destroy': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
+    'day.journal.show': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
+    'day.journal.update': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'tasks.index': { paramsTuple?: []; params?: {} }
     'tasks.create': { paramsTuple?: []; params?: {} }
     'tasks.store': { paramsTuple?: []; params?: {} }
@@ -33,6 +35,7 @@ export type ScannedRoutes = {
     'account.profile.show': { paramsTuple?: []; params?: {} }
     'day.tasks.index': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'day.session.show': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
+    'day.journal.show': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'tasks.index': { paramsTuple?: []; params?: {} }
     'tasks.create': { paramsTuple?: []; params?: {} }
     'tasks.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -46,6 +49,7 @@ export type ScannedRoutes = {
     'account.profile.show': { paramsTuple?: []; params?: {} }
     'day.tasks.index': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'day.session.show': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
+    'day.journal.show': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'tasks.index': { paramsTuple?: []; params?: {} }
     'tasks.create': { paramsTuple?: []; params?: {} }
     'tasks.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -71,6 +75,7 @@ export type ScannedRoutes = {
   }
   PATCH: {
     'day.session.update': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
+    'day.journal.update': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'tasks.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'goals.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }

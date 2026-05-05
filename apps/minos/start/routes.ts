@@ -53,6 +53,14 @@ router
           })
           .prefix('session')
           .as('session')
+
+        router
+          .group(() => {
+            router.get('', [controllers.Journals, 'show']).as('show')
+            router.patch('', [controllers.Journals, 'update']).as('update')
+          })
+          .prefix('journal')
+          .as('journal')
       })
       .prefix('day/:date')
       .where('date', { match: /^\d{4}-\d{2}-\d{2}$/ })
