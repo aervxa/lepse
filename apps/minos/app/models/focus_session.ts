@@ -1,8 +1,5 @@
 import { FocusSessionSchema } from '#database/schema'
+import { compose } from '@adonisjs/core/helpers'
+import { Day } from './mixins/day.ts'
 
-export default class FocusSession extends FocusSessionSchema {
-  public static async getDay(userId: number, date: string) {
-    // @ts-ignore | SQLite needs a string for searching instead of DateTime
-    return this.firstOrCreate({ userId, date }, { pomoCount: 0, stopwatchMs: 0, date })
-  }
-}
+export default class FocusSession extends compose(FocusSessionSchema, Day) {}
