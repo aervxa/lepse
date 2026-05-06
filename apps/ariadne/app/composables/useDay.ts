@@ -58,7 +58,7 @@ export const useDay = (date?: string) => {
 
   const taskReturns = { dayTasks: filteredDayTasks, fetchDayTasks, createDayTask, destroyDayTask }
 
-  // ─── Session ────────────────────────────────────────────────────────────────
+  // ─── Session ──────────────────────────────────────────────────────────────
 
   const focusSession = useState<Data.FocusSession | undefined>('focusSession', () => undefined)
 
@@ -94,7 +94,39 @@ export const useDay = (date?: string) => {
     updateFocusSession,
   }
 
+  // ─── Journal ──────────────────────────────────────────────────────────────
+
+  const journal = useState<Data.Journal | undefined>('journal', () => undefined)
+
+  const fetchJournal = async () => {
+    const [payload, error] = await $minos.api.day.journal
+      .show({
+        params: { date },
+      })
+      .safe()
+    if (payload) {
+      journal.value = payload.data
+    } else {
+      console.error(error)
+      return error
+    }
+  }
+
+  const updateJournal = async (
+    body: Parameters<typeof $minos.api.day.journal.update>['0']['body']
+  ) => {
+    const [payload, error] = await $minos.api.day.journal.update({ params: { date }, body }).safe()
+    if (payload) {
+      journal.value = payload.data
+    } else {
+      console.error(error)
+      return error
+    }
+  }
+
+  const journalReturns = { journal, fetchJournal, updateJournal }
+
   // ─── Returns ──────────────────────────────────────────────────────────────
 
-  return { ...taskReturns, ...sessionReturns }
+  return { ...taskReturns, ...sessionReturns, ...journalReturns }
 }
