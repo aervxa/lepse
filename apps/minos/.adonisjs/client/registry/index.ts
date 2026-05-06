@@ -72,6 +72,12 @@ const routes = {
     tokens: [{"old":"/api/v1/day/:date/journal","type":0,"val":"api","end":""},{"old":"/api/v1/day/:date/journal","type":0,"val":"v1","end":""},{"old":"/api/v1/day/:date/journal","type":0,"val":"day","end":""},{"old":"/api/v1/day/:date/journal","type":1,"val":"date","end":""},{"old":"/api/v1/day/:date/journal","type":0,"val":"journal","end":""}],
     types: placeholder as Registry['day.journal.update']['types'],
   },
+  'journals.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/journals',
+    tokens: [{"old":"/api/v1/journals","type":0,"val":"api","end":""},{"old":"/api/v1/journals","type":0,"val":"v1","end":""},{"old":"/api/v1/journals","type":0,"val":"journals","end":""}],
+    types: placeholder as Registry['journals.index']['types'],
+  },
   'tasks.index': {
     methods: ["GET","HEAD"],
     pattern: '/api/v1/tasks',

@@ -15,6 +15,7 @@ export type ScannedRoutes = {
     'day.session.update': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'day.journal.show': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'day.journal.update': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
+    'journals.index': { paramsTuple?: []; params?: {} }
     'tasks.index': { paramsTuple?: []; params?: {} }
     'tasks.create': { paramsTuple?: []; params?: {} }
     'tasks.store': { paramsTuple?: []; params?: {} }
@@ -35,6 +36,7 @@ export type ScannedRoutes = {
     'day.tasks.index': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'day.session.show': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'day.journal.show': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
+    'journals.index': { paramsTuple?: []; params?: {} }
     'tasks.index': { paramsTuple?: []; params?: {} }
     'tasks.create': { paramsTuple?: []; params?: {} }
     'tasks.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -49,6 +51,7 @@ export type ScannedRoutes = {
     'day.tasks.index': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'day.session.show': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'day.journal.show': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
+    'journals.index': { paramsTuple?: []; params?: {} }
     'tasks.index': { paramsTuple?: []; params?: {} }
     'tasks.create': { paramsTuple?: []; params?: {} }
     'tasks.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

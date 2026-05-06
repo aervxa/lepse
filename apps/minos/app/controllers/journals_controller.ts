@@ -4,6 +4,13 @@ import JournalTransformer from '#transformers/journal_transformer'
 import { updateJournalValidator } from '#validators/journal'
 
 export default class JournalsController {
+  async index({ auth, serialize }: HttpContext) {
+    const user = auth.getUserOrFail()
+    const journals = await Journal.query().where('userId', user.id)
+
+    return serialize(JournalTransformer.transform(journals))
+  }
+
   async show({ auth, params, serialize }: HttpContext) {
     const session = await Journal.getDay(auth.getUserOrFail().id, params.date as string)
 

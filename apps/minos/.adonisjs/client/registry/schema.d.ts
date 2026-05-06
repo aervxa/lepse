@@ -139,6 +139,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/journals_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'journals.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/journals'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/journals_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/journals_controller').default['index']>>>
+    }
+  }
   'tasks.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/tasks'

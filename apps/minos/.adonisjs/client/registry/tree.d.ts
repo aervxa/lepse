@@ -31,6 +31,9 @@ export interface ApiDefinition {
       update: typeof routes['day.journal.update']
     }
   }
+  journals: {
+    index: typeof routes['journals.index']
+  }
   tasks: {
     index: typeof routes['tasks.index']
     create: typeof routes['tasks.create']
