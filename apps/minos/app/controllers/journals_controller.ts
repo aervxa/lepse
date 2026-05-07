@@ -12,7 +12,7 @@ export default class JournalsController {
   }
 
   async show({ auth, params, serialize }: HttpContext) {
-    const session = await Journal.getDay(auth.getUserOrFail().id, params.date as string)
+    const session = await Journal.getDayOrFail(auth.getUserOrFail().id, params.date as string)
 
     return serialize(JournalTransformer.transform(session))
   }
@@ -20,7 +20,7 @@ export default class JournalsController {
   async update({ request, auth, params, serialize }: HttpContext) {
     const data = await request.validateUsing(updateJournalValidator)
 
-    const session = await Journal.getDay(auth.getUserOrFail().id, params.date as string)
+    const session = await Journal.getDayOrCreate(auth.getUserOrFail().id, params.date as string)
     session.merge(data)
     await session.save()
 

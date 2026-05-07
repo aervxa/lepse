@@ -71,6 +71,11 @@ export const useDay = (date?: string) => {
     if (payload) {
       focusSession.value = payload.data
     } else {
+      // Ignore 404 due to session not existing until update
+      if (error.isStatus(404)) {
+        console.info("404 is expected since session won't exist until first update")
+        return
+      }
       console.error(error)
       return error
     }
@@ -107,6 +112,11 @@ export const useDay = (date?: string) => {
     if (payload) {
       journal.value = payload.data
     } else {
+      // Ignore 404 due to journal not existing until update
+      if (error.isStatus(404)) {
+        console.info("404 is expected since journal won't exist until first update")
+        return
+      }
       console.error(error)
       return error
     }

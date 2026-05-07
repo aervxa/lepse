@@ -5,7 +5,7 @@ import { focusSessionValidator } from '#validators/focus_session'
 
 export default class FocusSessionsController {
   async show({ auth, params, serialize }: HttpContext) {
-    const session = await FocusSession.getDay(auth.getUserOrFail().id, params.date as string)
+    const session = await FocusSession.getDayOrFail(auth.getUserOrFail().id, params.date as string)
 
     return serialize(FocusSessionTransformer.transform(session))
   }
@@ -13,7 +13,10 @@ export default class FocusSessionsController {
   async update({ request, auth, params, serialize }: HttpContext) {
     const data = await request.validateUsing(focusSessionValidator)
 
-    const session = await FocusSession.getDay(auth.getUserOrFail().id, params.date as string)
+    const session = await FocusSession.getDayOrCreate(
+      auth.getUserOrFail().id,
+      params.date as string
+    )
     session.merge(data)
     await session.save()
 
