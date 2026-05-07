@@ -98,31 +98,31 @@ watch(
         </div>
 
         <div class="flex flex-col gap-3">
-          <div v-if="loading" v-for="i in 4" :key="i">
-            <Skeleton class="h-20 w-full rounded-xl" />
-          </div>
-
-          <Empty v-else-if="pastJournals.length === 0" class="border border-dashed">
+          <Empty v-if="pastJournals.length === 0" class="border border-dashed">
             <EmptyDescription class="text-xs">No past entries found.</EmptyDescription>
           </Empty>
 
-          <!-- TODO: Open in modal -->
-          <Item
+          <NuxtLink
             v-else
             v-for="journal in pastJournals"
+            :to="`/app/journal/${getClientDate(journal.date)}`"
             :key="journal.id"
-            :variant="journal.body === null ? 'outline' : 'muted'"
+            class="contents"
           >
-            <ItemContent>
-              <ItemTitle>{{ formatDate(new Date(journal.date || ''), 'MMMM D, YYYY') }}</ItemTitle>
-              <ItemDescription
-                class="line-clamp-2"
-                :class="[journal.body === null && 'opacity-60']"
-              >
-                {{ journal.body ?? 'Empty' }}
-              </ItemDescription>
-            </ItemContent>
-          </Item>
+            <Item :variant="journal.body === null ? 'outline' : 'muted'">
+              <ItemContent>
+                <ItemTitle>{{
+                  formatDate(new Date(journal.date || ''), 'MMMM D, YYYY')
+                }}</ItemTitle>
+                <ItemDescription
+                  class="line-clamp-2"
+                  :class="[journal.body === null && 'opacity-60']"
+                >
+                  {{ journal.body ?? 'Empty' }}
+                </ItemDescription>
+              </ItemContent>
+            </Item>
+          </NuxtLink>
         </div>
       </div>
     </div>
