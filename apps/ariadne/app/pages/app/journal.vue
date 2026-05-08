@@ -101,7 +101,7 @@ watch(
                     :key="m.value"
                     :variant="mood === m.value ? 'secondary' : 'ghost'"
                     size="icon-sm"
-                    @click="mood === m.value ? (mood = 0) : (mood = m.value)"
+                    @click="mood === m.value ? (mood = null) : (mood = m.value)"
                   >
                     <component :is="m.icon" :class="mood === m.value && 'text-green-400'" />
                   </Button>
