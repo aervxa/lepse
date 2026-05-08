@@ -52,7 +52,7 @@ watch(
 <template>
   <div
     v-if="route.meta.nested !== false"
-    class="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-8 overflow-auto p-8"
+    class="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-4 overflow-auto p-8"
   >
     <!-- Header -->
     <div class="flex flex-col">
@@ -60,72 +60,90 @@ watch(
       <p class="text-muted-foreground">Reflect on your day, capture your thoughts.</p>
     </div>
 
-    <div class="flex max-lg:flex-col gap-10">
-      <!-- Today's Entry -->
-      <div class="flex-1 flex flex-col gap-4">
-        <p class="text-lg font-semibold">Today's Entry</p>
+    <Tabs default-value="journal" class="gap-8">
+      <TabsList>
+        <TabsTrigger value="journal"> Journal </TabsTrigger>
+        <TabsTrigger value="scribbles"> Scribbles </TabsTrigger>
+      </TabsList>
 
-        <div class="relative min-h-96 flex">
-          <Skeleton v-if="loading" class="flex-1" />
-          <Textarea
-            v-else
-            v-model="journalBody"
-            placeholder="What's on your mind today?"
-            class="flex-1 p-4"
-            :class="[journalBody.length && 'pb-16']"
-          ></Textarea>
-          <!-- Actions -->
-          <div class="absolute bottom-4 right-4 flex items-end">
-            <!-- TODO: Actions (markdown) -->
-            <Button
-              v-if="journalBody.length"
-              size="sm"
-              @click="saveJournal"
-              :disabled="saving || !journalBodyDirty"
-            >
-              <Save />
-              {{ journalBodyDirty ? 'Save' : 'Saved' }}
-            </Button>
+      <!-- Journal -->
+      <TabsContent value="journal">
+        <div class="flex max-lg:flex-col gap-10">
+          <!-- Today's Entry -->
+          <div class="flex-1 flex flex-col gap-4">
+            <p class="text-lg font-semibold">Today's Entry</p>
+
+            <div class="relative min-h-96 flex">
+              <Skeleton v-if="loading" class="flex-1" />
+              <Textarea
+                v-else
+                v-model="journalBody"
+                placeholder="What's on your mind today?"
+                class="flex-1 p-4"
+                :class="[journalBody.length && 'pb-16']"
+              ></Textarea>
+              <!-- Actions -->
+              <div class="absolute bottom-4 right-4 flex items-end">
+                <!-- TODO: Actions (markdown) -->
+                <Button
+                  v-if="journalBody.length"
+                  size="sm"
+                  @click="saveJournal"
+                  :disabled="saving || !journalBodyDirty"
+                >
+                  <Save />
+                  {{ journalBodyDirty ? 'Save' : 'Saved' }}
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Past Entries -->
+          <div class="lg:basis-64 xl:basis-80 flex flex-col gap-4">
+            <div class="flex items-center gap-2 text-muted-foreground my-[5.5px]">
+              <History class="size-4" />
+              <p class="text-sm uppercase font-bold tracking-wider leading-none">History</p>
+            </div>
+
+            <div class="flex flex-col gap-3">
+              <Empty v-if="pastJournals.length === 0" class="border border-dashed">
+                <EmptyDescription class="text-xs">No past entries found.</EmptyDescription>
+              </Empty>
+
+              <NuxtLink
+                v-else
+                v-for="journal in pastJournals"
+                :to="`/app/journal/${getClientDate(journal.date)}`"
+                :key="journal.id"
+                class="contents"
+              >
+                <Item :variant="journal.body === null ? 'outline' : 'muted'">
+                  <ItemContent>
+                    <ItemTitle>{{
+                      formatDate(new Date(journal.date || ''), 'MMMM D, YYYY')
+                    }}</ItemTitle>
+                    <ItemDescription
+                      class="line-clamp-2"
+                      :class="[journal.body === null && 'opacity-60']"
+                    >
+                      {{ journal.body ?? 'Empty' }}
+                    </ItemDescription>
+                  </ItemContent>
+                </Item>
+              </NuxtLink>
+            </div>
           </div>
         </div>
-      </div>
+      </TabsContent>
 
-      <!-- Past Entries -->
-      <div class="lg:basis-64 xl:basis-80 flex flex-col gap-4">
-        <div class="flex items-center gap-2 text-muted-foreground my-[5.5px]">
-          <History class="size-4" />
-          <p class="text-sm uppercase font-bold tracking-wider leading-none">History</p>
-        </div>
-
-        <div class="flex flex-col gap-3">
-          <Empty v-if="pastJournals.length === 0" class="border border-dashed">
-            <EmptyDescription class="text-xs">No past entries found.</EmptyDescription>
-          </Empty>
-
-          <NuxtLink
-            v-else
-            v-for="journal in pastJournals"
-            :to="`/app/journal/${getClientDate(journal.date)}`"
-            :key="journal.id"
-            class="contents"
-          >
-            <Item :variant="journal.body === null ? 'outline' : 'muted'">
-              <ItemContent>
-                <ItemTitle>{{
-                  formatDate(new Date(journal.date || ''), 'MMMM D, YYYY')
-                }}</ItemTitle>
-                <ItemDescription
-                  class="line-clamp-2"
-                  :class="[journal.body === null && 'opacity-60']"
-                >
-                  {{ journal.body ?? 'Empty' }}
-                </ItemDescription>
-              </ItemContent>
-            </Item>
-          </NuxtLink>
-        </div>
-      </div>
-    </div>
+      <!-- Scribbles -->
+      <TabsContent value="scribbles">
+        <!-- TODO: Scribbles -->
+        <Empty>
+          <EmptyTitle>Scribbles!</EmptyTitle>
+        </Empty>
+      </TabsContent>
+    </Tabs>
   </div>
 
   <NuxtPage />
