@@ -1,11 +1,19 @@
 <script setup lang="ts">
 import { formatDate, useDebounceFn, useLocalStorage } from '@vueuse/core'
-import { History, Save } from 'lucide-vue-next'
+import { Angry, Annoyed, Frown, History, Laugh, Save, Smile } from 'lucide-vue-next'
 import { getClientDate } from '~/lib/utils'
 
 definePageMeta({
   layout: 'app',
 })
+
+const moods = [
+  { value: 1, icon: Angry },
+  { value: 2, icon: Frown },
+  { value: 3, icon: Annoyed },
+  { value: 4, icon: Smile },
+  { value: 5, icon: Laugh },
+]
 
 const today = getClientDate()
 
@@ -21,14 +29,16 @@ const pastJournals = computed(() => {
 
 const loading = ref(true)
 const draft = useLocalStorage('journal_draft', '')
-const journalBody = ref(draft.value ?? '')
-const journalBodyDirty = computed(() => journalBody.value !== journal.value?.body)
+const body = ref(draft.value ?? '')
+const mood = ref<number | null>(null)
+const dirty = computed(
+  () => body.value !== journal.value?.body || (mood.value && mood.value !== journal.value?.mood)
+)
 const saving = ref(false)
 
 const saveJournal = () => {
-  if (!journalBody.value) return
   saving.value = true
-  updateJournal({ body: journalBody.value }).then(() => {
+  updateJournal({ body: body.value, mood: mood.value }).then(() => {
     draft.value = ''
     saving.value = false
   })
@@ -37,13 +47,14 @@ const saveJournal = () => {
 onMounted(async () => {
   await fetchJournal()
   loading.value = false
-  // Update journalBody only if there's no draft (more inportant) and journal body exists
-  if (!draft.value && journal.value?.body) journalBody.value = journal.value.body
+  // Update body only if there's no draft (more inportant) and journal body exists
+  if (!draft.value && journal.value?.body) body.value = journal.value.body
+  if (journal.value?.mood) mood.value = journal.value.mood
 })
 watch(
-  journalBody,
+  body,
   useDebounceFn((val) => {
-    if (journalBodyDirty.value) draft.value = val
+    if (dirty.value) draft.value = val
     else draft.value = ''
   }, 500)
 )
@@ -77,22 +88,32 @@ watch(
               <Skeleton v-if="loading" class="flex-1" />
               <Textarea
                 v-else
-                v-model="journalBody"
+                v-model="body"
                 placeholder="What's on your mind today?"
                 class="flex-1 p-4"
-                :class="[journalBody.length && 'pb-16']"
+                :class="[body.length && 'pb-16']"
               ></Textarea>
               <!-- Actions -->
-              <div class="absolute bottom-4 right-4 flex items-end">
-                <!-- TODO: Actions (markdown) -->
+              <div class="absolute bottom-4 left-4 right-4 flex justify-between">
+                <div class="flex gap-1.">
+                  <Button
+                    v-for="m in moods"
+                    :key="m.value"
+                    :variant="mood === m.value ? 'secondary' : 'ghost'"
+                    size="icon-sm"
+                    @click="mood === m.value ? (mood = 0) : (mood = m.value)"
+                  >
+                    <component :is="m.icon" :class="mood === m.value && 'text-green-400'" />
+                  </Button>
+                </div>
                 <Button
-                  v-if="journalBody.length"
+                  v-if="dirty || body.length"
                   size="sm"
                   @click="saveJournal"
-                  :disabled="saving || !journalBodyDirty"
+                  :disabled="saving || !dirty"
                 >
                   <Save />
-                  {{ journalBodyDirty ? 'Save' : 'Saved' }}
+                  {{ dirty ? 'Save' : 'Saved' }}
                 </Button>
               </div>
             </div>
