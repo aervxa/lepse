@@ -16,7 +16,7 @@ const journal = computed(() =>
 
 <template>
   <Dialog :open="true" @update:open="useRouter().back()">
-    <DialogContent class="sm:max-w-2xl max-h-[80vh] flex flex-col">
+    <DialogContent class="sm:max-w-xl max-h-[80vh] flex flex-col">
       <DialogHeader>
         <DialogTitle class="text-lg">
           {{ formatDate(new Date(route.params.date as string), 'dddd, MMMM D, YYYY') }}
