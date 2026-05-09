@@ -6,7 +6,7 @@ export default class extends BaseSchema {
   async up() {
     this.schema.alterTable(this.tableName, (table) => {
       table.integer('goal_id').unsigned().nullable()
-      table.foreign('goal_id').references('goals.id').onDelete('CASCADE')
+      table.foreign('goal_id').references('goals.id').onDelete('SET NULL')
     })
   }
 
