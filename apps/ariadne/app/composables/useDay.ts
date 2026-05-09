@@ -32,14 +32,11 @@ export const useDay = (date?: string) => {
   const createDayTask = async (
     body: Parameters<typeof $minos.api.day.tasks.store>['0']['body']
   ) => {
-    console.log('doing')
     // Don't create if already exists for the same date
     if (dayTasks.value.some((dt) => dt.taskId === body.taskId && dt.date === date)) return
-    console.log('doing')
 
     const [payload, error] = await $minos.api.day.tasks.store({ params: { date }, body }).safe()
     if (payload) {
-      console.log(payload)
       dayTasks.value.push(payload.data)
     } else {
       console.error(error)
