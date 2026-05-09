@@ -58,7 +58,7 @@ export default class TasksController {
   /**
    * Handle form submission for the edit action
    */
-  async update({ params, request, bouncer, serialize }: HttpContext) {
+  async update({ params, request, bouncer, clientDate, serialize }: HttpContext) {
     const task = await Task.findOrFail(params.id)
     await bouncer.with(TaskPolicy).authorize('update', task)
 
@@ -67,7 +67,6 @@ export default class TasksController {
     await task.save()
 
     // Update the day task of the client's date if provided
-    const clientDate = request.header('x-client-date')
     if (clientDate && task.$dirty.status) {
       await TaskDay.query()
         .where('taskId', task.id)

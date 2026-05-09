@@ -69,7 +69,7 @@ router
         // Have index (listing) have it's own endpoint since it doesn't belong in a specific date
         router.get('journals', [controllers.Journals, 'index'])
 
-        router.resource('tasks', controllers.Tasks)
+        router.resource('tasks', controllers.Tasks).use(['update'], middleware.clientDate())
         router.resource('goals', controllers.Goals)
       })
       .use(middleware.auth())
