@@ -30,6 +30,24 @@ export default defineNuxtConfig({
   },
   ssr: false,
   vite: {
+    optimizeDeps: {
+      include: [
+        'vee-validate',
+        'zod',
+        '@vee-validate/zod',
+        'reka-ui/date',
+        '@vue/devtools-core',
+        '@vue/devtools-kit',
+        'clsx',
+        'tailwind-merge',
+        '@tuyau/core/client',
+        'lucide-vue-next',
+        'class-variance-authority',
+        '@vueuse/core',
+        'reka-ui',
+        '@internationalized/date',
+      ],
+    },
     plugins: [tailwindcss()],
   },
 })
