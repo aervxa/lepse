@@ -319,4 +319,88 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/goals_controller').default['destroy']>>>
     }
   }
+  'scribbles.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/scribbles'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['index']>>>
+    }
+  }
+  'scribbles.create': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/scribbles/create'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['create']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['create']>>>
+    }
+  }
+  'scribbles.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/scribbles'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/scribble').createScribbleValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/scribble').createScribbleValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'scribbles.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/scribbles/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['show']>>>
+    }
+  }
+  'scribbles.edit': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/scribbles/:id/edit'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['edit']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['edit']>>>
+    }
+  }
+  'scribbles.update': {
+    methods: ["PUT","PATCH"]
+    pattern: '/api/v1/scribbles/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/scribble').updateScribbleValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/scribble').updateScribbleValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'scribbles.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/scribbles/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['destroy']>>>
+    }
+  }
 }

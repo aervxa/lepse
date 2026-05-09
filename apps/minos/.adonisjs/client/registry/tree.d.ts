@@ -52,4 +52,13 @@ export interface ApiDefinition {
     update: typeof routes['goals.update']
     destroy: typeof routes['goals.destroy']
   }
+  scribbles: {
+    index: typeof routes['scribbles.index']
+    create: typeof routes['scribbles.create']
+    store: typeof routes['scribbles.store']
+    show: typeof routes['scribbles.show']
+    edit: typeof routes['scribbles.edit']
+    update: typeof routes['scribbles.update']
+    destroy: typeof routes['scribbles.destroy']
+  }
 }

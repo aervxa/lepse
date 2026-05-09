@@ -162,6 +162,48 @@ const routes = {
     tokens: [{"old":"/api/v1/goals/:id","type":0,"val":"api","end":""},{"old":"/api/v1/goals/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/goals/:id","type":0,"val":"goals","end":""},{"old":"/api/v1/goals/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['goals.destroy']['types'],
   },
+  'scribbles.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/scribbles',
+    tokens: [{"old":"/api/v1/scribbles","type":0,"val":"api","end":""},{"old":"/api/v1/scribbles","type":0,"val":"v1","end":""},{"old":"/api/v1/scribbles","type":0,"val":"scribbles","end":""}],
+    types: placeholder as Registry['scribbles.index']['types'],
+  },
+  'scribbles.create': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/scribbles/create',
+    tokens: [{"old":"/api/v1/scribbles/create","type":0,"val":"api","end":""},{"old":"/api/v1/scribbles/create","type":0,"val":"v1","end":""},{"old":"/api/v1/scribbles/create","type":0,"val":"scribbles","end":""},{"old":"/api/v1/scribbles/create","type":0,"val":"create","end":""}],
+    types: placeholder as Registry['scribbles.create']['types'],
+  },
+  'scribbles.store': {
+    methods: ["POST"],
+    pattern: '/api/v1/scribbles',
+    tokens: [{"old":"/api/v1/scribbles","type":0,"val":"api","end":""},{"old":"/api/v1/scribbles","type":0,"val":"v1","end":""},{"old":"/api/v1/scribbles","type":0,"val":"scribbles","end":""}],
+    types: placeholder as Registry['scribbles.store']['types'],
+  },
+  'scribbles.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/scribbles/:id',
+    tokens: [{"old":"/api/v1/scribbles/:id","type":0,"val":"api","end":""},{"old":"/api/v1/scribbles/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/scribbles/:id","type":0,"val":"scribbles","end":""},{"old":"/api/v1/scribbles/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['scribbles.show']['types'],
+  },
+  'scribbles.edit': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/scribbles/:id/edit',
+    tokens: [{"old":"/api/v1/scribbles/:id/edit","type":0,"val":"api","end":""},{"old":"/api/v1/scribbles/:id/edit","type":0,"val":"v1","end":""},{"old":"/api/v1/scribbles/:id/edit","type":0,"val":"scribbles","end":""},{"old":"/api/v1/scribbles/:id/edit","type":1,"val":"id","end":""},{"old":"/api/v1/scribbles/:id/edit","type":0,"val":"edit","end":""}],
+    types: placeholder as Registry['scribbles.edit']['types'],
+  },
+  'scribbles.update': {
+    methods: ["PUT","PATCH"],
+    pattern: '/api/v1/scribbles/:id',
+    tokens: [{"old":"/api/v1/scribbles/:id","type":0,"val":"api","end":""},{"old":"/api/v1/scribbles/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/scribbles/:id","type":0,"val":"scribbles","end":""},{"old":"/api/v1/scribbles/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['scribbles.update']['types'],
+  },
+  'scribbles.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/scribbles/:id',
+    tokens: [{"old":"/api/v1/scribbles/:id","type":0,"val":"api","end":""},{"old":"/api/v1/scribbles/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/scribbles/:id","type":0,"val":"scribbles","end":""},{"old":"/api/v1/scribbles/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['scribbles.destroy']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

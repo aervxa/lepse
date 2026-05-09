@@ -10,6 +10,7 @@ export const controllers = {
   Journals: () => import('#controllers/journals_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
   Profile: () => import('#controllers/profile_controller'),
+  Scribbles: () => import('#controllers/scribbles_controller'),
   TaskDays: () => import('#controllers/task_days_controller'),
   Tasks: () => import('#controllers/tasks_controller'),
 }

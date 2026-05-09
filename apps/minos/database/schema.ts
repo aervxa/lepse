@@ -89,6 +89,23 @@ export class JournalSchema extends BaseModel {
   declare userId: number
 }
 
+export class ScribbleSchema extends BaseModel {
+  static $columns = ['body', 'createdAt', 'id', 'title', 'updatedAt', 'userId'] as const
+  $columns = ScribbleSchema.$columns
+  @column()
+  declare body: string | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare title: string | null
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
+}
+
 export class TaskDaySchema extends BaseModel {
   static $columns = ['createdAt', 'date', 'id', 'status', 'taskId', 'updatedAt', 'userId'] as const
   $columns = TaskDaySchema.$columns

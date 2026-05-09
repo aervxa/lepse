@@ -11,6 +11,8 @@ import { middleware } from '#start/kernel'
 import router from '@adonisjs/core/services/router'
 import { controllers } from '#generated/controllers'
 
+const ScribblesController = () => import('#controllers/scribbles_controller')
+
 router.get('/', () => {
   return { hello: 'world' }
 })
@@ -71,6 +73,7 @@ router
 
         router.resource('tasks', controllers.Tasks).use(['update'], middleware.clientDate())
         router.resource('goals', controllers.Goals)
+        router.resource('scribbles', ScribblesController)
       })
       .use(middleware.auth())
   })
