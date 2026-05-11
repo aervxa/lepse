@@ -25,7 +25,7 @@ const journal = computed(() =>
       </DialogHeader>
 
       <div class="flex min-h-48">
-        <div v-if="journal?.body" class="sm:text-lg leading-relaxed">
+        <div v-if="journal?.body" class="text-base leading-relaxed whitespace-pre-wrap">
           {{ journal.body }}
         </div>
         <Empty v-else class="border border-dashed">

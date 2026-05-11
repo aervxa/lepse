@@ -1,13 +1,19 @@
 <script setup lang="ts">
-import { formatDate, useDebounceFn, useLocalStorage } from '@vueuse/core'
-import { Angry, Annoyed, Frown, History, Laugh, Save, Smile } from 'lucide-vue-next'
+import { formatDate, formatTimeAgo, useDebounceFn, useLocalStorage } from '@vueuse/core'
+import { Angry, Annoyed, Frown, History, Laugh, Plus, Save, Smile } from 'lucide-vue-next'
 import { getClientDate } from '~/lib/utils'
 
 definePageMeta({
   layout: 'app',
 })
 
-const moods = [
+const route = useRoute()
+
+const tab = ref<'journal' | 'scribbles'>(route.path.includes('scribbles') ? 'scribbles' : 'journal')
+
+// ─── Journal ────────────────────────────────────────────────────────────────
+
+const MOODS = [
   { value: 1, icon: Angry },
   { value: 2, icon: Frown },
   { value: 3, icon: Annoyed },
@@ -16,15 +22,13 @@ const moods = [
 ]
 
 const today = getClientDate()
-
-const route = useRoute()
 const { journal, fetchJournal, updateJournal } = useDay(today)
 const { journals } = useJournal()
 
 const pastJournals = computed(() => {
   return journals.value
     .filter((j) => !j.date?.startsWith(today))
-    .sort((a, b) => (b.date || '').localeCompare(a.date || ''))
+    .toSorted((a, b) => (b.date || '').localeCompare(a.date || ''))
 })
 
 const loading = ref(true)
@@ -58,6 +62,14 @@ watch(
     else draft.value = ''
   }, 500)
 )
+
+// ─── Scribbles ──────────────────────────────────────────────────────────────
+
+const { scribbles } = useScribbles()
+
+const sortedScribbles = computed(() =>
+  scribbles.value.toSorted((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''))
+)
 </script>
 
 <template>
@@ -66,15 +78,30 @@ watch(
     class="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-4 overflow-auto p-8"
   >
     <!-- Header -->
-    <div class="flex flex-col">
-      <p class="text-3xl font-bold">Journal</p>
-      <p class="text-muted-foreground">Reflect on your day, capture your thoughts.</p>
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-3xl font-bold">Journal</p>
+        <p class="text-muted-foreground">Reflect on your day, capture your thoughts.</p>
+      </div>
+      <Button v-if="tab === 'scribbles'" as-child>
+        <NuxtLink to="/app/journal/scribbles/create">
+          <Plus />
+          New Scribble
+        </NuxtLink>
+      </Button>
     </div>
 
-    <Tabs default-value="journal" class="gap-8">
+    <Tabs
+      v-model="tab"
+      @update:model-value="
+        (tab) =>
+          tab === 'journal' ? navigateTo('/app/journal') : navigateTo('/app/journal/scribbles')
+      "
+      class="gap-8"
+    >
       <TabsList>
-        <TabsTrigger value="journal"> Journal </TabsTrigger>
-        <TabsTrigger value="scribbles"> Scribbles </TabsTrigger>
+        <TabsTrigger value="journal">Journal</TabsTrigger>
+        <TabsTrigger value="scribbles">Scribbles</TabsTrigger>
       </TabsList>
 
       <!-- Journal -->
@@ -97,7 +124,7 @@ watch(
               <div class="absolute bottom-4 left-4 right-4 flex justify-between">
                 <div class="flex gap-1.">
                   <Button
-                    v-for="m in moods"
+                    v-for="m in MOODS"
                     :key="m.value"
                     :variant="mood === m.value ? 'secondary' : 'ghost'"
                     size="icon-sm"
@@ -138,14 +165,14 @@ watch(
                 :key="journal.id"
                 class="contents"
               >
-                <Item :variant="journal.body === null ? 'outline' : 'muted'">
+                <Item :variant="journal.body ? 'muted' : 'outline'">
                   <ItemContent>
-                    <ItemTitle>{{
-                      formatDate(new Date(journal.date || ''), 'MMMM D, YYYY')
-                    }}</ItemTitle>
+                    <ItemTitle>
+                      {{ formatDate(new Date(journal.date || ''), 'MMMM D, YYYY') }}
+                    </ItemTitle>
                     <ItemDescription
-                      class="line-clamp-2"
-                      :class="[journal.body === null && 'opacity-60']"
+                      class="line-clamp-2 whitespace-pre-wrap"
+                      :class="[!journal.body && 'opacity-60']"
                     >
                       {{ journal.body ?? 'Empty' }}
                     </ItemDescription>
@@ -159,10 +186,48 @@ watch(
 
       <!-- Scribbles -->
       <TabsContent value="scribbles">
-        <!-- TODO: Scribbles -->
-        <Empty>
-          <EmptyTitle>Scribbles!</EmptyTitle>
-        </Empty>
+        <div class="flex max-lg:flex-col gap-10">
+          <!-- Scribbles -->
+          <div class="flex-1 flex flex-col gap-4">
+            <p class="text-lg font-semibold">Scribbles</p>
+
+            <div class="flex flex-col gap-3 max-w-lg">
+              <Empty v-if="sortedScribbles.length === 0" class="border border-dashed">
+                <EmptyHeader>
+                  <EmptyTitle>No scribbles yet</EmptyTitle>
+                  <EmptyDescription>
+                    Start a note whenever you need to catch a passing thought.
+                  </EmptyDescription>
+                </EmptyHeader>
+              </Empty>
+
+              <NuxtLink
+                v-else
+                v-for="scribble in sortedScribbles"
+                :key="scribble.id"
+                :to="`/app/journal/scribbles/${scribble.id}`"
+                class="contents"
+              >
+                <Item :variant="scribble.body ? 'muted' : 'outline'">
+                  <ItemContent>
+                    <ItemTitle>{{ scribble.title || 'Untitled' }}</ItemTitle>
+                    <ItemDescription
+                      class="line-clamp-2 whitespace-pre-wrap"
+                      :class="[!scribble.body && 'opacity-60']"
+                    >
+                      {{ scribble.body || 'Empty' }}
+                    </ItemDescription>
+                  </ItemContent>
+                  <ItemFooter>
+                    <p class="text-xs text-muted-foreground/80">
+                      Last updated {{ formatTimeAgo(new Date(scribble.updatedAt || '')) }}
+                    </p>
+                  </ItemFooter>
+                </Item>
+              </NuxtLink>
+            </div>
+          </div>
+        </div>
       </TabsContent>
     </Tabs>
   </div>

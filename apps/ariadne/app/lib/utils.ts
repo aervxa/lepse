@@ -17,3 +17,14 @@ export function getClientDate(date?: string | null) {
   const dd = String(d.getDate()).padStart(2, '0')
   return `${yyyy}-${mm}-${dd}`
 }
+
+export function navigateBack() {
+  navigateTo(
+    '/' +
+      useRoute()
+        .path.split('/')
+        .filter(Boolean) // removes empty strings from the arr due to trailing slashes
+        .slice(0, -1) // remove the last segment (to go back)
+        .join('/')
+  )
+}
