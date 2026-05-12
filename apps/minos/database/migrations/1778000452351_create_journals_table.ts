@@ -9,7 +9,7 @@ export default class extends BaseSchema {
 
       table.integer('user_id').unsigned().notNullable().references('users.id').onDelete('CASCADE')
       table.date('date').notNullable()
-      table.string('body').nullable()
+      table.text('body').nullable()
       table.integer('mood').checkBetween([1, 5]).nullable()
 
       table.unique(['user_id', 'date'])
