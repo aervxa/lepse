@@ -70,6 +70,52 @@ export class GoalSchema extends BaseModel {
   declare userId: number
 }
 
+export class HabitPeriodSchema extends BaseModel {
+  static $columns = ['completed', 'count', 'createdAt', 'end', 'habitId', 'id', 'start', 'updatedAt', 'userId'] as const
+  $columns = HabitPeriodSchema.$columns
+  @column()
+  declare completed: boolean
+  @column()
+  declare count: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column.date()
+  declare end: DateTime
+  @column()
+  declare habitId: number
+  @column({ isPrimary: true })
+  declare id: number
+  @column.date()
+  declare start: DateTime
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
+}
+
+export class HabitSchema extends BaseModel {
+  static $columns = ['createdAt', 'description', 'frequency', 'id', 'name', 'reminders', 'target', 'updatedAt', 'userId'] as const
+  $columns = HabitSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column()
+  declare description: string | null
+  @column()
+  declare frequency: string
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare name: string
+  @column()
+  declare reminders: any
+  @column()
+  declare target: number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
+}
+
 export class JournalSchema extends BaseModel {
   static $columns = ['body', 'createdAt', 'date', 'id', 'mood', 'updatedAt', 'userId'] as const
   $columns = JournalSchema.$columns

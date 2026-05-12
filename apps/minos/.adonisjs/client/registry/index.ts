@@ -204,6 +204,60 @@ const routes = {
     tokens: [{"old":"/api/v1/scribbles/:id","type":0,"val":"api","end":""},{"old":"/api/v1/scribbles/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/scribbles/:id","type":0,"val":"scribbles","end":""},{"old":"/api/v1/scribbles/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['scribbles.destroy']['types'],
   },
+  'habits.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/habits',
+    tokens: [{"old":"/api/v1/habits","type":0,"val":"api","end":""},{"old":"/api/v1/habits","type":0,"val":"v1","end":""},{"old":"/api/v1/habits","type":0,"val":"habits","end":""}],
+    types: placeholder as Registry['habits.index']['types'],
+  },
+  'habits.create': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/habits/create',
+    tokens: [{"old":"/api/v1/habits/create","type":0,"val":"api","end":""},{"old":"/api/v1/habits/create","type":0,"val":"v1","end":""},{"old":"/api/v1/habits/create","type":0,"val":"habits","end":""},{"old":"/api/v1/habits/create","type":0,"val":"create","end":""}],
+    types: placeholder as Registry['habits.create']['types'],
+  },
+  'habits.store': {
+    methods: ["POST"],
+    pattern: '/api/v1/habits',
+    tokens: [{"old":"/api/v1/habits","type":0,"val":"api","end":""},{"old":"/api/v1/habits","type":0,"val":"v1","end":""},{"old":"/api/v1/habits","type":0,"val":"habits","end":""}],
+    types: placeholder as Registry['habits.store']['types'],
+  },
+  'habits.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/habits/:id',
+    tokens: [{"old":"/api/v1/habits/:id","type":0,"val":"api","end":""},{"old":"/api/v1/habits/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/habits/:id","type":0,"val":"habits","end":""},{"old":"/api/v1/habits/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['habits.show']['types'],
+  },
+  'habits.edit': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/habits/:id/edit',
+    tokens: [{"old":"/api/v1/habits/:id/edit","type":0,"val":"api","end":""},{"old":"/api/v1/habits/:id/edit","type":0,"val":"v1","end":""},{"old":"/api/v1/habits/:id/edit","type":0,"val":"habits","end":""},{"old":"/api/v1/habits/:id/edit","type":1,"val":"id","end":""},{"old":"/api/v1/habits/:id/edit","type":0,"val":"edit","end":""}],
+    types: placeholder as Registry['habits.edit']['types'],
+  },
+  'habits.update': {
+    methods: ["PUT","PATCH"],
+    pattern: '/api/v1/habits/:id',
+    tokens: [{"old":"/api/v1/habits/:id","type":0,"val":"api","end":""},{"old":"/api/v1/habits/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/habits/:id","type":0,"val":"habits","end":""},{"old":"/api/v1/habits/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['habits.update']['types'],
+  },
+  'habits.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/habits/:id',
+    tokens: [{"old":"/api/v1/habits/:id","type":0,"val":"api","end":""},{"old":"/api/v1/habits/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/habits/:id","type":0,"val":"habits","end":""},{"old":"/api/v1/habits/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['habits.destroy']['types'],
+  },
+  'habits.increment': {
+    methods: ["PATCH"],
+    pattern: '/api/v1/habits/:id/increment',
+    tokens: [{"old":"/api/v1/habits/:id/increment","type":0,"val":"api","end":""},{"old":"/api/v1/habits/:id/increment","type":0,"val":"v1","end":""},{"old":"/api/v1/habits/:id/increment","type":0,"val":"habits","end":""},{"old":"/api/v1/habits/:id/increment","type":1,"val":"id","end":""},{"old":"/api/v1/habits/:id/increment","type":0,"val":"increment","end":""}],
+    types: placeholder as Registry['habits.increment']['types'],
+  },
+  'habits.decrement': {
+    methods: ["PATCH"],
+    pattern: '/api/v1/habits/:id/decrement',
+    tokens: [{"old":"/api/v1/habits/:id/decrement","type":0,"val":"api","end":""},{"old":"/api/v1/habits/:id/decrement","type":0,"val":"v1","end":""},{"old":"/api/v1/habits/:id/decrement","type":0,"val":"habits","end":""},{"old":"/api/v1/habits/:id/decrement","type":1,"val":"id","end":""},{"old":"/api/v1/habits/:id/decrement","type":0,"val":"decrement","end":""}],
+    types: placeholder as Registry['habits.decrement']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

@@ -7,6 +7,8 @@
 import type { InferData, InferVariants } from '@adonisjs/core/types/transformers'
 import type FocusSessionTransformer from '#transformers/focus_session_transformer'
 import type GoalTransformer from '#transformers/goal_transformer'
+import type HabitPeriodTransformer from '#transformers/habit_period_transformer'
+import type HabitTransformer from '#transformers/habit_transformer'
 import type JournalTransformer from '#transformers/journal_transformer'
 import type ScribbleTransformer from '#transformers/scribble_transformer'
 import type TaskDayTransformer from '#transformers/task_day_transformer'
@@ -21,6 +23,14 @@ export namespace Data {
   export type Goal = InferData<GoalTransformer>
   export namespace Goal {
     export type Variants = InferVariants<GoalTransformer>
+  }
+  export type HabitPeriod = InferData<HabitPeriodTransformer>
+  export namespace HabitPeriod {
+    export type Variants = InferVariants<HabitPeriodTransformer>
+  }
+  export type Habit = InferData<HabitTransformer>
+  export namespace Habit {
+    export type Variants = InferVariants<HabitTransformer>
   }
   export type Journal = InferData<JournalTransformer>
   export namespace Journal {

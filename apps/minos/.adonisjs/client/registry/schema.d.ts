@@ -403,4 +403,112 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['destroy']>>>
     }
   }
+  'habits.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/habits'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'habits.create': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/habits/create'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'habits.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/habits'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'habits.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/habits/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'habits.edit': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/habits/:id/edit'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'habits.update': {
+    methods: ["PUT","PATCH"]
+    pattern: '/api/v1/habits/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'habits.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/habits/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'habits.increment': {
+    methods: ["PATCH"]
+    pattern: '/api/v1/habits/:id/increment'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/habit_periods_controller').default['increment']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/habit_periods_controller').default['increment']>>>
+    }
+  }
+  'habits.decrement': {
+    methods: ["PATCH"]
+    pattern: '/api/v1/habits/:id/decrement'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/habit_periods_controller').default['decrement']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/habit_periods_controller').default['decrement']>>>
+    }
+  }
 }

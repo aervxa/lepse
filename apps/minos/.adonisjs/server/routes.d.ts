@@ -37,6 +37,15 @@ export type ScannedRoutes = {
     'scribbles.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'scribbles.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'scribbles.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'habits.index': { paramsTuple?: []; params?: {} }
+    'habits.create': { paramsTuple?: []; params?: {} }
+    'habits.store': { paramsTuple?: []; params?: {} }
+    'habits.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'habits.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'habits.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'habits.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'habits.increment': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'habits.decrement': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   GET: {
     'account.profile.show': { paramsTuple?: []; params?: {} }
@@ -56,6 +65,10 @@ export type ScannedRoutes = {
     'scribbles.create': { paramsTuple?: []; params?: {} }
     'scribbles.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'scribbles.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'habits.index': { paramsTuple?: []; params?: {} }
+    'habits.create': { paramsTuple?: []; params?: {} }
+    'habits.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'habits.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   HEAD: {
     'account.profile.show': { paramsTuple?: []; params?: {} }
@@ -75,6 +88,10 @@ export type ScannedRoutes = {
     'scribbles.create': { paramsTuple?: []; params?: {} }
     'scribbles.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'scribbles.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'habits.index': { paramsTuple?: []; params?: {} }
+    'habits.create': { paramsTuple?: []; params?: {} }
+    'habits.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'habits.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   POST: {
     'auth.new_account.store': { paramsTuple?: []; params?: {} }
@@ -84,12 +101,14 @@ export type ScannedRoutes = {
     'tasks.store': { paramsTuple?: []; params?: {} }
     'goals.store': { paramsTuple?: []; params?: {} }
     'scribbles.store': { paramsTuple?: []; params?: {} }
+    'habits.store': { paramsTuple?: []; params?: {} }
   }
   DELETE: {
     'day.tasks.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'date': ParamValue,'id': ParamValue} }
     'tasks.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'goals.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'scribbles.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'habits.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   PATCH: {
     'day.session.update': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
@@ -97,11 +116,15 @@ export type ScannedRoutes = {
     'tasks.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'goals.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'scribbles.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'habits.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'habits.increment': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'habits.decrement': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   PUT: {
     'tasks.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'goals.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'scribbles.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'habits.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

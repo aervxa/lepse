@@ -61,4 +61,15 @@ export interface ApiDefinition {
     update: typeof routes['scribbles.update']
     destroy: typeof routes['scribbles.destroy']
   }
+  habits: {
+    index: typeof routes['habits.index']
+    create: typeof routes['habits.create']
+    store: typeof routes['habits.store']
+    show: typeof routes['habits.show']
+    edit: typeof routes['habits.edit']
+    update: typeof routes['habits.update']
+    destroy: typeof routes['habits.destroy']
+    increment: typeof routes['habits.increment']
+    decrement: typeof routes['habits.decrement']
+  }
 }
