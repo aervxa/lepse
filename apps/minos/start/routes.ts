@@ -10,9 +10,6 @@
 import { middleware } from '#start/kernel'
 import router from '@adonisjs/core/services/router'
 import { controllers } from '#generated/controllers'
-import HabitsController from '#controllers/habits_controller'
-
-const ScribblesController = () => import('#controllers/scribbles_controller')
 
 router.get('/', () => {
   return { hello: 'world' }
@@ -74,9 +71,9 @@ router
 
         router.resource('tasks', controllers.Tasks).use(['update'], middleware.clientDate())
         router.resource('goals', controllers.Goals)
-        router.resource('scribbles', ScribblesController)
+        router.resource('scribbles', controllers.Scribbles)
 
-        router.resource('habits', HabitsController)
+        router.resource('habits', controllers.Habits)
         router
           .group(() => {
             router.patch('increment', [controllers.HabitPeriods, 'increment']).as('increment')
