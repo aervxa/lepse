@@ -3,6 +3,8 @@ import Habit from '#models/habit'
 import HabitPolicy from '#policies/habit_policy'
 import HabitTransformer from '#transformers/habit_transformer'
 import { createHabitValidator, updateHabitValidator } from '#validators/habit'
+import HabitPeriod from '#models/habit_period'
+import db from '@adonisjs/lucid/services/db'
 
 export default class HabitsController {
   /**
@@ -54,12 +56,19 @@ export default class HabitsController {
   /**
    * Handle form submission for the edit action
    */
-  async update({ params, request, bouncer, serialize }: HttpContext) {
+  async update({ params, request, bouncer, clientDate, serialize }: HttpContext) {
     const habit = await Habit.findOrFail(params.id)
     await bouncer.with(HabitPolicy).authorize('update', habit)
 
     const payload = await request.validateUsing(updateHabitValidator)
     habit.merge(payload)
+
+    // Update only current habit_period.completed if target changes
+    if (clientDate && habit.$dirty.target) {
+      const hp = await HabitPeriod.getPeriod(habit, clientDate)
+      hp?.updateCount(0, habit.target)
+    }
+
     await habit.save()
 
     return serialize(HabitTransformer.transform(habit))

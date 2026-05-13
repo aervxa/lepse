@@ -73,7 +73,7 @@ router
         router.resource('goals', controllers.Goals)
         router.resource('scribbles', controllers.Scribbles)
 
-        router.resource('habits', controllers.Habits)
+        router.resource('habits', controllers.Habits).use(['update'], middleware.clientDate())
         router
           .group(() => {
             router.patch('increment', [controllers.HabitPeriods, 'increment']).as('increment')

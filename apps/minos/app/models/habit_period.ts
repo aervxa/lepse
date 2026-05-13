@@ -29,20 +29,26 @@ export default class HabitPeriod extends HabitPeriodSchema {
     return { start, end }
   }
 
-  public static async getPeriodOrCreate(userId: number, habit: Habit, clientDate: string) {
+  public static async getPeriod(habit: Habit, clientDate: string) {
     const { start, end } = this.#getPeriodRange(clientDate, habit.frequency)
 
-    const payload = { userId, habitId: habit.id, start, end } as any
+    return this.query().where({ habitId: habit.id, start, end }).first()
+  }
+
+  public static async getPeriodOrCreate(habit: Habit, clientDate: string) {
+    const { start, end } = this.#getPeriodRange(clientDate, habit.frequency)
+
+    const payload = { habitId: habit.id, start, end } as any
     return this.firstOrCreate(payload, payload)
   }
 
-  public static async getPeriodOrFail(userId: number, habit: Habit, clientDate: string) {
+  public static async getPeriodOrFail(habit: Habit, clientDate: string) {
     const { start, end } = this.#getPeriodRange(clientDate, habit.frequency)
 
-    return this.query().where({ userId, habitId: habit.id, start, end }).firstOrFail()
+    return this.query().where({ habitId: habit.id, start, end }).firstOrFail()
   }
 
-  async updateCount(delta: 1 | -1, target: number) {
+  async updateCount(delta: 0 | 1 | -1, target: number) {
     this.count = Math.max(0, this.count + delta)
     this.completed = this.count >= target
   }

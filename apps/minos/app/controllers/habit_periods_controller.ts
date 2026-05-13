@@ -6,12 +6,11 @@ import type { HttpContext } from '@adonisjs/core/http'
 
 export default class HabitPeriodController {
   // Helper for increment and decrement
-  async #updateCount({ auth, params, bouncer, clientDate, serialize }: HttpContext, delta: 1 | -1) {
-    const user = auth.getUserOrFail()
+  async #updateCount({ params, bouncer, clientDate, serialize }: HttpContext, delta: 1 | -1) {
     const habit = await Habit.findOrFail(params.id)
     await bouncer.with(HabitPeriodPolicy).authorize('update', habit)
 
-    const habitPeriod = await HabitPeriod.getPeriodOrCreate(user.id, habit, clientDate!)
+    const habitPeriod = await HabitPeriod.getPeriodOrCreate(habit, clientDate!)
     habitPeriod.updateCount(delta, habit.target)
     await habitPeriod.save()
 
@@ -26,11 +25,10 @@ export default class HabitPeriodController {
     return this.#updateCount(ctx, -1)
   }
 
-  async count({ auth, params, bouncer, clientDate, serialize }: HttpContext) {
-    const user = auth.getUserOrFail()
+  async count({ params, bouncer, clientDate, serialize }: HttpContext) {
     const habit = await Habit.findOrFail(params.id)
     await bouncer.with(HabitPeriodPolicy).authorize('show', habit)
-    const habitPeriod = await HabitPeriod.getPeriodOrFail(user.id, habit, clientDate!)
+    const habitPeriod = await HabitPeriod.getPeriodOrFail(habit, clientDate!)
 
     return serialize(HabitPeriodTransformer.transform(habitPeriod))
   }
