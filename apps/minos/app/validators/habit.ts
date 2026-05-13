@@ -5,7 +5,7 @@ export const createHabitValidator = vine.create(
     name: vine.string().minLength(1).maxLength(255).trim(),
     description: vine.string().maxLength(2500).trim().optional(),
     frequency: vine.enum(['daily', 'weekly']).optional(),
-    target: vine.number().min(0).optional(),
+    target: vine.number().min(1).optional(),
     reminders: vine
       .array(
         vine.object({
