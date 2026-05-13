@@ -64,7 +64,6 @@ export default class TasksController {
 
     const payload = await request.validateUsing(updateTaskValidator)
     task.merge(payload)
-    await task.save()
 
     // Update the day task of the client's date if provided
     if (clientDate && task.$dirty.status) {
@@ -73,6 +72,8 @@ export default class TasksController {
         .where('date', clientDate)
         .update({ status: task.status })
     }
+
+    await task.save()
 
     return serialize(TaskTransformer.transform(task))
   }
