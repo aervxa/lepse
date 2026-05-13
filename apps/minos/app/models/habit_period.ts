@@ -11,11 +11,11 @@ export default class HabitPeriod extends HabitPeriodSchema {
   @belongsTo(() => Habit)
   declare habit: BelongsTo<typeof Habit>
 
-  public static async getPeriodOrCreate(userId: number, habit: Habit, clientDate: string) {
+  static #getPeriodRange(clientDate: string, frequency: string) {
     let start = clientDate
     let end = clientDate
 
-    if (habit.frequency === 'weekly') {
+    if (frequency === 'weekly') {
       /**
        * Compute week start and end
        * NOTE: Luxon keeps 1-7 where 1 is Monday and Sunday is 7
@@ -26,8 +26,20 @@ export default class HabitPeriod extends HabitPeriodSchema {
       end = dt.plus({ days: 6 - delta }).toISODate()! // move forward to saturday (end of week)
     }
 
+    return { start, end }
+  }
+
+  public static async getPeriodOrCreate(userId: number, habit: Habit, clientDate: string) {
+    const { start, end } = this.#getPeriodRange(clientDate, habit.frequency)
+
     const payload = { userId, habitId: habit.id, start, end } as any
     return this.firstOrCreate(payload, payload)
+  }
+
+  public static async getPeriodOrFail(userId: number, habit: Habit, clientDate: string) {
+    const { start, end } = this.#getPeriodRange(clientDate, habit.frequency)
+
+    return this.query().where({ userId, habitId: habit.id, start, end }).firstOrFail()
   }
 
   async updateCount(delta: 1 | -1, target: number) {

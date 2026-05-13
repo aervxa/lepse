@@ -258,6 +258,12 @@ const routes = {
     tokens: [{"old":"/api/v1/habits/:id/decrement","type":0,"val":"api","end":""},{"old":"/api/v1/habits/:id/decrement","type":0,"val":"v1","end":""},{"old":"/api/v1/habits/:id/decrement","type":0,"val":"habits","end":""},{"old":"/api/v1/habits/:id/decrement","type":1,"val":"id","end":""},{"old":"/api/v1/habits/:id/decrement","type":0,"val":"decrement","end":""}],
     types: placeholder as Registry['habits.decrement']['types'],
   },
+  'habits.count': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/habits/:id/count',
+    tokens: [{"old":"/api/v1/habits/:id/count","type":0,"val":"api","end":""},{"old":"/api/v1/habits/:id/count","type":0,"val":"v1","end":""},{"old":"/api/v1/habits/:id/count","type":0,"val":"habits","end":""},{"old":"/api/v1/habits/:id/count","type":1,"val":"id","end":""},{"old":"/api/v1/habits/:id/count","type":0,"val":"count","end":""}],
+    types: placeholder as Registry['habits.count']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

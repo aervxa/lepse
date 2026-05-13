@@ -71,5 +71,6 @@ export interface ApiDefinition {
     destroy: typeof routes['habits.destroy']
     increment: typeof routes['habits.increment']
     decrement: typeof routes['habits.decrement']
+    count: typeof routes['habits.count']
   }
 }

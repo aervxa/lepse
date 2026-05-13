@@ -9,11 +9,9 @@ export default class HabitPeriodController {
   async #updateCount({ auth, params, bouncer, clientDate, serialize }: HttpContext, delta: 1 | -1) {
     const user = auth.getUserOrFail()
     const habit = await Habit.findOrFail(params.id)
-
     await bouncer.with(HabitPeriodPolicy).authorize('update', habit)
 
     const habitPeriod = await HabitPeriod.getPeriodOrCreate(user.id, habit, clientDate!)
-
     habitPeriod.updateCount(delta, habit.target)
     await habitPeriod.save()
 
@@ -26,5 +24,14 @@ export default class HabitPeriodController {
 
   async decrement(ctx: HttpContext) {
     return this.#updateCount(ctx, -1)
+  }
+
+  async count({ auth, params, bouncer, clientDate, serialize }: HttpContext) {
+    const user = auth.getUserOrFail()
+    const habit = await Habit.findOrFail(params.id)
+    await bouncer.with(HabitPeriodPolicy).authorize('show', habit)
+    const habitPeriod = await HabitPeriod.getPeriodOrFail(user.id, habit, clientDate!)
+
+    return serialize(HabitPeriodTransformer.transform(habitPeriod))
   }
 }

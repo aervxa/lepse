@@ -511,4 +511,16 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/habit_periods_controller').default['decrement']>>>
     }
   }
+  'habits.count': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/habits/:id/count'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/habit_periods_controller').default['count']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/habit_periods_controller').default['count']>>>
+    }
+  }
 }

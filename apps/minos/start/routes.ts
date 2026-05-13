@@ -78,6 +78,7 @@ router
           .group(() => {
             router.patch('increment', [controllers.HabitPeriods, 'increment']).as('increment')
             router.patch('decrement', [controllers.HabitPeriods, 'decrement']).as('decrement')
+            router.get('count', [controllers.HabitPeriods, 'count']).as('count')
           })
           .prefix('habits/:id')
           .as('habits')

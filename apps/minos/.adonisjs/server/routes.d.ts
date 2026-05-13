@@ -46,6 +46,7 @@ export type ScannedRoutes = {
     'habits.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'habits.increment': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'habits.decrement': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'habits.count': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   GET: {
     'account.profile.show': { paramsTuple?: []; params?: {} }
@@ -69,6 +70,7 @@ export type ScannedRoutes = {
     'habits.create': { paramsTuple?: []; params?: {} }
     'habits.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'habits.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'habits.count': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   HEAD: {
     'account.profile.show': { paramsTuple?: []; params?: {} }
@@ -92,6 +94,7 @@ export type ScannedRoutes = {
     'habits.create': { paramsTuple?: []; params?: {} }
     'habits.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'habits.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'habits.count': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   POST: {
     'auth.new_account.store': { paramsTuple?: []; params?: {} }
