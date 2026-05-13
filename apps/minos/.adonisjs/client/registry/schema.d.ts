@@ -411,8 +411,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: unknown
-      errorResponse: unknown
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['index']>>>
     }
   }
   'habits.create': {
@@ -423,20 +423,20 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: unknown
-      errorResponse: unknown
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['create']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['create']>>>
     }
   }
   'habits.store': {
     methods: ["POST"]
     pattern: '/api/v1/habits'
     types: {
-      body: {}
+      body: ExtractBody<InferInput<(typeof import('#validators/habit').createHabitValidator)>>
       paramsTuple: []
       params: {}
-      query: {}
-      response: unknown
-      errorResponse: unknown
+      query: ExtractQuery<InferInput<(typeof import('#validators/habit').createHabitValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'habits.show': {
@@ -447,8 +447,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: {}
-      response: unknown
-      errorResponse: unknown
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['show']>>>
     }
   }
   'habits.edit': {
@@ -459,20 +459,20 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: {}
-      response: unknown
-      errorResponse: unknown
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['edit']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['edit']>>>
     }
   }
   'habits.update': {
     methods: ["PUT","PATCH"]
     pattern: '/api/v1/habits/:id'
     types: {
-      body: {}
+      body: ExtractBody<InferInput<(typeof import('#validators/habit').updateHabitValidator)>>
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
-      query: {}
-      response: unknown
-      errorResponse: unknown
+      query: ExtractQuery<InferInput<(typeof import('#validators/habit').updateHabitValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'habits.destroy': {
@@ -483,8 +483,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
       query: {}
-      response: unknown
-      errorResponse: unknown
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['destroy']>>>
     }
   }
   'habits.increment': {
