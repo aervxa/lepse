@@ -4,7 +4,6 @@ import HabitPolicy from '#policies/habit_policy'
 import HabitTransformer from '#transformers/habit_transformer'
 import { createHabitValidator, updateHabitValidator } from '#validators/habit'
 import HabitPeriod from '#models/habit_period'
-import db from '@adonisjs/lucid/services/db'
 
 export default class HabitsController {
   /**
