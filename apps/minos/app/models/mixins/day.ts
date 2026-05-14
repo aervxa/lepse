@@ -7,7 +7,8 @@ export function Day<T extends NormalizeConstructor<typeof BaseModel>>(superclass
       return this.query().where({ userId, date }).firstOrFail()
     }
     public static async getDayOrCreate(userId: number, date: string) {
-      return this.firstOrCreate({ userId, date } as any, { userId, date } as any)
+      const day = await this.firstOrCreate({ userId, date } as any, { userId, date } as any)
+      return day.refresh()
     }
   }
   return MixinClass

@@ -38,8 +38,9 @@ export default class HabitPeriod extends HabitPeriodSchema {
   public static async getPeriodOrCreate(habit: Habit, clientDate: string) {
     const { start, end } = this.#getPeriodRange(clientDate, habit.frequency)
 
-    const payload = { habitId: habit.id, start, end } as any
-    return this.firstOrCreate(payload, payload)
+    const payload = { userId: habit.userId, habitId: habit.id, start, end } as any
+    const period = await this.firstOrCreate(payload, payload)
+    return period.refresh()
   }
 
   public static async getPeriodOrFail(habit: Habit, clientDate: string) {
