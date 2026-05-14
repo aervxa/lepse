@@ -71,6 +71,11 @@ export const useHabits = () => {
     if (payload) {
       $updateOrCreateHabitPeriod(payload.data)
     } else {
+      // Ignore 404 due to habit period not existing until update
+      if (error.isStatus(404)) {
+        console.info("404 is expected since habit period won't exist until first update")
+        return
+      }
       console.error(error)
       return error
     }
