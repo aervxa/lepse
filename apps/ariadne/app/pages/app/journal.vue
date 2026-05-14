@@ -36,7 +36,7 @@ const draft = useLocalStorage('journal_draft', '')
 const body = ref(draft.value ?? '')
 const mood = ref<number | null>(null)
 const dirty = computed(
-  () => body.value !== (journal.value?.body ?? '') || mood.value !== journal.value?.mood
+  () => body.value !== (journal.value?.body ?? '') || mood.value !== (journal.value?.mood ?? null)
 )
 const saving = ref(false)
 
@@ -134,7 +134,7 @@ const sortedScribbles = computed(() =>
                   </Button>
                 </div>
                 <Button
-                  v-if="dirty || body.length"
+                  v-if="dirty || journal"
                   size="sm"
                   @click="saveJournal"
                   :disabled="saving || !dirty"
