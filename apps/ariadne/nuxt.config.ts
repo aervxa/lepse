@@ -11,6 +11,10 @@ export default defineNuxtConfig({
   },
   compatibilityDate: '2025-07-15',
   css: ['./app/assets/css/main.css'],
+  // Enables the development server to be discoverable by other devices when running on iOS physical devices
+  devServer: {
+    host: '0',
+  },
   devtools: { enabled: true },
   fonts: {
     defaults: {
@@ -19,6 +23,8 @@ export default defineNuxtConfig({
     },
     families: [{ name: 'Outfit' }, { name: 'DM Mono' }],
   },
+  // Avoids error [unhandledRejection] EMFILE: too many open files, watch
+  ignore: ['**/src-tauri/**'],
   modules: ['@nuxt/fonts', 'shadcn-nuxt', 'vue-sonner/nuxt'],
   runtimeConfig: {
     public: {
@@ -28,8 +34,15 @@ export default defineNuxtConfig({
   shadcn: {
     prefix: '',
   },
+  // Enable SSG
   ssr: false,
   vite: {
+    // Better support for Tauri CLI output
+    clearScreen: false,
+    // Enable environment variables
+    // Additional environment variables can be found at
+    // https://v2.tauri.app/reference/environment-variables/
+    envPrefix: ['VITE_', 'TAURI_'],
     optimizeDeps: {
       include: [
         'vee-validate',
@@ -49,5 +62,9 @@ export default defineNuxtConfig({
       ],
     },
     plugins: [tailwindcss()],
+    server: {
+      // Tauri requires a consistent port
+      strictPort: true,
+    },
   },
 })
