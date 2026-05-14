@@ -108,7 +108,7 @@ useIntervalFn(() => {
 let stopwatchSyncedMs = 0
 const stopwatch = new Stopwatch({
   onStop: () => {
-    syncStopwatch()
+    if (stopwatch.elapsed.value) syncStopwatch()
   },
 })
 
