@@ -1,6 +1,6 @@
 import type { Data } from '@lepse/minos/data'
 
-export const useJournal = () => {
+export const useJournals = () => {
   const { $minos } = useNuxtApp()
   const journals = useState<Data.Journal[]>('journals', () => [])
 

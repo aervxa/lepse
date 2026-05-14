@@ -23,7 +23,7 @@ const MOODS = [
 
 const today = getClientDate()
 const { journal, fetchJournal, updateJournal } = useDay(today)
-const { journals } = useJournal()
+const { journals } = useJournals()
 
 const pastJournals = computed(() => {
   return journals.value
