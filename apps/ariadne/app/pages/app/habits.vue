@@ -3,7 +3,6 @@ definePageMeta({
   layout: 'app',
 })
 
-import { formatDate } from '@vueuse/core'
 import { Plus } from 'lucide-vue-next'
 
 const route = useRoute()

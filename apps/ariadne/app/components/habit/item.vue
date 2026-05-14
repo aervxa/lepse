@@ -12,7 +12,9 @@ const { habitPeriods, fetchHabitPeriod, incrementHabit } = useHabits()
 const habitPeriod = computed(() => habitPeriods.value.find((hp) => hp.habitId === props.habit.id))
 
 onMounted(() => {
-  fetchHabitPeriod(props.habit.id)
+  if (!habitPeriod) {
+    fetchHabitPeriod(props.habit.id)
+  }
 })
 
 const isLoggingCount = ref(false)
