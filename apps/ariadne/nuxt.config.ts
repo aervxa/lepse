@@ -26,6 +26,9 @@ export default defineNuxtConfig({
   // Avoids error [unhandledRejection] EMFILE: too many open files, watch
   ignore: ['**/src-tauri/**'],
   modules: ['@nuxt/fonts', 'shadcn-nuxt', 'vue-sonner/nuxt'],
+  routeRules: {
+    '/': { redirect: '/app' },
+  },
   runtimeConfig: {
     public: {
       apiUrl: process.env.NUXT_PUBLIC_API_URL || 'http://localhost:3333',
