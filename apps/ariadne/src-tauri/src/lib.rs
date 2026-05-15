@@ -1,6 +1,14 @@
+#[cfg(target_os = "linux")]
+use tauri_runtime_cef::CefRuntime;
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-  tauri::Builder::default()
+  #[cfg(target_os = "linux")]
+  let builder = tauri::Builder::<CefRuntime<_>>::new();
+  #[cfg(not(target_os = "linux"))]
+  let builder = tauri::Builder::default();
+
+  builder
     .setup(|app| {
       if cfg!(debug_assertions) {
         app.handle().plugin(
