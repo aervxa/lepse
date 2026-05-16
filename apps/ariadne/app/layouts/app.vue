@@ -9,8 +9,15 @@ import {
   Timer,
   Loader,
   LogOut,
+  X,
+  Minus,
+  SquareDashedTopSolid,
+  SquaresIntersect,
 } from 'lucide-vue-next'
+import { isTauri } from '@tauri-apps/api/core'
+import { getCurrentWebviewWindow, type WebviewWindow } from '@tauri-apps/api/webviewWindow'
 import logoSrc from '~/assets/images/logo.png'
+import type { UnlistenFn } from '@tauri-apps/api/event'
 
 const groups = [
   {
@@ -44,70 +51,119 @@ const sidebarKind = useLocalStorage<'inset' | 'floating'>('sidebar_kind', 'float
 const toggleSidebarKind = () => {
   sidebarKind.value = sidebarKind.value === 'inset' ? 'floating' : 'inset'
 }
+
+// ─── App ────────────────────────────────────────────────────────────────────
+
+const isApp = isTauri()
+const isAppMaximized = ref(false)
+let window: WebviewWindow | undefined
+let unlisten: UnlistenFn | undefined
+
+onMounted(async () => {
+  if (isApp) {
+    window = getCurrentWebviewWindow()
+    isAppMaximized.value = await window.isMaximized()
+
+    unlisten = await window?.onResized(async () => {
+      isAppMaximized.value = (await window?.isMaximized()) ?? false
+    })
+  }
+})
+
+onUnmounted(() => {
+  unlisten?.()
+})
 </script>
 
 <template>
-  <SidebarProvider>
-    <Sidebar :variant="sidebarKind" collapsible="icon">
-      <SidebarHeader v-if="sidebarKind === 'inset'">
-        <NuxtLink to="/app" class="px-3 py-2 w-fit">
-          <img :src="logoSrc" class="h-10 not-dark:invert" />
-        </NuxtLink>
-      </SidebarHeader>
+  <SidebarProvider class="[--titlebar-height:--spacing(10)] flex flex-col">
+    <div
+      v-if="isApp"
+      data-slot="titlebar"
+      data-tauri-drag-region
+      class="bg-sidebar border-border/70 h-(--titlebar-height) z-10 flex p-3 -mb-2 justify-between items-center"
+    >
+      <img :src="logoSrc" class="h-full not-dark:invert pointer-events-none" />
+      <div>
+        <Button variant="ghost" size="icon-sm" @click="window?.minimize()">
+          <Minus />
+        </Button>
+        <Button variant="ghost" size="icon-sm" @click="window?.toggleMaximize()">
+          <SquaresIntersect v-if="isAppMaximized" />
+          <SquareDashedTopSolid v-else />
+        </Button>
+        <Button variant="ghost-destructive" size="icon-sm" @click="window?.close()">
+          <X />
+        </Button>
+      </div>
+    </div>
 
-      <SidebarContent>
-        <SidebarGroup v-for="group in groups" :key="group.label ?? 'none'">
-          <SidebarGroupLabel v-if="group.label">{{ group.label }}</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem v-for="item in group.items" :key="item.label">
-                <SidebarMenuButton as-child :is-active="route.path.startsWith(item.route)">
-                  <NuxtLink :to="item.route">
-                    <component :is="item.icon" />
-                    {{ item.label }}
-                  </NuxtLink>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
+    <div class="flex flex-1">
+      <Sidebar
+        :variant="sidebarKind"
+        collapsible="icon"
+        :class="[isApp && 'top-(--titlebar-height) h-[calc(100svh-var(--titlebar-height))]!']"
+      >
+        <SidebarHeader v-if="!isApp && sidebarKind === 'inset'">
+          <NuxtLink to="/app" class="px-3 py-2 w-fit">
+            <img :src="logoSrc" class="h-10 not-dark:invert" />
+          </NuxtLink>
+        </SidebarHeader>
 
-      <SidebarFooter>
-        <div class="flex justify-between flex-wrap gap-2">
-          <SidebarKindToggle
-            @click="toggleSidebarKind"
-            :expandSidebar="sidebarKind === 'floating'"
-          />
+        <SidebarContent>
+          <SidebarGroup v-for="group in groups" :key="group.label ?? 'none'">
+            <SidebarGroupLabel v-if="group.label">{{ group.label }}</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem v-for="item in group.items" :key="item.label">
+                  <SidebarMenuButton as-child :is-active="route.path.startsWith(item.route)">
+                    <NuxtLink :to="item.route">
+                      <component :is="item.icon" />
+                      {{ item.label }}
+                    </NuxtLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
 
-          <AlertDialog>
-            <AlertDialogTrigger as-child>
-              <Button variant="outline" size="icon-sm">
-                <Loader v-if="loggingOut" class="animate-spin" />
-                <LogOut v-else />
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you sure you want to logout?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This will end this session and return you to the login page.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction as-child variant="destructive">
-                  <Button @click="logout">Logout</Button>
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
-      </SidebarFooter>
-    </Sidebar>
+        <SidebarFooter>
+          <div class="flex justify-between flex-wrap gap-2">
+            <SidebarKindToggle
+              @click="toggleSidebarKind"
+              :expandSidebar="sidebarKind === 'floating'"
+            />
 
-    <SidebarInset>
-      <slot />
-    </SidebarInset>
+            <AlertDialog>
+              <AlertDialogTrigger as-child>
+                <Button variant="outline" size="icon-sm">
+                  <Loader v-if="loggingOut" class="animate-spin" />
+                  <LogOut v-else />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you sure you want to logout?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will end this session and return you to the login page.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction as-child variant="destructive">
+                    <Button @click="logout">Logout</Button>
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        </SidebarFooter>
+      </Sidebar>
+
+      <SidebarInset class="border-2">
+        <slot />
+      </SidebarInset>
+    </div>
   </SidebarProvider>
 </template>
