@@ -1,0 +1,106 @@
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background: #000;
+    overflow: hidden;
+  }
+
+  .logo,
+  .loader-wrap {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .logo {
+    top: 25%;
+    width: min(60vw, 384px);
+    opacity: 0.6;
+  }
+
+  .loader-wrap {
+    top: 75%;
+  }
+
+  .dotm-circular-7 {
+    --dot-size: 8px;
+    --gap: 4px;
+
+    display: grid;
+    grid-template-columns: repeat(5, var(--dot-size));
+    gap: var(--gap);
+  }
+
+  .dotm-circular-7 span {
+    width: var(--dot-size);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: white;
+    opacity: 0.08;
+
+    transition: opacity 80ms linear;
+
+    box-shadow:
+      0 0 8px rgba(255, 255, 255, 0.3),
+      0 0 18px rgba(255, 255, 255, 0.12);
+  }
+
+  .dotm-circular-7 span.inactive {
+    opacity: 0 !important;
+    box-shadow: none;
+  }
+</style>
+
+<img src="/logo.png" alt="logo" class="logo" />
+
+<div class="loader-wrap">
+  <div class="dotm-circular-7" id="dotmCircular7"></div>
+</div>
+
+<script>
+  const root = document.getElementById('dotmCircular7')
+  const dots = []
+
+  const corners = new Set(['0,0', '0,4', '4,0', '4,4'])
+
+  for (let row = 0; row < 5; row++) {
+    for (let col = 0; col < 5; col++) {
+      const el = document.createElement('span')
+
+      if (corners.has(`${row},${col}`)) {
+        el.className = 'inactive'
+      } else {
+        dots.push({ el, row, col })
+      }
+
+      root.appendChild(el)
+    }
+  }
+
+  function animate(now) {
+    const t = (now / 1600) * Math.PI * 2
+
+    for (const { el, row, col } of dots) {
+      const x = col - 2
+      const y = row - 2
+
+      const ring = Math.hypot(x, y)
+      const angle = Math.atan2(y, x)
+
+      const petal = 0.5 + 0.5 * Math.cos(5 * angle - t * 1.7)
+
+      const radial = 0.5 + 0.5 * Math.cos(ring * 3.3 - t * 1.2)
+
+      const chord = 0.5 + 0.5 * Math.cos((x + y) * 1.6 + t * 1.35)
+
+      const blend = 0.68 * Math.pow(petal, 2.2) + 0.22 * radial + 0.1 * chord
+
+      el.style.opacity = 0.08 + 0.84 * blend
+    }
+
+    requestAnimationFrame(animate)
+  }
+
+  requestAnimationFrame(animate)
+</script>
