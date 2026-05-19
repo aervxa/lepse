@@ -13,6 +13,7 @@ export type ScannedRoutes = {
     'day.tasks.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'date': ParamValue,'id': ParamValue} }
     'day.session.show': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'day.session.update': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
+    'day.session.destroy': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'day.journal.show': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'day.journal.update': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'journals.index': { paramsTuple?: []; params?: {} }
@@ -111,6 +112,7 @@ export type ScannedRoutes = {
   }
   DELETE: {
     'day.tasks.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'date': ParamValue,'id': ParamValue} }
+    'day.session.destroy': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'tasks.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'goals.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'scribbles.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

@@ -106,10 +106,20 @@ export const useDay = (date?: string) => {
     }
   }
 
+  const destroyFocusSession = async () => {
+    const [, error] = await $minos.api.day.session.destroy({ params: { date } }).safe()
+    if (error) {
+      console.error(error)
+      return error
+    }
+    focusSessions.value = focusSessions.value.filter((fs) => !fs.date?.startsWith(date))
+  }
+
   const sessionReturns = {
     focusSession: currentFocusSession,
     fetchFocusSession,
     updateFocusSession,
+    destroyFocusSession,
   }
 
   // ─── Journal ──────────────────────────────────────────────────────────────

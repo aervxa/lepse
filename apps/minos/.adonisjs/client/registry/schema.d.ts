@@ -115,6 +115,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/focus_sessions_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'day.session.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/day/:date/session'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { date: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/focus_sessions_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/focus_sessions_controller').default['destroy']>>>
+    }
+  }
   'day.journal.show': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/day/:date/journal'
