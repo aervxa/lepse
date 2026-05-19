@@ -52,7 +52,7 @@ export default class ScribblesController {
   /**
    * Edit individual record
    */
-  async edit({ params }: HttpContext) {}
+  async edit({}: HttpContext) {}
 
   /**
    * Handle form submission for the edit action
