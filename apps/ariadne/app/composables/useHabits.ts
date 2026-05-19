@@ -46,7 +46,7 @@ export const useHabits = () => {
   }
 
   const destroyHabit = async (id: number) => {
-    const [error] = await $minos.api.habits.destroy({ params: { id } }).safe()
+    const [, error] = await $minos.api.habits.destroy({ params: { id } }).safe()
     if (error) {
       console.error(error)
       return error
