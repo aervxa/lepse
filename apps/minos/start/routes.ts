@@ -10,6 +10,7 @@
 import { middleware } from '#start/kernel'
 import router from '@adonisjs/core/services/router'
 import { controllers } from '#generated/controllers'
+import { DATE_REGEX } from '../app/lib/util/date.ts'
 
 router.get('/', () => {
   return { hello: 'world' }
@@ -63,11 +64,12 @@ router
               .as('journal')
           })
           .prefix('day/:date')
-          .where('date', { match: /^\d{4}-\d{2}-\d{2}$/ })
+          .where('date', { match: DATE_REGEX })
           .as('day')
 
         // Have index (listing) have it's own endpoint since it doesn't belong in a specific date
         router.get('journals', [controllers.Journals, 'index'])
+        router.get('focus-sessions', [controllers.FocusSessions, 'index'])
 
         router.resource('tasks', controllers.Tasks).use(['update'], middleware.clientDate())
         router.resource('goals', controllers.Goals)

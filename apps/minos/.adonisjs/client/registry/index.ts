@@ -78,6 +78,12 @@ const routes = {
     tokens: [{"old":"/api/v1/journals","type":0,"val":"api","end":""},{"old":"/api/v1/journals","type":0,"val":"v1","end":""},{"old":"/api/v1/journals","type":0,"val":"journals","end":""}],
     types: placeholder as Registry['journals.index']['types'],
   },
+  'focus_sessions.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/focus-sessions',
+    tokens: [{"old":"/api/v1/focus-sessions","type":0,"val":"api","end":""},{"old":"/api/v1/focus-sessions","type":0,"val":"v1","end":""},{"old":"/api/v1/focus-sessions","type":0,"val":"focus-sessions","end":""}],
+    types: placeholder as Registry['focus_sessions.index']['types'],
+  },
   'tasks.index': {
     methods: ["GET","HEAD"],
     pattern: '/api/v1/tasks',

@@ -1,5 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
+import { DATE_REGEX } from '../lib/util/date.ts'
 
 export default class ClientDateMiddleware {
   async handle(ctx: HttpContext, next: NextFn) {
@@ -7,7 +8,7 @@ export default class ClientDateMiddleware {
      * Verify existence and validity of date
      */
     const raw = ctx.request.header('x-client-date')
-    if (!raw || !/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
+    if (!raw || !DATE_REGEX.test(raw)) {
       return ctx.response.badRequest({ error: 'Missing or invalid x-client-date header' })
     }
 

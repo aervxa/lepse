@@ -34,6 +34,9 @@ export interface ApiDefinition {
   journals: {
     index: typeof routes['journals.index']
   }
+  focusSessions: {
+    index: typeof routes['focus_sessions.index']
+  }
   tasks: {
     index: typeof routes['tasks.index']
     create: typeof routes['tasks.create']

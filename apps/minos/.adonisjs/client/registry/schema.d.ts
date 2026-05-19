@@ -151,6 +151,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/journals_controller').default['index']>>>
     }
   }
+  'focus_sessions.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/focus-sessions'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/date_range').dateRangeValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/focus_sessions_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/focus_sessions_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'tasks.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/tasks'
