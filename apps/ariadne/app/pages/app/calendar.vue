@@ -19,9 +19,37 @@ import {
 } from 'reka-ui'
 import type { DateValue } from '@internationalized/date'
 import { fromDate, getLocalTimeZone } from '@internationalized/date'
-import { ChevronLeft, ChevronRight } from 'lucide-vue-next'
+import { ChevronLeft, ChevronRight, Clock, ClockFading } from 'lucide-vue-next'
+import { getClientDate } from '~/lib/utils'
+import { formatDuration } from '~/lib/time'
 
 const date = ref(fromDate(new Date(), getLocalTimeZone())) as Ref<DateValue>
+const { focusSessions, fetchFocusSessions } = useFocusSessions()
+const calendarFetchedRanges = useState<{ date: string; frequency: 'monthly' }[]>(
+  'calendarFetchedRanges',
+  () => []
+)
+
+const getDate = (year: number, month: number, day: number) =>
+  getClientDate(new Date(year, month - 1, day))
+
+watch(
+  () => [date.value.year, date.value.month],
+  () => {
+    const monthDate = getDate(date.value.year, date.value.month, 1)
+
+    if (
+      !calendarFetchedRanges.value.some(
+        ({ date: d, frequency: f }) => d === monthDate && f === 'monthly'
+      )
+    ) {
+      fetchFocusSessions(monthDate, 'monthly')
+
+      calendarFetchedRanges.value.push({ date: monthDate, frequency: 'monthly' })
+    }
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
@@ -80,17 +108,38 @@ const date = ref(fromDate(new Date(), getLocalTimeZone())) as Ref<DateValue>
                 as-child
               >
                 <NuxtLink
-                  :to="`/app/calendar/${weekDate.year}-${weekDate.month.toString().padStart(2, '0')}-${weekDate.day.toString().padStart(2, '0')}`"
-                  class="flex flex-col gap-4 p-3 rounded-lg border border-border bg-card/50 data-today:bg-primary/25 data-today:border-primary/50 not-data-today:opacity-80"
+                  :to="`/app/calendar/${getDate(weekDate.year, weekDate.month, weekDate.day)}`"
+                  class="relative flex flex-col gap-4 p-3 rounded-lg border border-border bg-card/50 data-today:bg-primary/25 data-today:border-primary/50 not-data-today:opacity-80"
                 >
-                  <p class="text-xl self-center leading-none font-medium">
+                  <p class="text-xl leading-none font-medium">
                     {{ dayValue }}
                   </p>
-                  <div class="flex justify-around items-end gap-4 -p-1">
-                    <span class="size-3 shrink-0 border-2 rounded-full border-green-500"></span>
-                    <p class="text-xs grayscale-50 self-end leading-none">
-                      {{ ['😴', '😒', '🙂', '😄', '🤩'][Math.floor(Math.random() * 5)] }}
-                    </p>
+                  <div
+                    class="flex flex-col gap-1"
+                    v-for="fs in [
+                      focusSessions.find((fs) =>
+                        fs.date?.startsWith(getDate(weekDate.year, weekDate.month, weekDate.day))
+                      ),
+                    ]"
+                  >
+                    <div class="flex items-center gap-1.5" title="time worked">
+                      <Clock class="size-3" />
+                      <p class="text-xs">
+                        {{
+                          formatDuration(fs?.stopwatchMs ?? 0, {
+                            format:
+                              (fs?.stopwatchMs ?? 0) > 3_600_000 /* Above an hour */
+                                ? 'hhh mmm'
+                                : 'mmm',
+                            pad: false,
+                          })
+                        }}
+                      </p>
+                    </div>
+                    <div class="flex items-center gap-1.5" title="pomos completed">
+                      <ClockFading class="size-3" />
+                      <p class="text-xs">{{ fs?.pomoCount ?? 0 }} pomos</p>
+                    </div>
                   </div>
                 </NuxtLink>
               </CalendarCellTrigger>

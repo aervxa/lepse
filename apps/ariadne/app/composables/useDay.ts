@@ -8,7 +8,7 @@ export const useDay = (date?: string) => {
   // ─── Tasks ────────────────────────────────────────────────────────────────
 
   const dayTasks = useState<Data.TaskDay[]>('dayTasks', () => [])
-  const filteredDayTasks = computed(() => dayTasks.value.filter((dt) => dt.date?.startsWith(date)))
+  const currentDayTasks = computed(() => dayTasks.value.filter((dt) => dt.date?.startsWith(date)))
 
   const fetchDayTasks = async () => {
     const [payload, error] = await $minos.api.day.tasks
@@ -25,7 +25,7 @@ export const useDay = (date?: string) => {
     }
   }
 
-  if (filteredDayTasks.value.length === 0) {
+  if (currentDayTasks.value.length === 0) {
     fetchDayTasks()
   }
 
@@ -33,7 +33,7 @@ export const useDay = (date?: string) => {
     body: Parameters<typeof $minos.api.day.tasks.store>['0']['body']
   ) => {
     // Don't create if already exists for the same date
-    if (dayTasks.value.some((dt) => dt.taskId === body.taskId && dt.date === date)) return
+    if (currentDayTasks.value.some((dt) => dt.taskId === body.taskId)) return
 
     const [payload, error] = await $minos.api.day.tasks.store({ params: { date }, body }).safe()
     if (payload) {
@@ -50,14 +50,22 @@ export const useDay = (date?: string) => {
       console.error(error)
       return error
     }
-    dayTasks.value = dayTasks.value.filter((t) => t.id !== id)
+    dayTasks.value = dayTasks.value.filter((dt) => dt.id !== id)
   }
 
-  const taskReturns = { dayTasks: filteredDayTasks, fetchDayTasks, createDayTask, destroyDayTask }
+  const taskReturns = {
+    dayTasks: currentDayTasks,
+    fetchDayTasks,
+    createDayTask,
+    destroyDayTask,
+  }
 
   // ─── Session ──────────────────────────────────────────────────────────────
 
-  const focusSession = useState<Data.FocusSession | undefined>('focusSession', () => undefined)
+  const focusSessions = useState<Data.FocusSession[]>('focusSessions', () => [])
+  const currentFocusSession = computed(() =>
+    focusSessions.value.find((fs) => fs.date?.startsWith(date))
+  )
 
   const fetchFocusSession = async () => {
     const [payload, error] = await $minos.api.day.session
@@ -66,7 +74,11 @@ export const useDay = (date?: string) => {
       })
       .safe()
     if (payload) {
-      focusSession.value = payload.data
+      // Reload session of only the current date
+      focusSessions.value = [
+        ...focusSessions.value.filter((fs) => fs.date !== payload.data.date),
+        payload.data,
+      ]
     } else {
       // Ignore 404 due to session not existing until update
       if (error.isStatus(404)) {
@@ -83,7 +95,11 @@ export const useDay = (date?: string) => {
   ) => {
     const [payload, error] = await $minos.api.day.session.update({ params: { date }, body }).safe()
     if (payload) {
-      focusSession.value = payload.data
+      // Reload session of only the current date
+      focusSessions.value = [
+        ...focusSessions.value.filter((fs) => fs.date !== payload.data.date),
+        payload.data,
+      ]
     } else {
       console.error(error)
       return error
@@ -91,14 +107,15 @@ export const useDay = (date?: string) => {
   }
 
   const sessionReturns = {
-    focusSession,
+    focusSession: currentFocusSession,
     fetchFocusSession,
     updateFocusSession,
   }
 
   // ─── Journal ──────────────────────────────────────────────────────────────
 
-  const journal = useState<Data.Journal | undefined>('journal', () => undefined)
+  const journals = useState<Data.Journal[]>('journalsByDay', () => [])
+  const currentJournal = computed(() => journals.value.find((j) => j.date?.startsWith(date)))
 
   const fetchJournal = async () => {
     const [payload, error] = await $minos.api.day.journal
@@ -107,7 +124,8 @@ export const useDay = (date?: string) => {
       })
       .safe()
     if (payload) {
-      journal.value = payload.data
+      // Reload journal of only the current date
+      journals.value = [...journals.value.filter((j) => j.date !== payload.data.date), payload.data]
     } else {
       // Ignore 404 due to journal not existing until update
       if (error.isStatus(404)) {
@@ -124,14 +142,15 @@ export const useDay = (date?: string) => {
   ) => {
     const [payload, error] = await $minos.api.day.journal.update({ params: { date }, body }).safe()
     if (payload) {
-      journal.value = payload.data
+      // Reload journal of only the current date
+      journals.value = [...journals.value.filter((j) => j.date !== payload.data.date), payload.data]
     } else {
       console.error(error)
       return error
     }
   }
 
-  const journalReturns = { journal, fetchJournal, updateJournal }
+  const journalReturns = { journal: currentJournal, fetchJournal, updateJournal }
 
   // ─── Returns ──────────────────────────────────────────────────────────────
 

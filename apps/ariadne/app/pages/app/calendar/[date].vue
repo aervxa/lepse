@@ -1,16 +1,20 @@
 <script setup lang="ts">
 import { formatDate } from '@vueuse/core'
-import { ChevronRight, Plus } from 'lucide-vue-next'
+import { ChevronRight, Clock, ClockFading, Plus } from 'lucide-vue-next'
 import { getClientDate } from '~/lib/utils'
+import { formatDuration } from '~/lib/time'
 
 definePageMeta({
   layout: 'app',
+  key: (route) => route.fullPath,
   validate: (route) => route.params.date === getClientDate(route.params.date as string),
 })
 
-const route = useRoute()
+const day = useRoute().params.date as string
+
 const { tasks } = useTasks()
-const { dayTasks, createDayTask } = useDay(route.params.date as string)
+const { dayTasks, createDayTask, focusSession, fetchFocusSession } = useDay(day)
+const { focusSessions } = useFocusSessions()
 
 const expandedDayTasks = computed(() =>
   dayTasks.value.map((dt) => {
@@ -23,6 +27,13 @@ const expandedDayTasks = computed(() =>
 )
 
 const showTasks = ref(true)
+const isToday = computed(() => day === getClientDate())
+
+onMounted(() => {
+  if (!focusSessions.value.some((fs) => fs.date?.startsWith(day))) {
+    fetchFocusSession()
+  }
+})
 </script>
 
 <template>
@@ -30,9 +41,29 @@ const showTasks = ref(true)
     <DialogContent>
       <DialogHeader>
         <DialogTitle class="text-lg">
-          {{ formatDate(new Date(route.params.date as string), 'dddd, MMMM D, YYYY') }}
+          {{ formatDate(new Date(day), 'dddd, MMMM D, YYYY') }}
         </DialogTitle>
-        <DialogDescription>View and manage tasks for this day.</DialogDescription>
+        <DialogDescription>
+          View and manage tasks for {{ isToday ? 'today' : 'this day' }}.
+        </DialogDescription>
+
+        <div class="flex gap-3 text-xs leading-none text-muted-foreground whitespace-nowrap">
+          <div class="flex items-center gap-1.5" title="time worked">
+            <Clock class="size-3" />
+            <p>
+              {{
+                formatDuration(focusSession?.stopwatchMs ?? 0, {
+                  format: 'hhh mmm',
+                  pad: false,
+                })
+              }}
+            </p>
+          </div>
+          <div class="flex items-center gap-1.5" title="pomos completed">
+            <ClockFading class="size-3" />
+            <p>{{ focusSession?.pomoCount ?? 0 }} pomos</p>
+          </div>
+        </div>
       </DialogHeader>
 
       <Collapsible v-model:open="showTasks">
@@ -45,9 +76,10 @@ const showTasks = ref(true)
           </CollapsibleTrigger>
 
           <Combobox
+            v-if="isToday"
             :items="tasks"
             empty="No tasks found."
-            placeholder="Select a task for today..."
+            :placeholder="`Select a task for ${isToday ? 'today' : 'this day'}...`"
             align="end"
             @select="
               (item) => {
@@ -67,13 +99,13 @@ const showTasks = ref(true)
               :key="dayTask.id"
               :task="dayTask.task"
               sub
-              :disable-controls="route.params.date !== getClientDate()"
+              :disable-controls="day !== getClientDate()"
             />
           </template>
           <Empty v-else>
             <EmptyHeader>
               <EmptyTitle>No tasks found.</EmptyTitle>
-              <EmptyDescription>
+              <EmptyDescription v-if="isToday">
                 Select a task from the dropdown to add it to today's schedule.
               </EmptyDescription>
             </EmptyHeader>
