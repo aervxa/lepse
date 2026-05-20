@@ -35,7 +35,7 @@ const undoCount = async () => {
 </script>
 
 <template>
-  <AppPage>
+  <AppPage nested>
     <template v-if="habit">
       <!-- Header -->
       <div class="flex flex-col gap-2">

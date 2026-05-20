@@ -1,8 +1,14 @@
+<script setup lang="ts">
+defineProps<{
+  nested?: boolean
+}>()
+</script>
+
 <template>
   <!-- Remove page if nested is hard set to false -->
   <div
     v-bind="$attrs"
-    v-if="useRoute().meta.nested !== false"
+    v-if="nested || useRoute().meta.nested !== false"
     class="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-8 p-8"
   >
     <slot />

@@ -162,7 +162,7 @@ onUnmounted(() => {
       </Sidebar>
 
       <SidebarInset class="border-2 overflow-hidden">
-        <ScrollArea class="h-full">
+        <ScrollArea class="h-full [&_[data-slot=scroll-area-viewport]>div]:h-full">
           <slot />
         </ScrollArea>
       </SidebarInset>

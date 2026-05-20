@@ -17,7 +17,7 @@ const showTasks = ref(true)
 </script>
 
 <template>
-  <AppPage>
+  <AppPage nested>
     <template v-if="goal">
       <!-- Header -->
       <div class="flex flex-col gap-1">

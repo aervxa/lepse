@@ -29,9 +29,8 @@ const { tasks, updateTask } = useTasks()
 
 // ─── Day ─────────────────────────────────────────────────────────────────────
 
-const { focusSession, fetchFocusSession, updateFocusSession, destroyFocusSession } = useDay(
-  getClientDate()
-)
+const { focusSession, fetchFocusSession, updateFocusSession, destroyFocusSession } =
+  useDay(getClientDate())
 
 // ─── Task ────────────────────────────────────────────────────────────────────
 
@@ -207,7 +206,7 @@ const inActivity = computed(() => stopwatch.running.value || pomoStopwatch.runni
 </script>
 
 <template>
-  <div class="flex flex-1 flex-col p-8">
+  <div class="flex h-full flex-col p-8">
     <!-- Header -->
     <div class="flex h-16 items-start justify-between">
       <NuxtLink to="/app" class="-mx-3 px-3 -my-2 py-2 w-fit">

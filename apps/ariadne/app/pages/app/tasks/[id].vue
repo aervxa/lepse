@@ -35,7 +35,7 @@ const linkGoal = async (goalId: number | null) => {
 </script>
 
 <template>
-  <AppPage>
+  <AppPage nested>
     <template v-if="task">
       <!-- Header -->
       <div class="flex flex-col gap-2">
