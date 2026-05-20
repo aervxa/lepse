@@ -35,7 +35,7 @@ const linkGoal = async (goalId: number | null) => {
 </script>
 
 <template>
-  <div class="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-8 overflow-auto p-8">
+  <AppPage>
     <template v-if="task">
       <!-- Header -->
       <div class="flex flex-col gap-2">
@@ -159,7 +159,5 @@ const linkGoal = async (goalId: number | null) => {
         {{ task.description ?? 'No description provided.' }}
       </p>
     </template>
-  </div>
-
-  <NuxtPage />
+  </AppPage>
 </template>

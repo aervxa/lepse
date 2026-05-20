@@ -73,10 +73,7 @@ const sortedScribbles = computed(() =>
 </script>
 
 <template>
-  <div
-    v-if="route.meta.nested !== false"
-    class="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-4 overflow-auto p-8"
-  >
+  <AppPage>
     <!-- Header -->
     <div class="flex items-center justify-between">
       <div>
@@ -230,7 +227,5 @@ const sortedScribbles = computed(() =>
         </div>
       </TabsContent>
     </Tabs>
-  </div>
-
-  <NuxtPage />
+  </AppPage>
 </template>

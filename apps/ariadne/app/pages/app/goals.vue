@@ -16,11 +16,7 @@ fetchGoals().then(() => {
 </script>
 
 <template>
-  <!-- Remove nested "layout" if nested is set to false -->
-  <div
-    v-if="route.meta.nested !== false"
-    class="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-8 overflow-auto p-8"
-  >
+  <AppPage>
     <!-- Header -->
     <div class="flex items-center justify-between">
       <div>
@@ -107,8 +103,5 @@ fetchGoals().then(() => {
         </div>
       </NuxtLink>
     </div>
-  </div>
-
-  <!-- Nested routes used for modals -->
-  <NuxtPage />
+  </AppPage>
 </template>

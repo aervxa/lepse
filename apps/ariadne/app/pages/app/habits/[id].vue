@@ -35,7 +35,7 @@ const undoCount = async () => {
 </script>
 
 <template>
-  <div class="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-8 overflow-auto p-8">
+  <AppPage>
     <template v-if="habit">
       <!-- Header -->
       <div class="flex flex-col gap-2">
@@ -98,7 +98,5 @@ const undoCount = async () => {
         <Button size="sm" :disabled="isLoggingCount" @click="logCount"> +1 </Button>
       </div>
     </template>
-  </div>
-
-  <NuxtPage />
+  </AppPage>
 </template>

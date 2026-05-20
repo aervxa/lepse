@@ -98,7 +98,7 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <div class="flex flex-1">
+    <div class="flex flex-1 min-h-0">
       <Sidebar
         :variant="sidebarKind"
         collapsible="icon"
@@ -161,8 +161,10 @@ onUnmounted(() => {
         </SidebarFooter>
       </Sidebar>
 
-      <SidebarInset class="border-2">
-        <slot />
+      <SidebarInset class="border-2 overflow-hidden">
+        <ScrollArea class="h-full">
+          <slot />
+        </ScrollArea>
       </SidebarInset>
     </div>
   </SidebarProvider>

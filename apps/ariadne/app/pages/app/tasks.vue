@@ -15,11 +15,7 @@ fetchTasks().then(() => {
 </script>
 
 <template>
-  <!-- Remove nested "layout" if nested is set to false -->
-  <div
-    v-if="route.meta.nested !== false"
-    class="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-8 overflow-auto p-8"
-  >
+  <AppPage>
     <!-- Header -->
     <div class="flex items-center justify-between">
       <div>
@@ -57,8 +53,5 @@ fetchTasks().then(() => {
       <Skeleton v-if="tasks.length === 0 && loadingTasks" v-for="i in 4" :key="i" />
       <TaskItem v-else v-for="task in tasks" :key="task.id" :task="task" />
     </div>
-  </div>
-
-  <!-- Nested routes used for modals -->
-  <NuxtPage />
+  </AppPage>
 </template>

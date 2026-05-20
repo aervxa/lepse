@@ -17,7 +17,7 @@ const showTasks = ref(true)
 </script>
 
 <template>
-  <div class="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-8 overflow-auto p-8">
+  <AppPage>
     <template v-if="goal">
       <!-- Header -->
       <div class="flex flex-col gap-1">
@@ -66,7 +66,5 @@ const showTasks = ref(true)
         </CollapsibleContent>
       </Collapsible>
     </template>
-  </div>
-
-  <NuxtPage />
+  </AppPage>
 </template>
