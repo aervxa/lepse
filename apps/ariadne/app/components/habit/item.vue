@@ -8,19 +8,16 @@ const props = defineProps<{
   habit: Data.Habit
 }>()
 
-const { habitPeriods, fetchHabitPeriod, incrementHabit } = useHabits()
-const habitPeriod = computed(() => habitPeriods.value.find((hp) => hp.habitId === props.habit.id))
+const { habitPeriod, fetchHabitPeriod, incrementHabit } = useHabit(props.habit.id)
 
 onMounted(() => {
-  if (!habitPeriod) {
-    fetchHabitPeriod(props.habit.id)
-  }
+  if (!habitPeriod.value) fetchHabitPeriod()
 })
 
 const isLoggingCount = ref(false)
 const logCount = async () => {
   isLoggingCount.value = true
-  const error = await incrementHabit(props.habit.id)
+  const error = await incrementHabit()
   isLoggingCount.value = false
   if (error) toast.error('Failed to update habit count.')
 }

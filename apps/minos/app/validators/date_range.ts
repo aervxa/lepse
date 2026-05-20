@@ -9,3 +9,9 @@ export const dateRangeValidator = vine.create(
     frequency: vine.enum(['daily', 'weekly', 'monthly']),
   })
 )
+
+export const optionalDateRangeValidator = vine.create(
+  vine.object({
+    date: date.optional(),
+  })
+)

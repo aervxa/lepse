@@ -7,20 +7,18 @@ definePageMeta({
 })
 
 const route = useRoute()
-const { habits, habitPeriods, fetchHabitPeriod, incrementHabit, decrementHabit } = useHabits()
-
-const habitId = computed(() => Number(route.params.id))
-const habit = computed(() => habits.value.find((h) => h.id === habitId.value))
-const habitPeriod = computed(() => habitPeriods.value.find((hp) => hp.habitId === habitId.value))
+const { habit, habitPeriod, fetchHabitPeriod, incrementHabit, decrementHabit } = useHabit(
+  Number(route.params.id)
+)
 
 onMounted(() => {
-  fetchHabitPeriod(habitId.value)
+  if (!habitPeriod.value) fetchHabitPeriod()
 })
 
 const isLoggingCount = ref(false)
 const logCount = async () => {
   isLoggingCount.value = true
-  const error = await incrementHabit(habitId.value)
+  const error = await incrementHabit()
   isLoggingCount.value = false
   if (error) toast.error('Failed to update habit count.')
 }
@@ -28,7 +26,7 @@ const logCount = async () => {
 const isUndoingCount = ref(false)
 const undoCount = async () => {
   isUndoingCount.value = true
-  const error = await decrementHabit(habitId.value)
+  const error = await decrementHabit()
   isUndoingCount.value = false
   if (error) toast.error('Failed to undo habit count.')
 }

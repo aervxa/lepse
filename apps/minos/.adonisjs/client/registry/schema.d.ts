@@ -542,9 +542,9 @@ export interface Registry {
       body: {}
       paramsTuple: [ParamValue]
       params: { id: ParamValue }
-      query: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/date_range').optionalDateRangeValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/habit_periods_controller').default['count']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/habit_periods_controller').default['count']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/habit_periods_controller').default['count']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
 }
