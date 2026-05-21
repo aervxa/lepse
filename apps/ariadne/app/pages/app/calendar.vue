@@ -1,11 +1,6 @@
 <script setup lang="ts">
-definePageMeta({
-  layout: 'app',
-})
-
 import {
   CalendarCell,
-  CalendarCellTrigger,
   CalendarGrid,
   CalendarGridBody,
   CalendarGridHead,
@@ -17,35 +12,31 @@ import {
   CalendarPrev,
   CalendarRoot,
 } from 'reka-ui'
-import type { DateValue } from '@internationalized/date'
-import { fromDate, getLocalTimeZone } from '@internationalized/date'
+import { fromDate, getLocalTimeZone, type DateValue } from '@internationalized/date'
 import { ChevronLeft, ChevronRight, Clock, ClockFading } from 'lucide-vue-next'
+import { formatDate } from '@vueuse/core'
 import { getClientDate } from '~/lib/utils'
 import { formatDuration } from '~/lib/time'
 
+definePageMeta({
+  layout: 'app',
+})
+
 const date = ref(fromDate(new Date(), getLocalTimeZone())) as Ref<DateValue>
+
+// store dates of months that have been fetched
+const cachedMonths = useState<string[]>('cachedMonths', () => [])
+
 const { focusSessions, fetchFocusSessions } = useFocusSessions()
-const calendarFetchedRanges = useState<{ date: string; frequency: 'monthly' }[]>(
-  'calendarFetchedRanges',
-  () => []
-)
 
-const getDate = (year: number, month: number, day: number) =>
-  getClientDate(new Date(year, month - 1, day))
-
+// fetch month data when date.month changes
 watch(
-  () => [date.value.year, date.value.month],
+  () => [date.value.month],
   () => {
-    const monthDate = getDate(date.value.year, date.value.month, 1)
-
-    if (
-      !calendarFetchedRanges.value.some(
-        ({ date: d, frequency: f }) => d === monthDate && f === 'monthly'
-      )
-    ) {
-      fetchFocusSessions(monthDate, 'monthly')
-
-      calendarFetchedRanges.value.push({ date: monthDate, frequency: 'monthly' })
+    const month = getClientDate(date.value.toDate(getLocalTimeZone()))
+    if (!cachedMonths.value.some((m) => m === month)) {
+      fetchFocusSessions(month, 'monthly')
+      cachedMonths.value.push(month)
     }
   },
   { immediate: true }
@@ -53,102 +44,114 @@ watch(
 </script>
 
 <template>
-  <Card class="max-w-3xl self-center my-auto py-0">
+  <AppPage class="max-w-6xl">
     <CalendarRoot
-      v-slot="{ weekDays, grid, date }"
       v-model:placeholder="date"
-      class="flex flex-col"
+      v-slot="{ weekDays, grid, date }"
+      class="flex min-h-0 flex-1 flex-col gap-4"
       weekdayFormat="long"
     >
-      <CalendarHeader class="flex justify-between items-center border-b px-4 py-3">
-        <CalendarPrev as-child>
-          <Button variant="ghost" size="icon">
-            <ChevronLeft />
-          </Button>
-        </CalendarPrev>
-        <CalendarHeading class="text-xl font-medium tracking-wide" />
-        <CalendarNext as-child>
-          <Button variant="ghost" size="icon">
-            <ChevronRight />
-          </Button>
-        </CalendarNext>
+      <CalendarHeader class="flex items-center justify-between">
+        <CalendarHeading class="text-3xl font-bold leading-normal" />
+        <div>
+          <CalendarPrev as-child>
+            <Button variant="ghost" size="icon" aria-label="Previous month">
+              <ChevronLeft />
+            </Button>
+          </CalendarPrev>
+          <CalendarNext as-child>
+            <Button variant="ghost" size="icon" aria-label="Next month">
+              <ChevronRight />
+            </Button>
+          </CalendarNext>
+        </div>
       </CalendarHeader>
-      <CalendarGrid
-        v-for="month in grid"
-        :key="month.value.toString()"
-        class="w-full flex flex-col gap-2 p-4 pt-3"
-      >
+
+      <CalendarGrid v-for="month in grid" :key="month.value.toString()" class="flex flex-col gap-2">
         <CalendarGridHead>
-          <CalendarGridRow class="grid grid-cols-7 gap-2">
+          <CalendarGridRow class="grid grid-cols-7">
             <CalendarHeadCell
               v-for="day in weekDays"
               :key="day"
-              class="text-xs font-light tracking-wider text-muted-foreground text-start px-2"
+              class="text-xs font-medium text-muted-foreground py-1"
             >
               {{ day }}
             </CalendarHeadCell>
           </CalendarGridRow>
         </CalendarGridHead>
-        <CalendarGridBody class="flex flex-col gap-3">
-          <CalendarGridRow
-            v-for="(weekDates, index) in month.rows"
-            :key="`weekDate-${index}`"
-            class="grid grid-cols-7 gap-3"
-          >
-            <CalendarCell
-              v-for="weekDate in weekDates"
-              :key="weekDate.toString()"
-              :date="weekDate"
-              class="text-center has-data-outside-view:opacity-30 has-data-outside-view:grayscale"
-            >
-              <CalendarCellTrigger
-                :day="weekDate"
-                :month="month.value"
-                v-slot="{ dayValue }"
-                as-child
+
+        <CalendarGridBody>
+          <Card class="py-0">
+            <CardContent class="px-0">
+              <CalendarGridRow
+                v-for="row in month.rows"
+                class="grid grid-cols-7 group/calendar-grid-row"
               >
-                <NuxtLink
-                  :to="`/app/calendar/${getDate(weekDate.year, weekDate.month, weekDate.day)}`"
-                  class="relative flex flex-col gap-4 p-3 rounded-lg border border-border bg-card/50 data-today:bg-primary/25 data-today:border-primary/50 not-data-today:opacity-80"
+                <CalendarCell
+                  v-for="cell in row"
+                  :key="cell.day"
+                  :date="cell"
+                  class="bg-clip-padding hover:bg-accent/20 border-e border-b group-last/calendar-grid-row:border-b-0 last:border-e-0"
+                  :class="[
+                    cell.compare(date) === 0 && 'bg-primary/20 hover:bg-primary/25',
+                    cell.month !== month.value.month && '**:opacity-60',
+                  ]"
+                  @click="(console.log(cell), console.log(date))"
                 >
-                  <p class="text-xl leading-none font-medium">
-                    {{ dayValue }}
-                  </p>
-                  <div
-                    class="flex flex-col gap-1"
-                    v-for="fs in [
-                      focusSessions.find((fs) =>
-                        fs.date?.startsWith(getDate(weekDate.year, weekDate.month, weekDate.day))
-                      ),
-                    ]"
+                  <NuxtLink
+                    :to="`/app/calendar/${getClientDate(cell.toDate(getLocalTimeZone()))}`"
+                    class="flex flex-col p-2 pt-1.5 gap-4 min-h-24"
                   >
-                    <div class="flex items-center gap-1.5" title="time worked">
-                      <Clock class="size-3" />
-                      <p class="text-xs">
-                        {{
-                          formatDuration(fs?.stopwatchMs ?? 0, {
-                            format:
-                              (fs?.stopwatchMs ?? 0) > 3_600_000 /* Above an hour */
-                                ? 'hhh mmm'
-                                : 'mmm',
-                            pad: false,
-                          })
-                        }}
+                    <!-- Cell "header" -->
+                    <div
+                      class="flex gap-[1ch] self-end text-xs leading-none"
+                      :class="[
+                        cell.month === month.value.month
+                          ? 'text-muted-foreground font-medium'
+                          : 'text-muted-foreground/40 font-extralight',
+                      ]"
+                    >
+                      <!-- Show month on the first day, only if prevous month days exist -->
+                      <p
+                        v-if="cell.month === month.value.month && cell.day === 1 && row[0] !== cell"
+                      >
+                        {{ formatDate(cell.toDate(getLocalTimeZone()), 'MMM') }}
                       </p>
+                      <p>{{ cell.day }}</p>
                     </div>
-                    <div class="flex items-center gap-1.5" title="pomos completed">
-                      <ClockFading class="size-3" />
-                      <p class="text-xs">{{ fs?.pomoCount ?? 0 }} pomos</p>
+
+                    <!-- Focus session -->
+                    <div
+                      v-for="fs in [
+                        focusSessions.find((fs) =>
+                          fs.date?.startsWith(getClientDate(cell.toDate(getLocalTimeZone())))
+                        ),
+                      ]"
+                      class="mt-auto flex gap-2 text-[10px] text-muted-foreground"
+                    >
+                      <div class="flex min-w-0 items-center gap-1" title="time worked">
+                        <Clock class="size-2.5 flex-none" />
+                        <p class="truncate">
+                          {{
+                            formatDuration(fs?.stopwatchMs ?? 0, {
+                              format: (fs?.stopwatchMs ?? 0) > 3_600_000 ? 'hhh mmm' : 'mmm',
+                              pad: false,
+                            })
+                          }}
+                        </p>
+                      </div>
+                      <div class="flex min-w-0 items-center gap-1" title="pomos completed">
+                        <ClockFading class="size-2.5 flex-none" />
+                        <p class="truncate">{{ fs?.pomoCount ?? 0 }} pomos</p>
+                      </div>
                     </div>
-                  </div>
-                </NuxtLink>
-              </CalendarCellTrigger>
-            </CalendarCell>
-          </CalendarGridRow>
+                  </NuxtLink>
+                </CalendarCell>
+              </CalendarGridRow>
+            </CardContent>
+          </Card>
         </CalendarGridBody>
       </CalendarGrid>
     </CalendarRoot>
-  </Card>
-
-  <NuxtPage />
+  </AppPage>
 </template>
