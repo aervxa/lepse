@@ -5,10 +5,10 @@ definePageMeta({
 </script>
 
 <template>
-  <!-- TODO: Focus should be here -->
-  <Empty>
-    <EmptyHeader>
-      <EmptyTitle>yokoso</EmptyTitle>
-    </EmptyHeader>
-  </Empty>
+  <!-- TODO: Focus should be here    -->
+  <!-- Header -->
+  <div class="flex items-center justify-between p-4">
+    <Logo class="h-10 sm:h-12" />
+    <FocusSessions />
+  </div>
 </template>
