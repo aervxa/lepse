@@ -87,7 +87,7 @@ onUnmounted(() => {
 
     <!-- Main App -->
     <section
-      class="flex-1 min-h-0 m-2 rounded-lg bg-background overflow-hidden border-2 flex flex-col"
+      class="flex-1 min-h-0 m-2 rounded-lg bg-background overflow-hidden border-2 flex flex-col p-4"
     >
       <slot />
     </section>
