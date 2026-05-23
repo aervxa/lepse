@@ -86,12 +86,10 @@ onUnmounted(() => {
     </div>
 
     <!-- Main App -->
-    <!-- <section class="bg">
-
+    <section
+      class="flex-1 min-h-0 m-2 rounded-lg bg-background overflow-hidden border-2 flex flex-col"
+    >
+      <slot />
     </section>
-     -->
-    <ScrollArea class="flex-1 min-h-0 m-2 rounded-lg bg-background overflow-hidden border-2">
-      <p v-for="i in 400">{{ i }}</p>
-    </ScrollArea>
   </main>
 </template>
