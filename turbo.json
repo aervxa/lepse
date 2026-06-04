@@ -13,8 +13,13 @@
     },
     "@lepse/ariadne#tdev": {
       "with": ["@lepse/minos#dev"],
-      "persistent": true,
-      "cache": false
+      "cache": false,
+      "persistent": true
+    },
+    "@lepse/ariadne#tdev:cef": {
+      "with": ["@lepse/minos#dev"],
+      "cache": false,
+      "persistent": true
     },
     "test": {
       "dependsOn": ["build"],
