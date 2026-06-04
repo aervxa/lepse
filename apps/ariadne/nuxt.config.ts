@@ -13,7 +13,7 @@ export default defineNuxtConfig({
   css: ['./app/assets/css/main.css'],
   // Enables the development server to be discoverable by other devices when running on iOS physical devices
   devServer: {
-    host: '0',
+    host: '0.0.0.0',
   },
   devtools: { enabled: true },
   fonts: {
