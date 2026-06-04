@@ -1,11 +1,11 @@
-#[cfg(target_os = "linux")]
+#[cfg(feature = "cef")]
 use tauri_runtime_cef::CefRuntime;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-  #[cfg(target_os = "linux")]
+  #[cfg(feature = "cef")]
   let builder = tauri::Builder::<CefRuntime<_>>::new();
-  #[cfg(not(target_os = "linux"))]
+  #[cfg(not(feature = "cef"))]
   let builder = tauri::Builder::default();
 
   builder
