@@ -3,6 +3,7 @@ import { Lightbulb, LightbulbOff } from 'lucide-vue-next'
 
 definePageMeta({
   layout: 'shell',
+  keepalive: 'true',
 })
 
 const inFocus = ref(false)
@@ -23,7 +24,7 @@ const inFocus = ref(false)
 
   <!-- Footer | actions -->
   <div class="flex items-center justify-between gap-8">
-    <div><!-- TODO: actions/nav ("bubbles") --></div>
+    <PopoverNav />
 
     <Button
       :variant="inFocus ? 'secondary' : 'default'"
