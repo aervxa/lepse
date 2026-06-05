@@ -3,7 +3,6 @@ import { Lightbulb, LightbulbOff } from 'lucide-vue-next'
 
 definePageMeta({
   layout: 'shell',
-  keepalive: 'true',
 })
 
 const inFocus = ref(false)

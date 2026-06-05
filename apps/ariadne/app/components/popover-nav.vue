@@ -4,6 +4,7 @@ import { navigateBack } from '~/lib/utils'
 
 const route = useRoute()
 
+const itemsWrapper = ref<HTMLDivElement | null>(null)
 const items = [
   { name: 'Tasks', path: '/shell/tasks', icon: ListTodo },
   { name: 'Goals', path: '/shell/goals', icon: Goal },
@@ -16,26 +17,39 @@ const items = [
     <Popover
       @update:open="
         (value) => {
-          !value && navigateBack()
+          value === false && navigateBack()
         }
       "
-      :open="items.map((i) => i.path).some((path) => route.path.startsWith(path))"
+      :open="items.some((item) => route.path.startsWith(item.path))"
     >
       <PopoverAnchor />
 
-      <PopoverContent class="mb-1 ml-6.5">
-        <NuxtPage />
+      <PopoverContent
+        class="mb-1 ml-6.5 w-96 max-w-[80vw]"
+        @interact-outside="
+          (event) => {
+            if (itemsWrapper?.contains(event.target as Node)) {
+              event.preventDefault()
+            }
+          }
+        "
+      >
+        <NuxtPage keepalive />
       </PopoverContent>
     </Popover>
 
     <!-- List of buttons -->
-    <div class="relative flex gap-2">
+    <div ref="itemsWrapper" class="relative flex gap-2">
       <Button
         v-for="item in items"
         :key="item.name"
         variant="outline"
         class="font-mono text-[11px] tracking-widest uppercase"
-        @click="navigateTo(item.path)"
+        @click="
+          route.path.startsWith(item.path)
+            ? navigateBack()
+            : (navigateTo(item.path), console.log('navigated to', item.path))
+        "
       >
         <component :is="item.icon" />
         {{ item.name }}
