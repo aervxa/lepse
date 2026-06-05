@@ -132,7 +132,7 @@
     @apply overflow-hidden;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
   }
   button:not(:disabled),
   [role='button']:not(:disabled) {

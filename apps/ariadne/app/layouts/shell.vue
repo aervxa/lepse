@@ -10,18 +10,22 @@ import {
 
 const router = useRouter()
 
-// ─── App ────────────────────────────────────────────────────────────────────
+// ─── Tauri ──────────────────────────────────────────────────────── start ───
+
 import { isTauri } from '@tauri-apps/api/core'
 import type { UnlistenFn } from '@tauri-apps/api/event'
 import { getCurrentWebviewWindow, type WebviewWindow } from '@tauri-apps/api/webviewWindow'
+import { platform, type Platform } from '@tauri-apps/plugin-os'
 
 const isApp = isTauri()
 const isAppMaximized = ref(false)
+let os: Platform | undefined
 let appWindow: WebviewWindow | undefined
 let unlisten: UnlistenFn | undefined
 
 onMounted(async () => {
   if (isApp) {
+    os = platform()
     appWindow = getCurrentWebviewWindow()
     isAppMaximized.value = await appWindow.isMaximized()
 
@@ -34,15 +38,20 @@ onMounted(async () => {
 onUnmounted(() => {
   unlisten?.()
 })
+
+// ─── Tauri ────────────────────────────────────────────────────────── end ───
 </script>
 
 <template>
-  <main class="flex h-dvh flex-col bg-sidebar">
+  <main
+    class="flex h-dvh flex-col"
+    :class="[os === 'windows' ? 'bg-transparent' : 'bg-sidebar/60']"
+  >
     <div
       v-if="isApp"
       data-slot="titlebar"
       data-tauri-drag-region
-      class="h-8 flex justify-between items-center -mb-2 select-none"
+      class="-mb-2 flex h-8 items-center justify-between select-none"
     >
       <!-- <img :src="logoSrc" class="h-full not-dark:invert pointer-events-none" /> -->
       <div class="px-2">
@@ -78,7 +87,7 @@ onUnmounted(() => {
           size="icon-sm"
           tabindex="-1"
           @click="appWindow?.close()"
-          class="hover:[&>svg]:stroke-3 text-muted-foreground hover:text-destructive w-10 pr-2"
+          class="text-muted-foreground hover:text-destructive w-10 pr-2 hover:[&>svg]:stroke-3"
         >
           <X />
         </Button>
@@ -87,7 +96,7 @@ onUnmounted(() => {
 
     <!-- Main App -->
     <section
-      class="flex-1 min-h-0 m-2 rounded-lg bg-background overflow-hidden border-2 flex flex-col p-4"
+      class="bg-background m-2 flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border-2 p-4"
     >
       <slot />
     </section>
