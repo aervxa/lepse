@@ -24,6 +24,7 @@ log = "0.4"
 tauri = { git = "https://github.com/tauri-apps/tauri", branch = "feat/cef", features = [] }
 tauri-runtime-cef = { git = "https://github.com/tauri-apps/tauri", branch = "feat/cef", optional = true }
 tauri-plugin-log = "2"
+tauri-plugin-os = "2"
 
 [patch.crates-io]
 tauri = { git = "https://github.com/tauri-apps/tauri", branch = "feat/cef" }

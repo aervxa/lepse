@@ -51,6 +51,7 @@ export default defineNuxtConfig({
         '@internationalized/date',
         '@tauri-apps/api/core',
         '@tauri-apps/api/webviewWindow',
+        '@tauri-apps/plugin-os',
         '@tuyau/core/client',
         '@vee-validate/zod',
         '@vue/devtools-core',

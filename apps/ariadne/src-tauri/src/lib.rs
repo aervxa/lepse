@@ -6,7 +6,7 @@ pub fn run() {
   #[cfg(feature = "cef")]
   let builder = tauri::Builder::<CefRuntime<_>>::new();
   #[cfg(not(feature = "cef"))]
-  let builder = tauri::Builder::default();
+  let builder = tauri::Builder::default().plugin(tauri_plugin_os::init());
 
   builder
     .setup(|app| {
