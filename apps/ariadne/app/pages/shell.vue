@@ -1,9 +1,14 @@
 <script setup>
+import { useWindowSize } from '@vueuse/core'
 import { Lightbulb, LightbulbOff } from 'lucide-vue-next'
+import { getDailyQuote } from '~/lib/quotes'
 
 definePageMeta({
   layout: 'shell',
 })
+
+const { width } = useWindowSize()
+const floatNav = computed(() => width.value >= 640)
 
 const inFocus = ref(false)
 </script>
@@ -24,7 +29,17 @@ const inFocus = ref(false)
   <!-- Footer | actions -->
   <div class="flex items-center justify-between gap-8">
     <div>
-      <BubbleNav />
+      <BubbleNav :float="floatNav" />
+      <p
+        class="max-w-[28ch] text-pretty"
+        :class="[
+          floatNav
+            ? 'text-xl font-medium opacity-80'
+            : 'absolute bottom-[20vh] left-1/2 -translate-x-1/2 text-center text-lg font-light italic opacity-60',
+        ]"
+      >
+        "{{ getDailyQuote() }}"
+      </p>
     </div>
 
     <Button

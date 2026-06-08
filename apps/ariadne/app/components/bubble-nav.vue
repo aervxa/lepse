@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { useWindowSize } from '@vueuse/core'
 import { Goal, ListTodo } from 'lucide-vue-next'
 import { navigateBack } from '~/lib/utils'
+
+const { float } = defineProps<{ float: Boolean }>()
 
 const route = useRoute()
 
@@ -15,9 +16,6 @@ const onOpenUpdate = (value: boolean) => {
   value === false && isBubbleOpen.value === true && navigateBack()
 }
 const isBubbleOpen = computed(() => items.some((item) => route.path.startsWith(item.path)))
-
-const { width } = useWindowSize()
-const float = computed(() => width.value >= 640)
 </script>
 
 <template>
