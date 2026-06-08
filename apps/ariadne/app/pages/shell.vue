@@ -22,15 +22,17 @@ const inFocus = ref(false)
   </div>
 
   <!-- Center | clock -->
-  <div class="mx-auto my-auto pb-[16vh]">
-    <Clock />
+  <div class="mx-auto my-auto flex flex-col items-center gap-4 pb-[16vh] sm:pb-[10vh]">
+    <div v-if="inFocus"></div>
+    <Clock v-else />
   </div>
 
   <!-- Footer | actions -->
-  <div class="flex items-center justify-between gap-8">
+  <div class="flex items-end justify-between gap-8">
     <div>
       <BubbleNav :float="floatNav" />
       <p
+        v-if="!inFocus || floatNav"
         class="max-w-[28ch] text-pretty"
         :class="[
           floatNav
