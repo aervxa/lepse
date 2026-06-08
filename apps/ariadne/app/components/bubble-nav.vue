@@ -37,13 +37,13 @@ const { width } = useWindowSize()
           }
         "
       >
-        <NuxtPage />
+        <NuxtPage source="popover" />
       </PopoverContent>
     </Popover>
 
     <Drawer v-else :open="isBubbleOpen" @update:open="onOpenUpdate">
       <DrawerContent>
-        <NuxtPage />
+        <NuxtPage source="drawer" />
       </DrawerContent>
     </Drawer>
 
