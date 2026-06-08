@@ -15,7 +15,7 @@ const { tasks } = useTasks()
       <PopoverDescription>Manage your focus and productivity.</PopoverDescription>
     </PopoverHeader>
 
-    <div class="flex flex-col gap-3" :class="[source === 'drawer' && 'p-4']">
+    <div class="flex flex-col gap-3" :class="[source === 'drawer' && 'p-4 pt-2']">
       <Item v-for="task in tasks" :key="task.id" variant="outline" as-child>
         <NuxtLink :to="`tasks/${task.id}`">
           <ItemContent>
