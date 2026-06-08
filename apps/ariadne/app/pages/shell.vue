@@ -23,7 +23,9 @@ const inFocus = ref(false)
 
   <!-- Footer | actions -->
   <div class="flex items-center justify-between gap-8">
-    <BubbleNav />
+    <div>
+      <BubbleNav />
+    </div>
 
     <Button
       :variant="inFocus ? 'secondary' : 'default'"
