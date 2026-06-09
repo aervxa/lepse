@@ -10,7 +10,7 @@ definePageMeta({
 const route = useRoute()
 
 const { width } = useWindowSize()
-const floatNav = computed(() => width.value >= 640)
+const floatNav = computed(() => width.value >= 768)
 
 const inFocus = computed(() => route.path.startsWith('/shell/focus'))
 const focusMethod = useLocalStorage<'stopwatch' | 'pomodoro'>('focus_method', 'stopwatch')
@@ -38,11 +38,11 @@ provide(focusMethodToggleableKey, focusMethodToggleable)
       <BubbleNav :float="floatNav" />
       <p
         v-if="!inFocus || floatNav"
-        class="max-w-[28ch] text-pretty"
+        class="max-w-[28ch] text-lg text-pretty"
         :class="[
           floatNav
-            ? 'text-xl font-medium opacity-80'
-            : 'absolute bottom-[20vh] left-1/2 -translate-x-1/2 text-center text-lg font-light italic opacity-60',
+            ? 'opacity-80 md:text-xl md:font-medium'
+            : 'absolute bottom-[20vh] left-1/2 -translate-x-1/2 text-center font-light italic opacity-60',
         ]"
       >
         "{{ getDailyQuote() }}"

@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { useWindowSize } from '@vueuse/core'
 import { Goal, ListTodo } from 'lucide-vue-next'
 
 const { float } = defineProps<{ float: Boolean }>()
 
 const route = useRoute()
+const { width } = useWindowSize()
 
 const btnWrapper = ref<HTMLDivElement | null>(null)
 const items = [
@@ -21,9 +23,9 @@ const isBubbleOpen = computed(() => items.some((item) => route.path.startsWith(i
   <!-- Wrapper to group popover's anchor together with the items -->
   <div
     class="flex"
-    :class="[float ? 'absolute top-1/2 left-10 -translate-1/2 flex-col' : 'relative']"
+    :class="[float ? 'absolute top-1/2 left-3 -translate-y-1/2 flex-col' : 'relative']"
   >
-    <Popover v-if="float" :open="isBubbleOpen" @update:open="onOpenUpdate">
+    <Popover v-if="width >= 1280" :open="isBubbleOpen" @update:open="onOpenUpdate">
       <PopoverAnchor class="pointer-events-none absolute inset-0" />
 
       <PopoverContent
@@ -48,7 +50,13 @@ const isBubbleOpen = computed(() => items.some((item) => route.path.startsWith(i
       </PopoverContent>
     </Popover>
 
-    <Drawer v-else :open="isBubbleOpen" @update:open="onOpenUpdate" should-scale-background>
+    <Drawer
+      v-else
+      :open="isBubbleOpen"
+      @update:open="onOpenUpdate"
+      should-scale-background
+      :direction="float ? 'left' : 'bottom'"
+    >
       <DrawerContent>
         <NuxtPage source="drawer" />
       </DrawerContent>
@@ -66,7 +74,7 @@ const isBubbleOpen = computed(() => items.some((item) => route.path.startsWith(i
         :data-path="item.path"
       >
         <component :is="item.icon" />
-        <span class="sm:hidden">{{ item.name }}</span>
+        <span v-if="!float">{{ item.name }}</span>
       </Button>
     </div>
   </div>
