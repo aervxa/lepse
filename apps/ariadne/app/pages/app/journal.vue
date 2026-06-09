@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { formatDate, formatTimeAgo, useDebounceFn, useLocalStorage } from '@vueuse/core'
 import { Angry, Annoyed, Frown, History, Laugh, Plus, Save, Smile } from 'lucide-vue-next'
-import { getClientDate } from '~/lib/utils'
 
 definePageMeta({
   layout: 'app',
@@ -103,12 +102,12 @@ const sortedScribbles = computed(() =>
 
       <!-- Journal -->
       <TabsContent value="journal">
-        <div class="flex max-lg:flex-col gap-10">
+        <div class="flex gap-10 max-lg:flex-col">
           <!-- Today's Entry -->
-          <div class="flex-1 flex flex-col gap-4">
+          <div class="flex flex-1 flex-col gap-4">
             <p class="text-lg font-semibold">Today's Entry</p>
 
-            <div class="relative min-h-96 flex">
+            <div class="relative flex min-h-96">
               <Skeleton v-if="loading" class="flex-1" />
               <Textarea
                 v-else
@@ -118,8 +117,8 @@ const sortedScribbles = computed(() =>
                 :class="[body.length && 'pb-16']"
               ></Textarea>
               <!-- Actions -->
-              <div class="absolute bottom-4 left-4 right-4 flex justify-between">
-                <div class="flex gap-1.">
+              <div class="absolute right-4 bottom-4 left-4 flex justify-between">
+                <div class="gap-1. flex">
                   <Button
                     v-for="m in MOODS"
                     :key="m.value"
@@ -144,10 +143,10 @@ const sortedScribbles = computed(() =>
           </div>
 
           <!-- Past Entries -->
-          <div class="lg:basis-64 xl:basis-80 flex flex-col gap-4">
-            <div class="flex items-center gap-2 text-muted-foreground my-[5.5px]">
+          <div class="flex flex-col gap-4 lg:basis-64 xl:basis-80">
+            <div class="text-muted-foreground my-[5.5px] flex items-center gap-2">
               <History class="size-4" />
-              <p class="text-sm uppercase font-bold tracking-wider leading-none">History</p>
+              <p class="text-sm leading-none font-bold tracking-wider uppercase">History</p>
             </div>
 
             <div class="flex flex-col gap-3">
@@ -183,12 +182,12 @@ const sortedScribbles = computed(() =>
 
       <!-- Scribbles -->
       <TabsContent value="scribbles">
-        <div class="flex max-lg:flex-col gap-10">
+        <div class="flex gap-10 max-lg:flex-col">
           <!-- Scribbles -->
-          <div class="flex-1 flex flex-col gap-4">
+          <div class="flex flex-1 flex-col gap-4">
             <p class="text-lg font-semibold">Scribbles</p>
 
-            <div class="flex flex-col gap-3 max-w-lg">
+            <div class="flex max-w-lg flex-col gap-3">
               <Empty v-if="sortedScribbles.length === 0" class="border border-dashed">
                 <EmptyHeader>
                   <EmptyTitle>No scribbles yet</EmptyTitle>
@@ -216,7 +215,7 @@ const sortedScribbles = computed(() =>
                     </ItemDescription>
                   </ItemContent>
                   <ItemFooter>
-                    <p class="text-xs text-muted-foreground/80">
+                    <p class="text-muted-foreground/80 text-xs">
                       Last updated {{ formatTimeAgo(new Date(scribble.updatedAt || '')) }}
                     </p>
                   </ItemFooter>

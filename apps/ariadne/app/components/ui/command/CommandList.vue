@@ -3,7 +3,7 @@ import type { ListboxContentProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
 import { reactiveOmit } from '@vueuse/core'
 import { ListboxContent, useForwardProps } from 'reka-ui'
-import { cn } from '@/lib/utils'
+import { cn } from '@/utils'
 
 const props = defineProps<ListboxContentProps & { class?: HTMLAttributes['class'] }>()
 
@@ -16,7 +16,12 @@ const forwarded = useForwardProps(delegatedProps)
   <ListboxContent
     data-slot="command-list"
     v-bind="forwarded"
-    :class="cn('no-scrollbar max-h-72 scroll-py-1 outline-none overflow-x-hidden overflow-y-auto', props.class)"
+    :class="
+      cn(
+        'no-scrollbar max-h-72 scroll-py-1 overflow-x-hidden overflow-y-auto outline-none',
+        props.class
+      )
+    "
   >
     <div role="presentation">
       <slot />

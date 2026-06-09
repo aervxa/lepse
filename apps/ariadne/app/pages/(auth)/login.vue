@@ -5,7 +5,6 @@ import { z } from 'zod'
 import { Eye } from 'lucide-vue-next'
 import { useAuth } from '~/composables/useAuth'
 import { toast } from 'vue-sonner'
-import { mapErrors } from '~/lib/utils'
 
 const { login } = useAuth()
 

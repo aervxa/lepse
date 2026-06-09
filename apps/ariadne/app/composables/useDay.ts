@@ -1,5 +1,4 @@
 import type { Data } from '@lepse/minos/data'
-import { getClientDate } from '~/lib/utils'
 
 export const useDay = (date?: string) => {
   date = date ?? getClientDate()

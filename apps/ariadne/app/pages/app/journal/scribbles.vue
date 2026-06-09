@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { navigateBack } from '~/lib/utils'
-
 const route = useRoute()
 
 const DIALOG_URL = /scribbles\/([^/]+(\/edit)?|create)\/?$/

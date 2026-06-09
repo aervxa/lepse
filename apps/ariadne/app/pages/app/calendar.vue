@@ -15,7 +15,6 @@ import {
 import { fromDate, getLocalTimeZone, type DateValue } from '@internationalized/date'
 import { ChevronLeft, ChevronRight, Clock, ClockFading } from 'lucide-vue-next'
 import { formatDate } from '@vueuse/core'
-import { getClientDate } from '~/lib/utils'
 import { formatDuration } from '~/lib/time'
 
 definePageMeta({
@@ -52,7 +51,7 @@ watch(
       weekdayFormat="long"
     >
       <CalendarHeader class="flex items-center justify-between">
-        <CalendarHeading class="text-3xl font-bold leading-normal" />
+        <CalendarHeading class="text-3xl leading-normal font-bold" />
         <div>
           <CalendarPrev as-child>
             <Button variant="ghost" size="icon" aria-label="Previous month">
@@ -73,7 +72,7 @@ watch(
             <CalendarHeadCell
               v-for="day in weekDays"
               :key="day"
-              class="text-xs font-medium text-muted-foreground py-1"
+              class="text-muted-foreground py-1 text-xs font-medium"
             >
               {{ day }}
             </CalendarHeadCell>
@@ -85,13 +84,13 @@ watch(
             <CardContent class="px-0">
               <CalendarGridRow
                 v-for="row in month.rows"
-                class="grid grid-cols-7 group/calendar-grid-row"
+                class="group/calendar-grid-row grid grid-cols-7"
               >
                 <CalendarCell
                   v-for="cell in row"
                   :key="cell.day"
                   :date="cell"
-                  class="bg-clip-padding hover:bg-accent/20 border-e border-b group-last/calendar-grid-row:border-b-0 last:border-e-0"
+                  class="hover:bg-accent/20 border-e border-b bg-clip-padding group-last/calendar-grid-row:border-b-0 last:border-e-0"
                   :class="[
                     cell.compare(date) === 0 && 'bg-primary/20 hover:bg-primary/25',
                     cell.month !== month.value.month && '**:opacity-60',
@@ -100,7 +99,7 @@ watch(
                 >
                   <NuxtLink
                     :to="`/app/calendar/${getClientDate(cell.toDate(getLocalTimeZone()))}`"
-                    class="flex flex-col p-2 pt-1.5 gap-4 min-h-24"
+                    class="flex min-h-24 flex-col gap-4 p-2 pt-1.5"
                   >
                     <!-- Cell "header" -->
                     <div
@@ -127,7 +126,7 @@ watch(
                           fs.date?.startsWith(getClientDate(cell.toDate(getLocalTimeZone())))
                         ),
                       ]"
-                      class="mt-auto flex gap-2 text-[10px] text-muted-foreground"
+                      class="text-muted-foreground mt-auto flex gap-2 text-[10px]"
                     >
                       <div class="flex min-w-0 items-center gap-1" title="time worked">
                         <Clock class="size-2.5 flex-none" />

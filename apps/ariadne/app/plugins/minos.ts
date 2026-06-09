@@ -1,6 +1,5 @@
 import { createTuyau } from '@tuyau/core/client'
 import { registry } from '@lepse/minos/registry'
-import { getClientDate } from '~/lib/utils'
 
 export default defineNuxtPlugin({
   name: 'minos',

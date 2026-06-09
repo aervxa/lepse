@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { formatDate } from '@vueuse/core'
 import { ChevronRight, Clock, ClockFading, Plus } from 'lucide-vue-next'
-import { getClientDate } from '~/lib/utils'
 import { formatDuration } from '~/lib/time'
 
 definePageMeta({
@@ -47,7 +46,7 @@ onMounted(() => {
           View and manage tasks for {{ isToday ? 'today' : 'this day' }}.
         </DialogDescription>
 
-        <div class="flex gap-3 text-xs leading-none text-muted-foreground whitespace-nowrap">
+        <div class="text-muted-foreground flex gap-3 text-xs leading-none whitespace-nowrap">
           <div class="flex items-center gap-1.5" title="time worked">
             <Clock class="size-3" />
             <p>
@@ -67,7 +66,7 @@ onMounted(() => {
       </DialogHeader>
 
       <Collapsible v-model:open="showTasks">
-        <div class="flex items-center gap-2 justify-between">
+        <div class="flex items-center justify-between gap-2">
           <CollapsibleTrigger as-child>
             <Button variant="ghost" size="xs">
               <ChevronRight class="transition-transform" :class="[showTasks && 'rotate-90']" />
@@ -92,7 +91,7 @@ onMounted(() => {
             </Button>
           </Combobox>
         </div>
-        <CollapsibleContent class="pt-2 flex flex-col">
+        <CollapsibleContent class="flex flex-col pt-2">
           <template v-if="expandedDayTasks.length" v-for="dayTask in expandedDayTasks">
             <TaskItem
               v-if="dayTask.task"

@@ -17,7 +17,6 @@ import { computed, ref, watch } from 'vue'
 import { getDailyQuote } from '~/lib/quotes'
 import { formatDuration, Stopwatch } from '~/lib/time'
 import logoSrc from '~/assets/images/logo.png'
-import { getClientDate } from '~/lib/utils'
 
 definePageMeta({
   layout: 'app',
@@ -209,7 +208,7 @@ const inActivity = computed(() => stopwatch.running.value || pomoStopwatch.runni
   <div class="flex h-full flex-col p-8">
     <!-- Header -->
     <div class="flex h-16 items-start justify-between">
-      <NuxtLink to="/app" class="-mx-3 px-3 -my-2 py-2 w-fit">
+      <NuxtLink to="/app" class="-mx-3 -my-2 w-fit px-3 py-2">
         <img :src="logoSrc" class="h-12 not-dark:invert" />
       </NuxtLink>
 
@@ -380,12 +379,12 @@ const inActivity = computed(() => stopwatch.running.value || pomoStopwatch.runni
     <!-- Footer -->
     <div class="flex h-32 items-end justify-between">
       <template v-if="inFocus">
-        <div class="flex flex-col gap-3 max-w-2/5">
+        <div class="flex max-w-2/5 flex-col gap-3">
           <div class="flex flex-col gap-2">
             <p class="font-mono text-xs tracking-widest uppercase opacity-60">working on</p>
             <div class="flex items-center">
               <p
-                class="truncate text-2xl pr-[1ch]"
+                class="truncate pr-[1ch] text-2xl"
                 :class="[task ? 'font-light' : 'font-extralight italic']"
               >
                 {{ task?.name ?? 'No task selected' }}

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Goal, ListTodo } from 'lucide-vue-next'
-import { navigateBack } from '~/lib/utils'
 
 const { float } = defineProps<{ float: Boolean }>()
 

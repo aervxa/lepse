@@ -2,7 +2,6 @@
 import { useForm, Field as VeeField } from 'vee-validate'
 import z from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
-import { mapErrors } from '~/lib/utils'
 import { toast } from 'vue-sonner'
 import { RotateCcw } from 'lucide-vue-next'
 

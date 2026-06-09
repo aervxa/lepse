@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { formatDate } from '@vueuse/core'
-import { getClientDate } from '~/lib/utils'
 
 definePageMeta({
   layout: 'app',
@@ -16,7 +15,7 @@ const journal = computed(() =>
 
 <template>
   <Dialog :open="true" @update:open="useRouter().back()">
-    <DialogContent class="sm:max-w-xl max-h-[80vh] flex flex-col">
+    <DialogContent class="flex max-h-[80vh] flex-col sm:max-w-xl">
       <DialogHeader>
         <DialogTitle class="text-lg">
           {{ formatDate(new Date(route.params.date as string), 'dddd, MMMM D, YYYY') }}
