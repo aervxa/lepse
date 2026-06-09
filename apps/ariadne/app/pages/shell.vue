@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useWindowSize } from '@vueuse/core'
 import { Lightbulb, LightbulbOff } from 'lucide-vue-next'
 import { getDailyQuote } from '~/lib/quotes'
@@ -7,10 +7,13 @@ definePageMeta({
   layout: 'shell',
 })
 
+const route = useRoute()
+
 const { width } = useWindowSize()
 const floatNav = computed(() => width.value >= 640)
 
-const inFocus = ref(false)
+const { focusMethod, focusMethodToggleable, toggleFocusMethod } = useFocus()
+const inFocus = computed(() => route.path.startsWith('/shell/focus'))
 </script>
 
 <template>
@@ -23,7 +26,7 @@ const inFocus = ref(false)
 
   <!-- Center | clock -->
   <div class="mx-auto my-auto flex flex-col items-center gap-4 pb-[16vh] sm:pb-[10vh]">
-    <div v-if="inFocus"></div>
+    <NuxtPage v-if="inFocus" />
     <Clock v-else />
   </div>
 
@@ -44,14 +47,27 @@ const inFocus = ref(false)
       </p>
     </div>
 
-    <Button
-      :variant="inFocus ? 'secondary' : 'default'"
-      class="font-mono text-[11px] tracking-widest uppercase"
-      @click="inFocus = !inFocus"
-    >
-      <LightbulbOff v-if="inFocus" />
-      <Lightbulb v-else />
-      {{ inFocus ? 'Exit' : 'Focus' }}
-    </Button>
+    <div class="flex gap-2">
+      <Button
+        v-if="inFocus"
+        variant="outline"
+        class="font-mono text-[10px] tracking-widest uppercase"
+        @click="toggleFocusMethod"
+        :disabled="!focusMethodToggleable"
+      >
+        {{ focusMethod === 'stopwatch' ? 'Pomodoro' : 'Stopwatch' }}
+      </Button>
+      <Button
+        :variant="inFocus ? 'secondary' : 'default'"
+        class="font-mono text-[11px] tracking-widest uppercase"
+        as-child
+      >
+        <NuxtLink :to="inFocus ? '/shell' : '/shell/focus'">
+          <LightbulbOff v-if="inFocus" />
+          <Lightbulb v-else />
+          {{ inFocus ? 'Exit' : 'Focus' }}
+        </NuxtLink>
+      </Button>
+    </div>
   </div>
 </template>
