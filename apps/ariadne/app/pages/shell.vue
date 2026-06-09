@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useWindowSize } from '@vueuse/core'
+import { useLocalStorage, useWindowSize } from '@vueuse/core'
 import { Lightbulb, LightbulbOff } from 'lucide-vue-next'
 import { getDailyQuote } from '~/lib/quotes'
 
@@ -12,8 +12,10 @@ const route = useRoute()
 const { width } = useWindowSize()
 const floatNav = computed(() => width.value >= 640)
 
-const { focusMethod, focusMethodToggleable, toggleFocusMethod } = useFocus()
 const inFocus = computed(() => route.path.startsWith('/shell/focus'))
+const focusMethod = useLocalStorage<'stopwatch' | 'pomodoro'>('focus_method', 'stopwatch')
+const focusMethodToggleable = ref(true)
+provide(focusMethodToggleableKey, focusMethodToggleable)
 </script>
 
 <template>
@@ -26,7 +28,7 @@ const inFocus = computed(() => route.path.startsWith('/shell/focus'))
 
   <!-- Center | clock -->
   <div class="mx-auto my-auto flex flex-col items-center gap-4 pb-[16vh] sm:pb-[10vh]">
-    <NuxtPage v-if="inFocus" />
+    <NuxtPage v-if="inFocus" :method="focusMethod" />
     <Clock v-else />
   </div>
 
@@ -52,7 +54,7 @@ const inFocus = computed(() => route.path.startsWith('/shell/focus'))
         v-if="inFocus"
         variant="outline"
         class="font-mono text-[10px] tracking-widest uppercase"
-        @click="toggleFocusMethod"
+        @click="focusMethod = focusMethod === 'stopwatch' ? 'pomodoro' : 'stopwatch'"
         :disabled="!focusMethodToggleable"
       >
         {{ focusMethod === 'stopwatch' ? 'Pomodoro' : 'Stopwatch' }}

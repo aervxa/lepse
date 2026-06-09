@@ -2,16 +2,16 @@
 import { FastForward, Pause, Play, RefreshCw } from 'lucide-vue-next'
 import { formatDuration, Stopwatch } from '~/lib/time'
 
-const { focusMethod, focusMethodToggleable } = useFocus()
+const { method } = defineProps<{ method: 'stopwatch' | 'pomodoro' }>()
 
 // ─── Shared stopwatch ───────────────────────────────────────────────────────
 
 const stopwatch = new Stopwatch()
 
 const formatted = computed(() => {
-  if (focusMethod.value === 'stopwatch') {
+  if (method === 'stopwatch') {
     return formatDuration(stopwatch.elapsed.value)
-  } else if (focusMethod.value === 'pomodoro') {
+  } else if (method === 'pomodoro') {
     const pomoElapsed =
       (pomoState.value === 'work'
         ? POMO_TIME
@@ -24,14 +24,19 @@ const formatted = computed(() => {
   }
 })
 
+const focusMethodToggleable = inject(focusMethodToggleableKey)
+
 // Update focusMethodToggleable when stopwatch running state changes
 watch([stopwatch.running], () => {
-  focusMethodToggleable.value = !stopwatch.running.value
+  if (focusMethodToggleable) focusMethodToggleable.value = !stopwatch.running.value
 })
 // Reset stopwatch when method changes
-watch([focusMethod], () => {
-  stopwatch.reset()
-})
+watch(
+  () => method,
+  () => {
+    stopwatch.reset()
+  }
+)
 
 // ─── Pomo ───────────────────────────────────────────────────────────────────
 
@@ -56,12 +61,12 @@ function skipPomo() {
 
 <template>
   <!-- Stopwatch -->
-  <p v-if="focusMethod === 'stopwatch'" class="text-6xl font-semibold tabular-nums">
+  <p v-if="method === 'stopwatch'" class="text-6xl font-semibold tabular-nums">
     <span>{{ formatted.slice(stopwatch.elapsed.value > 3600000 ? 0 : 3, -4) }}</span>
     <span class="text-3xl font-medium opacity-40">{{ formatted.slice(-4) }}</span>
   </p>
   <!-- Pomo -->
-  <template v-else-if="focusMethod === 'pomodoro'">
+  <template v-else-if="method === 'pomodoro'">
     <div class="flex gap-2">
       <Button
         v-for="state in pomoStates"
@@ -101,7 +106,7 @@ function skipPomo() {
       <Play v-else />
     </Button>
     <Button
-      v-if="focusMethod === 'pomodoro'"
+      v-if="method === 'pomodoro'"
       variant="ghost"
       size="icon"
       :disabled="!stopwatch.running.value"
