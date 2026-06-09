@@ -1,7 +1,3 @@
-<script setup>
-import { activeDialog, closeDialog } from '~/lib/dialog'
-</script>
-
 <template>
   <AlertDialog v-if="activeDialog" open>
     <AlertDialogContent>
