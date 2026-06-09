@@ -1,12 +1,25 @@
 <script setup lang="ts">
+import { useDebounceFn, useIntervalFn } from '@vueuse/core'
 import { FastForward, Pause, Play, RefreshCw } from 'lucide-vue-next'
 import { formatDuration, Stopwatch } from '~/lib/time'
 
 const { method } = defineProps<{ method: 'stopwatch' | 'pomodoro' }>()
 
-// ─── Shared stopwatch ───────────────────────────────────────────────────────
+const { focusSession, updateFocusSession } = useDay(getClientDate())
 
-const stopwatch = new Stopwatch()
+// ─── Shared stopwatch class ─────────────────────────────────────────────────
+
+const stopwatch = new Stopwatch({
+  onStart: () => {
+    if (method === 'stopwatch') stopwatchSyncInterval.resume()
+  },
+  onStop: () => {
+    if (method === 'stopwatch') {
+      syncStopwatch()
+      stopwatchSyncInterval.pause()
+    }
+  },
+})
 
 const formatted = computed(() => {
   if (method === 'stopwatch') {
@@ -38,6 +51,23 @@ watch(
   }
 )
 
+// ─── Stopwatch ──────────────────────────────────────────────────────────────
+
+let stopwatchSyncedMs = 0
+const syncStopwatch = useDebounceFn(() => {
+  const elapsed = stopwatch.elapsed.value
+
+  // Update focus session's stopwatchMs
+  updateFocusSession({
+    stopwatchMs: (focusSession.value?.stopwatchMs ?? 0) + (elapsed - stopwatchSyncedMs),
+  })
+
+  stopwatchSyncedMs = elapsed
+}, 1_000)
+
+// Sync every 10 seconds if stopwatch is running
+const stopwatchSyncInterval = useIntervalFn(syncStopwatch, 10_000, { immediate: false })
+
 // ─── Pomo ───────────────────────────────────────────────────────────────────
 
 const pomoStates = ['work', 'break', 'long-break'] as const
@@ -52,6 +82,9 @@ function skipPomo() {
   if (pomoState.value === 'work') {
     pomoCount.value++
     pomoState.value = pomoCount.value % 4 === 0 ? 'long-break' : 'break'
+
+    // Increment focus session's pomoCount
+    updateFocusSession({ pomoCount: (focusSession.value?.pomoCount ?? 0) + 1 })
   } else {
     pomoState.value = 'work'
   }
