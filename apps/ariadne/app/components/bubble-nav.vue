@@ -48,7 +48,7 @@ const isBubbleOpen = computed(() => items.some((item) => route.path.startsWith(i
       </PopoverContent>
     </Popover>
 
-    <Drawer v-else :open="isBubbleOpen" @update:open="onOpenUpdate">
+    <Drawer v-else :open="isBubbleOpen" @update:open="onOpenUpdate" should-scale-background>
       <DrawerContent>
         <NuxtPage source="drawer" />
       </DrawerContent>

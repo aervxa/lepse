@@ -96,6 +96,7 @@ onUnmounted(() => {
 
     <!-- Main App -->
     <section
+      data-vaul-drawer-wrapper
       class="bg-background m-2 flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border-2 p-4"
     >
       <slot />
