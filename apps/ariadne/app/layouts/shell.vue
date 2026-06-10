@@ -62,7 +62,7 @@ onUnmounted(() => {
           <ArrowRight />
         </Button>
       </div>
-      <div class="[&>button]:rounded-none">
+      <div class="pointer-events-auto z-377 [&>button]:rounded-none">
         <Button
           variant="ghost"
           size="icon-sm"
