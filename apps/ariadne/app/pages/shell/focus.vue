@@ -1,11 +1,22 @@
 <script setup lang="ts">
 import { useDebounceFn, useIntervalFn } from '@vueuse/core'
-import { FastForward, Pause, Play, RefreshCw } from 'lucide-vue-next'
+import { ChevronsUpDown, FastForward, Pause, Play, RefreshCw } from 'lucide-vue-next'
 import { formatDuration, Stopwatch } from '~/lib/time'
 
 const { method } = defineProps<{ method: 'stopwatch' | 'pomodoro' }>()
 
 const { focusSession, updateFocusSession } = useDay(getClientDate())
+
+// ─── Task ───────────────────────────────────────────────────────────────────
+
+const { tasks, updateTask } = useTasks()
+const taskId = ref<number | null>(null)
+const task = computed(() => tasks.value.find((t) => t.id === taskId.value))
+
+const selectTask = (id: number) => {
+  stopwatch.reset()
+  taskId.value = id
+}
 
 // ─── Shared stopwatch class ─────────────────────────────────────────────────
 
@@ -40,9 +51,13 @@ const formatted = computed(() => {
 const focusMethodToggleable = inject(focusMethodToggleableKey)
 
 // Update focusMethodToggleable when stopwatch running state changes
-watch([stopwatch.running], () => {
-  if (focusMethodToggleable) focusMethodToggleable.value = !stopwatch.running.value
-})
+watch(
+  [stopwatch.running],
+  () => {
+    if (focusMethodToggleable) focusMethodToggleable.value = !stopwatch.running.value
+  },
+  { immediate: true }
+)
 // Reset stopwatch when method changes
 watch(
   () => method,
@@ -61,6 +76,11 @@ const syncStopwatch = useDebounceFn(() => {
   updateFocusSession({
     stopwatchMs: (focusSession.value?.stopwatchMs ?? 0) + (elapsed - stopwatchSyncedMs),
   })
+  // Update selected task
+  if (task.value)
+    updateTask(task.value.id, {
+      stopwatchMs: task.value.stopwatchMs + (elapsed - stopwatchSyncedMs),
+    })
 
   stopwatchSyncedMs = elapsed
 }, 1_000)
@@ -85,6 +105,8 @@ function skipPomo() {
 
     // Increment focus session's pomoCount
     updateFocusSession({ pomoCount: (focusSession.value?.pomoCount ?? 0) + 1 })
+    // Update selected task
+    if (task.value) updateTask(task.value.id, { pomoCount: task.value.pomoCount + 1 })
   } else {
     pomoState.value = 'work'
   }
@@ -93,34 +115,59 @@ function skipPomo() {
 </script>
 
 <template>
-  <!-- Stopwatch -->
-  <p v-if="method === 'stopwatch'" class="text-6xl font-semibold tabular-nums">
-    <span>{{ formatted.slice(stopwatch.elapsed.value > 3600000 ? 0 : 3, -4) }}</span>
-    <span class="text-3xl font-medium opacity-40">{{ formatted.slice(-4) }}</span>
-  </p>
-  <!-- Pomo -->
-  <template v-else-if="method === 'pomodoro'">
+  <!-- TODO: task selector -->
+  <div class="w-full" :class="[method === 'stopwatch' ? 'mt-8 mb-6' : 'mb-4']">
+    <Combobox
+      :items="tasks"
+      @select="(i) => selectTask(i.id)"
+      :checked-item-id="task?.id"
+      empty="No tasks found."
+      placeholder="Search a task"
+      align="center"
+    >
+      <Button variant="outline" role="combobox" class="w-full justify-between">
+        {{ task ? task.name : 'Select task...' }}
+        <ChevronsUpDown class="ml-2 size-4 shrink-0 opacity-60" />
+      </Button>
+    </Combobox>
+  </div>
+
+  <!-- Pomo-specific state tabs -->
+  <template v-if="method === 'pomodoro'">
     <div class="flex gap-2">
       <Button
         v-for="state in pomoStates"
         :key="state"
         :variant="state === pomoState ? 'default' : 'ghost'"
-        size="sm"
-        class="mb-6 font-mono text-xs tracking-widest uppercase transition-opacity duration-300"
-        :class="pomoState === state ? 'font-bold opacity-100!' : 'opacity-60'"
+        size="xs"
+        class="font-mono text-[10px] font-light tracking-widest uppercase"
+        :class="pomoState === state ? 'font-medium opacity-100!' : 'opacity-60'"
         :disabled="stopwatch.running.value"
         @click="(stopwatch.reset(), (pomoState = state))"
       >
         {{ state }}
       </Button>
     </div>
-    <p class="text-center text-7xl font-semibold tabular-nums">
-      {{ formatted }}
-    </p>
   </template>
+  <!-- Stopwatch/Pomo main display -->
+  <p class="relative flex font-semibold tabular-nums">
+    <span class="h-min text-7xl leading-none sm:text-8xl">
+      {{
+        method === 'stopwatch'
+          ? formatted.slice(stopwatch.elapsed.value > 3600000 ? 0 : 3, -4)
+          : formatted
+      }}
+    </span>
+    <span
+      v-if="method === 'stopwatch'"
+      class="absolute bottom-2.25 left-full translate-x-4 text-xl tracking-wider opacity-60 sm:translate-x-6"
+    >
+      {{ formatted.slice(-3, -1) }}
+    </span>
+  </p>
 
   <!-- Actions -->
-  <div class="mt-8 grid grid-cols-3 place-items-center gap-4">
+  <div class="top-full mt-4 grid grid-cols-3 place-items-center gap-4">
     <Button
       variant="ghost"
       size="icon"

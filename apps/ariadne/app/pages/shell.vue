@@ -27,7 +27,7 @@ provide(focusMethodToggleableKey, focusMethodToggleable)
   </div>
 
   <!-- Center | clock -->
-  <div class="mx-auto my-auto flex flex-col items-center gap-4 pb-[16vh] sm:pb-[10vh]">
+  <div class="relative mx-auto my-auto flex flex-col items-center gap-4 pb-[16vh] sm:pb-[10vh]">
     <NuxtPage v-if="inFocus" :method="focusMethod" />
     <Clock v-else />
   </div>
