@@ -27,7 +27,7 @@ export default defineNuxtConfig({
   ignore: ['**/src-tauri/**'],
   modules: ['@nuxt/fonts', 'shadcn-nuxt', 'vue-sonner/nuxt'],
   routeRules: {
-    '/': { redirect: '/app' },
+    '/': { redirect: '/shell' },
   },
   runtimeConfig: {
     public: {
@@ -63,6 +63,7 @@ export default defineNuxtConfig({
         'reka-ui',
         'reka-ui/date',
         'tailwind-merge',
+        'vaul-vue',
         'vee-validate',
         'zod',
       ],
