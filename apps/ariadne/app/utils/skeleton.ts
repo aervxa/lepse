@@ -1,4 +1,4 @@
-const SKELETON_DELAY_MS = 200
+export const SKELETON_DELAY_MS = 200
 
 export const skeletonLoad = async <T>(promise: Promise<T>, show: Ref<boolean>): Promise<T> => {
   const timer = setTimeout(() => {

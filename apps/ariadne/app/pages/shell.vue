@@ -23,7 +23,10 @@ provide(focusMethodToggleableKey, focusMethodToggleable)
   <!-- Header | logo -->
   <div class="flex items-center justify-between gap-8">
     <Logo class="h-10 sm:h-12" />
-    <FocusSessions />
+    <div class="flex items-start gap-4">
+      <FocusSessions />
+      <Profile />
+    </div>
   </div>
 
   <!-- Center | clock -->
