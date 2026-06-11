@@ -1,6 +1,5 @@
 <script setup>
 const { user } = useAuth()
-console.log(user)
 </script>
 
 <template>
