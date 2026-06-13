@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { createReusableTemplate } from '@vueuse/core'
-import { Smile, X } from 'lucide-vue-next'
+import { LogOut, Pencil, Smile, X } from 'lucide-vue-next'
 import type { MotionProps } from 'motion-v'
 
-const { user } = useAuth()
+const { user, logout } = useAuth()
 const open = ref(false)
 
 const transition: { [key: string]: MotionProps['transition'] } = {
@@ -77,7 +77,7 @@ const [DefineAvatar, ReuseAvatar] = createReusableTemplate<{ state: 'after' | 'b
           layout-id="profile-popover"
           :style="{ borderRadius: '16px' }"
           :transition="transition['after']"
-          class="bg-popover border-border/40 pointer-events-auto relative flex flex-col gap-4 rounded-2xl border p-4 shadow-2xl"
+          class="bg-popover border-border/40 pointer-events-auto relative flex flex-col gap-6 rounded-2xl border p-4 shadow-2xl"
         >
           <!-- Close button -->
           <Button
@@ -92,7 +92,34 @@ const [DefineAvatar, ReuseAvatar] = createReusableTemplate<{ state: 'after' | 'b
           <!-- Header -->
           <div class="flex flex-col items-center gap-2">
             <ReuseAvatar state="after" />
-            <p class="font-medium">{{ user?.fullName }}</p>
+            <p class="font-medium">Hi, {{ user?.fullName }}!</p>
+          </div>
+
+          <div class="flex items-end justify-between gap-2">
+            <Button variant="outline" size="sm" as-child>
+              <NuxtLink to="/shell/account">
+                <Pencil />
+                Edit Profile
+              </NuxtLink>
+            </Button>
+            <LoadingButton
+              variant="destructive"
+              size="icon-sm"
+              :action="
+                () =>
+                  dialog({
+                    title: 'Are you sure you want to logout?',
+                    description: 'This will end this session and return you to the login page.',
+                    action: 'Logout',
+                  }).then((value) => {
+                    if (value === true) {
+                      return logout()
+                    }
+                  })
+              "
+            >
+              <LogOut />
+            </LoadingButton>
           </div>
         </Motion>
       </PopoverContent>
