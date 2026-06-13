@@ -38,7 +38,9 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
       data-slot="alert-dialog-overlay"
       class="data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 fixed inset-0 z-50 bg-black/80 duration-100 supports-backdrop-filter:backdrop-blur-xs"
     />
+    <!-- FIXME: https://github.com/unovue/reka-ui/issues/2702 | :disable-outside-pointer-events="true" is a workaround -->
     <AlertDialogContent
+      :disable-outside-pointer-events="true"
       data-slot="alert-dialog-content"
       :data-size="size"
       v-bind="{ ...$attrs, ...forwarded }"
