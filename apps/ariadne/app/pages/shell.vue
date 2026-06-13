@@ -21,7 +21,7 @@ provide(focusMethodToggleableKey, focusMethodToggleable)
 <template>
   <!-- TODO: Focus should be here    -->
   <!-- Header | logo -->
-  <div class="flex items-center justify-between gap-8">
+  <div class="flex items-start justify-between gap-8">
     <Logo class="h-10 sm:h-12" />
     <div class="flex items-start gap-4">
       <FocusSessions />
