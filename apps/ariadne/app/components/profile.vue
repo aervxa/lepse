@@ -1,36 +1,19 @@
 <script setup lang="ts">
 import { createReusableTemplate } from '@vueuse/core'
 import { LogOut, Pencil, Smile, X } from 'lucide-vue-next'
-import type { MotionProps } from 'motion-v'
 
 const { user, logout } = useAuth()
 const open = ref(false)
 
-const transition: { [key: string]: MotionProps['transition'] } = {
-  before: {
-    layout: {
-      type: 'spring',
-      stiffness: 500,
-      damping: 30,
-      mass: 0.7,
-    },
-  },
-  after: {
-    layout: {
-      type: 'spring',
-      stiffness: 500,
-      damping: 30,
-    },
-  },
-}
-
-const [DefineAvatar, ReuseAvatar] = createReusableTemplate<{ state: 'after' | 'before' }>()
+const [DefineAvatar, ReuseAvatar] = createReusableTemplate<{ state: 'after' | 'before' }>({
+  inheritAttrs: false, // defining state as a runtime prop isn't needed since no attrs need to be inherited
+})
 </script>
 
 <template>
   <DefineAvatar v-slot="{ state }">
     <AnimatePresence>
-      <Motion as="div" layout-id="profile-avatar" :transition="transition[state]">
+      <Motion as="div" layout-id="profile-avatar" :transition="popoverTransition[state]()">
         <Avatar :class="state === 'after' ? 'size-24' : undefined">
           <!-- TODO: Put actual avatar -->
           <AvatarImage src="https://avatars.githubusercontent.com/u/122371060" />
@@ -43,19 +26,17 @@ const [DefineAvatar, ReuseAvatar] = createReusableTemplate<{ state: 'after' | 'b
   <div class="relative flex">
     <Popover v-model:open="open">
       <!-- Dummy circle for before state of motion in popover -->
-      <AnimatePresence>
-        <Motion
-          v-if="!open"
-          as="div"
-          layout-id="profile-popover"
-          :style="{ borderRadius: '20px' }"
-          :transition="transition['before']"
-          class="bg-popover absolute inset-1"
-        />
-      </AnimatePresence>
+      <Motion
+        v-if="!open"
+        as="div"
+        layout-id="profile-popover"
+        :style="{ borderRadius: '20px' }"
+        :transition="popoverTransition.before()"
+        class="bg-popover absolute inset-1"
+      />
 
       <PopoverTrigger as-child>
-        <Button variant="ghost" size="icon" class="z-10">
+        <Button variant="ghost" size="icon">
           <ReuseAvatar v-if="!open" state="before" />
           <!-- To keep button size -->
           <Smile v-else />
@@ -70,7 +51,7 @@ const [DefineAvatar, ReuseAvatar] = createReusableTemplate<{ state: 'after' | 'b
           as="div"
           layout-id="profile-popover"
           :style="{ borderRadius: '16px' }"
-          :transition="transition['after']"
+          :transition="popoverTransition.after()"
           class="bg-popover border-border/40 relative flex flex-col gap-6 rounded-2xl border p-4 shadow-2xl"
         >
           <!-- Close button -->

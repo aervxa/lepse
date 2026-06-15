@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useLocalStorage, useWindowSize } from '@vueuse/core'
+import { useLocalStorage } from '@vueuse/core'
 import { Lightbulb, LightbulbOff } from 'lucide-vue-next'
 import { getDailyQuote } from '~/lib/quotes'
 
@@ -8,9 +8,6 @@ definePageMeta({
 })
 
 const route = useRoute()
-
-const { width } = useWindowSize()
-const floatNav = computed(() => width.value >= 768)
 
 const inFocus = computed(() => route.path.startsWith('/shell/focus'))
 const focusMethod = useLocalStorage<'stopwatch' | 'pomodoro'>('focus_method', 'stopwatch')
@@ -38,15 +35,16 @@ provide(focusMethodToggleableKey, focusMethodToggleable)
   <!-- Footer | actions -->
   <div class="flex items-end justify-between gap-8">
     <div>
-      <BubbleNav :float="floatNav" />
+      <BubbleNav />
       <p
-        v-if="!inFocus || floatNav"
+        v-if="!inFocus"
         class="max-w-[28ch] text-lg text-pretty"
-        :class="[
-          floatNav
-            ? 'opacity-80 md:text-xl md:font-medium'
-            : 'absolute bottom-[20vh] left-1/2 -translate-x-1/2 text-center font-light italic opacity-60',
-        ]"
+        :class="
+          cn(
+            'peer-data-[float=true]:opacity-80 peer-data-[float=true]:md:text-xl peer-data-[float=true]:md:font-medium',
+            'peer-data-[float=false]:absolute peer-data-[float=false]:bottom-[20vh] peer-data-[float=false]:left-1/2 peer-data-[float=false]:-translate-x-1/2 peer-data-[float=false]:text-center peer-data-[float=false]:font-light peer-data-[float=false]:italic peer-data-[float=false]:opacity-60'
+          )
+        "
       >
         "{{ getDailyQuote() }}"
       </p>

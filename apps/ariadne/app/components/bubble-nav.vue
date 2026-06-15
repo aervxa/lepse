@@ -1,81 +1,99 @@
 <script setup lang="ts">
 import { useWindowSize } from '@vueuse/core'
-import { Goal, ListTodo } from 'lucide-vue-next'
-
-const { float } = defineProps<{ float: Boolean }>()
+import { Goal, ListTodo, X } from 'lucide-vue-next'
 
 const route = useRoute()
 const { width } = useWindowSize()
+const float = computed(() => width.value >= 768)
 
-const btnWrapper = ref<HTMLDivElement | null>(null)
 const items = [
-  { name: 'Tasks', path: '/shell/tasks', icon: ListTodo },
-  { name: 'Goals', path: '/shell/goals', icon: Goal },
+  { name: 'tasks', path: '/shell/tasks', icon: ListTodo, open: ref(false) },
+  { name: 'goals', path: '/shell/goals', icon: Goal, open: ref(false) },
 ]
 
-const onOpenUpdate = (value: boolean) => {
-  value === false && isBubbleOpen.value === true && navigateBack()
+const onOpenUpdate = (value: boolean, path: string) => {
+  if (value === true) {
+    navigateTo(path)
+  } else if (route.path.startsWith(path)) {
+    navigateTo('/shell')
+  }
 }
-const isBubbleOpen = computed(() => items.some((item) => route.path.startsWith(item.path)))
 </script>
 
 <template>
-  <!-- Wrapper to group popover's anchor together with the items -->
+  <!-- Trigger wrapper (lol) -->
   <div
-    class="flex"
-    :class="[float ? 'absolute top-1/2 left-3 -translate-y-1/2 flex-col' : 'relative']"
+    class="peer flex gap-2"
+    :class="[float && 'absolute top-1/2 left-3 -translate-y-1/2 flex-col']"
+    :data-float="float"
   >
-    <Popover v-if="width >= 1280" :open="isBubbleOpen" @update:open="onOpenUpdate">
-      <PopoverAnchor class="pointer-events-none absolute inset-0" />
-
-      <PopoverContent
-        side="right"
-        align="center"
-        class="ml-1 w-96"
-        @interact-outside="
-          (event) => {
-            const target = event.target as HTMLElement
-            // prevent outisde interaction closing popover if the user clicks another item (exclude the wrapper for the space)
-            if (
-              btnWrapper !== target &&
-              btnWrapper?.contains(target) &&
-              route.path.startsWith(target.closest('button')?.dataset.path ?? '') // ignore only the related button
-            ) {
-              event.preventDefault()
-            }
-          }
-        "
+    <!-- Nav item (per) -->
+    <div v-for="item in items" :key="item.name" class="relative flex">
+      <Popover
+        v-if="float"
+        v-model:open="item.open.value"
+        @update:open="(v) => onOpenUpdate(v, item.path)"
       >
-        <NuxtPage source="popover" />
-      </PopoverContent>
-    </Popover>
+        <!-- Dummy circle for before state of motion in popover -->
+        <Motion
+          v-if="!item.open.value"
+          as="div"
+          :layout-id="item.name + '-bubble-popover'"
+          :style="{ borderRadius: '20px' }"
+          :transition="popoverTransition.before()"
+          class="bg-popover absolute inset-0"
+        />
 
-    <Drawer
-      v-else
-      :open="isBubbleOpen"
-      @update:open="onOpenUpdate"
-      should-scale-background
-      :direction="float ? 'left' : 'bottom'"
-    >
-      <DrawerContent>
-        <NuxtPage source="drawer" />
-      </DrawerContent>
-    </Drawer>
+        <PopoverTrigger as-child>
+          <Button variant="outline" size="icon" class="z-10">
+            <component :is="item.icon" />
+            <template v-if="!float">{{ item.name }}</template>
+          </Button>
+        </PopoverTrigger>
 
-    <!-- List of buttons -->
-    <div ref="btnWrapper" class="flex gap-2" :class="[float && 'flex-col']">
-      <Button
-        v-for="item in items"
-        :key="item.name"
-        variant="outline"
-        :size="float ? 'icon' : undefined"
-        class="font-mono text-[11px] tracking-widest uppercase"
-        @click="route.path.startsWith(item.path) ? navigateBack() : navigateTo(item.path)"
-        :data-path="item.path"
+        <PopoverAnchor class="absolute top-1/2 left-0 size-0 -translate-y-1/2" />
+
+        <PopoverContent force-mount side="right" align="center" :side-offset="0" unstyled>
+          <Motion
+            v-if="item.open.value"
+            as="div"
+            :layout-id="item.name + '-bubble-popover'"
+            :style="{ borderRadius: '16px' }"
+            :transition="popoverTransition.after()"
+            class="border-border/40 bg-popover relative z-100 flex h-128 w-96 flex-col gap-6 rounded-2xl border p-4 shadow-2xl"
+          >
+            <!-- Close button -->
+            <Button
+              variant="ghost"
+              size="icon"
+              class="absolute top-1.5 right-1.5"
+              @click="item.open.value = false"
+            >
+              <X />
+            </Button>
+
+            <NuxtPage source="popover" />
+          </Motion>
+        </PopoverContent>
+      </Popover>
+
+      <Drawer
+        v-else
+        v-model:open="item.open.value"
+        @update:open="(v) => onOpenUpdate(v, item.path)"
+        should-scale-background
       >
-        <component :is="item.icon" />
-        <span v-if="!float">{{ item.name }}</span>
-      </Button>
+        <DrawerTrigger>
+          <Button variant="outline" class="font-mono text-[11px] tracking-widest uppercase">
+            <component :is="item.icon" />
+            <template v-if="!float">{{ item.name }}</template>
+          </Button>
+        </DrawerTrigger>
+
+        <DrawerContent>
+          <NuxtPage source="drawer" />
+        </DrawerContent>
+      </Drawer>
     </div>
   </div>
 </template>
