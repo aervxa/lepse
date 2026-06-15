@@ -47,7 +47,6 @@ const onOpenUpdate = (value: boolean, path: string) => {
         <PopoverTrigger as-child>
           <Button variant="outline" size="icon" class="z-10">
             <component :is="item.icon" />
-            <template v-if="!float">{{ item.name }}</template>
           </Button>
         </PopoverTrigger>
 
