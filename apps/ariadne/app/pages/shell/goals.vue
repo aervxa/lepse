@@ -5,7 +5,7 @@ const { goals } = useGoals()
 </script>
 
 <template>
-  <div :class="[source === 'drawer' ? 'mx-auto w-full max-w-sm' : 'contents']">
+  <div :class="[source === 'drawer' ? 'mx-auto w-full max-w-sm' : 'flex flex-col gap-6']">
     <DrawerHeader v-if="source === 'drawer'">
       <DrawerTitle>Goals</DrawerTitle>
       <DrawerDescription>Manage what matters.</DrawerDescription>
@@ -15,7 +15,12 @@ const { goals } = useGoals()
       <PopoverDescription>Manage what matters.</PopoverDescription>
     </PopoverHeader>
 
-    <div class="flex flex-col gap-3" :class="[source === 'drawer' && 'p-4 pt-2']">
+    <Motion
+      as="div"
+      layout
+      class="flex flex-col gap-3"
+      :class="[source === 'drawer' && 'p-4 pt-2']"
+    >
       <Item v-for="goal in goals" :key="goal.id" variant="outline" as-child>
         <NuxtLink :to="`goals/${goal.id}`">
           <ItemContent>
@@ -26,6 +31,6 @@ const { goals } = useGoals()
           </ItemContent>
         </NuxtLink>
       </Item>
-    </div>
+    </Motion>
   </div>
 </template>

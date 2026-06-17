@@ -1,98 +1,134 @@
 <script setup lang="ts">
 import { useWindowSize } from '@vueuse/core'
 import { Goal, ListTodo, X } from 'lucide-vue-next'
+import type { FocusOutsideEvent } from 'reka-ui'
 
 const route = useRoute()
 const { width } = useWindowSize()
 const float = computed(() => width.value >= 768)
 
 const items = [
-  { name: 'tasks', path: '/shell/tasks', icon: ListTodo, open: ref(false) },
-  { name: 'goals', path: '/shell/goals', icon: Goal, open: ref(false) },
+  { name: 'tasks', path: '/shell/tasks', icon: ListTodo },
+  { name: 'goals', path: '/shell/goals', icon: Goal },
 ]
 
-const onOpenUpdate = (value: boolean, path: string) => {
-  if (value === true) {
-    navigateTo(path)
-  } else if (route.path.startsWith(path)) {
+const open = ref(false)
+const wrapper = useTemplateRef('wrapper')
+const activeIndex = ref(-1)
+
+onMounted(() => {
+  activeIndex.value = items.findIndex((item) => route.path.startsWith(item.path))
+})
+
+watch(activeIndex, () => {
+  nextTick().then(() => {
+    setTimeout(() => {
+      if (activeIndex.value > -1) {
+        navigateTo(items[activeIndex.value]!.path)
+        open.value = true
+      } else {
+        open.value = false
+        navigateTo('/shell')
+      }
+    })
+  })
+})
+
+const handleInteractOutside = (e: FocusOutsideEvent) => {
+  const target = e.target as HTMLElement
+  if (wrapper.value !== target && wrapper.value?.contains(target)) {
+    e.preventDefault()
+  } else {
     navigateTo('/shell')
   }
 }
 </script>
 
 <template>
-  <!-- Trigger wrapper (lol) -->
+  <!-- Trigger wrapper -->
   <div
+    ref="wrapper"
     class="peer flex gap-2"
     :class="[float && 'absolute top-1/2 left-3 -translate-y-1/2 flex-col']"
     :data-float="float"
   >
-    <!-- Nav item (per) -->
-    <div v-for="item in items" :key="item.name" class="relative flex">
-      <Popover
-        v-if="float"
-        v-model:open="item.open.value"
-        @update:open="(v) => onOpenUpdate(v, item.path)"
-      >
+    <!-- Triggers -->
+    <template v-for="(item, index) in items" :key="item.name">
+      <div class="relative flex">
         <!-- Dummy circle for before state of motion in popover -->
         <Motion
-          v-if="!item.open.value"
+          v-if="!open && activeIndex === index"
           as="div"
-          :layout-id="item.name + '-bubble-popover'"
-          :style="{ borderRadius: '20px' }"
+          layout-id="bubble-popover"
+          :style="{ borderRadius: '20px', height: '36px' }"
           :transition="popoverTransition.before()"
           class="bg-popover absolute inset-0"
+          @layout-animation-complete="!open && (activeIndex = -1)"
         />
 
-        <PopoverTrigger as-child>
-          <Button variant="outline" size="icon" class="z-10">
-            <component :is="item.icon" />
-          </Button>
-        </PopoverTrigger>
+        <Button
+          variant="outline"
+          :size="float ? 'icon' : undefined"
+          class="z-10"
+          :class="[float && 'bg-popover font-mono text-[11px] tracking-widest uppercase']"
+          @click="activeIndex = activeIndex === index ? -1 : index"
+        >
+          <component :is="item.icon" />
+          <template v-if="!float">{{ item.name }}</template>
+        </Button>
+      </div>
+    </template>
 
-        <PopoverAnchor class="absolute top-1/2 left-0 size-0 -translate-y-1/2" />
+    <Popover v-model:open="open">
+      <PopoverAnchor class="absolute top-1/2 left-full size-0" />
 
-        <PopoverContent force-mount side="right" align="center" :side-offset="0" unstyled>
-          <Motion
-            v-if="item.open.value"
-            as="div"
-            :layout-id="item.name + '-bubble-popover'"
-            :style="{ borderRadius: '16px' }"
-            :transition="popoverTransition.after()"
-            class="border-border/40 bg-popover relative z-100 flex h-128 w-96 flex-col gap-6 rounded-2xl border p-4 shadow-2xl"
-          >
-            <!-- Close button -->
-            <Button
-              variant="ghost"
-              size="icon"
-              class="absolute top-1.5 right-1.5"
-              @click="item.open.value = false"
-            >
-              <X />
-            </Button>
-
-            <NuxtPage source="popover" />
-          </Motion>
-        </PopoverContent>
-      </Popover>
-
-      <Drawer
-        v-else
-        v-model:open="item.open.value"
-        @update:open="(v) => onOpenUpdate(v, item.path)"
-        should-scale-background
+      <PopoverContent
+        force-mount
+        side="right"
+        align="center"
+        :side-offset="8"
+        unstyled
+        @interact-outside="(e) => handleInteractOutside(e)"
       >
-        <DrawerTrigger>
-          <Button variant="outline" class="font-mono text-[11px] tracking-widest uppercase">
-            <component :is="item.icon" />
-            <template v-if="!float">{{ item.name }}</template>
+        <Motion
+          v-if="open"
+          as="div"
+          layout-id="bubble-popover"
+          :style="{ borderRadius: '16px', height: 'auto' }"
+          :transition="popoverTransition.after()"
+          class="border-border/40 bg-popover relative z-100 w-96 overflow-clip rounded-2xl border p-4 shadow-2xl"
+        >
+          <!-- Close button -->
+          <Button
+            variant="ghost"
+            size="icon"
+            class="absolute top-1.5 right-1.5"
+            @click="open = false"
+          >
+            <X />
           </Button>
-        </DrawerTrigger>
 
-        <DrawerContent>
-          <NuxtPage source="drawer" />
-        </DrawerContent>
-      </Drawer>
-    </div>
+          <NuxtPage source="popover" v-slot="{ Component }">
+            <Transition name="blurfade" appear>
+              <component :is="Component" :key="route.path" source="popover" />
+            </Transition>
+          </NuxtPage>
+        </Motion>
+      </PopoverContent>
+    </Popover>
   </div>
 </template>
+
+<style>
+.blurfade-enter-active,
+.blurfade-leave-active {
+  transition: all 0.25s;
+}
+
+.blurfade-enter-from,
+.blurfade-leave-to {
+  opacity: 0;
+  filter: blur(0.4rem);
+  transform: scale(0.95);
+}
+</style>

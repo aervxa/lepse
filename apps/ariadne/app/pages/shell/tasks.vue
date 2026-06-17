@@ -5,7 +5,7 @@ const { tasks } = useTasks()
 </script>
 
 <template>
-  <div :class="[source === 'drawer' ? 'mx-auto w-full max-w-sm' : 'contents']">
+  <div :class="[source === 'drawer' ? 'mx-auto w-full max-w-sm' : 'flex flex-col gap-6']">
     <DrawerHeader v-if="source === 'drawer'">
       <DrawerTitle>Tasks</DrawerTitle>
       <DrawerDescription>Manage your focus and productivity.</DrawerDescription>
@@ -15,7 +15,12 @@ const { tasks } = useTasks()
       <PopoverDescription>Manage your focus and productivity.</PopoverDescription>
     </PopoverHeader>
 
-    <div class="flex flex-col gap-3" :class="[source === 'drawer' && 'p-4 pt-2']">
+    <Motion
+      as="div"
+      layout
+      class="flex flex-col gap-3"
+      :class="[source === 'drawer' && 'p-4 pt-2']"
+    >
       <Item v-for="task in tasks" :key="task.id" variant="outline" as-child>
         <NuxtLink :to="`tasks/${task.id}`">
           <ItemContent>
@@ -26,6 +31,6 @@ const { tasks } = useTasks()
           </ItemContent>
         </NuxtLink>
       </Item>
-    </div>
+    </Motion>
   </div>
 </template>
