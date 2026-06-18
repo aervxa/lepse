@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useWindowSize } from '@vueuse/core'
 import { Goal, ListTodo, X } from 'lucide-vue-next'
-import type { FocusOutsideEvent } from 'reka-ui'
 
 const route = useRoute()
 const { width } = useWindowSize()
@@ -36,15 +35,11 @@ watch(activeIndex, (_, oldIndex) => {
   })
 })
 
-const handleInteractOutside = (e: FocusOutsideEvent) => {
-  if (!open.value) return
-  const target = e.target as HTMLElement
-  if (wrapper.value !== target && wrapper.value?.contains(target)) {
-    e.preventDefault()
-  } else {
-    navigateTo('/shell')
+watch(open, () => {
+  if (!open.value) {
+    float.value ? navigateTo('/shell') : (activeIndex.value = -1)
   }
-}
+})
 </script>
 
 <template>
@@ -74,7 +69,7 @@ const handleInteractOutside = (e: FocusOutsideEvent) => {
           :size="float ? 'icon' : undefined"
           class="z-10"
           :class="[float && 'bg-popover font-mono text-[11px] tracking-widest uppercase']"
-          @click="activeIndex = activeIndex === index ? -1 : index"
+          @click="activeIndex === index ? (open = false) : (activeIndex = index)"
         >
           <component :is="item.icon" />
           <template v-if="!float">{{ item.name }}</template>
@@ -91,7 +86,14 @@ const handleInteractOutside = (e: FocusOutsideEvent) => {
         align="center"
         :side-offset="8"
         unstyled
-        @interact-outside="(e) => handleInteractOutside(e)"
+        @interact-outside="
+          (e) => {
+            const target = e.target as HTMLElement
+            if (wrapper !== target && wrapper?.contains(target)) {
+              e.preventDefault()
+            }
+          }
+        "
       >
         <Motion
           v-if="open"
