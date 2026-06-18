@@ -15,9 +15,9 @@ const { goals } = useGoals()
 
 <template>
   <NuxtLink
-    :to="`/app/tasks/${task.id}`"
-    class="flex items-center justify-between rounded-xl hover:bg-muted/50 focus-within:bg-muted/50"
-    :class="sub ? 'px-2 py-1' : 'p-2 border'"
+    :to="`/shell/tasks/${task.id}`"
+    class="hover:bg-muted/50 focus-within:bg-muted/50 flex items-center justify-between rounded-xl"
+    :class="sub ? 'px-2 py-1' : 'border p-2'"
   >
     <div class="flex items-center gap-2">
       <!-- Priority Dropdown -->
@@ -32,8 +32,8 @@ const { goals } = useGoals()
       <p :class="sub ? 'text-sm font-medium' : 'font-semibold'">{{ task.name }}</p>
 
       <template v-if="task.goalId && !sub">
-        <ChevronRight class="size-3 -mr-0.5 text-muted-foreground" />
-        <p class="text-xs font-medium text-muted-foreground">
+        <ChevronRight class="text-muted-foreground -mr-0.5 size-3" />
+        <p class="text-muted-foreground text-xs font-medium">
           {{ goals.find((goal) => goal.id === task.goalId)?.name }}
         </p>
       </template>
@@ -41,7 +41,7 @@ const { goals } = useGoals()
 
     <!-- Additional info -->
     <div
-      class="flex items-center justify-end min-w-0 gap-3 px-4 text-xs leading-none text-muted-foreground whitespace-nowrap"
+      class="text-muted-foreground flex min-w-0 items-center justify-end gap-3 px-4 text-xs leading-none whitespace-nowrap"
     >
       <div class="flex items-center gap-1.5" title="time worked">
         <Clock class="size-3" />

@@ -25,7 +25,10 @@ watch(activeIndex, (_, oldIndex) => {
   nextTick().then(() => {
     setTimeout(() => {
       if (activeIndex.value > -1) {
-        navigateTo(items[activeIndex.value]!.path)
+        const path = items[activeIndex.value]!.path
+        if (!route.path.startsWith(path)) {
+          navigateTo(path)
+        }
         open.value = true
       } else {
         open.value = false
@@ -104,16 +107,6 @@ watch(open, () => {
           :transition="popoverTransition.after()"
           class="border-border/40 bg-popover relative z-100 w-96 overflow-clip rounded-2xl border p-4 shadow-2xl"
         >
-          <!-- Close button -->
-          <Button
-            variant="ghost"
-            size="icon"
-            class="absolute top-1.5 right-1.5"
-            @click="open = false"
-          >
-            <X />
-          </Button>
-
           <NuxtPage source="popover" v-slot="{ Component }">
             <Transition name="blurfade" appear>
               <component :is="Component" :key="route.path" source="popover" />

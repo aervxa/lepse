@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { X } from 'lucide-vue-next'
+import { PopoverClose } from 'reka-ui';
+
 const { source } = defineProps<{ source: 'drawer' | 'popover' }>()
 
 const { tasks } = useTasks()
@@ -6,6 +9,13 @@ const { tasks } = useTasks()
 
 <template>
   <div :class="[source === 'drawer' ? 'mx-auto w-full max-w-sm' : 'flex flex-col gap-6']">
+    <!-- Close button -->
+    <PopoverClose v-if="source === 'popover'" as-child>
+      <Button variant="ghost" size="icon" class="absolute top-1.5 right-1.5">
+        <X />
+      </Button>
+    </PopoverClose>
+
     <DrawerHeader v-if="source === 'drawer'">
       <DrawerTitle>Tasks</DrawerTitle>
       <DrawerDescription>Manage your focus and productivity.</DrawerDescription>
