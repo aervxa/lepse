@@ -5,8 +5,8 @@ import type { FocusOutsideEvent } from 'reka-ui'
 
 const route = useRoute()
 const { width } = useWindowSize()
-const float = computed(() => width.value >= 768)
 
+const float = computed(() => width.value >= 768)
 const items = [
   { name: 'tasks', path: '/shell/tasks', icon: ListTodo },
   { name: 'goals', path: '/shell/goals', icon: Goal },
@@ -35,6 +35,7 @@ watch(activeIndex, () => {
 })
 
 const handleInteractOutside = (e: FocusOutsideEvent) => {
+  if (!open.value) return
   const target = e.target as HTMLElement
   if (wrapper.value !== target && wrapper.value?.contains(target)) {
     e.preventDefault()
@@ -60,7 +61,7 @@ const handleInteractOutside = (e: FocusOutsideEvent) => {
           v-if="!open && activeIndex === index"
           as="div"
           layout-id="bubble-popover"
-          :style="{ borderRadius: '20px', height: '36px' }"
+          :style="{ borderRadius: '20px' }"
           :transition="popoverTransition.before()"
           class="bg-popover absolute inset-0"
           @layout-animation-complete="!open && (activeIndex = -1)"
@@ -79,7 +80,7 @@ const handleInteractOutside = (e: FocusOutsideEvent) => {
       </div>
     </template>
 
-    <Popover v-model:open="open">
+    <Popover v-if="float" v-model:open="open">
       <PopoverAnchor class="absolute top-1/2 left-full size-0" />
 
       <PopoverContent
@@ -94,7 +95,7 @@ const handleInteractOutside = (e: FocusOutsideEvent) => {
           v-if="open"
           as="div"
           layout-id="bubble-popover"
-          :style="{ borderRadius: '16px', height: 'auto' }"
+          :style="{ borderRadius: '16px' }"
           :transition="popoverTransition.after()"
           class="border-border/40 bg-popover relative z-100 w-96 overflow-clip rounded-2xl border p-4 shadow-2xl"
         >
@@ -116,6 +117,12 @@ const handleInteractOutside = (e: FocusOutsideEvent) => {
         </Motion>
       </PopoverContent>
     </Popover>
+
+    <Drawer v-else v-model:open="open" should-scale-background>
+      <DrawerContent>
+        <NuxtPage source="drawer" />
+      </DrawerContent>
+    </Drawer>
   </div>
 </template>
 
