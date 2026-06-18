@@ -15,12 +15,14 @@ const items = [
 const open = ref(false)
 const wrapper = useTemplateRef('wrapper')
 const activeIndex = ref(-1)
+const openingPopover = ref(false)
 
 onMounted(() => {
   activeIndex.value = items.findIndex((item) => route.path.startsWith(item.path))
 })
 
-watch(activeIndex, () => {
+watch(activeIndex, (_, oldIndex) => {
+  openingPopover.value = oldIndex === -1
   nextTick().then(() => {
     setTimeout(() => {
       if (activeIndex.value > -1) {
@@ -94,6 +96,7 @@ const handleInteractOutside = (e: FocusOutsideEvent) => {
         <Motion
           v-if="open"
           as="div"
+          :layout="openingPopover ? 'size' : undefined"
           layout-id="bubble-popover"
           :style="{ borderRadius: '16px' }"
           :transition="popoverTransition.after()"
