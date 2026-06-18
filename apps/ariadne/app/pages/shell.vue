@@ -7,9 +7,7 @@ definePageMeta({
   layout: 'shell',
 })
 
-const route = useRoute()
-
-const inFocus = computed(() => route.path.startsWith('/shell/focus'))
+const inFocus = ref(false)
 const focusMethod = useLocalStorage<'stopwatch' | 'pomodoro'>('focus_method', 'stopwatch')
 const focusMethodToggleable = ref(true)
 provide(focusMethodToggleableKey, focusMethodToggleable)
@@ -27,8 +25,10 @@ provide(focusMethodToggleableKey, focusMethodToggleable)
   </div>
 
   <!-- Center | clock -->
-  <div class="relative mx-auto my-auto flex flex-col items-center gap-4 pb-[16vh] sm:pb-[10vh]">
-    <NuxtPage v-if="inFocus" :method="focusMethod" />
+  <div
+    class="relative mx-auto my-auto flex flex-col items-center gap-4 pt-[8vh] pb-[16vh] max-sm:pb-[20vh]"
+  >
+    <Focus v-if="inFocus" :method="focusMethod" />
     <Clock v-else />
   </div>
 
@@ -37,8 +37,7 @@ provide(focusMethodToggleableKey, focusMethodToggleable)
     <div>
       <BubbleNav />
       <p
-        v-if="!inFocus"
-        class="max-w-[28ch] text-lg text-pretty"
+        class="max-w-[28ch] w-full text-lg text-pretty"
         :class="
           cn(
             'peer-data-[float=true]:opacity-80 peer-data-[float=true]:md:text-xl peer-data-[float=true]:md:font-medium',
@@ -63,13 +62,11 @@ provide(focusMethodToggleableKey, focusMethodToggleable)
       <Button
         :variant="inFocus ? 'secondary' : 'default'"
         class="font-mono text-[11px] tracking-widest uppercase"
-        as-child
+        @click="inFocus = !inFocus"
       >
-        <NuxtLink :to="inFocus ? '/shell' : '/shell/focus'">
-          <LightbulbOff v-if="inFocus" />
-          <Lightbulb v-else />
-          {{ inFocus ? 'Exit' : 'Focus' }}
-        </NuxtLink>
+        <LightbulbOff v-if="inFocus" />
+        <Lightbulb v-else />
+        {{ inFocus ? 'Exit' : 'Focus' }}
       </Button>
     </div>
   </div>

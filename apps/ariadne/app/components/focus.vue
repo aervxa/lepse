@@ -115,7 +115,7 @@ function skipPomo() {
 </script>
 
 <template>
-  <!-- TODO: task selector -->
+  <!-- TODO: Move task selector away to the top part of the page -->
   <div class="w-full" :class="[method === 'stopwatch' ? 'mt-8 mb-6' : 'mb-4']">
     <Combobox
       :items="tasks"
