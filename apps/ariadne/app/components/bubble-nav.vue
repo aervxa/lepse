@@ -1,122 +1,141 @@
 <script setup lang="ts">
 import { useWindowSize } from '@vueuse/core'
-import { Goal, ListTodo, X } from 'lucide-vue-next'
+import { ChevronDown, Goal, ListTodo } from 'lucide-vue-next'
+import type { FocusOutsideEvent } from 'reka-ui'
 
-const route = useRoute()
-const { width } = useWindowSize()
-
-const float = computed(() => width.value >= 768)
 const items = [
   { name: 'tasks', path: '/shell/tasks', icon: ListTodo },
   { name: 'goals', path: '/shell/goals', icon: Goal },
 ]
+type Item = (typeof items)[number]
 
+const { width } = useWindowSize()
+const mode = computed<'drawer-bottom' | 'drawer-left' | 'popover'>(() =>
+  width.value < BREAKPOINTS.sm
+    ? 'drawer-bottom'
+    : width.value < BREAKPOINTS.xl
+      ? 'drawer-left'
+      : 'popover'
+)
+const route = useRoute()
+const nav = useTemplateRef('nav')
 const open = ref(false)
-const wrapper = useTemplateRef('wrapper')
-const activeIndex = ref(-1)
-const openingPopover = ref(false)
+const activeItem = ref<Item>()
 
 onMounted(() => {
-  activeIndex.value = items.findIndex((item) => route.path.startsWith(item.path))
+  openNav(items.find((item) => route.path.startsWith(item.path)))
 })
 
-watch(activeIndex, (_, oldIndex) => {
-  openingPopover.value = oldIndex === -1
-  nextTick().then(() => {
-    setTimeout(() => {
-      if (activeIndex.value > -1) {
-        const path = items[activeIndex.value]!.path
-        if (!route.path.startsWith(path)) {
-          navigateTo(path)
-        }
-        open.value = true
-      } else {
-        open.value = false
-        navigateTo('/shell')
-      }
-    })
-  })
-})
-
-watch(open, () => {
-  if (!open.value) {
-    float.value ? navigateTo('/shell') : (activeIndex.value = -1)
+watch(open, async (value) => {
+  if (!value) {
+    navigateTo('/shell')
+    activeItem.value = undefined
   }
 })
+
+async function openNav(item?: Item) {
+  if (!item) return
+
+  // If popover is open
+  if (open.value) {
+    // close popover if activeItem is the invoker
+    if (activeItem.value?.name === item.name) {
+      open.value = false
+    } else {
+      navigateTo(item.path)
+    }
+  } else {
+    await navigateTo(item.path)
+    open.value = true
+  }
+
+  activeItem.value = item
+}
+
+function focusOutside(event: FocusOutsideEvent) {
+  const target = event.target as HTMLElement
+  if (target !== nav.value && nav.value?.contains(target)) {
+    event.preventDefault()
+  }
+}
 </script>
 
 <template>
-  <!-- Trigger wrapper -->
   <div
-    ref="wrapper"
-    class="peer flex gap-2"
-    :class="[float && 'absolute top-1/2 left-3 -translate-y-1/2 flex-col']"
-    :data-float="float"
+    ref="nav"
+    class="peer flex gap-1 rounded-full"
+    :class="[
+      mode !== 'drawer-bottom' && 'absolute top-1/2 left-2 -translate-y-1/2 flex-col',
+      mode === 'popover' && 'border-border border p-1',
+    ]"
+    :data-float="mode !== 'drawer-bottom'"
   >
-    <!-- Triggers -->
-    <template v-for="(item, index) in items" :key="item.name">
-      <div class="relative flex">
-        <!-- Dummy circle for before state of motion in popover -->
+    <Motion
+      v-if="!open && mode === 'popover'"
+      as="div"
+      layout-id="bubble-popover"
+      :style="{ borderRadius: '24px' }"
+      :transition="popoverTransition.before()"
+      class="bg-sidebar pointer-events-none absolute inset-0 -z-10"
+    />
+
+    <div v-for="item in items" :key="item.name" class="relative">
+      <AnimatePresence>
         <Motion
-          v-if="!open && activeIndex === index"
+          v-if="activeItem?.name === item.name"
           as="div"
-          layout-id="bubble-popover"
-          :style="{ borderRadius: '20px' }"
-          :transition="popoverTransition.before()"
-          class="bg-popover absolute inset-0"
-          @layout-animation-complete="!open && (activeIndex = -1)"
+          layout-id="bubble-nav-item"
+          :exit="{ scale: 0 }"
+          :transition="{
+            layout: {
+              type: 'spring',
+              bounce: 0.4,
+              duration: 0.4,
+            },
+          }"
+          class="bg-popover border-border/60 absolute -inset-0.5 -z-10 rounded-full border"
         />
+      </AnimatePresence>
 
-        <Button
-          variant="outline"
-          :size="float ? 'icon' : undefined"
-          class="z-10"
-          :class="[float && 'bg-popover font-mono text-[11px] tracking-widest uppercase']"
-          @click="activeIndex === index ? (open = false) : (activeIndex = index)"
-        >
-          <component :is="item.icon" />
-          <template v-if="!float">{{ item.name }}</template>
-        </Button>
-      </div>
-    </template>
+      <Button
+        :variant="mode === 'popover' ? 'ghost' : 'outline'"
+        :size="mode !== 'drawer-bottom' ? 'icon' : undefined"
+        @click="openNav(item)"
+      >
+        <component :is="item.icon" />
+        <span :class="[mode !== 'drawer-bottom' && 'sr-only']">{{ item.name }}</span>
+      </Button>
+    </div>
 
-    <Popover v-if="float" v-model:open="open">
-      <PopoverAnchor class="absolute top-1/2 left-full size-0" />
-
+    <Popover v-if="mode === 'popover'" v-model:open="open">
+      <PopoverAnchor class="pointer-events-none absolute inset-0" />
       <PopoverContent
         force-mount
         side="right"
         align="center"
         :side-offset="8"
         unstyled
-        @interact-outside="
-          (e) => {
-            const target = e.target as HTMLElement
-            if (wrapper !== target && wrapper?.contains(target)) {
-              e.preventDefault()
-            }
-          }
-        "
+        class="aspect-2/3 w-sm"
+        @interact-outside="focusOutside"
       >
         <Motion
           v-if="open"
           as="div"
-          :layout="openingPopover ? 'size' : undefined"
           layout-id="bubble-popover"
           :style="{ borderRadius: '16px' }"
           :transition="popoverTransition.after()"
-          class="border-border/40 bg-popover relative z-100 w-96 overflow-clip rounded-2xl border p-4 shadow-2xl"
+          class="border-border/40 bg-popover relative z-100 h-full rounded-2xl border shadow-2xl"
         >
-          <NuxtPage source="popover" v-slot="{ Component }">
-            <Transition name="blurfade" appear>
-              <component :is="Component" :key="route.path" source="popover" />
-            </Transition>
-          </NuxtPage>
+          <NuxtPage source="popover" :transition="{ name: 'blurfade', mode: 'out-in' }" />
         </Motion>
       </PopoverContent>
     </Popover>
-
-    <Drawer v-else v-model:open="open" should-scale-background>
+    <Drawer
+      v-else
+      v-model:open="open"
+      should-scale-background
+      :direction="mode === 'drawer-bottom' ? 'bottom' : 'left'"
+    >
       <DrawerContent>
         <NuxtPage source="drawer" />
       </DrawerContent>
@@ -127,7 +146,7 @@ watch(open, () => {
 <style>
 .blurfade-enter-active,
 .blurfade-leave-active {
-  transition: all 0.25s;
+  transition: all 0.2s;
 }
 
 .blurfade-enter-from,

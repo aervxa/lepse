@@ -44,3 +44,9 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     </AnimatePresence>
   </PopoverPortal>
 </template>
+
+<style>
+[data-reka-popper-content-wrapper] {
+  pointer-events: none;
+}
+</style>

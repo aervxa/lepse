@@ -37,7 +37,7 @@ provide(focusMethodToggleableKey, focusMethodToggleable)
     <div>
       <BubbleNav />
       <p
-        class="max-w-[28ch] w-full text-lg text-pretty"
+        class="w-full max-w-[28ch] text-lg text-pretty"
         :class="
           cn(
             'peer-data-[float=true]:opacity-80 peer-data-[float=true]:md:text-xl peer-data-[float=true]:md:font-medium',

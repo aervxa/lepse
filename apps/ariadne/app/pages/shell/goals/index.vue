@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { X } from 'lucide-vue-next'
-import { PopoverClose } from 'reka-ui';
+import { PopoverClose } from 'reka-ui'
 
 const { source } = defineProps<{ source: 'drawer' | 'popover' }>()
 
@@ -8,7 +8,10 @@ const { goals } = useGoals()
 </script>
 
 <template>
-  <div :class="[source === 'drawer' ? 'mx-auto w-full max-w-sm' : 'flex flex-col gap-6']">
+  <div
+    class="relative flex size-full flex-col"
+    :class="[source === 'drawer' ? 'mx-auto max-w-sm' : 'gap-6 p-4']"
+  >
     <!-- Close button -->
     <PopoverClose v-if="source === 'popover'" as-child>
       <Button variant="ghost" size="icon" class="absolute top-1.5 right-1.5">
@@ -25,12 +28,7 @@ const { goals } = useGoals()
       <PopoverDescription>Manage what matters.</PopoverDescription>
     </PopoverHeader>
 
-    <Motion
-      as="div"
-      layout
-      class="flex flex-col gap-3"
-      :class="[source === 'drawer' && 'p-4 pt-2']"
-    >
+    <Motion as="div" class="flex flex-col gap-3" :class="[source === 'drawer' && 'p-4 pt-2']">
       <Item v-for="goal in goals" :key="goal.id" variant="outline" as-child>
         <NuxtLink :to="`goals/${goal.id}`">
           <ItemContent>
