@@ -23,7 +23,7 @@ let os: Platform | undefined
 let appWindow: WebviewWindow | undefined
 let unlisten: UnlistenFn | undefined
 
-onMounted(async () => {
+onBeforeMount(async () => {
   if (isApp) {
     os = platform()
     appWindow = getCurrentWebviewWindow()
@@ -35,7 +35,7 @@ onMounted(async () => {
   }
 })
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
   unlisten?.()
 })
 
