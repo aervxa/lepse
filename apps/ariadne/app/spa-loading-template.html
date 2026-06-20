@@ -59,8 +59,11 @@
       }
     </style>
     <script>
-      if (window.__TAURI__.os.platform() === 'windows') {
-        document.body.style.background = 'transparent'
+      if (window.__TAURI__) {
+        if (window.__TAURI__.os.platform() === 'windows') {
+          document.body.style.background = 'transparent'
+        }
+        window.__TAURI__.window.getCurrentWindow().show()
       }
     </script>
   </head>
