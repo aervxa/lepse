@@ -58,6 +58,11 @@
         box-shadow: none;
       }
     </style>
+    <script>
+      if (window.__TAURI__.os.platform() === 'windows') {
+        document.body.style.background = 'transparent'
+      }
+    </script>
   </head>
   <body data-tauri-drag-region>
     <img src="/logo.png" alt="logo" class="logo" />
@@ -65,6 +70,7 @@
       <div class="dotm-circular-7" id="dotmCircular7"></div>
     </div>
 
+    <!-- Animation -->
     <script>
       const root = document.getElementById('dotmCircular7')
       const dots = []
