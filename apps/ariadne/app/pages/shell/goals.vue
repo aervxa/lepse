@@ -10,7 +10,7 @@ const { goals } = useGoals()
 const inSubpage = computed(() => /goals\/\d+/.test(route.path))
 </script>
 <template>
-  <div class="flex size-full flex-col" :class="[source === 'drawer' && 'mx-auto max-w-sm']">
+  <div class="flex size-full flex-1 flex-col" :class="[source === 'drawer' && 'mx-auto max-w-sm']">
     <AnimatePresence mode="popLayout">
       <Motion
         v-if="!inSubpage"
