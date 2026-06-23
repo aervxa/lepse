@@ -11,7 +11,6 @@ export const popoverTransition = {
       },
     }
   },
-
   after(): MotionProps['transition'] {
     return {
       layout: {
@@ -19,6 +18,25 @@ export const popoverTransition = {
         stiffness: 500,
         damping: 30,
       },
+    }
+  },
+}
+
+export const contentTransition = {
+  out(): MotionProps['transition'] {
+    return {
+      type: 'spring',
+      stiffness: 520,
+      damping: 36,
+      mass: 0.65,
+    }
+  },
+  in(): MotionProps['transition'] {
+    return {
+      type: 'spring',
+      stiffness: 420,
+      damping: 34,
+      mass: 0.75,
     }
   },
 }

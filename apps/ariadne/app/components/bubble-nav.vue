@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useWindowSize } from '@vueuse/core'
-import { ChevronDown, Goal, ListTodo } from 'lucide-vue-next'
+import { Goal, ListTodo } from 'lucide-vue-next'
 import type { FocusOutsideEvent } from 'reka-ui'
 
 const items = [
@@ -17,6 +17,8 @@ const mode = computed<'drawer-bottom' | 'drawer-left' | 'popover'>(() =>
       ? 'drawer-left'
       : 'popover'
 )
+const source = computed(() => (mode.value.startsWith('drawer') ? 'drawer' : 'popover'))
+provide(bubbleNavSourceKey, readonly(source))
 const route = useRoute()
 const nav = useTemplateRef('nav')
 const open = ref(false)
@@ -45,7 +47,10 @@ async function openNav(item?: Item) {
       navigateTo(item.path)
     }
   } else {
-    await navigateTo(item.path)
+    // Let nested slugs remain on reloads
+    if (!new RegExp(`${item.path}/\\d+`).test(route.path)) {
+      await navigateTo(item.path)
+    }
     open.value = true
   }
 
@@ -124,9 +129,9 @@ function focusOutside(event: FocusOutsideEvent) {
           layout-id="bubble-popover"
           :style="{ borderRadius: '16px' }"
           :transition="popoverTransition.after()"
-          class="border-border/40 bg-popover relative z-100 h-full rounded-2xl border shadow-2xl"
+          class="border-border/40 bg-popover relative z-100 h-full overflow-hidden rounded-2xl border shadow-2xl"
         >
-          <NuxtPage source="popover" :transition="{ name: 'blurfade', mode: 'out-in' }" />
+          <NuxtPage />
         </Motion>
       </PopoverContent>
     </Popover>
@@ -136,23 +141,9 @@ function focusOutside(event: FocusOutsideEvent) {
       should-scale-background
       :direction="mode === 'drawer-bottom' ? 'bottom' : 'left'"
     >
-      <DrawerContent>
-        <NuxtPage source="drawer" />
+      <DrawerContent class="min-h-[67vh]">
+        <NuxtPage />
       </DrawerContent>
     </Drawer>
   </div>
 </template>
-
-<style>
-.blurfade-enter-active,
-.blurfade-leave-active {
-  transition: all 0.2s;
-}
-
-.blurfade-enter-from,
-.blurfade-leave-to {
-  opacity: 0;
-  filter: blur(0.4rem);
-  transform: scale(0.95);
-}
-</style>
