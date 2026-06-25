@@ -8,19 +8,37 @@ const route = useRoute()
 const { goals } = useGoals()
 
 const inSubpage = computed(() => /goals\/\d+/.test(route.path))
+
+const [subpage, animateSubpage] = useAnimate()
+const openSubpage = () => {
+  animateSubpage(
+    subpage.value,
+    {
+      opacity: [0, 1],
+      x: ['2rem', 0],
+      filter: ['blur(4px)', 'blur(0px)'],
+    },
+    contentTransition.in()
+  )
+}
 </script>
+
 <template>
   <div class="flex size-full flex-1 flex-col" :class="[source === 'drawer' && 'mx-auto max-w-sm']">
     <AnimatePresence mode="popLayout">
       <Motion
-        v-if="!inSubpage"
+        v-show="!inSubpage"
         as="div"
         class="flex flex-1 flex-col"
         :class="[source === 'popover' && 'gap-6 p-4']"
-        :initial="{ opacity: 0, x: '-1rem', scale: 0.95, filter: 'blur(4px)' }"
-        :animate="{ opacity: 1, x: 0, scale: 1, filter: 'blur(0px)' }"
-        :exit="{ opacity: 0, x: '-1rem', scale: 0.95, filter: 'blur(4px)' }"
-        :transition="!inSubpage ? contentTransition.in() : contentTransition.out()"
+        :initial="{ opacity: 0, scale: 0.95, filter: 'blur(4px)' }"
+        :animate="{ opacity: 1, scale: 1, filter: 'blur(0px)', transition: contentTransition.in() }"
+        :exit="{
+          opacity: 0,
+          scale: 0.95,
+          filter: 'blur(4px)',
+          transition: contentTransition.out(),
+        }"
       >
         <!-- Close button -->
         <PopoverClose v-if="source === 'popover'" as-child>
@@ -42,13 +60,13 @@ const inSubpage = computed(() => /goals\/\d+/.test(route.path))
         <!-- List -->
         <div class="flex flex-col gap-3" :class="[source === 'drawer' && 'p-4 pt-2']">
           <Item v-for="goal in goals" :key="goal.id" variant="outline" as-child>
-            <NuxtLink :to="`/shell/goals/${goal.id}`">
+            <NuxtLink :to="`/shell/goals/${goal.id}`" @click="openSubpage">
               <ItemMedia>
                 <!-- TODO: Goal status -->
               </ItemMedia>
               <ItemContent>
                 <ItemTitle>{{ goal.name }}</ItemTitle>
-                <ItemDescription :class="[!goal.description && 'text-muted-foreground italic']">
+                <ItemDescription :class="[!goal.description && 'italic']">
                   {{ goal.description ?? 'No description provided' }}
                 </ItemDescription>
               </ItemContent>
@@ -62,13 +80,12 @@ const inSubpage = computed(() => /goals\/\d+/.test(route.path))
 
       <!-- item page -->
       <Motion
-        v-if="inSubpage"
+        v-show="inSubpage"
         as="div"
+        ref="subpage"
         class="flex flex-1 flex-col"
-        :initial="{ opacity: 0, x: '2rem', filter: 'blur(4px)' }"
-        :animate="{ opacity: 1, x: 0, filter: 'blur(0px)' }"
-        :exit="{ opacity: 0, x: '2rem', filter: 'blur(4px)' }"
-        :transition="inSubpage ? contentTransition.in() : contentTransition.out()"
+        :initial="{ opacity: 0, scale: 0.95, filter: 'blur(4px)' }"
+        :animate="{ opacity: 1, scale: 1, filter: 'blur(0px)', transition: contentTransition.in() }"
       >
         <NuxtPage />
       </Motion>

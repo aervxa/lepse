@@ -35,6 +35,11 @@ watch(open, async (value) => {
   }
 })
 
+// Change activeItem on route changes
+watch(route, (value) => {
+  activeItem.value = items.find((item) => value.path.startsWith(item.path))
+})
+
 async function openNav(item?: Item) {
   if (!item) return
 
