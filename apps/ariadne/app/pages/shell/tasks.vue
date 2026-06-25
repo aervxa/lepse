@@ -49,7 +49,7 @@ const inSubpage = computed(() => /tasks\/\d+/.test(route.path))
               </ItemMedia>
               <ItemContent>
                 <ItemTitle>{{ task.name }}</ItemTitle>
-                <ItemDescription :class="[!task.description && 'text-muted-foreground italic']">
+                <ItemDescription :class="[!task.description && 'italic']">
                   {{ task.description ?? 'No description provided' }}
                 </ItemDescription>
               </ItemContent>

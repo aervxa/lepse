@@ -21,15 +21,18 @@ export function getClientDate(date?: Date | string | null) {
   return `${yyyy}-${mm}-${dd}`
 }
 
+/** Go back if previous page is of this app, else cut down the last segment of the route */
 export function navigateBack() {
-  navigateTo(
-    '/' +
-      useRoute()
-        .path.split('/')
-        .filter(Boolean) // removes empty strings from the arr due to trailing slashes
-        .slice(0, -1) // remove the last segment (to go back)
-        .join('/')
-  )
+  return window.history.state?.back
+    ? useRouter().back()
+    : navigateTo(
+        '/' +
+          useRoute()
+            .path.split('/')
+            .filter(Boolean) // removes empty strings from the arr due to trailing slashes
+            .slice(0, -1) // remove the last segment (to go back)
+            .join('/')
+      )
 }
 
 // IMPORTANT: MUST match tailwind breakpoints

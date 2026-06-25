@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { formatDate } from '@vueuse/core'
 import { ChevronLeft } from 'lucide-vue-next'
 
 const route = useRoute()
@@ -7,6 +8,15 @@ const source = inject(bubbleNavSourceKey)
 
 const { tasks } = useTasks()
 const task = computed(() => tasks.value.find((t) => t.id === Number(id)))
+
+const now = new Date()
+const date = computed(() => new Date(task.value?.createdAt ?? 0))
+const formattedDate = computed(() =>
+  formatDate(
+    date.value,
+    now.getFullYear() - date.value.getFullYear() > 0 ? 'MMM D, YYYYY' : 'MMM D'
+  )
+)
 </script>
 
 <template>
@@ -23,24 +33,50 @@ const task = computed(() => tasks.value.find((t) => t.id === Number(id)))
 
   <div
     v-if="task"
-    class="flex flex-1 flex-col justify-between gap-4"
-    :class="[source === 'popover' && 'p-4 pt-0']"
+    class="flex flex-1 flex-col gap-4 p-4"
+    :class="[source === 'drawer' ? 'pt-1' : 'pt-0']"
   >
-    <DrawerHeader v-if="source === 'drawer'" class="text-left!">
-      <DrawerTitle class="text-2xl">{{ task.name }}</DrawerTitle>
-      <DrawerDescription class="text-left text-base">
-        {{ task.description ?? 'No description provided' }}
-      </DrawerDescription>
-    </DrawerHeader>
-    <PopoverHeader v-if="source === 'popover'">
-      <PopoverTitle class="text-2xl">{{ task.name }}</PopoverTitle>
-      <PopoverDescription class="text-base">
-        {{ task.description ?? 'No description provided' }}
-      </PopoverDescription>
-    </PopoverHeader>
+    <!-- Header -->
+    <div class="flex flex-col gap-1.5">
+      <p class="text-2xl font-medium">{{ task.name }}</p>
+      <div class="flex items-center">
+        <p class="text-xs font-light opacity-60">Linked to</p>
+        <TaskGoalLink :id="task.id" />
+      </div>
+    </div>
+    <p class="text-muted-foreground text-base" :class="[!task.description && 'italic']">
+      {{ task.description ?? 'No description provided' }}
+    </p>
 
-    <div class="flex flex-col">
-      <!-- TODO: Details -->
+    <Separator class="mt-auto opacity-50" />
+    <div class="flex flex-col gap-1.5">
+      <!-- TODO: TIME SPENT -->
+      <!-- STATUS -->
+      <div class="flex items-center gap-2">
+        <p class="font-mono text-[10px] font-medium tracking-widest uppercase opacity-80">
+          Status:
+        </p>
+        <TaskStatusDropdown :id="task.id" :status="task.status">
+          <Button variant="outline" size="xs">
+            <TaskStatusIcon :status="task.status" />
+            {{ task.status }}
+          </Button>
+        </TaskStatusDropdown>
+      </div>
+      <!-- PRIORITY -->
+      <div class="flex items-center gap-2">
+        <p class="font-mono text-[10px] font-medium tracking-widest uppercase opacity-80">
+          Priority:
+        </p>
+        <TaskPriorityDropdown :id="task.id" :priority="task.priority">
+          <Button variant="outline" size="xs">
+            <TaskPriorityIcon :priority="task.priority" />
+            {{ task.priority }}
+          </Button>
+        </TaskPriorityDropdown>
+      </div>
+      <!-- CREATED AT -->
+      <p class="text-muted-foreground mt-1 text-xs">Created at {{ formattedDate }}</p>
     </div>
   </div>
 </template>

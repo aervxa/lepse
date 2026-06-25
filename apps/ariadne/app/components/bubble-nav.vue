@@ -59,7 +59,10 @@ async function openNav(item?: Item) {
 
 function focusOutside(event: FocusOutsideEvent) {
   const target = event.target as HTMLElement
-  if (target !== nav.value && nav.value?.contains(target)) {
+  if (
+    (target !== nav.value && nav.value?.contains(target)) ||
+    target.dataset.slot === 'popover-trigger'
+  ) {
     event.preventDefault()
   }
 }
