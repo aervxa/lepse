@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { formatDate } from '@vueuse/core'
-import { ChevronLeft } from 'lucide-vue-next'
+import { ChevronLeft, Clock, ClockFading } from 'lucide-vue-next'
+import { formatDuration } from '~/lib/time'
 
 const route = useRoute()
 const { id } = route.params
@@ -37,20 +38,41 @@ const formattedDate = computed(() =>
     :class="[source === 'drawer' ? 'pt-1' : 'pt-0']"
   >
     <!-- Header -->
-    <div class="flex flex-col gap-1.5">
+    <div class="flex flex-col gap-1">
       <p class="text-2xl font-medium">{{ task.name }}</p>
+      <!-- Goal linking -->
       <div class="flex items-center">
-        <p class="text-xs font-light opacity-60">Linked to</p>
+        <p class="text-xs font-light opacity-80">Linked to</p>
         <TaskGoalLink :id="task.id" />
       </div>
+      <!-- Time spent on task -->
+      <div class="flex items-center gap-2">
+        <div
+          v-for="item in [
+            { icon: ClockFading, label: `${task.pomoCount ?? 0} pomos` },
+            {
+              icon: Clock,
+              label: `${formatDuration(task.stopwatchMs ?? 0, {
+                format: task.stopwatchMs >= 3_600_000 /* an hour */ ? 'hhh mmm' : 'mmm',
+                pad: false,
+              })}`,
+            },
+          ]"
+          class="flex items-center gap-1 sm:gap-1.5"
+        >
+          <component :is="item.icon" class="size-3 opacity-60" />
+          <p class="text-[10px] leading-none font-extralight tracking-wide opacity-60">
+            {{ item.label }}
+          </p>
+        </div>
+      </div>
     </div>
-    <p class="text-muted-foreground text-base" :class="[!task.description && 'italic']">
+    <p class="text-base leading-relaxed font-light" :class="[!task.description && 'italic']">
       {{ task.description ?? 'No description provided' }}
     </p>
 
     <Separator class="mt-auto opacity-50" />
     <div class="flex flex-col gap-1.5">
-      <!-- TODO: TIME SPENT -->
       <!-- STATUS -->
       <div class="flex items-center gap-2">
         <p class="font-mono text-[10px] font-medium tracking-widest uppercase opacity-80">
