@@ -11,10 +11,7 @@ const props = defineProps<Props>()
 const isLoading = ref(false)
 
 async function run() {
-  isLoading.value = true
-  props.action().finally(() => {
-    isLoading.value = false
-  })
+  skeletonLoad(props.action(), isLoading)
 }
 </script>
 
