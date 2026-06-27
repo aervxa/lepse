@@ -13,24 +13,27 @@ const { id } = route.params
 const source = inject(bubbleNavSourceKey)
 
 const { tasks, updateTask } = useTasks()
-const nameDraft = ref('')
-const descriptionDraft = ref('')
+const nameEl = useTemplateRef('nameEl')
+const descriptionEl = useTemplateRef('descriptionEl')
 const task = computed(() => {
   const t = tasks.value.find((t) => t.id === Number(id))
-  nameDraft.value = t?.name ?? ''
-  descriptionDraft.value = t?.description ?? ''
+  if (t) {
+    nameEl.value && (nameEl.value.textContent = t.name)
+    descriptionEl.value && (descriptionEl.value.textContent = t.description)
+  }
   return t
 })
 const isSaving = ref(false)
 
 const save = async () => {
-  // Get drafts only if they differ
-  const name = nameDraft.value === task.value?.name ? undefined : nameDraft.value
-  const description =
-    descriptionDraft.value === task.value?.description ? undefined : descriptionDraft.value
+  if (!task.value || !nameEl.value || !descriptionEl.value) return
+  const name = nameEl.value.textContent
+  const description = descriptionEl.value.textContent
 
-  // if no differs, return
-  if (name === undefined && description === undefined) return
+  // if values are not dirty, there's nothing to change
+  const nameDirty = name !== task.value.name
+  const descriptionDirty = description !== task.value.description
+  if (!nameDirty && !descriptionDirty) return
 
   // skeletonLoad loading indicator to avoid flash
   skeletonLoad(
@@ -71,7 +74,14 @@ const formattedDate = computed(() =>
   >
     <!-- Header -->
     <div class="flex flex-col gap-1">
-      <Input v-model="nameDraft" class="text-2xl font-medium" @blur="save" unstyled />
+      <p
+        ref="nameEl"
+        data-placeholder="required"
+        class="before:text-destructive/50 text-2xl font-medium outline-none before:pointer-events-none before:text-xl before:font-light before:italic empty:before:content-[attr(data-placeholder)]"
+        @input="nameEl && !nameEl.textContent && (nameEl.textContent = null)"
+        @blur="save"
+        contenteditable
+      ></p>
 
       <!-- Goal linking -->
       <div class="flex items-center">
@@ -100,15 +110,25 @@ const formattedDate = computed(() =>
         </div>
       </div>
     </div>
-    <Input
-      v-model="descriptionDraft"
-      class="text-base leading-relaxed font-light"
-      placeholder="No description provided."
-      @blur="save"
-      unstyled
-    />
+    <!-- Description | relative/absolute wrapper to force contenteditable p tag into a fixed space (otherwise grows parent) -->
+    <div class="relative flex-1">
+      <div class="absolute inset-0">
+        <ScrollArea class="size-full">
+          <p
+            ref="descriptionEl"
+            data-placeholder="No description provided."
+            class="before:text-muted-foreground text-base font-light outline-none before:pointer-events-none before:italic empty:before:content-[attr(data-placeholder)]"
+            @input="
+              descriptionEl && !descriptionEl.textContent && (descriptionEl.textContent = null)
+            "
+            @blur="save"
+            contenteditable
+          ></p>
+        </ScrollArea>
+      </div>
+    </div>
 
-    <Separator class="mt-auto opacity-50" />
+    <Separator class="opacity-50" />
     <div class="flex items-end justify-between gap-4">
       <div class="flex flex-col gap-1.5">
         <!-- STATUS -->
