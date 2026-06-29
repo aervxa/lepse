@@ -29,7 +29,7 @@ const setPriority = async (
         </Button>
       </slot>
     </DropdownMenuTrigger>
-    <DropdownMenuContent align="start">
+    <DropdownMenuContent align="end" side="right">
       <DropdownMenuCheckboxItem
         v-for="p in ['none', 'urgent', 'high', 'medium', 'low'] as const"
         :key="p"

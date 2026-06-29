@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { formatDate, useDebounceFn } from '@vueuse/core'
+import { formatDate } from '@vueuse/core'
 import { ChevronLeft, Clock, ClockFading, LoaderCircle } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
 import { formatDuration } from '~/lib/time'

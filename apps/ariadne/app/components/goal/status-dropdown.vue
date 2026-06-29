@@ -28,7 +28,7 @@ const setStatus = async (
         </Button>
       </slot>
     </DropdownMenuTrigger>
-    <DropdownMenuContent align="start">
+    <DropdownMenuContent align="end" side="bottom">
       <DropdownMenuCheckboxItem
         v-for="s in ['active', 'completed', 'abandoned'] as const"
         :key="s"
