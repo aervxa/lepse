@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { formatDate } from '@vueuse/core'
-import { ChevronLeft, ChevronRight, Clock, ClockFading, LoaderCircle, Plus } from 'lucide-vue-next'
+import { ChevronLeft, ChevronRight, Clock, ClockFading, Plus } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
 import { formatDuration } from '~/lib/time'
 
@@ -10,7 +9,6 @@ definePageMeta({
 
 const route = useRoute()
 const { id } = route.params
-const source = inject(bubbleNavSourceKey)
 
 const { goals, updateGoal } = useGoals()
 const nameEl = useTemplateRef('nameEl')
@@ -59,7 +57,7 @@ const linkTask = async (taskId: number, unlink?: boolean) => {
 </script>
 
 <template>
-  <div class="my-2 flex items-center justify-between pr-2"">
+  <div class="my-2 flex items-center justify-between pr-2">
     <Button variant="link" size="sm" class="w-fit opacity-60" @click="navigateBack()">
       <ChevronLeft />
       Go back
@@ -82,10 +80,7 @@ const linkTask = async (taskId: number, unlink?: boolean) => {
   <div class="relative flex-1">
     <div class="absolute inset-0">
       <ScrollArea class="size-full">
-        <div
-          v-if="goal"
-          class="flex flex-col gap-4 p-4"
-        >
+        <div v-if="goal" class="flex flex-col gap-4 p-4">
           <!-- Header -->
           <div class="flex flex-col gap-3">
             <p
@@ -106,32 +101,31 @@ const linkTask = async (taskId: number, unlink?: boolean) => {
               "
               @blur="save"
               contenteditable
-            >
-            </p>
+            ></p>
           </div>
 
           <Separator class="mt-2 opacity-50" />
 
           <!-- Tasks -->
           <Collapsible default-open v-slot="{ open }">
-            <div class="flex items-center gap-4 justify-between">
+            <div class="flex items-center justify-between gap-4 pr-3">
               <div class="flex items-center gap-4">
-              <CollapsibleTrigger as-child>
-                <Button variant="ghost" size="xs">
-                  <ChevronRight class="transition-transform" :class="[open && 'rotate-90']" />
-                  Tasks
-                </Button>
-              </CollapsibleTrigger>
-              <div class="flex items-center gap-1.5 pr-6">
-                <CircularProgress
-                  :value="Math.max(4, (goalTasksDone / goalTasks.length) * 100)"
-                  :size="12"
-                  :thickness="1.5"
-                />
-                <span class="text-xs text-muted-foreground">
-                  {{ goalTasksDone }}/{{ goalTasks.length }}
-                </span>
-              </div>
+                <CollapsibleTrigger as-child>
+                  <Button variant="ghost" size="xs">
+                    <ChevronRight class="transition-transform" :class="[open && 'rotate-90']" />
+                    Tasks
+                  </Button>
+                </CollapsibleTrigger>
+                <div class="flex items-center gap-1.5 pr-6">
+                  <CircularProgress
+                    :value="Math.max(4, (goalTasksDone / goalTasks.length) * 100)"
+                    :size="12"
+                    :thickness="1.5"
+                  />
+                  <span class="text-muted-foreground text-xs">
+                    {{ goalTasksDone }}/{{ goalTasks.length }}
+                  </span>
+                </div>
               </div>
 
               <Combobox
@@ -147,8 +141,37 @@ const linkTask = async (taskId: number, unlink?: boolean) => {
               </Combobox>
             </div>
             <CollapsibleContent>
-              <div class="pt-2 flex flex-col">
-                <TaskItem v-for="task in goalTasks" :key="task.id" :task="task" sub />
+              <div class="flex flex-col pt-2">
+                <!-- <TaskItem v-for="task in goalTasks" :key="task.id" :task="task" sub /> -->
+                <Item v-for="task in goalTasks" :key="task.id" size="sm" as-child>
+                  <NuxtLink :to="`/shell/tasks/${task.id}`">
+                    <ItemContent>
+                      <ItemTitle>{{ task.name }}</ItemTitle>
+                    </ItemContent>
+                    <ItemActions>
+                      <div
+                        class="text-muted-foreground flex gap-3 text-xs leading-none whitespace-nowrap"
+                      >
+                        <div class="flex items-center gap-1.5" title="time worked">
+                          <Clock class="size-3" />
+                          <p>
+                            {{
+                              formatDuration(task.stopwatchMs, {
+                                format: 'hhh mmm',
+                                pad: false,
+                              })
+                            }}
+                          </p>
+                        </div>
+                        <div class="flex items-center gap-1.5" title="pomos completed">
+                          <ClockFading class="size-3" />
+                          <p>{{ task.pomoCount }} pomos</p>
+                        </div>
+                      </div>
+                      <ChevronRight class="size-4" />
+                    </ItemActions>
+                  </NuxtLink>
+                </Item>
               </div>
             </CollapsibleContent>
           </Collapsible>
