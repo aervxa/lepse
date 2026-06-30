@@ -25,6 +25,12 @@ const task = computed(() => {
 })
 const isSaving = ref(false)
 
+const clearEmptyInput = (event: InputEvent) => {
+  const target = event.currentTarget as HTMLElement
+  if (!target) return
+  if (!target.textContent) target.textContent = null
+}
+
 const save = async () => {
   if (!task.value || !nameEl.value || !descriptionEl.value) return
   const name = nameEl.value.textContent
@@ -78,7 +84,7 @@ const formattedDate = computed(() =>
         ref="nameEl"
         data-placeholder="required"
         class="before:text-destructive/50 text-2xl font-medium outline-none before:pointer-events-none before:text-xl before:font-light before:italic empty:before:content-[attr(data-placeholder)]"
-        @input="nameEl && !nameEl.textContent && (nameEl.textContent = null)"
+        @input="clearEmptyInput"
         @blur="save"
         contenteditable
       ></p>
@@ -118,9 +124,7 @@ const formattedDate = computed(() =>
             ref="descriptionEl"
             data-placeholder="No description provided."
             class="before:text-muted-foreground text-base font-light outline-none before:pointer-events-none before:italic empty:before:content-[attr(data-placeholder)]"
-            @input="
-              descriptionEl && !descriptionEl.textContent && (descriptionEl.textContent = null)
-            "
+            @input="clearEmptyInput"
             @blur="save"
             contenteditable
           ></p>
