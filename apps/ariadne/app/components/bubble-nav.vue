@@ -128,7 +128,7 @@ function focusOutside(event: FocusOutsideEvent) {
         align="center"
         :side-offset="8"
         unstyled
-        class="aspect-4/5 max-h-[67vh] w-sm"
+        :class="[open && 'aspect-4/5 max-h-[67vh] w-sm']"
         @interact-outside="focusOutside"
       >
         <Motion
