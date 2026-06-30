@@ -6,7 +6,10 @@ defineProps<{
   priority: string
   text?: boolean
   disabled?: boolean
+  align?: DropdownMenuContentProps['align']
+  side?: DropdownMenuContentProps['side']
 }>()
+const open = defineModel<boolean>('open')
 
 const { updateTask } = useTasks()
 
@@ -21,7 +24,7 @@ const setPriority = async (
 </script>
 
 <template>
-  <DropdownMenu>
+  <DropdownMenu v-model:open="open">
     <DropdownMenuTrigger as-child :title="`priority: ${priority}`" :disabled>
       <slot>
         <Button variant="ghost" size="icon-sm">
@@ -29,7 +32,7 @@ const setPriority = async (
         </Button>
       </slot>
     </DropdownMenuTrigger>
-    <DropdownMenuContent align="end" side="right">
+    <DropdownMenuContent :align :side>
       <DropdownMenuCheckboxItem
         v-for="p in ['none', 'urgent', 'high', 'medium', 'low'] as const"
         :key="p"

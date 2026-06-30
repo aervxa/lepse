@@ -30,7 +30,6 @@ const openSubpage = () => {
         v-show="!inSubpage"
         as="div"
         class="flex flex-1 flex-col"
-        :class="[source === 'popover' && 'gap-6 p-4']"
         :initial="{ opacity: 0, scale: 0.95, filter: 'blur(4px)' }"
         :animate="{ opacity: 1, scale: 1, filter: 'blur(0px)', transition: contentTransition.in() }"
         :exit="{
@@ -52,29 +51,33 @@ const openSubpage = () => {
           <DrawerTitle class="text-2xl">Tasks</DrawerTitle>
           <DrawerDescription>Manage your focus and productivity.</DrawerDescription>
         </DrawerHeader>
-        <PopoverHeader v-if="source === 'popover'">
+        <PopoverHeader v-if="source === 'popover'" class="p-4 pb-2">
           <PopoverTitle class="text-2xl">Tasks</PopoverTitle>
           <PopoverDescription>Manage your focus and productivity.</PopoverDescription>
         </PopoverHeader>
 
-        <!-- List -->
-        <div class="flex flex-col gap-3" :class="[source === 'drawer' && 'p-4 pt-2']">
-          <Item v-for="task in tasks" :key="task.id" variant="outline" as-child>
-            <NuxtLink :to="`/shell/tasks/${task.id}`" @click="openSubpage">
-              <ItemMedia>
-                <!-- TODO: Task status/urgency  -->
-              </ItemMedia>
-              <ItemContent>
-                <ItemTitle>{{ task.name }}</ItemTitle>
-                <ItemDescription :class="[!task.description && 'italic']">
-                  {{ task.description ?? 'No description provided' }}
-                </ItemDescription>
-              </ItemContent>
-              <ItemActions>
-                <ChevronRight class="size-4" />
-              </ItemActions>
-            </NuxtLink>
-          </Item>
+        <!-- List | relative/absolute wrapper to force contenteditable p tag into a fixed space (otherwise grows parent) -->
+        <div class="relative flex-1">
+          <div class="absolute inset-0">
+            <ScrollArea class="size-full">
+              <div class="flex flex-col gap-3 p-4">
+                <Item v-for="task in tasks" :key="task.id" variant="outline" size="sm" as-child>
+                  <NuxtLink :to="`/shell/tasks/${task.id}`" @click="openSubpage">
+                    <!-- Task status  -->
+                    <ItemMedia class="-my-3 -mr-1.5">
+                      <TaskStatusDropdown :id="task.id" :status="task.status" />
+                    </ItemMedia>
+                    <ItemContent>
+                      <ItemTitle>{{ task.name }}</ItemTitle>
+                    </ItemContent>
+                    <ItemActions>
+                      <ChevronRight class="size-4" />
+                    </ItemActions>
+                  </NuxtLink>
+                </Item>
+              </div>
+            </ScrollArea>
+          </div>
         </div>
       </Motion>
 

@@ -66,7 +66,7 @@ const linkTask = async (taskId: number, unlink?: boolean) => {
     <!-- STATUS -->
     <div v-if="goal" class="flex items-center gap-2">
       <p class="font-mono text-[10px] font-medium tracking-widest uppercase opacity-80">Status:</p>
-      <GoalStatusDropdown :id="goal.id" :status="goal.status">
+      <GoalStatusDropdown :id="goal.id" :status="goal.status" align="end">
         <Button variant="outline" size="xs">
           <GoalStatusIcon :status="goal.status" />
           {{ goal.status }}
@@ -145,6 +145,10 @@ const linkTask = async (taskId: number, unlink?: boolean) => {
                 <!-- <TaskItem v-for="task in goalTasks" :key="task.id" :task="task" sub /> -->
                 <Item v-for="task in goalTasks" :key="task.id" size="sm" as-child>
                   <NuxtLink :to="`/shell/tasks/${task.id}`">
+                    <!-- Task status  -->
+                    <ItemMedia class="-my-3 -mr-1.5">
+                      <TaskStatusDropdown :id="task.id" :status="task.status" />
+                    </ItemMedia>
                     <ItemContent>
                       <ItemTitle>{{ task.name }}</ItemTitle>
                     </ItemContent>

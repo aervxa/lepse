@@ -30,7 +30,6 @@ const openSubpage = () => {
         v-show="!inSubpage"
         as="div"
         class="flex flex-1 flex-col"
-        :class="[source === 'popover' && 'gap-6 p-4']"
         :initial="{ opacity: 0, scale: 0.95, filter: 'blur(4px)' }"
         :animate="{ opacity: 1, scale: 1, filter: 'blur(0px)', transition: contentTransition.in() }"
         :exit="{
@@ -52,29 +51,32 @@ const openSubpage = () => {
           <DrawerTitle class="text-2xl">Goals</DrawerTitle>
           <DrawerDescription>Manage what matters.</DrawerDescription>
         </DrawerHeader>
-        <PopoverHeader v-if="source === 'popover'">
+        <PopoverHeader v-if="source === 'popover'" class="p-4 pb-2">
           <PopoverTitle class="text-2xl">Goals</PopoverTitle>
           <PopoverDescription>Manage what matters.</PopoverDescription>
         </PopoverHeader>
 
-        <!-- List -->
-        <div class="flex flex-col gap-3" :class="[source === 'drawer' && 'p-4 pt-2']">
-          <Item v-for="goal in goals" :key="goal.id" variant="outline" as-child>
-            <NuxtLink :to="`/shell/goals/${goal.id}`" @click="openSubpage">
-              <ItemMedia>
-                <!-- TODO: Goal status -->
-              </ItemMedia>
-              <ItemContent>
-                <ItemTitle>{{ goal.name }}</ItemTitle>
-                <ItemDescription :class="[!goal.description && 'italic']">
-                  {{ goal.description ?? 'No description provided' }}
-                </ItemDescription>
-              </ItemContent>
-              <ItemActions>
-                <ChevronRight class="size-4" />
-              </ItemActions>
-            </NuxtLink>
-          </Item>
+        <!-- List | relative/absolute wrapper to force contenteditable p tag into a fixed space (otherwise grows parent) -->
+        <div class="relative flex-1">
+          <div class="absolute inset-0">
+            <ScrollArea class="size-full">
+              <div class="flex flex-col gap-3 p-4">
+                <Item v-for="goal in goals" :key="goal.id" variant="outline" as-child>
+                  <NuxtLink :to="`/shell/goals/${goal.id}`" @click="openSubpage">
+                    <ItemContent>
+                      <ItemTitle>{{ goal.name }}</ItemTitle>
+                      <ItemDescription :class="[!goal.description && 'italic']">
+                        {{ goal.description ?? 'No description provided' }}
+                      </ItemDescription>
+                    </ItemContent>
+                    <ItemActions>
+                      <ChevronRight class="size-4" />
+                    </ItemActions>
+                  </NuxtLink>
+                </Item>
+              </div>
+            </ScrollArea>
+          </div>
         </div>
       </Motion>
 

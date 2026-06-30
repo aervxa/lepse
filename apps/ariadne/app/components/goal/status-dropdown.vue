@@ -4,6 +4,8 @@ import { toast } from 'vue-sonner'
 defineProps<{
   id: number
   status: string
+  align?: DropdownMenuContentProps['align']
+  side?: DropdownMenuContentProps['side']
 }>()
 
 const { updateGoal } = useGoals()
@@ -28,7 +30,7 @@ const setStatus = async (
         </Button>
       </slot>
     </DropdownMenuTrigger>
-    <DropdownMenuContent align="end" side="bottom">
+    <DropdownMenuContent :align :side>
       <DropdownMenuCheckboxItem
         v-for="s in ['active', 'completed', 'abandoned'] as const"
         :key="s"

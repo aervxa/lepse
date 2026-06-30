@@ -136,7 +136,7 @@ const formattedDate = computed(() =>
           <p class="font-mono text-[10px] font-medium tracking-widest uppercase opacity-80">
             Status:
           </p>
-          <TaskStatusDropdown :id="task.id" :status="task.status">
+          <TaskStatusDropdown :id="task.id" :status="task.status" align="end" side="right">
             <Button variant="outline" size="xs">
               <TaskStatusIcon :status="task.status" />
               {{ task.status }}
@@ -148,7 +148,7 @@ const formattedDate = computed(() =>
           <p class="font-mono text-[10px] font-medium tracking-widest uppercase opacity-80">
             Priority:
           </p>
-          <TaskPriorityDropdown :id="task.id" :priority="task.priority">
+          <TaskPriorityDropdown :id="task.id" :priority="task.priority" align="end" side="right">
             <Button variant="outline" size="xs">
               <TaskPriorityIcon :priority="task.priority" />
               {{ task.priority }}

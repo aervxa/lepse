@@ -1,11 +1,15 @@
 <script setup lang="ts">
+import type { DropdownMenuContentProps } from 'reka-ui'
 import { toast } from 'vue-sonner'
 
 defineProps<{
   id: number
   status: string
   disabled?: boolean
+  align?: DropdownMenuContentProps['align']
+  side?: DropdownMenuContentProps['side']
 }>()
+const open = defineModel<boolean>('open')
 
 const { updateTask } = useTasks()
 
@@ -20,7 +24,7 @@ const setStatus = async (
 </script>
 
 <template>
-  <DropdownMenu>
+  <DropdownMenu v-model:open="open">
     <DropdownMenuTrigger as-child :title="`status: ${status}`" :disabled>
       <slot>
         <Button variant="ghost" size="icon-sm">
@@ -28,7 +32,7 @@ const setStatus = async (
         </Button>
       </slot>
     </DropdownMenuTrigger>
-    <DropdownMenuContent align="end" side="right">
+    <DropdownMenuContent :align :side>
       <DropdownMenuCheckboxItem
         v-for="s in ['todo', 'in_progress', 'done', 'canceled'] as const"
         :key="s"
