@@ -40,8 +40,8 @@ provide(focusMethodToggleableKey, focusMethodToggleable)
         class="w-full max-w-[28ch] text-lg text-pretty"
         :class="
           cn(
-            'peer-data-[float=true]:opacity-80 peer-data-[float=true]:md:text-xl peer-data-[float=true]:md:font-medium',
-            'peer-data-[float=false]:absolute peer-data-[float=false]:bottom-[20vh] peer-data-[float=false]:left-1/2 peer-data-[float=false]:-translate-x-1/2 peer-data-[float=false]:text-center peer-data-[float=false]:font-light peer-data-[float=false]:italic peer-data-[float=false]:opacity-60'
+            'opacity-80 peer-data-[float=true]:md:text-xl peer-data-[float=true]:md:font-medium',
+            'peer-data-[float=false]:absolute peer-data-[float=false]:bottom-[20vh] peer-data-[float=false]:left-1/2 peer-data-[float=false]:-translate-x-1/2 peer-data-[float=false]:text-center peer-data-[float=false]:font-normal peer-data-[float=false]:italic'
           )
         "
       >

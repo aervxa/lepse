@@ -78,24 +78,23 @@ function focusOutside(event: FocusOutsideEvent) {
     ref="nav"
     class="peer flex gap-1 rounded-full"
     :class="[
-      mode !== 'drawer-bottom' && 'absolute top-1/2 left-2 -translate-y-1/2 flex-col',
-      mode === 'popover' && 'border-border border p-1',
+      mode !== 'drawer-bottom' && 'absolute top-1/2 left-2 -translate-y-1/2 flex-col p-1 backdrop-blur-lg **:backdrop-blur-none border-border border',
     ]"
     :data-float="mode !== 'drawer-bottom'"
   >
     <Motion
-      v-if="!open && mode === 'popover'"
+      v-if="!open && mode !== 'drawer-bottom'"
       as="div"
       layout-id="bubble-popover"
       :style="{ borderRadius: '24px' }"
       :transition="popoverTransition.before()"
-      class="bg-sidebar pointer-events-none absolute inset-0 -z-10"
+      class="bg-sidebar/60 pointer-events-none absolute inset-0 -z-10"
     />
 
     <div v-for="item in items" :key="item.name" class="relative">
       <AnimatePresence>
         <Motion
-          v-if="activeItem?.name === item.name"
+          v-if="mode === 'popover' && activeItem?.name === item.name"
           as="div"
           layout-id="bubble-nav-item"
           :exit="{ scale: 0 }"
@@ -106,12 +105,12 @@ function focusOutside(event: FocusOutsideEvent) {
               duration: 0.4,
             },
           }"
-          class="bg-popover border-border/60 absolute -inset-0.5 -z-10 rounded-full border"
+          class="bg-primary/25 border-border/60 absolute -inset-0.5 -z-10 rounded-full border"
         />
       </AnimatePresence>
 
       <Button
-        :variant="mode === 'popover' ? 'ghost' : 'outline'"
+        :variant="mode === 'drawer-bottom' ? 'secondary' : 'ghost'"
         :size="mode !== 'drawer-bottom' ? 'icon' : undefined"
         @click="openNav(item)"
       >
@@ -137,7 +136,7 @@ function focusOutside(event: FocusOutsideEvent) {
           layout-id="bubble-popover"
           :style="{ borderRadius: '16px' }"
           :transition="popoverTransition.after()"
-          class="border-border/40 bg-popover relative z-100 h-full overflow-hidden rounded-2xl border shadow-2xl"
+          class="border-border/40 bg-popover/80 backdrop-blur-3xl relative z-100 h-full overflow-hidden rounded-2xl border shadow-2xl"
         >
           <NuxtPage />
         </Motion>

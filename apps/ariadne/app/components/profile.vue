@@ -52,7 +52,7 @@ const [DefineAvatar, ReuseAvatar] = createReusableTemplate<{ state: 'after' | 'b
           layout-id="profile-popover"
           :style="{ borderRadius: '16px' }"
           :transition="popoverTransition.after()"
-          class="bg-popover border-border/40 relative flex flex-col gap-6 rounded-2xl border p-4 shadow-2xl"
+          class="bg-popover/80 backdrop-blur-3xl border-border/40 relative flex flex-col gap-6 rounded-2xl border p-4 shadow-2xl"
         >
           <!-- Close button -->
           <Button

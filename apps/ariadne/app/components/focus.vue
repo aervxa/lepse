@@ -167,7 +167,7 @@ function skipPomo() {
   </p>
 
   <!-- Actions -->
-  <div class="top-full mt-4 grid grid-cols-3 place-items-center gap-4">
+  <div class="top-full mt-4 grid grid-cols-3 place-items-center gap-2">
     <Button
       variant="ghost"
       size="icon"
@@ -177,7 +177,6 @@ function skipPomo() {
       <RefreshCw />
     </Button>
     <Button
-      variant="outline"
       size="icon-lg"
       class="size-14 rounded-full"
       @click="stopwatch.toggle()"

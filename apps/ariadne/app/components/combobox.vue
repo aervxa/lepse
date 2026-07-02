@@ -28,7 +28,7 @@ if (!slots.default) {
       <slot />
     </PopoverTrigger>
     <PopoverContent :align class="p-0">
-      <Command highlight-on-hover>
+      <Command highlight-on-hover class="rounded-[inherit] bg-transparent backdrop-blur-none">
         <CommandInput :placeholder="props.placeholder" />
         <CommandList>
           <CommandEmpty>{{ props.empty }}</CommandEmpty>
