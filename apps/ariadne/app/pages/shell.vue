@@ -21,6 +21,7 @@ provide(focusMethodToggleableKey, focusMethodToggleable)
     <div class="flex items-start gap-4">
       <FocusSessions />
       <Profile />
+      <Settings />
     </div>
   </div>
 

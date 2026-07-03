@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { createReusableTemplate } from '@vueuse/core'
-import { LogOut, Pencil, Smile, X } from 'lucide-vue-next'
+import { LogOut, Pencil, Settings, Smile, X } from 'lucide-vue-next'
 
 const { user, logout } = useAuth()
 const open = ref(false)
@@ -52,7 +52,7 @@ const [DefineAvatar, ReuseAvatar] = createReusableTemplate<{ state: 'after' | 'b
           layout-id="profile-popover"
           :style="{ borderRadius: '16px' }"
           :transition="popoverTransition.after()"
-          class="bg-popover/80 backdrop-blur-3xl border-border/40 relative flex flex-col gap-6 rounded-2xl border p-4 shadow-2xl"
+          class="bg-popover/80 border-border/40 relative flex flex-col gap-6 rounded-2xl border p-4 shadow-2xl backdrop-blur-3xl"
         >
           <!-- Close button -->
           <Button
@@ -71,12 +71,19 @@ const [DefineAvatar, ReuseAvatar] = createReusableTemplate<{ state: 'after' | 'b
           </div>
 
           <div class="flex items-end justify-between gap-2">
-            <Button variant="outline" size="sm" as-child>
-              <NuxtLink to="/shell/account">
-                <Pencil />
-                Edit Profile
-              </NuxtLink>
-            </Button>
+            <div class="flex gap-2">
+              <Button variant="outline" size="icon-sm" as-child>
+                <NuxtLink to="/shell/settings">
+                  <Settings />
+                </NuxtLink>
+              </Button>
+              <Button variant="outline" size="sm" as-child>
+                <NuxtLink to="/shell/settings/profile">
+                  <Pencil />
+                  Edit Profile
+                </NuxtLink>
+              </Button>
+            </div>
             <LoadingButton
               variant="destructive"
               size="icon-sm"
