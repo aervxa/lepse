@@ -28,7 +28,7 @@ const { user } = useAuth()
       <DialogDescription class="sr-only">adjust ur likings and preferences</DialogDescription>
 
       <SidebarProvider class="min-h-full">
-        <Sidebar collapsible="none" class="hidden md:flex">
+        <Sidebar collapsible="none" class="hidden border-r md:flex">
           <SidebarHeader>
             <SidebarMenuButton
               size="lg"
