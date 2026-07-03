@@ -13,7 +13,12 @@ const [DefineAvatar, ReuseAvatar] = createReusableTemplate<{ state: 'after' | 'b
 <template>
   <DefineAvatar v-slot="{ state }">
     <AnimatePresence>
-      <Motion as="div" layout-id="profile-avatar" :transition="popoverTransition[state]()">
+      <Motion
+        as="div"
+        layout-id="profile-avatar"
+        :transition="popoverTransition[state]()"
+        class="rounded-full"
+      >
         <Avatar :class="state === 'after' ? 'size-24' : undefined">
           <!-- TODO: Put actual avatar -->
           <AvatarImage src="https://avatars.githubusercontent.com/u/122371060" />
@@ -66,21 +71,28 @@ const [DefineAvatar, ReuseAvatar] = createReusableTemplate<{ state: 'after' | 'b
 
           <!-- Header -->
           <div class="flex flex-col items-center gap-2">
-            <ReuseAvatar state="after" />
+            <div class="group relative rounded-full">
+              <ReuseAvatar state="after" />
+              <NuxtLink
+                to="/shell/settings/profile"
+                class="absolute inset-0 rounded-full **:transition-all"
+              >
+                <div
+                  class="bg-background/50 group-hover:bg-muted/50 absolute right-[14.645%] bottom-[14.645%] translate-1/2 rounded-full p-2 backdrop-blur-lg"
+                >
+                  <Pencil class="size-3 group-hover:stroke-3" />
+                </div>
+              </NuxtLink>
+            </div>
             <p class="font-medium">Hi, {{ user?.fullName }}!</p>
           </div>
 
           <div class="flex items-end justify-between gap-2">
             <div class="flex gap-2">
-              <Button variant="outline" size="icon-sm" as-child>
+              <Button variant="outline" size="sm" as-child>
                 <NuxtLink to="/shell/settings">
                   <Settings />
-                </NuxtLink>
-              </Button>
-              <Button variant="outline" size="sm" as-child>
-                <NuxtLink to="/shell/settings/profile">
-                  <Pencil />
-                  Edit Profile
+                  Settings
                 </NuxtLink>
               </Button>
             </div>
