@@ -1,15 +1,21 @@
 import type User from '#models/user'
 import { BaseTransformer } from '@adonisjs/core/transformers'
+import drive from '@adonisjs/drive/services/main'
 
 export default class UserTransformer extends BaseTransformer<User> {
-  toObject() {
-    return this.pick(this.resource, [
-      'id',
-      'fullName',
-      'email',
-      'createdAt',
-      'updatedAt',
-      'initials',
-    ])
+  async toObject() {
+    return {
+      ...this.pick(this.resource, [
+        'id',
+        'fullName',
+        'email',
+        'createdAt',
+        'updatedAt',
+        'initials',
+      ]),
+      avatarUrl: this.resource.avatar ? await drive.use().getUrl(this.resource.avatar) : null,
+    }
   }
 }
+
+//  await drive.use().getUrl(user.avatar)

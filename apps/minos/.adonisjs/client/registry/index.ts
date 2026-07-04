@@ -6,6 +6,12 @@ import type { ApiDefinition } from './tree.d.ts'
 const placeholder: any = {}
 
 const routes = {
+  'drive.fs.serve': {
+    methods: ["GET","HEAD"],
+    pattern: '/uploads/*',
+    tokens: [{"old":"/uploads/*","type":0,"val":"uploads","end":""},{"old":"/uploads/*","type":2,"val":"*","end":""}],
+    types: placeholder as Registry['drive.fs.serve']['types'],
+  },
   'auth.new_account.store': {
     methods: ["POST"],
     pattern: '/api/v1/auth/signup',
@@ -29,6 +35,12 @@ const routes = {
     pattern: '/api/v1/account/profile',
     tokens: [{"old":"/api/v1/account/profile","type":0,"val":"api","end":""},{"old":"/api/v1/account/profile","type":0,"val":"v1","end":""},{"old":"/api/v1/account/profile","type":0,"val":"account","end":""},{"old":"/api/v1/account/profile","type":0,"val":"profile","end":""}],
     types: placeholder as Registry['account.profile.show']['types'],
+  },
+  'account.profile.update_avatar': {
+    methods: ["POST"],
+    pattern: '/api/v1/account/profile/avatar',
+    tokens: [{"old":"/api/v1/account/profile/avatar","type":0,"val":"api","end":""},{"old":"/api/v1/account/profile/avatar","type":0,"val":"v1","end":""},{"old":"/api/v1/account/profile/avatar","type":0,"val":"account","end":""},{"old":"/api/v1/account/profile/avatar","type":0,"val":"profile","end":""},{"old":"/api/v1/account/profile/avatar","type":0,"val":"avatar","end":""}],
+    types: placeholder as Registry['account.profile.update_avatar']['types'],
   },
   'day.tasks.index': {
     methods: ["GET","HEAD"],

@@ -32,6 +32,7 @@ router
         router
           .group(() => {
             router.get('/profile', [controllers.Profile, 'show'])
+            router.post('/profile/avatar', [controllers.Profile, 'updateAvatar'])
           })
           .prefix('account')
           .as('account')

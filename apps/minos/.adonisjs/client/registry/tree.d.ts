@@ -2,6 +2,11 @@
 import type { routes } from './index.ts'
 
 export interface ApiDefinition {
+  drive: {
+    fs: {
+      serve: typeof routes['drive.fs.serve']
+    }
+  }
   auth: {
     newAccount: {
       store: typeof routes['auth.new_account.store']
@@ -14,6 +19,7 @@ export interface ApiDefinition {
   account: {
     profile: {
       show: typeof routes['account.profile.show']
+      updateAvatar: typeof routes['account.profile.update_avatar']
     }
   }
   day: {
