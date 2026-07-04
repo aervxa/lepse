@@ -27,7 +27,6 @@
     "turbo": "^2.8.21"
   },
   "packageManager": "npm@11.11.1",
-  "prettier": "@adonisjs/prettier-config",
   "allowScripts": {
     "vue-demi@0.14.10": true,
     "@parcel/watcher@2.5.6": true,
