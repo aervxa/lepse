@@ -75,10 +75,10 @@ const [DefineAvatar, ReuseAvatar] = createReusableTemplate<{ state: 'after' | 'b
               <ReuseAvatar state="after" />
               <NuxtLink
                 to="/shell/settings/profile"
-                class="absolute inset-0 rounded-full **:transition-all"
+                class="focus absolute inset-0 rounded-full **:transition-all"
               >
                 <div
-                  class="bg-background/50 group-hover:bg-muted/50 absolute right-[14.645%] bottom-[14.645%] translate-1/2 rounded-full p-2 backdrop-blur-lg"
+                  class="bg-background/50 group-hover:bg-muted/50 group-focus-within:bg-muted/50 absolute right-[14.645%] bottom-[14.645%] translate-1/2 rounded-full p-2 backdrop-blur-lg"
                 >
                   <Pencil class="size-3 group-hover:stroke-3" />
                 </div>
