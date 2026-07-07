@@ -12,7 +12,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@lucide/vue": "^1.17.0",
+    "@lucide/vue": "^1.23.0",
     "@nuxt/fonts": "^0.14.0",
     "@tailwindcss/vite": "^4.2.2",
     "@tauri-apps/api": "^2.11.0",
@@ -25,8 +25,8 @@
     "lucide-vue-next": "^1.0.0",
     "motion-v": "^2.3.0",
     "nuxt": "^4.4.2",
-    "reka-ui": "^2.9.10",
-    "shadcn-vue": "^2.6.2",
+    "reka-ui": "^2.10.1",
+    "shadcn-vue": "^2.7.4",
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.2.2",
     "vaul-vue": "^0.4.1",
