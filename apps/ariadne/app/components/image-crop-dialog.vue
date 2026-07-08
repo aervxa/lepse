@@ -1,18 +1,23 @@
 <!-- TODO: Save -->
 <script setup lang="ts">
 import { clamp } from '@vueuse/core'
-import { ImageIcon } from 'lucide-vue-next'
+import { ImageIcon, RotateCcw } from 'lucide-vue-next'
+import { toast } from 'vue-sonner'
+
+const SIZE = 224
+const OUTPUT_SIZE = 128
+
+const props = defineProps<{
+  onCrop?: (blob: Blob) => void | Promise<void>
+}>()
 
 const uploadInput = useTemplateRef('uploadInput')
 const open = computed({
   get: () => !!img.value.src,
   set: (value: boolean) => {
     if (!value) {
-      // reset
       img.value.src = ''
-      slider.value[0] = 0
-      x.set(0)
-      y.set(0)
+      reset()
     }
     return value
   },
@@ -24,7 +29,6 @@ const img = ref<{
   width: number
   height: number
 }>({ src: '', width: 0, height: 0 })
-const SIZE = 224
 const baseScale = ref(0)
 
 const openPicker = () => {
@@ -44,9 +48,7 @@ const upload = (e: Event) => {
       img.value.height = tmpImg.height
       // initial drag pos would be based on whichever side is longer, so baseScale is measured from the other "base" side
       baseScale.value = SIZE / Math.min(img.value.width, img.value.height)
-      // initial center image
-      x.set(constraints.value.x / 2)
-      y.set(constraints.value.y / 2)
+      reset()
     }
   }
 }
@@ -59,7 +61,7 @@ const constraints = computed(() => ({
   y: SIZE - img.value.height * scale.value,
 }))
 watch(scale, (newScale, oldScale) => {
-  if (!oldScale || !img.value.src) return
+  if (!slider.value[0] || !img.value.src) return
 
   /**
    * explanation:
@@ -76,6 +78,42 @@ watch(scale, (newScale, oldScale) => {
   x.set(clamp(R - (R - x.get()) * ratio, constraints.value.x, 0))
   y.set(clamp(R - (R - y.get()) * ratio, constraints.value.y, 0))
 })
+
+const reset = () => {
+  slider.value[0] = 0
+  x.set(constraints.value.x / 2)
+  y.set(constraints.value.y / 2)
+}
+
+const crop = () => {
+  return new Promise<void>((resolve) => {
+    const tmpImg = new Image()
+    tmpImg.src = img.value.src
+    tmpImg.onload = async function () {
+      const canvas = new OffscreenCanvas(OUTPUT_SIZE, OUTPUT_SIZE)
+      const ctx = canvas.getContext('2d')
+      if (!ctx) {
+        toast.error('Something went wrong', { description: 'browser quirks, please try again!' })
+        return
+      }
+      ctx.drawImage(
+        tmpImg,
+        -x.get() / scale.value,
+        -y.get() / scale.value,
+        SIZE / scale.value,
+        SIZE / scale.value,
+        0,
+        0,
+        OUTPUT_SIZE,
+        OUTPUT_SIZE
+      )
+      const blob = await canvas.convertToBlob({ type: 'image/webp', quality: 0.8 })
+      await props.onCrop?.(blob)
+      open.value = false
+      resolve()
+    }
+  })
+}
 </script>
 
 <template>
@@ -134,6 +172,14 @@ watch(scale, (newScale, oldScale) => {
         <Slider v-model="slider" class="w-1/3" />
         <ImageIcon class="size-6" />
       </div>
+
+      <DialogFooter>
+        <Button variant="ghost" size="icon" class="mr-auto" @click="reset">
+          <RotateCcw />
+        </Button>
+        <Button variant="outline">Cancel</Button>
+        <LoadingButton :action="crop">Save</LoadingButton>
+      </DialogFooter>
     </DialogContent>
   </Dialog>
 </template>
