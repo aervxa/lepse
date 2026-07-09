@@ -17,5 +17,3 @@ export default class UserTransformer extends BaseTransformer<User> {
     }
   }
 }
-
-//  await drive.use().getUrl(user.avatar)
