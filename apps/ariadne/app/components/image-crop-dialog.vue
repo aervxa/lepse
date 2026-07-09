@@ -128,7 +128,7 @@ const crop = () => {
     />
     <slot :open="openPicker" />
 
-    <DialogContent class="aspect-4/5. sm:max-w-sm">
+    <DialogContent class="sm:max-w-sm">
       <DialogHeader>
         <DialogTitle>Edit Image</DialogTitle>
         <DialogDescription class="sr-only">Crop nd Scale</DialogDescription>
@@ -177,7 +177,7 @@ const crop = () => {
         <Button variant="ghost" size="icon" class="mr-auto" @click="reset">
           <RotateCcw />
         </Button>
-        <Button variant="outline">Cancel</Button>
+        <Button variant="outline" @click="open = false">Cancel</Button>
         <LoadingButton :action="crop">Save</LoadingButton>
       </DialogFooter>
     </DialogContent>
