@@ -1,4 +1,3 @@
-<!-- TODO: Save -->
 <script setup lang="ts">
 import { clamp } from '@vueuse/core'
 import { ImageIcon, RotateCcw } from 'lucide-vue-next'
@@ -124,6 +123,7 @@ const crop = () => {
       accept="image/*"
       class="sr-only"
       aria-label="Upload image"
+      tabindex="-1"
       @change="upload"
     />
     <slot :open="openPicker" />
