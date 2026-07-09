@@ -38,11 +38,10 @@ const { user } = useAuth()
             >
               <NuxtLink to="/shell/settings/profile">
                 <Avatar size="lg">
-                  <!-- TODO: Put actual avatar -->
-                  <AvatarImage src="https://avatars.githubusercontent.com/u/122371060" />
-                  <AvatarFallback :delay-ms="SKELETON_DELAY_MS">{{
-                    user?.initials
-                  }}</AvatarFallback>
+                  <AvatarImage :src="user?.avatarUrl ?? ''" />
+                  <AvatarFallback :delay-ms="SKELETON_DELAY_MS">
+                    {{ user?.initials }}
+                  </AvatarFallback>
                 </Avatar>
                 <div class="flex flex-1 flex-col gap-1">
                   <span class="truncate text-xs tracking-wide">{{ user?.fullName }}</span>
@@ -75,7 +74,7 @@ const { user } = useAuth()
           </SidebarContent>
         </Sidebar>
 
-        <section class="bg-background flex-1">
+        <section class="bg-background flex flex-1 flex-col gap-8 p-6">
           <NuxtPage />
         </section>
       </SidebarProvider>

@@ -61,10 +61,10 @@ export const useAuth = () => {
     }
   }
 
-  const updateAvatar = async (
-    body: Parameters<typeof $minos.api.account.profile.updateAvatar>['0']['body']
+  const updateProfile = async (
+    body: Parameters<typeof $minos.api.account.profile.update>['0']['body']
   ) => {
-    const [payload, error] = await $minos.api.account.profile.updateAvatar({ body }).safe()
+    const [payload, error] = await $minos.api.account.profile.update({ body }).safe()
     if (payload) {
       user.value = payload.data
     } else {
@@ -73,5 +73,5 @@ export const useAuth = () => {
     }
   }
 
-  return { user, signup, login, logout, refreshUser, updateAvatar }
+  return { user, signup, login, logout, refreshUser, updateProfile }
 }

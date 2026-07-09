@@ -13,6 +13,10 @@ const isLoading = ref(false)
 async function run() {
   skeletonLoad(props.action(), isLoading)
 }
+
+defineExpose({
+  isLoading: readonly(isLoading),
+})
 </script>
 
 <template>

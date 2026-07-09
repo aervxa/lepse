@@ -20,8 +20,7 @@ const [DefineAvatar, ReuseAvatar] = createReusableTemplate<{ state: 'after' | 'b
         class="rounded-full"
       >
         <Avatar :class="state === 'after' ? 'size-24' : undefined">
-          <!-- TODO: Put actual avatar -->
-          <AvatarImage src="https://avatars.githubusercontent.com/u/122371060" />
+          <AvatarImage :src="user?.avatarUrl ?? ''" />
           <AvatarFallback :delay-ms="SKELETON_DELAY_MS">{{ user?.initials }}</AvatarFallback>
         </Avatar>
       </Motion>
