@@ -32,7 +32,7 @@ router
         router
           .group(() => {
             router.get('/profile', [controllers.Profile, 'show'])
-            router.post('/profile/avatar', [controllers.Profile, 'updateAvatar'])
+            router.patch('/profile', [controllers.Profile, 'update'])
           })
           .prefix('account')
           .as('account')

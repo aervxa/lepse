@@ -1,5 +1,5 @@
 import UserTransformer from '#transformers/user_transformer'
-import { updateAvatarValidator } from '#validators/profile'
+import { updateValidator } from '#validators/profile'
 import type { HttpContext } from '@adonisjs/core/http'
 import string from '@adonisjs/core/helpers/string'
 import drive from '@adonisjs/drive/services/main'
@@ -10,35 +10,50 @@ export default class ProfileController {
     return serialize(UserTransformer.transform(auth.getUserOrFail()))
   }
 
-  async updateAvatar({ request, auth, response, serialize }: HttpContext) {
+  async update({ request, auth, response, serialize }: HttpContext) {
     const user = auth.getUserOrFail()
-    const payload = await request.validateUsing(updateAvatarValidator)
-    const avatarFileName = `avatars/${string.uuid()}.${payload.avatar.extname}`
-    const oldAvatar = user.avatar
+    const payload = await request.validateUsing(updateValidator)
 
-    // Save new avatar
-    await payload.avatar.moveToDisk(avatarFileName)
+    if (payload.name !== undefined) {
+      user.fullName = payload.name
+    }
 
-    // Set new avatar
-    user.avatar = avatarFileName
-    await user.save()
+    if (payload.avatar !== undefined) {
+      const oldAvatar = user.avatar // Save for deletion
 
-    // Delete old avatar
-    if (oldAvatar) {
-      await drive
-        .use()
-        .delete(oldAvatar)
-        .catch((error) => {
-          // Don't let old avatar delete failing warn user
-          logger.warn(
-            {
-              error,
-              oldAvatar,
-              user,
-            },
-            "Failed to delete user's old avatar"
-          )
-        })
+      if (payload.avatar) {
+        const avatarFileName = `avatars/${string.uuid()}.${payload.avatar.extname}`
+
+        // Save new avatar
+        await payload.avatar.moveToDisk(avatarFileName)
+
+        // Set new avatar
+        user.avatar = avatarFileName
+      } else {
+        user.avatar = null
+      }
+
+      // Delete old avatar
+      if (oldAvatar) {
+        await drive
+          .use()
+          .delete(oldAvatar)
+          .catch((error) => {
+            // Don't let old avatar delete failing warn user
+            logger.warn(
+              {
+                error,
+                oldAvatar,
+                user,
+              },
+              "Failed to delete user's old avatar"
+            )
+          })
+      }
+    }
+
+    if (user.isDirty()) {
+      await user.save()
     }
 
     return response.created(await serialize(UserTransformer.transform(user)))

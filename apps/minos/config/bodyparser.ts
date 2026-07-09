@@ -51,7 +51,7 @@ const bodyParserConfig = defineConfig({
     /**
      * Automatically process uploaded files into the system tmp directory.
      */
-    autoProcess: ['/api/v1/account/profile/avatar'],
+    autoProcess: ['/api/v1/account/profile'],
 
     /**
      * Normalize empty string values to null.

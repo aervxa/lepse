@@ -19,7 +19,7 @@ export interface ApiDefinition {
   account: {
     profile: {
       show: typeof routes['account.profile.show']
-      updateAvatar: typeof routes['account.profile.update_avatar']
+      update: typeof routes['account.profile.update']
     }
   }
   day: {

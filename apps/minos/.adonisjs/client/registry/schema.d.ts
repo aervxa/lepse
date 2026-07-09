@@ -67,16 +67,16 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/profile_controller').default['show']>>>
     }
   }
-  'account.profile.update_avatar': {
-    methods: ["POST"]
-    pattern: '/api/v1/account/profile/avatar'
+  'account.profile.update': {
+    methods: ["PATCH"]
+    pattern: '/api/v1/account/profile'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/profile').updateAvatarValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#validators/profile').updateValidator)>>
       paramsTuple: []
       params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/profile').updateAvatarValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/profile_controller').default['updateAvatar']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/profile_controller').default['updateAvatar']>>> | { status: 422; response: { errors: SimpleError[] } }
+      query: ExtractQuery<InferInput<(typeof import('#validators/profile').updateValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/profile_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/profile_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'day.tasks.index': {

@@ -9,7 +9,7 @@ export type ScannedRoutes = {
     'auth.access_token.store': { paramsTuple?: []; params?: {} }
     'auth.access_token.destroy': { paramsTuple?: []; params?: {} }
     'account.profile.show': { paramsTuple?: []; params?: {} }
-    'account.profile.update_avatar': { paramsTuple?: []; params?: {} }
+    'account.profile.update': { paramsTuple?: []; params?: {} }
     'day.tasks.index': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'day.tasks.store': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'day.tasks.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'date': ParamValue,'id': ParamValue} }
@@ -108,22 +108,14 @@ export type ScannedRoutes = {
     'auth.new_account.store': { paramsTuple?: []; params?: {} }
     'auth.access_token.store': { paramsTuple?: []; params?: {} }
     'auth.access_token.destroy': { paramsTuple?: []; params?: {} }
-    'account.profile.update_avatar': { paramsTuple?: []; params?: {} }
     'day.tasks.store': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'tasks.store': { paramsTuple?: []; params?: {} }
     'goals.store': { paramsTuple?: []; params?: {} }
     'scribbles.store': { paramsTuple?: []; params?: {} }
     'habits.store': { paramsTuple?: []; params?: {} }
   }
-  DELETE: {
-    'day.tasks.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'date': ParamValue,'id': ParamValue} }
-    'day.session.destroy': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
-    'tasks.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'goals.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'scribbles.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'habits.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-  }
   PATCH: {
+    'account.profile.update': { paramsTuple?: []; params?: {} }
     'day.session.update': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'day.journal.update': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'tasks.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -132,6 +124,14 @@ export type ScannedRoutes = {
     'habits.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'habits.increment': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'habits.decrement': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+  }
+  DELETE: {
+    'day.tasks.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'date': ParamValue,'id': ParamValue} }
+    'day.session.destroy': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
+    'tasks.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'goals.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'scribbles.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'habits.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   PUT: {
     'tasks.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

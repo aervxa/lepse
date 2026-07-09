@@ -1,8 +1,12 @@
 import vine from '@vinejs/vine'
 
-export const updateAvatarValidator = vine.create({
-  avatar: vine.file({
-    size: '100kb',
-    extnames: ['webp'],
-  }),
+export const updateValidator = vine.create({
+  name: vine.string().nullable().optional(),
+  avatar: vine
+    .file({
+      size: '100kb',
+      extnames: ['webp'],
+    })
+    .nullable()
+    .optional(),
 })
