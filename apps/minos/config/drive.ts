@@ -9,7 +9,7 @@ const driveConfig = defineConfig({
    * The services object can be used to configure multiple file system
    * services each using the same or a different driver.
    */
-  services: { 
+  services: {
     fs: services.fs({
       location: app.makePath('storage'),
       serveFiles: true,
@@ -25,6 +25,7 @@ const driveConfig = defineConfig({
       bucket: env.get('R2_BUCKET'),
       endpoint: env.get('R2_ENDPOINT'),
       visibility: 'public',
+      cdnUrl: env.get('R2_CDN'),
     }),
   },
 })
