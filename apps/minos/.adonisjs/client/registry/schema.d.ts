@@ -571,4 +571,28 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/habit_periods_controller').default['count']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'backgrounds.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/backgrounds'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/backgrounds_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/backgrounds_controller').default['index']>>>
+    }
+  }
+  'backgrounds.select': {
+    methods: ["PATCH"]
+    pattern: '/api/v1/backgrounds/select'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/background').selectBackgroundValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/background').selectBackgroundValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/backgrounds_controller').default['select']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/backgrounds_controller').default['select']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
 }

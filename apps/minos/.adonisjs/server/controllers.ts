@@ -5,6 +5,7 @@
 
 export const controllers = {
   AccessToken: () => import('#controllers/access_token_controller'),
+  Backgrounds: () => import('#controllers/backgrounds_controller'),
   FocusSessions: () => import('#controllers/focus_sessions_controller'),
   Goals: () => import('#controllers/goals_controller'),
   HabitPeriods: () => import('#controllers/habit_periods_controller'),

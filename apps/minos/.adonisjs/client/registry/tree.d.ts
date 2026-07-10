@@ -83,4 +83,8 @@ export interface ApiDefinition {
     decrement: typeof routes['habits.decrement']
     count: typeof routes['habits.count']
   }
+  backgrounds: {
+    index: typeof routes['backgrounds.index']
+    select: typeof routes['backgrounds.select']
+  }
 }

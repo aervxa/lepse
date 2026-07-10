@@ -288,6 +288,18 @@ const routes = {
     tokens: [{"old":"/api/v1/habits/:id/count","type":0,"val":"api","end":""},{"old":"/api/v1/habits/:id/count","type":0,"val":"v1","end":""},{"old":"/api/v1/habits/:id/count","type":0,"val":"habits","end":""},{"old":"/api/v1/habits/:id/count","type":1,"val":"id","end":""},{"old":"/api/v1/habits/:id/count","type":0,"val":"count","end":""}],
     types: placeholder as Registry['habits.count']['types'],
   },
+  'backgrounds.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/backgrounds',
+    tokens: [{"old":"/api/v1/backgrounds","type":0,"val":"api","end":""},{"old":"/api/v1/backgrounds","type":0,"val":"v1","end":""},{"old":"/api/v1/backgrounds","type":0,"val":"backgrounds","end":""}],
+    types: placeholder as Registry['backgrounds.index']['types'],
+  },
+  'backgrounds.select': {
+    methods: ["PATCH"],
+    pattern: '/api/v1/backgrounds/select',
+    tokens: [{"old":"/api/v1/backgrounds/select","type":0,"val":"api","end":""},{"old":"/api/v1/backgrounds/select","type":0,"val":"v1","end":""},{"old":"/api/v1/backgrounds/select","type":0,"val":"backgrounds","end":""},{"old":"/api/v1/backgrounds/select","type":0,"val":"select","end":""}],
+    types: placeholder as Registry['backgrounds.select']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

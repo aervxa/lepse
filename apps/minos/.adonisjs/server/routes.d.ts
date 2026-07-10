@@ -51,6 +51,8 @@ export type ScannedRoutes = {
     'habits.increment': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'habits.decrement': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'habits.count': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'backgrounds.index': { paramsTuple?: []; params?: {} }
+    'backgrounds.select': { paramsTuple?: []; params?: {} }
   }
   GET: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
@@ -77,6 +79,7 @@ export type ScannedRoutes = {
     'habits.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'habits.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'habits.count': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'backgrounds.index': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
@@ -103,6 +106,7 @@ export type ScannedRoutes = {
     'habits.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'habits.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'habits.count': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'backgrounds.index': { paramsTuple?: []; params?: {} }
   }
   POST: {
     'auth.new_account.store': { paramsTuple?: []; params?: {} }
@@ -124,6 +128,7 @@ export type ScannedRoutes = {
     'habits.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'habits.increment': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'habits.decrement': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'backgrounds.select': { paramsTuple?: []; params?: {} }
   }
   DELETE: {
     'day.tasks.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'date': ParamValue,'id': ParamValue} }

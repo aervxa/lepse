@@ -31,8 +31,8 @@ router
       .group(() => {
         router
           .group(() => {
-            router.get('/profile', [controllers.Profile, 'show'])
-            router.patch('/profile', [controllers.Profile, 'update'])
+            router.get('profile', [controllers.Profile, 'show'])
+            router.patch('profile', [controllers.Profile, 'update'])
           })
           .prefix('account')
           .as('account')
@@ -87,6 +87,9 @@ router
           .prefix('habits/:id')
           .as('habits')
           .use(middleware.clientDate())
+
+        router.get('backgrounds', [controllers.Backgrounds, 'index'])
+        router.patch('backgrounds/select', [controllers.Backgrounds, 'select'])
       })
       .use(middleware.auth())
   })
