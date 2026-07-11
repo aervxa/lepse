@@ -75,15 +75,6 @@ onBeforeUnmount(() => {
           variant="ghost"
           size="icon-sm"
           tabindex="-1"
-          @click="appWindow?.minimize()"
-          class="text-muted-foreground"
-        >
-          <Minus />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          tabindex="-1"
           @click="appWindow?.toggleMaximize()"
           class="text-muted-foreground"
         >
