@@ -23,7 +23,7 @@ const { user } = useAuth()
 
 <template>
   <Dialog v-model:open="open">
-    <DialogContent class="min-h-128 overflow-hidden p-0 md:max-w-2xl lg:max-w-3xl">
+    <DialogContent class="min-h-152 sm:min-h-128 overflow-hidden p-0 md:max-w-2xl lg:max-w-3xl">
       <DialogTitle class="sr-only">Settings</DialogTitle>
       <DialogDescription class="sr-only">adjust ur likings and preferences</DialogDescription>
 
@@ -74,7 +74,7 @@ const { user } = useAuth()
           </SidebarContent>
         </Sidebar>
 
-        <section class="bg-background flex flex-1 flex-col gap-8 p-6">
+        <section class="md:bg-background flex flex-1 flex-col gap-8 p-6">
           <NuxtPage />
         </section>
       </SidebarProvider>

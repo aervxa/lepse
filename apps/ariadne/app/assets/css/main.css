@@ -124,6 +124,8 @@
   --font-mono: var(--font-dm-mono);
 
   /* IMPORTANT: MUST match util breakpoints */
+  --breakpoint-2xs: 448px;
+  --breakpoint-xs: 512px;
   --breakpoint-sm: 640px;
   --breakpoint-md: 768px;
   --breakpoint-lg: 1024px;
