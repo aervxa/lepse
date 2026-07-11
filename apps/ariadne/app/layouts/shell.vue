@@ -45,10 +45,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <main
-    class="flex h-dvh flex-col"
-    :class="[os === 'windows' ? 'bg-transparent' : 'bg-sidebar/60']"
-  >
+  <main class="flex h-dvh flex-col" :class="[os === 'windows' ? 'bg-transparent' : 'bg-sidebar']">
     <div
       v-if="isApp"
       data-slot="titlebar"
