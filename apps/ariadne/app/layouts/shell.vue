@@ -61,7 +61,7 @@ onBeforeUnmount(() => {
           <ArrowRight />
         </Button>
       </div>
-      <div class="pointer-events-auto z-377 [&>button]:rounded-none">
+      <div class="pointer-events-auto z-377 [&>button]:rounded-none" @pointerdown.stop>
         <Button
           variant="ghost"
           size="icon-sm"
