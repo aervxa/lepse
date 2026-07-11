@@ -116,7 +116,7 @@ onBeforeUnmount(() => {
             backgrounds.find((b) => b.id === user?.backgroundId)?.url ||
             '/images/backgrounds/02-rooftop-garden.png' /* TODO: Replace default background with an 'intro' one */
           "
-          class="size-full object-cover"
+          class="pointer-events-none size-full object-cover select-none"
         />
       </div>
       <slot />

@@ -34,7 +34,10 @@ const select = (id: number) => {
           :disabled="isSelecting"
           @click="select(background.id)"
         >
-          <img :src="background.url" class="border-border rounded-[inherit] border" />
+          <img
+            :src="background.url"
+            class="border-border pointer-events-none rounded-[inherit] border"
+          />
           <p class="text-center capitalize">{{ background.name.replace('-', ' ') }}</p>
         </Button>
       </template>
