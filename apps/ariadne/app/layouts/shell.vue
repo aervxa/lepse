@@ -9,6 +9,8 @@ import {
 } from 'lucide-vue-next'
 
 const router = useRouter()
+const { user } = useAuth()
+const { backgrounds } = useBackgrounds()
 
 // ─── Tauri ──────────────────────────────────────────────────────── start ───
 
@@ -76,6 +78,15 @@ onBeforeUnmount(() => {
           variant="ghost"
           size="icon-sm"
           tabindex="-1"
+          @click="appWindow?.minimize()"
+          class="text-muted-foreground"
+        >
+          <Minus />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          tabindex="-1"
           @click="appWindow?.toggleMaximize()"
           class="text-muted-foreground"
         >
@@ -97,10 +108,16 @@ onBeforeUnmount(() => {
     <!-- Main App -->
     <section
       data-vaul-drawer-wrapper
-      class="relative m-2 flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border-2 p-4 z-0"
+      class="relative z-0 m-2 flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border-2 p-4"
     >
       <div class="absolute inset-0 -z-10">
-        <img src="/images/backgrounds/02-rooftop-garden.png" class="object-cover size-full" />
+        <img
+          :src="
+            backgrounds.find((b) => b.id === user?.backgroundId)?.url ||
+            '/images/backgrounds/02-rooftop-garden.png' /* TODO: Replace default background with an 'intro' one */
+          "
+          class="size-full object-cover"
+        />
       </div>
       <slot />
     </section>

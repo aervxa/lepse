@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useLocalStorage } from '@vueuse/core'
-import { Lightbulb, LightbulbOff } from 'lucide-vue-next'
+import { Lightbulb, LightbulbOff, Wallpaper } from 'lucide-vue-next'
 import { getDailyQuote } from '~/lib/quotes'
 
 definePageMeta({
@@ -51,6 +51,11 @@ provide(focusMethodToggleableKey, focusMethodToggleable)
     </div>
 
     <div class="flex gap-2">
+      <Button variant="outline" size="icon" as-child>
+        <NuxtLink to="/shell/settings/background">
+          <Wallpaper />
+        </NuxtLink>
+      </Button>
       <Button
         v-if="inFocus"
         variant="outline"
