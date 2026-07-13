@@ -42,6 +42,13 @@ onBeforeUnmount(() => {
 })
 
 // ─── Tauri ────────────────────────────────────────────────────────── end ───
+
+const showBackground = ref(false)
+onMounted(() => {
+  setTimeout(() => {
+    showBackground.value = true
+  }, SKELETON_DELAY_MS)
+})
 </script>
 
 <template>
@@ -100,6 +107,7 @@ onBeforeUnmount(() => {
     >
       <div class="absolute inset-0 -z-10">
         <img
+          v-show="showBackground"
           :src="
             backgrounds.find((b) => b.id === user?.backgroundId)?.url ||
             '/images/backgrounds/02-rooftop-garden.png' /* TODO: Replace default background with an 'intro' one */
