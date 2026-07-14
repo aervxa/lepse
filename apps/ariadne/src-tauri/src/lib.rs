@@ -10,6 +10,7 @@ pub fn run() {
 
   builder
     .plugin(tauri_plugin_os::init())
+    .plugin(tauri_plugin_store::Builder::new().build())
     .setup(|app| {
       if cfg!(debug_assertions) {
         app.handle().plugin(
