@@ -43,10 +43,10 @@ onBeforeUnmount(() => {
 
 // ─── Tauri ────────────────────────────────────────────────────────── end ───
 
-const showBackground = ref(false)
+const showSkeleton = ref(false)
 onMounted(() => {
   setTimeout(() => {
-    showBackground.value = true
+    showSkeleton.value = true
   }, SKELETON_DELAY_MS)
 })
 </script>
@@ -59,7 +59,6 @@ onMounted(() => {
       data-tauri-drag-region
       class="-mb-2 flex h-8 items-center justify-between select-none"
     >
-      <!-- <img :src="logoSrc" class="h-full not-dark:invert pointer-events-none" /> -->
       <div class="px-2">
         <Button variant="ghost" size="icon-xs" tabindex="-1" @click="router.back()">
           <ArrowLeft />
@@ -107,10 +106,11 @@ onMounted(() => {
     >
       <div class="absolute inset-0 -z-10">
         <img
-          v-show="showBackground"
           :src="
             backgrounds.find((b) => b.id === user?.backgroundId)?.url ||
-            '/images/backgrounds/02-rooftop-garden.png' /* TODO: Replace default background with an 'intro' one */
+            (showSkeleton
+              ? '/images/backgrounds/02-rooftop-garden.png' /* TODO: Replace default background with an 'intro' one */
+              : undefined)
           "
           class="pointer-events-none size-full object-cover select-none"
         />
