@@ -102,17 +102,17 @@ onMounted(() => {
     <!-- Main App -->
     <section
       data-vaul-drawer-wrapper
-      class="relative z-0 m-2 flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border-2 p-4"
+      class="bg-background relative z-0 m-2 flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border-2 p-4"
     >
       <div class="absolute inset-0 -z-10">
-        <img
+        <Image
           :src="
             backgrounds.find((b) => b.id === user?.backgroundId)?.url ||
             (showSkeleton
               ? '/images/backgrounds/02-rooftop-garden.png' /* TODO: Replace default background with an 'intro' one */
-              : undefined)
+              : '')
           "
-          class="pointer-events-none size-full object-cover select-none"
+          class="pointer-events-none -z-10 size-full object-cover select-none"
         />
       </div>
       <slot />
