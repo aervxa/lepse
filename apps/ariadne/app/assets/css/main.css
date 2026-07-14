@@ -141,7 +141,7 @@
     @apply overflow-hidden;
   }
   body {
-    @apply text-foreground bg-transparent!;
+    @apply text-foreground bg-transparent;
   }
   button:not(:disabled),
   [role='button']:not(:disabled) {
