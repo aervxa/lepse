@@ -25,6 +25,9 @@ export default defineNuxtConfig({
   },
   // Avoids error [unhandledRejection] EMFILE: too many open files, watch
   ignore: ['**/src-tauri/**'],
+  imports: {
+    dirs: ['~/composables/**'],
+  },
   modules: ['@nuxt/fonts', 'motion-v/nuxt', 'shadcn-nuxt', 'vue-sonner/nuxt'],
   routeRules: {
     '/': { redirect: '/shell' },
