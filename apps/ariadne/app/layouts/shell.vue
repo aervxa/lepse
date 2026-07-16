@@ -43,6 +43,8 @@ onBeforeUnmount(() => {
 
 // ─── Tauri ────────────────────────────────────────────────────────── end ───
 
+const { windowTransparency } = useSettings()
+
 const showSkeleton = ref(false)
 onMounted(() => {
   setTimeout(() => {
@@ -52,7 +54,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="flex h-dvh flex-col" :class="[os === 'windows' ? 'bg-transparent' : 'bg-sidebar']">
+  <main
+    class="flex h-dvh flex-col"
+    :class="[
+      os === 'windows' ? 'bg-transparent' : windowTransparency ? 'bg-sidebar/60' : 'bg-sidebar',
+    ]"
+  >
     <div
       v-if="isApp"
       data-slot="titlebar"

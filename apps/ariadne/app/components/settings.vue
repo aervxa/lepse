@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { isTauri } from '@tauri-apps/api/core'
 import { Image, Pencil, User } from 'lucide-vue-next'
 
 const items = [
   { name: 'account', path: '/shell/settings/account', icon: User },
   { name: 'background', path: '/shell/settings/background', icon: Image },
+  ...(isTauri() ? [{ name: 'app', path: '/shell/settings/app', icon: Image }] : []),
 ]
 
 const route = useRoute()
