@@ -1,4 +1,8 @@
-use tauri::Manager;
+use tauri::{
+  menu::{Menu, MenuItem, PredefinedMenuItem},
+  tray::TrayIconBuilder,
+  Manager,
+};
 use tauri_plugin_store::StoreExt;
 
 #[cfg(feature = "cef")]
@@ -22,6 +26,37 @@ pub fn run() {
             .build(),
         )?;
       }
+
+      // Create tray
+      TrayIconBuilder::new()
+        .icon(app.default_window_icon().unwrap().clone())
+        .menu(&Menu::with_items(
+          app,
+          &[
+            &MenuItem::with_id(app, "show/hide", "Show/Hide", true, None::<&str>)?,
+            &PredefinedMenuItem::separator(app)?,
+            &MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?,
+          ],
+        )?)
+        .on_menu_event(|app, event| match event.id.as_ref() {
+          "show/hide" => {
+            if let Some(window) = app.get_webview_window("main") {
+              if window.is_visible().unwrap_or(false) {
+                let _ = window.close();
+              } else {
+                let _ = window.unminimize();
+                let _ = window.show();
+                let _ = window.set_focus();
+              }
+            }
+          }
+          "quit" => {
+            app.exit(0);
+          }
+          _ => {}
+        })
+        .build(app)?;
+
       Ok(())
     })
     .on_window_event(|window, event| {
