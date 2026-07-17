@@ -33,6 +33,6 @@
     "@swc/core@1.15.24": true,
     "better-sqlite3@12.8.0": true,
     "esbuild@0.27.7": true,
-    "esbuild@0.28.0": true
+    "esbuild@0.28.1": true
   }
 }
