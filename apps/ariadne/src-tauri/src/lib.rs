@@ -1,4 +1,5 @@
 use tauri::{
+  image::Image,
   menu::{Menu, MenuItem, PredefinedMenuItem},
   tray::TrayIconBuilder,
   Manager,
@@ -29,7 +30,7 @@ pub fn run() {
 
       // Create tray
       TrayIconBuilder::new()
-        .icon(app.default_window_icon().unwrap().clone())
+        .icon(Image::from_path("icons/tray.png")?)
         .menu(&Menu::with_items(
           app,
           &[
