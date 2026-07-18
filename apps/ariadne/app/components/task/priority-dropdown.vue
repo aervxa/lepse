@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { DropdownMenuContentProps } from 'reka-ui';
 import { toast } from 'vue-sonner'
 
 defineProps<{

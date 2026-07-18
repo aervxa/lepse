@@ -94,12 +94,7 @@ const deleteGoal = async () => {
         <p class="font-mono text-[10px] font-medium tracking-widest uppercase opacity-80">
           Status:
         </p>
-        <GoalStatusDropdown :id="goal.id" :status="goal.status" align="end">
-          <Button variant="outline" size="xs">
-            <GoalStatusIcon :status="goal.status" />
-            {{ goal.status }}
-          </Button>
-        </GoalStatusDropdown>
+        <GoalStatusDropdown :id="goal.id" :status="goal.status" align="end" />
       </div>
       <!-- More options -->
       <DropdownMenu>
