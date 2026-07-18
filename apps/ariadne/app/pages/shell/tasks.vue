@@ -26,6 +26,7 @@ const openSubpage = () => {
   )
 }
 
+const createOpen = ref(false)
 const schema = z.object({
   name: z.string().min(1, 'Name is required').max(255),
   description: z.string().max(2500).optional(),
@@ -48,7 +49,7 @@ const onSubmit = handleSubmit(async (values) => {
     toast.error('Something went wrong!', { description: error.message })
   } else {
     toast.success('Task created!')
-    navigateTo('/app/tasks')
+    createOpen.value = false
   }
 })
 </script>
@@ -111,16 +112,16 @@ const onSubmit = handleSubmit(async (values) => {
         </div>
 
         <!-- Create -->
-        <Dialog>
+        <Dialog v-model:open="createOpen">
           <DialogTrigger as-child>
-            <Button size="icon-lg" class="absolute bottom-4 right-4">
+            <Button size="icon-lg" class="absolute right-4 bottom-4">
               <Plus />
             </Button>
           </DialogTrigger>
           <DialogContent>
             <form class="contents" @submit="onSubmit">
               <DialogHeader>
-                <DialogTitle>New task</DialogTitle>
+                <DialogTitle>New Task</DialogTitle>
                 <DialogDescription>Remember to complete this task</DialogDescription>
               </DialogHeader>
 
@@ -189,10 +190,16 @@ const onSubmit = handleSubmit(async (values) => {
               </FieldGroup>
 
               <DialogFooter>
-                <Button variant="outline" type="button" @click="navigateTo('/app/tasks')">
-                  Cancel
-                </Button>
-                <Button type="submit" :disabled="isSubmitting || !meta.valid">Create Task</Button>
+                <DialogClose>
+                  <Button variant="outline" type="button">Cancel</Button>
+                </DialogClose>
+                <LoadingButton
+                  type="submit"
+                  :disabled="isSubmitting || !meta.valid"
+                  :loading="isSubmitting"
+                >
+                  Create Task
+                </LoadingButton>
               </DialogFooter>
             </form>
           </DialogContent>

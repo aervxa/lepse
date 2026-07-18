@@ -1,11 +1,15 @@
 <script setup lang="ts">
-import { ChevronRight, X } from 'lucide-vue-next'
+import { toTypedSchema } from '@vee-validate/zod'
+import { ChevronRight, Plus, X } from 'lucide-vue-next'
 import { PopoverClose } from 'reka-ui'
+import { useForm, Field as VeeField } from 'vee-validate'
+import { toast } from 'vue-sonner'
+import z from 'zod'
 
 const source = inject(bubbleNavSourceKey)
 
 const route = useRoute()
-const { goals } = useGoals()
+const { goals, createGoal } = useGoals()
 
 const inSubpage = computed(() => /goals\/\d+/.test(route.path))
 
@@ -21,8 +25,32 @@ const openSubpage = () => {
     contentTransition.in()
   )
 }
-</script>
 
+const createOpen = ref(false)
+const schema = z.object({
+  name: z.string().min(1, 'Name is required').max(255),
+  description: z.string().max(2500).optional(),
+})
+
+const { handleSubmit, setFieldError, isSubmitting, meta } = useForm({
+  validationSchema: toTypedSchema(schema),
+})
+
+const onSubmit = handleSubmit(async (values) => {
+  const error = await createGoal(values)
+  if (error?.isValidationError()) {
+    const errors = mapErrors(error.response.errors)
+    for (const [field, err] of Object.entries(errors)) {
+      setFieldError(field as any, err.message)
+    }
+  } else if (error) {
+    toast.error('Something went wrong!', { description: error.message })
+  } else {
+    toast.success('Goal created!')
+    createOpen.value = false
+  }
+})
+</script>
 <template>
   <div class="flex size-full flex-1 flex-col" :class="[source === 'drawer' && 'mx-auto max-w-sm']">
     <AnimatePresence mode="popLayout">
@@ -78,6 +106,70 @@ const openSubpage = () => {
             </ScrollArea>
           </div>
         </div>
+
+        <!-- Create -->
+        <Dialog v-model:open="createOpen">
+          <DialogTrigger as-child>
+            <Button size="icon-lg" class="absolute right-4 bottom-4">
+              <Plus />
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <form class="contents" @submit="onSubmit">
+              <DialogHeader>
+                <DialogTitle>New Goal</DialogTitle>
+                <DialogDescription>Don't add too many at once</DialogDescription>
+              </DialogHeader>
+
+              <FieldGroup>
+                <!-- Name -->
+                <VeeField v-slot="{ field, errors }" name="name">
+                  <Field :data-invalid="!!errors.length">
+                    <FieldLabel for="name">Name *</FieldLabel>
+                    <Input
+                      id="name"
+                      v-bind="field"
+                      :model-value="field.value"
+                      placeholder="e.g. Get xyz"
+                      :aria-invalid="!!errors.length"
+                    />
+                    <FieldError v-if="errors.length" :errors="errors" />
+                  </Field>
+                </VeeField>
+
+                <!-- Description -->
+                <VeeField v-slot="{ field, errors }" name="description">
+                  <Field :data-invalid="!!errors.length">
+                    <FieldLabel for="description">Description</FieldLabel>
+                    <Textarea
+                      id="description"
+                      v-bind="field"
+                      :model-value="field.value"
+                      rows="3"
+                      class="resize-none"
+                      placeholder="Add context..."
+                      :aria-invalid="!!errors.length"
+                    />
+                    <FieldError v-if="errors.length" :errors="errors" />
+                  </Field>
+                </VeeField>
+              </FieldGroup>
+
+              <DialogFooter>
+                <DialogClose>
+                  <Button variant="outline" type="button">Cancel</Button>
+                </DialogClose>
+                <LoadingButton
+                  type="submit"
+                  :disabled="isSubmitting || !meta.valid"
+                  :loading="isSubmitting"
+                >
+                  Create Goal
+                </LoadingButton>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
       </Motion>
 
       <!-- item page -->
