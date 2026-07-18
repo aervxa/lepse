@@ -1,11 +1,15 @@
 <script setup lang="ts">
-import { ChevronRight, X } from 'lucide-vue-next'
+import { toTypedSchema } from '@vee-validate/zod'
+import { ChevronRight, Plus, X } from 'lucide-vue-next'
 import { PopoverClose } from 'reka-ui'
+import { useForm, Field as VeeField } from 'vee-validate'
+import { toast } from 'vue-sonner'
+import z from 'zod'
 
 const source = inject(bubbleNavSourceKey)
 
 const route = useRoute()
-const { tasks } = useTasks()
+const { tasks, createTask } = useTasks()
 
 const inSubpage = computed(() => /tasks\/\d+/.test(route.path))
 
@@ -21,6 +25,32 @@ const openSubpage = () => {
     contentTransition.in()
   )
 }
+
+const schema = z.object({
+  name: z.string().min(1, 'Name is required').max(255),
+  description: z.string().max(2500).optional(),
+  timeEstimateMin: z.coerce.number().min(0).optional(),
+  deadline: z.string().optional(),
+})
+
+const { handleSubmit, setFieldError, isSubmitting, meta } = useForm({
+  validationSchema: toTypedSchema(schema),
+})
+
+const onSubmit = handleSubmit(async (values) => {
+  const error = await createTask(values)
+  if (error?.isValidationError()) {
+    const errors = mapErrors(error.response.errors)
+    for (const [field, err] of Object.entries(errors)) {
+      setFieldError(field as any, err.message)
+    }
+  } else if (error) {
+    toast.error('Something went wrong!', { description: error.message })
+  } else {
+    toast.success('Task created!')
+    navigateTo('/app/tasks')
+  }
+})
 </script>
 
 <template>
@@ -79,6 +109,94 @@ const openSubpage = () => {
             </ScrollArea>
           </div>
         </div>
+
+        <!-- Create -->
+        <Dialog>
+          <DialogTrigger as-child>
+            <Button size="icon-lg" class="absolute bottom-4 right-4">
+              <Plus />
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <form class="contents" @submit="onSubmit">
+              <DialogHeader>
+                <DialogTitle>New task</DialogTitle>
+                <DialogDescription>Remember to complete this task</DialogDescription>
+              </DialogHeader>
+
+              <FieldGroup>
+                <!-- Name -->
+                <VeeField v-slot="{ field, errors }" name="name">
+                  <Field :data-invalid="!!errors.length">
+                    <FieldLabel for="name">Name *</FieldLabel>
+                    <Input
+                      id="name"
+                      v-bind="field"
+                      :model-value="field.value"
+                      placeholder="e.g. Do xyz"
+                      :aria-invalid="!!errors.length"
+                    />
+                    <FieldError v-if="errors.length" :errors="errors" />
+                  </Field>
+                </VeeField>
+
+                <!-- Description -->
+                <VeeField v-slot="{ field, errors }" name="description">
+                  <Field :data-invalid="!!errors.length">
+                    <FieldLabel for="description">Description</FieldLabel>
+                    <Textarea
+                      id="description"
+                      v-bind="field"
+                      :model-value="field.value"
+                      rows="3"
+                      class="resize-none"
+                      placeholder="Add context..."
+                      :aria-invalid="!!errors.length"
+                    />
+                    <FieldError v-if="errors.length" :errors="errors" />
+                  </Field>
+                </VeeField>
+
+                <!-- Deadline + Estimate -->
+                <FieldGroup class="flex-row @max-xs:contents">
+                  <VeeField v-slot="{ field, errors }" name="deadline">
+                    <Field :data-invalid="!!errors.length">
+                      <FieldLabel for="deadline">Deadline</FieldLabel>
+                      <DatePicker
+                        id="deadline"
+                        :model-value="field.value"
+                        @update:model-value="field.onChange"
+                      />
+                      <FieldError v-if="errors.length" :errors="errors" />
+                    </Field>
+                  </VeeField>
+
+                  <VeeField v-slot="{ field, errors }" name="timeEstimateMin">
+                    <Field :data-invalid="!!errors.length">
+                      <FieldLabel for="timeEstimateMin">Estimate (min)</FieldLabel>
+                      <Input
+                        id="timeEstimateMin"
+                        v-bind="field"
+                        :model-value="field.value"
+                        type="number"
+                        placeholder="25"
+                        :aria-invalid="!!errors.length"
+                      />
+                      <FieldError v-if="errors.length" :errors="errors" />
+                    </Field>
+                  </VeeField>
+                </FieldGroup>
+              </FieldGroup>
+
+              <DialogFooter>
+                <Button variant="outline" type="button" @click="navigateTo('/app/tasks')">
+                  Cancel
+                </Button>
+                <Button type="submit" :disabled="isSubmitting || !meta.valid">Create Task</Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
       </Motion>
 
       <!-- item page -->
