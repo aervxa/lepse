@@ -30,8 +30,6 @@ const createOpen = ref(false)
 const schema = z.object({
   name: z.string().min(1, 'Name is required').max(255),
   description: z.string().max(2500).optional(),
-  // timeEstimateMin: z.coerce.number().min(0).optional(),
-  // deadline: z.string().optional(),
 })
 
 const { handleSubmit, setFieldError, isSubmitting, meta } = useForm({
@@ -157,36 +155,6 @@ const onSubmit = handleSubmit(async (values) => {
                     <FieldError v-if="errors.length" :errors="errors" />
                   </Field>
                 </VeeField>
-
-                <!-- Deadline + Estimate -->
-                <!-- <FieldGroup class="flex-row @max-xs:contents">
-                  <VeeField v-slot="{ field, errors }" name="deadline">
-                    <Field :data-invalid="!!errors.length">
-                      <FieldLabel for="deadline">Deadline</FieldLabel>
-                      <DatePicker
-                        id="deadline"
-                        :model-value="field.value"
-                        @update:model-value="field.onChange"
-                      />
-                      <FieldError v-if="errors.length" :errors="errors" />
-                    </Field>
-                  </VeeField>
-
-                  <VeeField v-slot="{ field, errors }" name="timeEstimateMin">
-                    <Field :data-invalid="!!errors.length">
-                      <FieldLabel for="timeEstimateMin">Estimate (min)</FieldLabel>
-                      <Input
-                        id="timeEstimateMin"
-                        v-bind="field"
-                        :model-value="field.value"
-                        type="number"
-                        placeholder="25"
-                        :aria-invalid="!!errors.length"
-                      />
-                      <FieldError v-if="errors.length" :errors="errors" />
-                    </Field>
-                  </VeeField>
-                </FieldGroup> -->
               </FieldGroup>
 
               <DialogFooter>
