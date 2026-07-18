@@ -9,10 +9,8 @@ export default class TaskTransformer extends BaseTransformer<Task> {
       'description',
       'priority',
       'status',
-      'timeEstimateMin',
       'pomoCount',
       'stopwatchMs',
-      'deadline',
       'createdAt',
       'goalId',
     ])

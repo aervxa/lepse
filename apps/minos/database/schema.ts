@@ -189,12 +189,10 @@ export class TaskDaySchema extends BaseModel {
 }
 
 export class TaskSchema extends BaseModel {
-  static $columns = ['createdAt', 'deadline', 'description', 'goalId', 'id', 'name', 'pomoCount', 'priority', 'status', 'stopwatchMs', 'timeEstimateMin', 'updatedAt', 'userId'] as const
+  static $columns = ['createdAt', 'description', 'goalId', 'id', 'name', 'pomoCount', 'priority', 'status', 'stopwatchMs', 'updatedAt', 'userId'] as const
   $columns = TaskSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
-  @column.dateTime()
-  declare deadline: DateTime | null
   @column()
   declare description: string | null
   @column()
@@ -211,8 +209,6 @@ export class TaskSchema extends BaseModel {
   declare status: string
   @column()
   declare stopwatchMs: number
-  @column()
-  declare timeEstimateMin: number | null
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
   @column()
