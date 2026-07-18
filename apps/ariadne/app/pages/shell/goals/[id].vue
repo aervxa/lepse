@@ -25,7 +25,7 @@ const goal = computed(() => {
   const g = goals.value.find((g) => g.id === Number(id))
   if (g) {
     nameEl.value && (nameEl.value.textContent = g.name)
-    descriptionEl.value && (descriptionEl.value.textContent = g.description)
+    descriptionEl.value && (descriptionEl.value.innerText = g.description ?? '')
   }
   return g
 })
@@ -40,7 +40,7 @@ const clearEmptyInput = (event: InputEvent) => {
 const save = async () => {
   if (!goal.value || !nameEl.value || !descriptionEl.value) return
   const name = nameEl.value.textContent
-  const description = descriptionEl.value.textContent
+  const description = descriptionEl.value.innerText
 
   // if values are not dirty, there's nothing to change
   const nameDirty = name !== goal.value.name
@@ -100,7 +100,8 @@ const linkTask = async (taskId: number, unlink?: boolean) => {
             <p
               ref="nameEl"
               data-placeholder="required"
-              class="before:text-destructive/50 text-2xl font-medium outline-none before:pointer-events-none before:text-xl before:font-light before:italic empty:before:content-[attr(data-placeholder)]"
+              class="before:text-destructive/50 no-scrollbar overflow-x-auto text-2xl font-medium whitespace-nowrap outline-none before:pointer-events-none before:text-xl before:font-light before:italic empty:before:content-[attr(data-placeholder)]"
+              @keydown.enter.prevent
               @input="clearEmptyInput"
               @blur="save"
               contenteditable

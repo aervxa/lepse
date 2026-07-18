@@ -19,7 +19,7 @@ const task = computed(() => {
   const t = tasks.value.find((t) => t.id === Number(id))
   if (t) {
     nameEl.value && (nameEl.value.textContent = t.name)
-    descriptionEl.value && (descriptionEl.value.textContent = t.description)
+    descriptionEl.value && (descriptionEl.value.innerText = t.description ?? '')
   }
   return t
 })
@@ -34,7 +34,7 @@ const clearEmptyInput = (event: InputEvent) => {
 const save = async () => {
   if (!task.value || !nameEl.value || !descriptionEl.value) return
   const name = nameEl.value.textContent
-  const description = descriptionEl.value.textContent
+  const description = descriptionEl.value.innerText
 
   // if values are not dirty, there's nothing to change
   const nameDirty = name !== task.value.name
@@ -83,7 +83,8 @@ const formattedDate = computed(() =>
       <p
         ref="nameEl"
         data-placeholder="required"
-        class="before:text-destructive/50 text-2xl font-medium outline-none before:pointer-events-none before:text-xl before:font-light before:italic empty:before:content-[attr(data-placeholder)]"
+        class="before:text-destructive/50 no-scrollbar overflow-x-auto text-2xl font-medium whitespace-nowrap outline-none before:pointer-events-none before:text-xl before:font-light before:italic empty:before:content-[attr(data-placeholder)]"
+        @keydown.enter.prevent
         @input="clearEmptyInput"
         @blur="save"
         contenteditable
