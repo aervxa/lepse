@@ -5,7 +5,9 @@ import {
   ChevronRight,
   Clock,
   ClockFading,
+  MoreHorizontal,
   Plus,
+  Trash,
   Unlink,
 } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
@@ -18,7 +20,7 @@ definePageMeta({
 const route = useRoute()
 const { id } = route.params
 
-const { goals, updateGoal } = useGoals()
+const { goals, updateGoal, destroyGoal } = useGoals()
 const nameEl = useTemplateRef('nameEl')
 const descriptionEl = useTemplateRef('descriptionEl')
 const goal = computed(() => {
@@ -68,24 +70,51 @@ const linkTask = async (taskId: number, unlink?: boolean) => {
     else toast.success(unlink ? 'Task unlinked.' : 'Task linked.')
   }
 }
+
+const deleteGoal = async () => {
+  const error = await destroyGoal(Number(id))
+  if (error) toast.error('Failed to delete goal.', { description: error.message })
+  else {
+    toast.success('Goal deleted successfully.')
+    navigateBack()
+  }
+}
 </script>
 
 <template>
-  <div class="my-2 flex items-center justify-between pr-2">
+  <div class="flex items-center justify-between p-2 pl-0">
     <Button variant="link" size="sm" class="w-fit opacity-60" @click="navigateBack()">
       <ChevronLeft />
       Go back
     </Button>
 
-    <!-- STATUS -->
-    <div v-if="goal" class="flex items-center gap-2">
-      <p class="font-mono text-[10px] font-medium tracking-widest uppercase opacity-80">Status:</p>
-      <GoalStatusDropdown :id="goal.id" :status="goal.status" align="end">
-        <Button variant="outline" size="xs">
-          <GoalStatusIcon :status="goal.status" />
-          {{ goal.status }}
-        </Button>
-      </GoalStatusDropdown>
+    <div class="flex items-center gap-2">
+      <!-- STATUS -->
+      <div v-if="goal" class="flex items-center gap-2">
+        <p class="font-mono text-[10px] font-medium tracking-widest uppercase opacity-80">
+          Status:
+        </p>
+        <GoalStatusDropdown :id="goal.id" :status="goal.status" align="end">
+          <Button variant="outline" size="xs">
+            <GoalStatusIcon :status="goal.status" />
+            {{ goal.status }}
+          </Button>
+        </GoalStatusDropdown>
+      </div>
+      <!-- More options -->
+      <DropdownMenu>
+        <DropdownMenuTrigger as-child>
+          <Button variant="ghost" size="icon-sm">
+            <MoreHorizontal />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent class="min-w-40" align="end">
+          <DropdownMenuItem variant="destructive" @select="deleteGoal">
+            <Trash />
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   </div>
 

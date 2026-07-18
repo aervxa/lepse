@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { formatDate } from '@vueuse/core'
-import { ChevronLeft, Clock, ClockFading, LoaderCircle } from 'lucide-vue-next'
+import {
+  ChevronLeft,
+  Clock,
+  ClockFading,
+  LoaderCircle,
+  MoreHorizontal,
+  Trash,
+} from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
 import { formatDuration } from '~/lib/time'
 
@@ -12,7 +19,7 @@ const route = useRoute()
 const { id } = route.params
 const source = inject(bubbleNavSourceKey)
 
-const { tasks, updateTask } = useTasks()
+const { tasks, updateTask, destroyTask } = useTasks()
 const nameEl = useTemplateRef('nameEl')
 const descriptionEl = useTemplateRef('descriptionEl')
 const task = computed(() => {
@@ -59,19 +66,45 @@ const formattedDate = computed(() =>
     now.getFullYear() - date.value.getFullYear() > 0 ? 'MMM D, YYYYY' : 'MMM D'
   )
 )
+
+const deleteTask = async () => {
+  const error = await destroyTask(Number(id))
+  if (error) toast.error('Failed to delete task.', { description: error.message })
+  else {
+    toast.success('Task deleted successfully.')
+    navigateBack()
+  }
+}
 </script>
 
 <template>
-  <Button
-    variant="link"
-    size="sm"
-    class="my-2 w-fit opacity-60"
-    :class="[source === 'drawer' && 'mb-0']"
-    @click="navigateBack()"
-  >
-    <ChevronLeft />
-    Go back
-  </Button>
+  <div class="flex items-center justify-between gap-4 p-2 pl-0">
+    <Button
+      variant="link"
+      size="sm"
+      class="w-fit opacity-60"
+      :class="[source === 'drawer' && 'mb-0']"
+      @click="navigateBack()"
+    >
+      <ChevronLeft />
+      Go back
+    </Button>
+
+    <!-- More options -->
+    <DropdownMenu>
+      <DropdownMenuTrigger as-child>
+        <Button variant="ghost" size="icon-sm">
+          <MoreHorizontal />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent class="min-w-40" align="end">
+        <DropdownMenuItem variant="destructive" @select="deleteTask">
+          <Trash />
+          Delete
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  </div>
 
   <div
     v-if="task"
