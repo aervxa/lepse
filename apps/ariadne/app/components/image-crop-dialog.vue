@@ -106,7 +106,7 @@ const crop = () => {
         OUTPUT_SIZE,
         OUTPUT_SIZE
       )
-      const blob = await canvas.convertToBlob({ type: 'image/webp', quality: 0.8 })
+      const blob = await canvas.convertToBlob()
       await props.onCrop?.(blob)
       open.value = false
       resolve()

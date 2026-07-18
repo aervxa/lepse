@@ -4,8 +4,8 @@ export const updateValidator = vine.create({
   name: vine.string().nullable().optional(),
   avatar: vine
     .file({
-      size: '100kb',
-      extnames: ['webp'],
+      size: '500kb',
+      extnames: ['png'],
     })
     .nullable()
     .optional(),
