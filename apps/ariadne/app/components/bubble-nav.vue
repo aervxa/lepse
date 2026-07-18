@@ -38,6 +38,8 @@ watch(open, async (value) => {
 // Change activeItem on route changes
 watch(route, (value) => {
   activeItem.value = items.find((item) => value.path.startsWith(item.path))
+  // if no active item, close popover
+  if (!activeItem.value) open.value = false
 })
 
 async function openNav(item?: Item) {
@@ -78,7 +80,8 @@ function focusOutside(event: FocusOutsideEvent) {
     ref="nav"
     class="peer flex gap-1 rounded-full"
     :class="[
-      mode !== 'drawer-bottom' && 'absolute top-1/2 left-2 -translate-y-1/2 flex-col p-1 backdrop-blur-lg **:backdrop-blur-none border-border border',
+      mode !== 'drawer-bottom' &&
+        'border-border absolute top-1/2 left-2 -translate-y-1/2 flex-col border p-1 backdrop-blur-lg **:backdrop-blur-none',
     ]"
     :data-float="mode !== 'drawer-bottom'"
   >
@@ -136,7 +139,7 @@ function focusOutside(event: FocusOutsideEvent) {
           layout-id="bubble-popover"
           :style="{ borderRadius: '16px' }"
           :transition="popoverTransition.after()"
-          class="border-border/40 bg-popover/80 backdrop-blur-3xl relative z-100 h-full overflow-hidden rounded-2xl border shadow-2xl"
+          class="border-border/40 bg-popover/80 relative z-100 h-full overflow-hidden rounded-2xl border shadow-2xl backdrop-blur-3xl"
         >
           <NuxtPage />
         </Motion>
