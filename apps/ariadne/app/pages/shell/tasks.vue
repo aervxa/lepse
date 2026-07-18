@@ -30,8 +30,8 @@ const createOpen = ref(false)
 const schema = z.object({
   name: z.string().min(1, 'Name is required').max(255),
   description: z.string().max(2500).optional(),
-  timeEstimateMin: z.coerce.number().min(0).optional(),
-  deadline: z.string().optional(),
+  // timeEstimateMin: z.coerce.number().min(0).optional(),
+  // deadline: z.string().optional(),
 })
 
 const { handleSubmit, setFieldError, isSubmitting, meta } = useForm({
@@ -159,7 +159,7 @@ const onSubmit = handleSubmit(async (values) => {
                 </VeeField>
 
                 <!-- Deadline + Estimate -->
-                <FieldGroup class="flex-row @max-xs:contents">
+                <!-- <FieldGroup class="flex-row @max-xs:contents">
                   <VeeField v-slot="{ field, errors }" name="deadline">
                     <Field :data-invalid="!!errors.length">
                       <FieldLabel for="deadline">Deadline</FieldLabel>
@@ -186,7 +186,7 @@ const onSubmit = handleSubmit(async (values) => {
                       <FieldError v-if="errors.length" :errors="errors" />
                     </Field>
                   </VeeField>
-                </FieldGroup>
+                </FieldGroup> -->
               </FieldGroup>
 
               <DialogFooter>
