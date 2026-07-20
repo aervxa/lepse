@@ -26,7 +26,7 @@ const {
     <div class="flex items-start gap-4">
       <FocusSessions />
       <Profile />
-      <Settings />
+      <SettingsDialog />
     </div>
   </div>
 

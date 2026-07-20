@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { isTauri } from '@tauri-apps/api/core'
-import { Image, Pencil, User } from 'lucide-vue-next'
+import { Image, MonitorCog, Pencil, User } from 'lucide-vue-next'
 
 const items = [
-  { name: 'account', path: '/shell/settings/account', icon: User },
-  { name: 'background', path: '/shell/settings/background', icon: Image },
-  ...(isTauri() ? [{ name: 'app', path: '/shell/settings/app', icon: Image }] : []),
+  { name: 'Account', path: '/shell/settings/account', icon: User },
+  { name: 'Background', path: '/shell/settings/background', icon: Image },
+  ...(isTauri() ? [{ name: 'System', path: '/shell/settings/app', icon: MonitorCog }] : []),
 ]
 
 const route = useRoute()
@@ -25,7 +25,7 @@ const { user } = useAuth()
 
 <template>
   <Dialog v-model:open="open">
-    <DialogContent class="min-h-152 sm:min-h-128 overflow-hidden p-0 md:max-w-2xl lg:max-w-3xl">
+    <DialogContent class="min-h-152 overflow-hidden p-0 sm:min-h-128 md:max-w-2xl lg:max-w-3xl">
       <DialogTitle class="sr-only">Settings</DialogTitle>
       <DialogDescription class="sr-only">adjust ur likings and preferences</DialogDescription>
 
