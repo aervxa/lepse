@@ -18,6 +18,7 @@ import { isTauri } from '@tauri-apps/api/core'
 import type { UnlistenFn } from '@tauri-apps/api/event'
 import { getCurrentWebviewWindow, type WebviewWindow } from '@tauri-apps/api/webviewWindow'
 import { platform, type Platform } from '@tauri-apps/plugin-os'
+import { useFullscreen } from '@vueuse/core'
 
 const isApp = isTauri()
 const isAppMaximized = ref(false)
@@ -52,20 +53,8 @@ onMounted(() => {
   }, SKELETON_DELAY_MS)
 })
 
-const shellApp = useTemplateRef('shellApp')
-const inFullscreen = ref(false)
-const toggleFullscreen = () => {
-  inFullscreen.value = !inFullscreen.value
-  if (inFullscreen.value) {
-    shellApp.value?.requestFullscreen()
-  } else {
-    document.exitFullscreen()
-  }
-}
-provide(isShellFullscreenKey, inFullscreen)
-provide(toggleShellFullscreenKey, toggleFullscreen)
-
 const navigation = useNavigation()
+const { isFullscreen } = useFullscreen()
 </script>
 
 <template>
@@ -77,6 +66,7 @@ const navigation = useNavigation()
   >
     <div
       v-if="isApp"
+      v-show="!isFullscreen"
       data-slot="titlebar"
       data-tauri-drag-region
       class="z-377 -mb-2 flex h-8 items-center justify-between select-none [&_button]:pointer-events-auto"
@@ -136,9 +126,9 @@ const navigation = useNavigation()
 
     <!-- Main App -->
     <section
-      ref="shellApp"
       data-vaul-drawer-wrapper
-      class="bg-background relative z-0 m-2 flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border-2 p-4"
+      class="bg-background relative z-0 flex min-h-0 flex-1 flex-col overflow-hidden border-2"
+      :class="[isFullscreen ? 'p-6' : 'm-2 rounded-lg p-4']"
     >
       <div class="absolute inset-0 -z-10">
         <Image

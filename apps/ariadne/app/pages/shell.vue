@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useLocalStorage } from '@vueuse/core'
+import { useFullscreen, useLocalStorage } from '@vueuse/core'
 import { Expand, Lightbulb, LightbulbOff, Shrink, Wallpaper } from 'lucide-vue-next'
 import { getDailyQuote } from '~/lib/quotes'
 
@@ -12,8 +12,11 @@ const focusMethod = useLocalStorage<'stopwatch' | 'pomodoro'>('focus_method', 's
 const focusMethodToggleable = ref(true)
 provide(focusMethodToggleableKey, focusMethodToggleable)
 
-const isShellFullscreen = inject(isShellFullscreenKey)
-const toggleShellFullscreen = inject(toggleShellFullscreenKey)
+const {
+  isFullscreen,
+  isSupported: isFullscreenSupported,
+  toggle: toggleFullscreen,
+} = useFullscreen()
 </script>
 
 <template>
@@ -71,8 +74,8 @@ const toggleShellFullscreen = inject(toggleShellFullscreenKey)
         <Lightbulb v-else />
         {{ inFocus ? 'Exit' : 'Focus' }}
       </Button>
-      <Button variant="ghost" size="icon" @click="toggleShellFullscreen">
-        <Shrink v-if="isShellFullscreen" />
+      <Button v-if="isFullscreenSupported" variant="ghost" size="icon" @click="toggleFullscreen">
+        <Shrink v-if="isFullscreen" />
         <Expand v-else />
       </Button>
     </div>

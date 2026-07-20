@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useWindowSize } from '@vueuse/core'
+import { useFullscreen, useWindowSize } from '@vueuse/core'
 import { Goal, ListTodo } from 'lucide-vue-next'
 import type { FocusOutsideEvent } from 'reka-ui'
 
@@ -76,6 +76,8 @@ function focusOutside(event: FocusOutsideEvent) {
     event.preventDefault()
   }
 }
+
+const { isFullscreen } = useFullscreen()
 </script>
 
 <template>
@@ -84,7 +86,9 @@ function focusOutside(event: FocusOutsideEvent) {
     class="peer flex gap-1 rounded-full"
     :class="[
       mode !== 'drawer-bottom' &&
-        'border-border absolute top-1/2 left-2 -translate-y-1/2 flex-col border p-1 backdrop-blur-lg **:backdrop-blur-none',
+        'border-border absolute top-1/2 -translate-y-1/2 flex-col border p-1 backdrop-blur-lg **:backdrop-blur-none' +
+          ' ' +
+          (isFullscreen ? 'left-4' : 'left-2'),
     ]"
     :data-float="mode !== 'drawer-bottom'"
   >
@@ -131,7 +135,7 @@ function focusOutside(event: FocusOutsideEvent) {
         force-mount
         side="right"
         align="center"
-        :side-offset="8"
+        :side-offset="isFullscreen ? 12 : 8"
         unstyled
         :class="[open && 'aspect-4/5 max-h-[67vh] w-sm']"
         @interact-outside="focusOutside"
