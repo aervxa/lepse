@@ -7,18 +7,25 @@ import {
   SquaresIntersect,
   X,
 } from 'lucide-vue-next'
+import { isTauri } from '@tauri-apps/api/core'
+import { platform, type Platform } from '@tauri-apps/plugin-os'
+import { getCurrentWebviewWindow, type WebviewWindow } from '@tauri-apps/api/webviewWindow'
+import type { UnlistenFn } from '@tauri-apps/api/event'
+import { useFullscreen } from '@vueuse/core'
 
-const router = useRouter()
 const { user } = useAuth()
 const { backgrounds } = useBackgrounds()
+const { windowTransparency } = useSettings()
+const { isFullscreen } = useFullscreen()
+
+const showSkeleton = ref(false)
+onMounted(() => {
+  setTimeout(() => {
+    showSkeleton.value = true
+  }, SKELETON_DELAY_MS)
+})
 
 // ─── Tauri ──────────────────────────────────────────────────────── start ───
-
-import { isTauri } from '@tauri-apps/api/core'
-import type { UnlistenFn } from '@tauri-apps/api/event'
-import { getCurrentWebviewWindow, type WebviewWindow } from '@tauri-apps/api/webviewWindow'
-import { platform, type Platform } from '@tauri-apps/plugin-os'
-import { useFullscreen } from '@vueuse/core'
 
 const isApp = isTauri()
 const isAppMaximized = ref(false)
@@ -43,18 +50,6 @@ onBeforeUnmount(() => {
 })
 
 // ─── Tauri ────────────────────────────────────────────────────────── end ───
-
-const { windowTransparency } = useSettings()
-
-const showSkeleton = ref(false)
-onMounted(() => {
-  setTimeout(() => {
-    showSkeleton.value = true
-  }, SKELETON_DELAY_MS)
-})
-
-const navigation = useNavigation()
-const { isFullscreen } = useFullscreen()
 </script>
 
 <template>
@@ -69,35 +64,18 @@ const { isFullscreen } = useFullscreen()
       v-show="!isFullscreen"
       data-slot="titlebar"
       data-tauri-drag-region
-      class="z-377 -mb-2 flex h-8 items-center justify-between select-none [&_button]:pointer-events-auto"
+      class="-mb-2 flex h-8 items-center justify-between select-none"
       @pointerdown.stop
     >
-      <div class="px-2">
-        <Button
-          variant="ghost"
-          size="icon-xs"
-          tabindex="-1"
-          :disabled="!navigation.canGoBack"
-          @click="navigation.back()"
-        >
-          <ArrowLeft />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon-xs"
-          tabindex="-1"
-          :disabled="!navigation.canGoForward"
-          @click="navigation.forward()"
-        >
-          <ArrowRight />
-        </Button>
+      <div class="pointer-events-none px-2">
+        <img src="/favicon.svg" class="size-5 grayscale" />
       </div>
-      <div class="[&>button]:rounded-none">
+      <div v-if="appWindow" class="z-377 [&>button]:pointer-events-auto [&>button]:rounded-none">
         <Button
           variant="ghost"
           size="icon-sm"
           tabindex="-1"
-          @click="appWindow?.minimize()"
+          @click="appWindow.minimize()"
           class="text-muted-foreground"
         >
           <Minus />
@@ -106,7 +84,7 @@ const { isFullscreen } = useFullscreen()
           variant="ghost"
           size="icon-sm"
           tabindex="-1"
-          @click="appWindow?.toggleMaximize()"
+          @click="appWindow.toggleMaximize()"
           class="text-muted-foreground"
         >
           <SquaresIntersect v-if="isAppMaximized" />
@@ -116,7 +94,7 @@ const { isFullscreen } = useFullscreen()
           variant="ghost"
           size="icon-sm"
           tabindex="-1"
-          @click="appWindow?.close()"
+          @click="appWindow.close()"
           class="text-muted-foreground hover:text-destructive w-10 pr-2 hover:[&>svg]:stroke-3"
         >
           <X />
