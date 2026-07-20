@@ -51,6 +51,19 @@ onMounted(() => {
     showSkeleton.value = true
   }, SKELETON_DELAY_MS)
 })
+
+const shellApp = useTemplateRef('shellApp')
+const inFullscreen = ref(false)
+const toggleFullscreen = () => {
+  inFullscreen.value = !inFullscreen.value
+  if (inFullscreen.value) {
+    shellApp.value?.requestFullscreen()
+  } else {
+    document.exitFullscreen()
+  }
+}
+provide(isShellFullscreenKey, inFullscreen)
+provide(toggleShellFullscreenKey, toggleFullscreen)
 </script>
 
 <template>
@@ -108,6 +121,7 @@ onMounted(() => {
 
     <!-- Main App -->
     <section
+      ref="shellApp"
       data-vaul-drawer-wrapper
       class="bg-background relative z-0 m-2 flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border-2 p-4"
     >

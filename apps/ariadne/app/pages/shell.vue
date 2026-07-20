@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useLocalStorage } from '@vueuse/core'
-import { Lightbulb, LightbulbOff, Wallpaper } from 'lucide-vue-next'
+import { Expand, Lightbulb, LightbulbOff, Shrink, Wallpaper } from 'lucide-vue-next'
 import { getDailyQuote } from '~/lib/quotes'
 
 definePageMeta({
@@ -11,6 +11,9 @@ const inFocus = ref(false)
 const focusMethod = useLocalStorage<'stopwatch' | 'pomodoro'>('focus_method', 'stopwatch')
 const focusMethodToggleable = ref(true)
 provide(focusMethodToggleableKey, focusMethodToggleable)
+
+const isShellFullscreen = inject(isShellFullscreenKey)
+const toggleShellFullscreen = inject(toggleShellFullscreenKey)
 </script>
 
 <template>
@@ -50,11 +53,6 @@ provide(focusMethodToggleableKey, focusMethodToggleable)
     </div>
 
     <div class="flex gap-2">
-      <Button variant="outline" size="icon" as-child>
-        <NuxtLink to="/shell/settings/background">
-          <Wallpaper />
-        </NuxtLink>
-      </Button>
       <Button
         v-if="inFocus"
         variant="outline"
@@ -72,6 +70,10 @@ provide(focusMethodToggleableKey, focusMethodToggleable)
         <LightbulbOff v-if="inFocus" />
         <Lightbulb v-else />
         {{ inFocus ? 'Exit' : 'Focus' }}
+      </Button>
+      <Button variant="ghost" size="icon" @click="toggleShellFullscreen">
+        <Shrink v-if="isShellFullscreen" />
+        <Expand v-else />
       </Button>
     </div>
   </div>
