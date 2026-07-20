@@ -9,12 +9,14 @@ const nowStr = computed(() => now.value.toLocaleTimeString([], { timeStyle: 'sho
 
 <template>
   <p
-    class="max-w-xs text-center text-base font-medium tracking-wide text-pretty sm:max-w-sm sm:text-xl"
+    class="max-w-xs text-center text-base leading-relaxed font-medium tracking-wide text-pretty sm:max-w-sm sm:text-xl 2xl:text-2xl"
   >
     {{ getGreeting(now).replace('{name}', user?.fullName ?? 'User') }}
   </p>
   <p class="relative flex font-semibold tabular-nums">
-    <span class="text-shadow-ring h-min text-8xl leading-none text-shadow-lg sm:text-9xl">
+    <span
+      class="text-shadow-ring 2xl:text-10xl h-min text-8xl leading-none text-shadow-lg sm:text-9xl"
+    >
       {{ nowStr.slice(0, -3) }}
     </span>
     <span
