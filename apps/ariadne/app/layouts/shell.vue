@@ -64,6 +64,8 @@ const toggleFullscreen = () => {
 }
 provide(isShellFullscreenKey, inFullscreen)
 provide(toggleShellFullscreenKey, toggleFullscreen)
+
+const navigation = useNavigation()
 </script>
 
 <template>
@@ -77,17 +79,30 @@ provide(toggleShellFullscreenKey, toggleFullscreen)
       v-if="isApp"
       data-slot="titlebar"
       data-tauri-drag-region
-      class="-mb-2 flex h-8 items-center justify-between select-none"
+      class="z-377 -mb-2 flex h-8 items-center justify-between select-none [&_button]:pointer-events-auto"
+      @pointerdown.stop
     >
       <div class="px-2">
-        <Button variant="ghost" size="icon-xs" tabindex="-1" @click="router.back()">
+        <Button
+          variant="ghost"
+          size="icon-xs"
+          tabindex="-1"
+          :disabled="!navigation.canGoBack"
+          @click="navigation.back()"
+        >
           <ArrowLeft />
         </Button>
-        <Button variant="ghost" size="icon-xs" tabindex="-1" @click="router.forward()">
+        <Button
+          variant="ghost"
+          size="icon-xs"
+          tabindex="-1"
+          :disabled="!navigation.canGoForward"
+          @click="navigation.forward()"
+        >
           <ArrowRight />
         </Button>
       </div>
-      <div class="pointer-events-auto z-377 [&>button]:rounded-none" @pointerdown.stop>
+      <div class="[&>button]:rounded-none">
         <Button
           variant="ghost"
           size="icon-sm"
