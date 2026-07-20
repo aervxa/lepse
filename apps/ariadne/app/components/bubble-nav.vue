@@ -40,6 +40,9 @@ watch(route, (value) => {
   activeItem.value = items.find((item) => value.path.startsWith(item.path))
   // if no active item, close popover
   if (!activeItem.value) open.value = false
+  else if (open.value === false) {
+    openNav(activeItem.value)
+  }
 })
 
 async function openNav(item?: Item) {
