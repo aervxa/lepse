@@ -1,8 +1,8 @@
 use tauri::{
   image::Image,
   menu::{Menu, MenuItem, PredefinedMenuItem},
-  tray::TrayIconBuilder,
-  Manager,
+  tray::{TrayIcon, TrayIconBuilder, TrayIconEvent},
+  AppHandle, Manager, Result, Runtime,
 };
 use tauri_plugin_store::StoreExt;
 
@@ -27,37 +27,7 @@ pub fn run() {
             .build(),
         )?;
       }
-
-      // Create tray
-      TrayIconBuilder::new()
-        .icon(Image::from_path("icons/tray.png")?)
-        .menu(&Menu::with_items(
-          app,
-          &[
-            &MenuItem::with_id(app, "show/hide", "Show/Hide", true, None::<&str>)?,
-            &PredefinedMenuItem::separator(app)?,
-            &MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?,
-          ],
-        )?)
-        .on_menu_event(|app, event| match event.id.as_ref() {
-          "show/hide" => {
-            if let Some(window) = app.get_webview_window("main") {
-              if window.is_visible().unwrap_or(false) {
-                let _ = window.close();
-              } else {
-                let _ = window.unminimize();
-                let _ = window.show();
-                let _ = window.set_focus();
-              }
-            }
-          }
-          "quit" => {
-            app.exit(0);
-          }
-          _ => {}
-        })
-        .build(app)?;
-
+      setup_tray(app.app_handle())?;
       Ok(())
     })
     .on_window_event(|window, event| {
@@ -80,4 +50,44 @@ pub fn run() {
     })
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
+}
+
+fn setup_tray<R: Runtime>(app: &AppHandle<R>) -> Result<TrayIcon<R>> {
+  Ok(
+    TrayIconBuilder::new()
+      .icon(Image::from_path("icons/tray.png")?)
+      .menu(&Menu::with_items(
+        app,
+        &[
+          &MenuItem::with_id(app, "show", "Show", true, None::<&str>)?,
+          &PredefinedMenuItem::separator(app)?,
+          &MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?,
+        ],
+      )?)
+      .on_menu_event(|app, event| match event.id.as_ref() {
+        "show" => {
+          if let Some(window) = app.get_webview_window("main") {
+            let _ = window.unminimize();
+            let _ = window.show();
+            let _ = window.set_focus();
+          }
+        }
+        "quit" => {
+          app.exit(0);
+        }
+        _ => {}
+      })
+      .on_tray_icon_event(|tray, event| match event {
+        TrayIconEvent::Click { .. } => {
+          let app = tray.app_handle();
+          if let Some(window) = app.get_webview_window("main") {
+            let _ = window.unminimize();
+            let _ = window.show();
+            let _ = window.set_focus();
+          }
+        }
+        _ => {}
+      })
+      .build(app)?,
+  )
 }
