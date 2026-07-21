@@ -1,11 +1,11 @@
-import type { Data } from '@lepse/minos/data'
+import type { Data } from '@lepse/clotho/data'
 
 export const useFocusSessions = () => {
-  const { $minos } = useNuxtApp()
+  const { $clotho } = useNuxtApp()
   const focusSessions = useState<Data.FocusSession[]>('focusSessions', () => [])
 
   const fetchFocusSessions = async (date: string, frequency: 'daily' | 'weekly' | 'monthly') => {
-    const [payload, error] = await $minos.api.focusSessions
+    const [payload, error] = await $clotho.api.focusSessions
       .index({
         query: { date, frequency },
       })

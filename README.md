@@ -20,4 +20,4 @@ Most productivity apps are built bottom to up. You complete tasks and hope they 
 > project is heavily in development lol
 
 > [!NOTE]
-> project might go open-code, atleast ariadne if publicizing minos would cause vulnerabilities
+> project might go open-code, atleast lachesis if publicizing clotho would cause vulnerabilities

@@ -33,7 +33,7 @@ const { handleSubmit, setFieldError, isSubmitting, resetForm, meta } = useForm({
   initialValues: {
     name: habit.value?.name,
     description: habit.value?.description || undefined,
-    // @ts-ignore | minos provides string instead of enum due to json-ification
+    // @ts-ignore | clotho provides string instead of enum due to json-ification
     frequency: habit.value?.frequency || 'daily',
     target: habit.value?.target || 1,
     reminders: habit.value?.reminders || undefined,

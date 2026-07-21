@@ -1,13 +1,13 @@
 import { createTuyau } from '@tuyau/core/client'
-import { registry } from '@lepse/minos/registry'
+import { registry } from '@lepse/clotho/registry'
 
 export default defineNuxtPlugin({
-  name: 'minos',
+  name: 'clotho',
   async setup() {
     const config = useRuntimeConfig()
     const token = useCookie('auth_token')
 
-    const minos = createTuyau({
+    const clotho = createTuyau({
       baseUrl: config.public.apiUrl,
       registry,
       hooks: {
@@ -22,6 +22,6 @@ export default defineNuxtPlugin({
       },
     })
 
-    return { provide: { minos } }
+    return { provide: { clotho } }
   },
 })

@@ -1,12 +1,12 @@
-import type { Data } from '@lepse/minos/data'
+import type { Data } from '@lepse/clotho/data'
 
 export const useBackgrounds = () => {
-  const { $minos } = useNuxtApp()
+  const { $clotho } = useNuxtApp()
   const { refreshUser } = useAuth()
   const backgrounds = useState<Data.Background[]>('backgrounds', () => [])
 
   const fetchBackgrounds = async () => {
-    const [payload, error] = await $minos.api.backgrounds.index({}).safe()
+    const [payload, error] = await $clotho.api.backgrounds.index({}).safe()
     if (payload) {
       backgrounds.value = payload.data
     } else {
@@ -20,9 +20,9 @@ export const useBackgrounds = () => {
   }
 
   const selectBackground = async (
-    body: Parameters<typeof $minos.api.backgrounds.select>['0']['body']
+    body: Parameters<typeof $clotho.api.backgrounds.select>['0']['body']
   ) => {
-    const [, error] = await $minos.api.backgrounds.select({ body }).safe()
+    const [, error] = await $clotho.api.backgrounds.select({ body }).safe()
     if (error) {
       console.error(error)
       return error

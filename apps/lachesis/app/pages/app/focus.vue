@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Data } from '@lepse/minos/data'
+import type { Data } from '@lepse/clotho/data'
 import { useDebounceFn, useIntervalFn, useNow } from '@vueuse/core'
 import {
   ChevronsUpDown,

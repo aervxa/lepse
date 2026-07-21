@@ -1,8 +1,8 @@
-import type { Data } from '@lepse/minos/data'
+import type { Data } from '@lepse/clotho/data'
 
 export const useDay = (date?: string) => {
   date = date ?? getClientDate()
-  const { $minos } = useNuxtApp()
+  const { $clotho } = useNuxtApp()
 
   // ─── Tasks ────────────────────────────────────────────────────────────────
 
@@ -10,7 +10,7 @@ export const useDay = (date?: string) => {
   const currentDayTasks = computed(() => dayTasks.value.filter((dt) => dt.date?.startsWith(date)))
 
   const fetchDayTasks = async () => {
-    const [payload, error] = await $minos.api.day.tasks
+    const [payload, error] = await $clotho.api.day.tasks
       .index({
         params: { date },
       })
@@ -29,12 +29,12 @@ export const useDay = (date?: string) => {
   }
 
   const createDayTask = async (
-    body: Parameters<typeof $minos.api.day.tasks.store>['0']['body']
+    body: Parameters<typeof $clotho.api.day.tasks.store>['0']['body']
   ) => {
     // Don't create if already exists for the same date
     if (currentDayTasks.value.some((dt) => dt.taskId === body.taskId)) return
 
-    const [payload, error] = await $minos.api.day.tasks.store({ params: { date }, body }).safe()
+    const [payload, error] = await $clotho.api.day.tasks.store({ params: { date }, body }).safe()
     if (payload) {
       dayTasks.value.push(payload.data)
     } else {
@@ -44,7 +44,7 @@ export const useDay = (date?: string) => {
   }
 
   const destroyDayTask = async (id: number) => {
-    const [, error] = await $minos.api.day.tasks.destroy({ params: { date, id } }).safe()
+    const [, error] = await $clotho.api.day.tasks.destroy({ params: { date, id } }).safe()
     if (error) {
       console.error(error)
       return error
@@ -67,7 +67,7 @@ export const useDay = (date?: string) => {
   )
 
   const fetchFocusSession = async () => {
-    const [payload, error] = await $minos.api.day.session
+    const [payload, error] = await $clotho.api.day.session
       .show({
         params: { date },
       })
@@ -90,9 +90,9 @@ export const useDay = (date?: string) => {
   }
 
   const updateFocusSession = async (
-    body: Parameters<typeof $minos.api.day.session.update>['0']['body']
+    body: Parameters<typeof $clotho.api.day.session.update>['0']['body']
   ) => {
-    const [payload, error] = await $minos.api.day.session.update({ params: { date }, body }).safe()
+    const [payload, error] = await $clotho.api.day.session.update({ params: { date }, body }).safe()
     if (payload) {
       // Reload session of only the current date
       focusSessions.value = [
@@ -106,7 +106,7 @@ export const useDay = (date?: string) => {
   }
 
   const destroyFocusSession = async () => {
-    const [, error] = await $minos.api.day.session.destroy({ params: { date } }).safe()
+    const [, error] = await $clotho.api.day.session.destroy({ params: { date } }).safe()
     if (error) {
       console.error(error)
       return error
@@ -127,7 +127,7 @@ export const useDay = (date?: string) => {
   const currentJournal = computed(() => journals.value.find((j) => j.date?.startsWith(date)))
 
   const fetchJournal = async () => {
-    const [payload, error] = await $minos.api.day.journal
+    const [payload, error] = await $clotho.api.day.journal
       .show({
         params: { date },
       })
@@ -147,9 +147,9 @@ export const useDay = (date?: string) => {
   }
 
   const updateJournal = async (
-    body: Parameters<typeof $minos.api.day.journal.update>['0']['body']
+    body: Parameters<typeof $clotho.api.day.journal.update>['0']['body']
   ) => {
-    const [payload, error] = await $minos.api.day.journal.update({ params: { date }, body }).safe()
+    const [payload, error] = await $clotho.api.day.journal.update({ params: { date }, body }).safe()
     if (payload) {
       // Reload journal of only the current date
       journals.value = [...journals.value.filter((j) => j.date !== payload.data.date), payload.data]

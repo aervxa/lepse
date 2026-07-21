@@ -1,7 +1,7 @@
-import type { Data } from '@lepse/minos/data'
+import type { Data } from '@lepse/clotho/data'
 
 export const useAuth = () => {
-  const { $minos } = useNuxtApp()
+  const { $clotho } = useNuxtApp()
   const token = useCookie('auth_token', { maxAge: 60 * 60 * 24 * 365 /* one  year */ })
   const user = useState<Data.User | undefined>('user', () => undefined)
 
@@ -11,7 +11,7 @@ export const useAuth = () => {
     password: string,
     passwordConfirmation: string
   ) => {
-    const [payload, error] = await $minos.api.auth.newAccount
+    const [payload, error] = await $clotho.api.auth.newAccount
       .store({ body: { fullName, email, password, passwordConfirmation } })
       .safe()
     if (payload) {
@@ -24,7 +24,7 @@ export const useAuth = () => {
   }
 
   const login = async (email: string, password: string) => {
-    const [payload, error] = await $minos.api.auth.accessToken
+    const [payload, error] = await $clotho.api.auth.accessToken
       .store({ body: { email, password } })
       .safe()
     if (payload) {
@@ -37,7 +37,7 @@ export const useAuth = () => {
   }
 
   const logout = async () => {
-    await $minos.api.auth.accessToken.destroy({})
+    await $clotho.api.auth.accessToken.destroy({})
     token.value = null
     user.value = undefined
     navigateTo('/')
@@ -45,7 +45,7 @@ export const useAuth = () => {
 
   const refreshUser = async () => {
     if (token.value) {
-      const [payload, error] = await $minos.api.account.profile.show({}).safe()
+      const [payload, error] = await $clotho.api.account.profile.show({}).safe()
       if (payload) {
         user.value = payload.data
       } else {
@@ -62,9 +62,9 @@ export const useAuth = () => {
   }
 
   const updateProfile = async (
-    body: Parameters<typeof $minos.api.account.profile.update>['0']['body']
+    body: Parameters<typeof $clotho.api.account.profile.update>['0']['body']
   ) => {
-    const [payload, error] = await $minos.api.account.profile.update({ body }).safe()
+    const [payload, error] = await $clotho.api.account.profile.update({ body }).safe()
     if (payload) {
       user.value = payload.data
     } else {

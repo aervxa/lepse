@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { CalendarDays, ChevronUp, Target } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
-import type { Data } from '@lepse/minos/data'
+import type { Data } from '@lepse/clotho/data'
 import { Item } from '@/components/ui/item' // Manual import not needed for functionality, but zed(ide) mistakes Item usage for habit/item.vue lol
 
 const props = defineProps<{

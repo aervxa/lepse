@@ -1,7 +1,7 @@
-import type { Data } from '@lepse/minos/data'
+import type { Data } from '@lepse/clotho/data'
 
 export const useHabit = (id: number) => {
-  const { $minos } = useNuxtApp()
+  const { $clotho } = useNuxtApp()
 
   // ─── Habit ────────────────────────────────────────────────────────────────
 
@@ -9,7 +9,7 @@ export const useHabit = (id: number) => {
   const habit = computed(() => habits.value.find((habit) => habit.id === id))
 
   const fetchHabit = async () => {
-    const [payload, error] = await $minos.api.habits.show({ params: { id } }).safe()
+    const [payload, error] = await $clotho.api.habits.show({ params: { id } }).safe()
 
     if (payload) {
       const index = habits.value.findIndex((h) => h.id === id)
@@ -40,7 +40,7 @@ export const useHabit = (id: number) => {
   }
 
   const fetchHabitPeriod = async (date?: string) => {
-    const [payload, error] = await $minos.api.habits
+    const [payload, error] = await $clotho.api.habits
       .count({
         params: { id },
         query: { date },
@@ -61,7 +61,7 @@ export const useHabit = (id: number) => {
   }
 
   const incrementHabit = async () => {
-    const [payload, error] = await $minos.api.habits.increment({ params: { id } }).safe()
+    const [payload, error] = await $clotho.api.habits.increment({ params: { id } }).safe()
     if (payload) {
       $updateOrCreateHabitPeriod(payload.data)
     } else {
@@ -71,7 +71,7 @@ export const useHabit = (id: number) => {
   }
 
   const decrementHabit = async () => {
-    const [payload, error] = await $minos.api.habits.decrement({ params: { id } }).safe()
+    const [payload, error] = await $clotho.api.habits.decrement({ params: { id } }).safe()
     if (payload) {
       $updateOrCreateHabitPeriod(payload.data)
     } else {

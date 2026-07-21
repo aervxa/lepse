@@ -1,11 +1,11 @@
-import type { Data } from '@lepse/minos/data'
+import type { Data } from '@lepse/clotho/data'
 
 export const useTasks = () => {
-  const { $minos } = useNuxtApp()
+  const { $clotho } = useNuxtApp()
   const tasks = useState<Data.Task[]>('tasks', () => [])
 
   const fetchTasks = async () => {
-    const [payload, error] = await $minos.api.tasks.index({}).safe()
+    const [payload, error] = await $clotho.api.tasks.index({}).safe()
     if (payload) {
       tasks.value = payload.data
     } else {
@@ -18,8 +18,8 @@ export const useTasks = () => {
     fetchTasks()
   }
 
-  const createTask = async (body: Parameters<typeof $minos.api.tasks.store>['0']['body']) => {
-    const [payload, error] = await $minos.api.tasks.store({ body }).safe()
+  const createTask = async (body: Parameters<typeof $clotho.api.tasks.store>['0']['body']) => {
+    const [payload, error] = await $clotho.api.tasks.store({ body }).safe()
     if (payload) {
       tasks.value.push(payload.data)
     } else {
@@ -30,9 +30,9 @@ export const useTasks = () => {
 
   const updateTask = async (
     id: number,
-    body: Parameters<typeof $minos.api.tasks.update>['0']['body']
+    body: Parameters<typeof $clotho.api.tasks.update>['0']['body']
   ) => {
-    const [payload, error] = await $minos.api.tasks.update({ params: { id }, body }).safe()
+    const [payload, error] = await $clotho.api.tasks.update({ params: { id }, body }).safe()
     if (payload) {
       const index = tasks.value.findIndex((t) => t.id === id)
       if (index !== -1) tasks.value[index] = payload.data
@@ -43,7 +43,7 @@ export const useTasks = () => {
   }
 
   const destroyTask = async (id: number) => {
-    const [, error] = await $minos.api.tasks.destroy({ params: { id } }).safe()
+    const [, error] = await $clotho.api.tasks.destroy({ params: { id } }).safe()
     if (error) {
       console.error(error)
       return error

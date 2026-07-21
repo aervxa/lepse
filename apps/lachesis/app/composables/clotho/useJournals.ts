@@ -1,11 +1,11 @@
-import type { Data } from '@lepse/minos/data'
+import type { Data } from '@lepse/clotho/data'
 
 export const useJournals = () => {
-  const { $minos } = useNuxtApp()
+  const { $clotho } = useNuxtApp()
   const journals = useState<Data.Journal[]>('journals', () => [])
 
   const fetchJournals = async () => {
-    const [payload, error] = await $minos.api.journals.index({}).safe()
+    const [payload, error] = await $clotho.api.journals.index({}).safe()
     if (payload) {
       journals.value = payload.data
     } else {

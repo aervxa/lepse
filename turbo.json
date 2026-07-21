@@ -11,13 +11,13 @@
       "cache": false,
       "persistent": true
     },
-    "@lepse/ariadne#tdev": {
-      "with": ["@lepse/minos#dev"],
+    "@lepse/lachesis#tdev": {
+      "with": ["@lepse/clotho#dev"],
       "cache": false,
       "persistent": true
     },
-    "@lepse/ariadne#tdev:cef": {
-      "with": ["@lepse/minos#dev"],
+    "@lepse/lachesis#tdev:cef": {
+      "with": ["@lepse/clotho#dev"],
       "cache": false,
       "persistent": true
     },
