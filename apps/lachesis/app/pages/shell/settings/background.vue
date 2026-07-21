@@ -1,5 +1,9 @@
 <script setup lang="ts">
+const { user } = useAuth()
 const { backgrounds, selectBackground } = useBackgrounds()
+const selectedBackgroundId = computed(
+  () => backgrounds.value.find((bg) => bg.id === user.value?.backgroundId)?.id
+)
 
 const groupedBackgrounds = computed(() =>
   Object.entries(
@@ -34,12 +38,13 @@ const select = (id: number) => {
               :key="background.id"
               variant="ghost"
               class="flex h-auto flex-col gap-2 rounded-2xl p-2"
+              :class="[background.id === selectedBackgroundId && 'bg-muted!']"
               :disabled="isSelecting"
               @click="select(background.id)"
             >
               <img
                 :src="background.url"
-                class="border-border pointer-events-none rounded-[inherit] border"
+                class="border-border bg-muted/60 pointer-events-none aspect-video w-full rounded-[inherit] border"
               />
               <p class="text-center capitalize">{{ background.name.replace('-', ' ') }}</p>
             </Button>
