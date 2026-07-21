@@ -1,12 +1,5 @@
 <script setup lang="ts">
-import {
-  ArrowLeft,
-  ArrowRight,
-  Minus,
-  SquareDashedTopSolid,
-  SquaresIntersect,
-  X,
-} from 'lucide-vue-next'
+import { Minus, SquareDashedTopSolid, SquaresIntersect, X } from 'lucide-vue-next'
 import { isTauri } from '@tauri-apps/api/core'
 import { platform, type Platform } from '@tauri-apps/plugin-os'
 import { getCurrentWebviewWindow, type WebviewWindow } from '@tauri-apps/api/webviewWindow'
@@ -14,7 +7,7 @@ import type { UnlistenFn } from '@tauri-apps/api/event'
 import { useFullscreen } from '@vueuse/core'
 
 const { user } = useAuth()
-const { backgrounds } = useBackgrounds()
+const { backgrounds, activeBackgroundId } = useBackgrounds()
 const { windowTransparency } = useSettings()
 const { isFullscreen } = useFullscreen()
 
@@ -110,8 +103,8 @@ onBeforeUnmount(() => {
     >
       <div class="absolute inset-0 -z-10">
         <Image
-          v-if="user?.backgroundId"
-          :src="backgrounds.find((b) => b.id === user?.backgroundId)?.url"
+          v-if="activeBackgroundId"
+          :src="backgrounds.find((b) => b.id === activeBackgroundId)?.url"
           class="pointer-events-none -z-10 size-full object-cover select-none"
         />
       </div>

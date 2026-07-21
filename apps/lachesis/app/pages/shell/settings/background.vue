@@ -1,9 +1,7 @@
 <script setup lang="ts">
-const { user } = useAuth()
-const { backgrounds, selectBackground } = useBackgrounds()
-const selectedBackgroundId = computed(
-  () => backgrounds.value.find((bg) => bg.id === user.value?.backgroundId)?.id
-)
+import { toast } from 'vue-sonner'
+
+const { backgrounds, activeBackgroundId, selectBackground } = useBackgrounds()
 
 const groupedBackgrounds = computed(() =>
   Object.entries(
@@ -14,9 +12,11 @@ const groupedBackgrounds = computed(() =>
   ).sort(([style1], [style2]) => style1.localeCompare(style2))
 )
 
-const isSelecting = ref(false)
-const select = (id: number) => {
-  skeletonLoad(selectBackground({ id }), isSelecting)
+const select = async (id: number) => {
+  const error = await selectBackground({ id })
+  if (error) {
+    toast.error('Failed to update background!', { description: error.message })
+  }
 }
 </script>
 
@@ -38,8 +38,7 @@ const select = (id: number) => {
               :key="background.id"
               variant="ghost"
               class="flex h-auto flex-col gap-2 rounded-2xl p-2"
-              :class="[background.id === selectedBackgroundId && 'bg-muted!']"
-              :disabled="isSelecting"
+              :class="[background.id === activeBackgroundId && 'bg-muted!']"
               @click="select(background.id)"
             >
               <img

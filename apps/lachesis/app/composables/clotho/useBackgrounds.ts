@@ -1,8 +1,9 @@
 import type { Data } from '@lepse/clotho/data'
+import { useDebounceFn } from '@vueuse/core'
 
 export const useBackgrounds = () => {
   const { $clotho } = useNuxtApp()
-  const { refreshUser } = useAuth()
+  const { user, refreshUser } = useAuth()
   const backgrounds = useState<Data.Background[]>('backgrounds', () => [])
 
   const fetchBackgrounds = async () => {
@@ -19,17 +20,41 @@ export const useBackgrounds = () => {
     fetchBackgrounds()
   }
 
+  const activeBackgroundId = useState<number | null>('activeBackgroundId', () => null)
+  const activeBackgroundIdLock = useState('activeBackgroundIdLock', () => false)
+  watch(
+    user,
+    () => {
+      // prevents activeBackgroundId from being updated while selecting a background (incase smt else updates user, triggering this)
+      if (!activeBackgroundIdLock.value) activeBackgroundId.value = user.value?.backgroundId ?? null
+    },
+    { immediate: true }
+  )
+
+  const _select = useDebounceFn(
+    async (body: Parameters<typeof $clotho.api.backgrounds.select>['0']['body']) => {
+      const [, error] = await $clotho.api.backgrounds.select({ body }).safe()
+      if (error) {
+        activeBackgroundId.value = user.value?.backgroundId ?? null
+        console.error(error)
+        return error
+      } else {
+        await refreshUser()
+      }
+    },
+    1000
+  )
   const selectBackground = async (
     body: Parameters<typeof $clotho.api.backgrounds.select>['0']['body']
   ) => {
-    const [, error] = await $clotho.api.backgrounds.select({ body }).safe()
+    activeBackgroundIdLock.value = true
+    activeBackgroundId.value = Number(body.id)
+    const error = await _select(body)
+    activeBackgroundIdLock.value = false
     if (error) {
-      console.error(error)
       return error
-    } else {
-      refreshUser()
     }
   }
 
-  return { backgrounds, fetchBackgrounds, selectBackground }
+  return { backgrounds, fetchBackgrounds, activeBackgroundId, selectBackground }
 }
