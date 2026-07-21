@@ -110,12 +110,8 @@ onBeforeUnmount(() => {
     >
       <div class="absolute inset-0 -z-10">
         <Image
-          :src="
-            backgrounds.find((b) => b.id === user?.backgroundId)?.url ||
-            (showSkeleton
-              ? '/images/backgrounds/02-rooftop-garden.png' /* TODO: Replace default background with an 'intro' one */
-              : '')
-          "
+          v-if="user?.backgroundId"
+          :src="backgrounds.find((b) => b.id === user?.backgroundId)?.url"
           class="pointer-events-none -z-10 size-full object-cover select-none"
         />
       </div>

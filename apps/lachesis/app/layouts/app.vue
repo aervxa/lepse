@@ -16,7 +16,6 @@ import {
 } from 'lucide-vue-next'
 import { isTauri } from '@tauri-apps/api/core'
 import { getCurrentWebviewWindow, type WebviewWindow } from '@tauri-apps/api/webviewWindow'
-import logoSrc from '~/assets/images/logo.png'
 import type { UnlistenFn } from '@tauri-apps/api/event'
 
 const groups = [
@@ -83,7 +82,7 @@ onUnmounted(() => {
       data-tauri-drag-region
       class="bg-sidebar border-border/70 h-(--titlebar-height) z-10 flex p-3 -mb-2 justify-between items-center"
     >
-      <img :src="logoSrc" class="h-full not-dark:invert pointer-events-none" />
+      <img src="/logo.png" class="h-full not-dark:invert pointer-events-none" />
       <div>
         <Button variant="ghost" size="icon-sm" @click="window?.minimize()">
           <Minus />
@@ -106,7 +105,7 @@ onUnmounted(() => {
       >
         <SidebarHeader v-if="!isApp && sidebarKind === 'inset'">
           <NuxtLink to="/app" class="px-3 py-2 w-fit">
-            <img :src="logoSrc" class="h-10 not-dark:invert" />
+            <img src="/logo.png" class="h-10 not-dark:invert" />
           </NuxtLink>
         </SidebarHeader>
 

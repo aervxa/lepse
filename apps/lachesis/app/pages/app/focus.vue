@@ -16,7 +16,6 @@ import {
 import { computed, ref, watch } from 'vue'
 import { getDailyQuote } from '~/lib/quotes'
 import { formatDuration, Stopwatch } from '~/lib/time'
-import logoSrc from '~/assets/images/logo.png'
 
 definePageMeta({
   layout: 'app',
@@ -209,7 +208,7 @@ const inActivity = computed(() => stopwatch.running.value || pomoStopwatch.runni
     <!-- Header -->
     <div class="flex h-16 items-start justify-between">
       <NuxtLink to="/app" class="-mx-3 -my-2 w-fit px-3 py-2">
-        <img :src="logoSrc" class="h-12 not-dark:invert" />
+        <img src="/logo.png" class="h-12 not-dark:invert" />
       </NuxtLink>
 
       <!-- Session Totals -->
