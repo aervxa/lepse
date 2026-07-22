@@ -85,8 +85,17 @@ const onSubmit = handleSubmit(async (values) => {
           <PopoverDescription>Manage your focus and productivity.</PopoverDescription>
         </PopoverHeader>
 
+        <Empty v-if="tasks.length === 0" class="mb-12">
+          <EmptyHeader>
+            <EmptyTitle>No tasks yet.</EmptyTitle>
+            <EmptyDescription>You have yet to create any tasks.</EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
+            <Button @click="createOpen = true">Create Task</Button>
+          </EmptyContent>
+        </Empty>
         <!-- List | relative/absolute wrapper to force contenteditable p tag into a fixed space (otherwise grows parent) -->
-        <div class="relative flex-1">
+        <div v-else class="relative flex-1">
           <div class="absolute inset-0">
             <ScrollArea class="size-full">
               <div class="flex flex-col gap-3 p-4">
@@ -111,7 +120,7 @@ const onSubmit = handleSubmit(async (values) => {
 
         <!-- Create -->
         <Dialog v-model:open="createOpen">
-          <DialogTrigger as-child>
+          <DialogTrigger v-if="tasks.length > 0" as-child>
             <Button size="icon-lg" class="absolute right-4 bottom-4">
               <Plus />
             </Button>
