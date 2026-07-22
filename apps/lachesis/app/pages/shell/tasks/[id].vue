@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { formatDate } from '@vueuse/core'
 import {
+  ArrowUpRight,
   ChevronLeft,
   Clock,
   ClockFading,
   LoaderCircle,
   MoreHorizontal,
   Trash,
+  Unlink,
 } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
 import { formatDuration } from '~/lib/time'
@@ -67,6 +69,22 @@ const formattedDate = computed(() =>
   )
 )
 
+const { goals, createGoal } = useGoals()
+const goal = computed(() => goals.value.find((g) => g.id === task.value?.goalId))
+
+const linkGoal = async (goalId: number | null) => {
+  if (task.value) {
+    const error = await updateTask(task.value.id, { goalId })
+    if (error) toast.error('Failed to link goal.')
+    else toast.success(goalId === null ? 'Goal unlinked.' : 'Goal linked.')
+  }
+}
+
+const createNewGoal = async (search: string) => {
+  const error = await createGoal({ name: search })
+  if (error) toast.error('Failed to create goal!', { description: error.message })
+}
+
 const deleteTask = async () => {
   const error = await destroyTask(Number(id))
   if (error) toast.error('Failed to delete task.', { description: error.message })
@@ -126,7 +144,45 @@ const deleteTask = async () => {
       <!-- Goal linking -->
       <div class="flex items-center">
         <p class="text-xs font-light opacity-80">Linked to</p>
-        <TaskGoalLink :id="task.id" />
+        <ContextMenu v-if="goal">
+          <ContextMenuTrigger as-child>
+            <Button variant="ghost" size="xs" as-child>
+              <NuxtLink :to="`/shell/goals/${goal.id}`">
+                <Link />
+                {{ goal.name }}
+              </NuxtLink>
+            </Button>
+          </ContextMenuTrigger>
+          <ContextMenuContent>
+            <ContextMenuItem as-child>
+              <NuxtLink :to="`/shell/goals/${goal.id}`">
+                <ArrowUpRight />
+                Open goal
+              </NuxtLink>
+            </ContextMenuItem>
+            <ContextMenuItem @select="linkGoal(null)">
+              <Unlink />
+              Unlink
+            </ContextMenuItem>
+          </ContextMenuContent>
+        </ContextMenu>
+        <Combobox
+          v-else
+          :items="goals"
+          @select="
+            (item) => {
+              linkGoal(item.id)
+            }
+          "
+          :create="createNewGoal"
+          empty="No goals found."
+          placeholder="Search a goal"
+        >
+          <Button variant="ghost" size="xs">
+            <Link />
+            <span class="text-muted-foreground italic">none</span>
+          </Button>
+        </Combobox>
       </div>
       <!-- Time spent on task -->
       <div class="flex items-center gap-2">

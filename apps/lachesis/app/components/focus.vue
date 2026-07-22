@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useDebounceFn, useIntervalFn } from '@vueuse/core'
 import { ChevronsUpDown, FastForward, Pause, Play, RefreshCw } from 'lucide-vue-next'
+import { toast } from 'vue-sonner'
 import { formatDuration, Stopwatch } from '~/lib/time'
 
 const { method } = defineProps<{ method: 'stopwatch' | 'pomodoro' }>()
@@ -9,13 +10,18 @@ const { focusSession, updateFocusSession } = useDay(getClientDate())
 
 // ─── Task ───────────────────────────────────────────────────────────────────
 
-const { tasks, updateTask } = useTasks()
+const { tasks, updateTask, createTask } = useTasks()
 const taskId = ref<number | null>(null)
 const task = computed(() => tasks.value.find((t) => t.id === taskId.value))
 
 const selectTask = (id: number) => {
   stopwatch.reset()
   taskId.value = id
+}
+
+const createNewTask = async (search: string) => {
+  const error = await createTask({ name: search })
+  if (error) toast.error('Failed to create task!', { description: error.message })
 }
 
 // ─── Shared stopwatch class ─────────────────────────────────────────────────
@@ -120,6 +126,7 @@ function skipPomo() {
     <Combobox
       :items="tasks"
       @select="(i) => selectTask(i.id)"
+      :create="createNewTask"
       :checked-item-id="task?.id"
       empty="No tasks found."
       placeholder="Search a task"
@@ -176,11 +183,7 @@ function skipPomo() {
     >
       <RefreshCw />
     </Button>
-    <Button
-      size="icon-lg"
-      class="size-14 rounded-full"
-      @click="stopwatch.toggle()"
-    >
+    <Button size="icon-lg" class="size-14 rounded-full" @click="stopwatch.toggle()">
       <Pause v-if="stopwatch.running.value" />
       <Play v-else />
     </Button>

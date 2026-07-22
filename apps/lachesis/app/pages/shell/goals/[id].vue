@@ -59,7 +59,7 @@ const save = async () => {
   )
 }
 
-const { tasks, updateTask } = useTasks()
+const { tasks, updateTask, createTask } = useTasks()
 const goalTasks = computed(() => tasks.value.filter((t) => t.goalId === goal.value?.id))
 const goalTasksDone = computed(() => goalTasks.value.filter((t) => t.status === 'done').length)
 
@@ -69,6 +69,11 @@ const linkTask = async (taskId: number, unlink?: boolean) => {
     if (error) toast.error('Failed to link task.')
     else toast.success(unlink ? 'Task unlinked.' : 'Task linked.')
   }
+}
+
+const createNewTask = async (search: string) => {
+  const error = await createTask({ name: search })
+  if (error) toast.error('Failed to create task!', { description: error.message })
 }
 
 const deleteGoal = async () => {
@@ -168,6 +173,7 @@ const deleteGoal = async () => {
               <Combobox
                 :items="tasks.filter((t) => t.goalId === null)"
                 @select="(t) => linkTask(t.id)"
+                :create="createNewTask"
                 empty="No tasks found."
                 placeholder="Search a task"
                 align="end"
