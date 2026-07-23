@@ -55,6 +55,30 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/access_token_controller').default['destroy']>>>
     }
   }
+  'verify.email.request': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/verify/email/request'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/verify_email_controller').default['request']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/verify_email_controller').default['request']>>>
+    }
+  }
+  'verify.email': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/verify/email/:token'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { token: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/verify_email_controller').default['verify']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/verify_email_controller').default['verify']>>>
+    }
+  }
   'account.profile.show': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/account/profile'

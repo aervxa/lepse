@@ -16,6 +16,11 @@ export interface ApiDefinition {
       destroy: typeof routes['auth.access_token.destroy']
     }
   }
+  verify: {
+    email: typeof routes['verify.email'] & {
+      request: typeof routes['verify.email.request']
+    }
+  }
   account: {
     profile: {
       show: typeof routes['account.profile.show']

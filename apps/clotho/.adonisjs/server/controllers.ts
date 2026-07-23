@@ -16,4 +16,5 @@ export const controllers = {
   Scribbles: () => import('#controllers/scribbles_controller'),
   TaskDays: () => import('#controllers/task_days_controller'),
   Tasks: () => import('#controllers/tasks_controller'),
+  VerifyEmail: () => import('#controllers/verify_email_controller'),
 }

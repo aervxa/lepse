@@ -28,6 +28,15 @@ router
       .as('auth')
 
     router
+      .get('verify/email/request', [controllers.VerifyEmail, 'request'])
+      .as('verify.email.request')
+      .use(middleware.auth())
+    router
+      .get('verify/email/:token', [controllers.VerifyEmail, 'verify'])
+      .as('verify.email')
+      .where('token', { match: /^.{64}$/, cast: String })
+
+    router
       .group(() => {
         router
           .group(() => {

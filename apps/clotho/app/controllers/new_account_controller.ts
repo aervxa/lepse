@@ -13,6 +13,7 @@ export default class NewAccountController {
       password,
     })
     const token = await User.accessTokens.create(user)
+    await user.sendVerifyEmail()
 
     return serialize({
       user: UserTransformer.transform(user),

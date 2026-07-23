@@ -6,6 +6,7 @@ type ButtonProps = InstanceType<typeof Button>['$props']
 interface Props extends /* @vue-ignore */ ButtonProps {
   action?: () => Promise<unknown>
   loading?: boolean
+  forceSlot?: boolean
 }
 const props = defineProps<Props>()
 if (props.action && props.loading) {
@@ -25,7 +26,6 @@ let timeout: NodeJS.Timeout
 watch(
   () => props.loading,
   () => {
-    if (props.loading === undefined) return
     if (props.loading) {
       timeout = setTimeout(() => {
         isLoading.value = true
@@ -47,6 +47,7 @@ defineExpose({
   <Button :disabled="isLoading" @click="run">
     <slot v-if="isLoading" name="loader">
       <LoaderCircle class="animate-spin" />
+      <slot v-if="props.forceSlot" />
     </slot>
     <slot v-else />
   </Button>

@@ -61,6 +61,23 @@ export const useAuth = () => {
     }
   }
 
+  const verifyEmailRequest = async () => {
+    const [, error] = await $clotho.api.verify.email.request({}).safe()
+    if (error) {
+      console.error(error)
+      return error
+    }
+  }
+  const verifyEmail = async (token: string) => {
+    const [payload, error] = await $clotho.api.verify.email({ params: { token } }).safe()
+    if (payload) {
+      user.value = payload.data
+    } else {
+      console.error(error)
+      return error
+    }
+  }
+
   const updateProfile = async (
     body: Parameters<typeof $clotho.api.account.profile.update>['0']['body']
   ) => {
@@ -73,5 +90,14 @@ export const useAuth = () => {
     }
   }
 
-  return { user, signup, login, logout, refreshUser, updateProfile }
+  return {
+    user,
+    signup,
+    login,
+    logout,
+    refreshUser,
+    verifyEmail,
+    verifyEmailRequest,
+    updateProfile,
+  }
 }

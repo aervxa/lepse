@@ -30,6 +30,18 @@ const routes = {
     tokens: [{"old":"/api/v1/auth/logout","type":0,"val":"api","end":""},{"old":"/api/v1/auth/logout","type":0,"val":"v1","end":""},{"old":"/api/v1/auth/logout","type":0,"val":"auth","end":""},{"old":"/api/v1/auth/logout","type":0,"val":"logout","end":""}],
     types: placeholder as Registry['auth.access_token.destroy']['types'],
   },
+  'verify.email.request': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/verify/email/request',
+    tokens: [{"old":"/api/v1/verify/email/request","type":0,"val":"api","end":""},{"old":"/api/v1/verify/email/request","type":0,"val":"v1","end":""},{"old":"/api/v1/verify/email/request","type":0,"val":"verify","end":""},{"old":"/api/v1/verify/email/request","type":0,"val":"email","end":""},{"old":"/api/v1/verify/email/request","type":0,"val":"request","end":""}],
+    types: placeholder as Registry['verify.email.request']['types'],
+  },
+  'verify.email': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/verify/email/:token',
+    tokens: [{"old":"/api/v1/verify/email/:token","type":0,"val":"api","end":""},{"old":"/api/v1/verify/email/:token","type":0,"val":"v1","end":""},{"old":"/api/v1/verify/email/:token","type":0,"val":"verify","end":""},{"old":"/api/v1/verify/email/:token","type":0,"val":"email","end":""},{"old":"/api/v1/verify/email/:token","type":1,"val":"token","end":""}],
+    types: placeholder as Registry['verify.email']['types'],
+  },
   'account.profile.show': {
     methods: ["GET","HEAD"],
     pattern: '/api/v1/account/profile',

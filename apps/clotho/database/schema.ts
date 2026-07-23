@@ -215,8 +215,27 @@ export class TaskSchema extends BaseModel {
   declare userId: number
 }
 
+export class TokenSchema extends BaseModel {
+  static $columns = ['createdAt', 'expiresAt', 'id', 'token', 'type', 'updatedAt', 'userId'] as const
+  $columns = TokenSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column.dateTime()
+  declare expiresAt: DateTime | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare token: string
+  @column()
+  declare type: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
+}
+
 export class UserSchema extends BaseModel {
-  static $columns = ['avatar', 'backgroundId', 'createdAt', 'email', 'fullName', 'id', 'password', 'updatedAt'] as const
+  static $columns = ['avatar', 'backgroundId', 'createdAt', 'email', 'emailVerified', 'fullName', 'id', 'password', 'updatedAt'] as const
   $columns = UserSchema.$columns
   @column()
   declare avatar: string | null
@@ -226,6 +245,8 @@ export class UserSchema extends BaseModel {
   declare createdAt: DateTime
   @column()
   declare email: string
+  @column()
+  declare emailVerified: boolean
   @column()
   declare fullName: string | null
   @column({ isPrimary: true })
