@@ -38,14 +38,14 @@ const onSubmit = handleSubmit(async (values) => {
 <template>
   <div class="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
     <div class="flex w-full max-w-sm flex-col gap-6">
-      <a href="/" class="flex items-center gap-2 self-center font-medium">
+      <NuxtLink to="/" class="flex items-center gap-2 self-center font-medium">
         <div
           class="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md"
         >
           <Eye class="size-4" />
         </div>
         Lepse
-      </a>
+      </NuxtLink>
 
       <Card>
         <CardHeader class="text-center">
@@ -91,7 +91,7 @@ const onSubmit = handleSubmit(async (values) => {
                 <Button type="submit" class="w-full" :disabled="isSubmitting">Login</Button>
                 <p class="text-muted-foreground text-center text-sm">
                   Don't have an account?
-                  <a href="/signup" class="text-foreground underline">Sign up</a>
+                  <NuxtLink to="/signup" class="text-foreground underline">Sign up</NuxtLink>
                 </p>
               </Field>
             </FieldGroup>
