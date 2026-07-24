@@ -17,7 +17,10 @@ export const useBackgrounds = () => {
   }
 
   if (backgrounds.value.length === 0) {
-    fetchBackgrounds()
+    fetchBackgrounds().then(() => {
+      const ids = backgrounds.value.map((bg) => bg.id)
+      activeBackgroundId.value = ids[Math.floor(Math.random() * ids.length)]!
+    })
   }
 
   const activeBackgroundId = useState<number | null>('activeBackgroundId', () => null)
@@ -26,7 +29,8 @@ export const useBackgrounds = () => {
     user,
     () => {
       // prevents activeBackgroundId from being updated while selecting a background (incase smt else updates user, triggering this)
-      if (!activeBackgroundIdLock.value) activeBackgroundId.value = user.value?.backgroundId ?? null
+      if (!activeBackgroundIdLock.value && user.value?.backgroundId)
+        activeBackgroundId.value = user.value?.backgroundId
     },
     { immediate: true }
   )

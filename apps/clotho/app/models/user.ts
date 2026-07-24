@@ -22,11 +22,6 @@ export default class User extends compose(UserSchema, withAuthFinder(hash)) {
     return `${first.slice(0, 2)}`.toUpperCase()
   }
 
-  @beforeCreate()
-  static async assignBackground(user: User) {
-    user.backgroundId = await Background.getRandomId()
-  }
-
   @hasMany(() => Token)
   declare tokens: HasMany<typeof Token>
   @hasMany(() => Token, { onQuery: (query) => query.where('type', 'VERIFY_EMAIL') })
