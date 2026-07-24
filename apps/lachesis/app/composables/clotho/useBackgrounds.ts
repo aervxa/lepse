@@ -16,14 +16,22 @@ export const useBackgrounds = () => {
     }
   }
 
+  const getRandomBackgroundId = () => {
+    if (backgrounds.value.length > 0) {
+      const ids = backgrounds.value.map((bg) => bg.id)
+      return ids[Math.floor(Math.random() * ids.length)]!
+    } else {
+      return -1
+    }
+  }
+
   if (backgrounds.value.length === 0) {
     fetchBackgrounds().then(() => {
-      const ids = backgrounds.value.map((bg) => bg.id)
-      activeBackgroundId.value = ids[Math.floor(Math.random() * ids.length)]!
+      activeBackgroundId.value = getRandomBackgroundId()
     })
   }
 
-  const activeBackgroundId = useState<number | null>('activeBackgroundId', () => null)
+  const activeBackgroundId = useState<number>('activeBackgroundId')
   const activeBackgroundIdLock = useState('activeBackgroundIdLock', () => false)
   watch(
     user,
@@ -39,7 +47,7 @@ export const useBackgrounds = () => {
     async (body: Parameters<typeof $clotho.api.backgrounds.select>['0']['body']) => {
       const [, error] = await $clotho.api.backgrounds.select({ body }).safe()
       if (error) {
-        activeBackgroundId.value = user.value?.backgroundId ?? null
+        activeBackgroundId.value = user.value?.backgroundId ?? getRandomBackgroundId()
         console.error(error)
         return error
       } else {
