@@ -1,0 +1,26 @@
+@mjml()
+  <mjml>
+    <mj-body>
+      <mj-section>
+        <mj-column>
+          <mj-text font-size="20px" font-weight="600" align="center">
+            Welcome to {{ brandName }}, {{ user.fullName }}!
+          </mj-text>
+          <mj-text align="center">
+            <span style="opacity: 0.8" font-weight="500">
+              Please verify your email by visiting the link below
+            </span>
+          </mj-text>
+          <mj-button href="{{ url }}">
+            Verify Email
+          </mj-button>
+          <mj-text align="center" font-size="10px" padding-top="16px">
+            <span style="opacity: 0.6">
+              If you didn't request verification, you can safely ignore this.
+            </span>
+          </mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-body>
+  </mjml>
+@end

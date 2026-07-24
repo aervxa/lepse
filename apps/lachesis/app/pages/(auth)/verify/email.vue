@@ -4,7 +4,10 @@ import { CheckCircle2, LoaderCircle, MailCheck, XCircle } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
 
 definePageMeta({
-  validate: (route) => typeof route.query.token === 'string' && route.query.token.length === 64,
+  validate: (route) => {
+    console.log(typeof route.query.token, route.query.token?.length, route.query.token)
+    return typeof route.query.token === 'string' && route.query.token.length === 64
+  },
 })
 
 const route = useRoute()

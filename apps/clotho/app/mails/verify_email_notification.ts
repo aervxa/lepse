@@ -20,6 +20,7 @@ export default class VerifyEmailNotification extends BaseMail {
     const url = env.get('FRONTEND_URL') + `/verify/email?token=${this.token}`
     this.message
       .to(this.user.email)
+      .subject('Please verify your email!')
       .htmlView('emails/verify_email_html', { user: this.user, url })
       .textView('emails/verify_email_text', { user: this.user, url })
   }
