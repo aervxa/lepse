@@ -38,7 +38,7 @@ const search = ref('')
           <CommandEmpty :class="{ 'flex flex-col items-center gap-2': props.create }">
             {{ props.empty }}
             <LoadingButton
-              v-if="props.create"
+              v-if="props.create && search"
               variant="outline"
               size="xs"
               :action="

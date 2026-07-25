@@ -109,6 +109,20 @@ onBeforeUnmount(() => {
         />
       </div>
       <slot />
+
+      <Item
+        v-if="!user?.emailVerified"
+        variant="outline"
+        class="bg-card/90 absolute top-4 left-1/2 w-sm -translate-x-1/2 backdrop-blur-lg"
+      >
+        <ItemContent>
+          <ItemTitle>Please verify your email!</ItemTitle>
+          <ItemDescription>Check if we already sent you a link</ItemDescription>
+        </ItemContent>
+        <ItemActions>
+          <EmailVerifyButton />
+        </ItemActions>
+      </Item>
     </section>
   </main>
 </template>

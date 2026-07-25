@@ -76,7 +76,7 @@ const { user } = useAuth()
           </SidebarContent>
         </Sidebar>
 
-        <section class="md:bg-background flex flex-1 flex-col gap-8 p-6">
+        <section class="md:bg-background relative flex flex-1 flex-col gap-8 p-6">
           <NuxtPage />
         </section>
       </SidebarProvider>

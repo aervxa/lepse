@@ -53,6 +53,12 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
+  <EmailVerifiedOnly>
+    <PopoverClose as-child>
+      <Button>Close</Button>
+    </PopoverClose>
+  </EmailVerifiedOnly>
+
   <div class="flex size-full flex-1 flex-col" :class="[source === 'drawer' && 'mx-auto max-w-sm']">
     <AnimatePresence mode="popLayout">
       <Motion

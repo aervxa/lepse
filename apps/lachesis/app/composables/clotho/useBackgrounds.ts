@@ -16,10 +16,12 @@ export const useBackgrounds = () => {
     }
   }
 
+  let randomBackgroundId: number
   const getRandomBackgroundId = () => {
     if (backgrounds.value.length > 0) {
       const ids = backgrounds.value.map((bg) => bg.id)
-      return ids[Math.floor(Math.random() * ids.length)]!
+      randomBackgroundId = ids[Math.floor(Math.random() * ids.length)]!
+      return randomBackgroundId
     } else {
       return -1
     }
@@ -47,7 +49,7 @@ export const useBackgrounds = () => {
     async (body: Parameters<typeof $clotho.api.backgrounds.select>['0']['body']) => {
       const [, error] = await $clotho.api.backgrounds.select({ body }).safe()
       if (error) {
-        activeBackgroundId.value = user.value?.backgroundId ?? getRandomBackgroundId()
+        activeBackgroundId.value = user.value?.backgroundId ?? randomBackgroundId
         console.error(error)
         return error
       } else {

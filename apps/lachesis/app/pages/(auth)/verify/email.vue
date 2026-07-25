@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useCountdown } from '@vueuse/core'
 import { CheckCircle2, LoaderCircle, MailCheck, XCircle } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
 
@@ -13,11 +12,10 @@ definePageMeta({
 const route = useRoute()
 const token = route.query.token as string
 
-const { user, verifyEmail, verifyEmailRequest } = useAuth()
+const { user, verifyEmail } = useAuth()
 const isVerifying = ref(false)
 const hasVerified = ref(false)
 const hasFailed = ref(false)
-const { remaining, start } = useCountdown(60)
 const hasRequested = ref(false)
 
 onMounted(async () => {
@@ -29,21 +27,10 @@ onMounted(async () => {
       description: error.message,
     })
     hasFailed.value = true
-    user.value && start()
   } else {
     hasVerified.value = true
   }
 })
-
-const request = async () => {
-  const error = await verifyEmailRequest()
-  if (error) {
-    toast.error('Failed to send new link!', { description: 'please try again' })
-  } else {
-    toast.success('New verification link sent!')
-    hasRequested.value = true
-  }
-}
 </script>
 
 <template>
@@ -72,7 +59,7 @@ const request = async () => {
             ? 'You may close this now!'
             : hasFailed
               ? user
-                ? `Don't worry, you can request a new link ${remaining > 0 ? `after ${remaining} seconds` : 'now'}`
+                ? "Don't worry, you can request a new link shortly"
                 : "Don't worry, you can request a new link once ur logged in"
               : 'Please wait a moment'
         }}
@@ -80,14 +67,7 @@ const request = async () => {
     </EmptyHeader>
     <EmptyContent v-if="!isVerifying">
       <template v-if="user">
-        <LoadingButton
-          v-if="hasFailed && !hasRequested"
-          :disabled="remaining > 0"
-          :action="request"
-          force-slot
-        >
-          {{ remaining || 'Request new link' }}
-        </LoadingButton>
+        <EmailVerifyButton v-if="hasFailed && !hasRequested" @success="hasRequested = true" />
 
         <Button v-else-if="hasVerified" variant="secondary" as-child>
           <NuxtLink to="/">Go to Homepage</NuxtLink>

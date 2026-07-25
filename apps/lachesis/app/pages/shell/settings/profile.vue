@@ -27,7 +27,7 @@ const resetName = () => {
   name.value = user.value?.fullName ?? ''
 }
 
-const avatarDirty = computed(() => avatar.value !== user.value?.avatarUrl)
+const avatarDirty = computed(() => (avatar.value || null) !== user.value?.avatarUrl)
 const nameDirty = computed(() => name.value !== user.value?.fullName)
 const dirty = computed(() => avatarDirty.value || nameDirty.value)
 const reset = () => {
@@ -60,6 +60,12 @@ const save = async () => {
 </script>
 
 <template>
+  <EmailVerifiedOnly>
+    <DialogClose as-child>
+      <Button>Close</Button>
+    </DialogClose>
+  </EmailVerifiedOnly>
+
   <DialogTitle>Edit profile</DialogTitle>
 
   <!-- Avatar -->

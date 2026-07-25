@@ -21,6 +21,12 @@ const select = async (id: number) => {
 </script>
 
 <template>
+  <EmailVerifiedOnly>
+    <DialogClose as-child>
+      <Button>Close</Button>
+    </DialogClose>
+  </EmailVerifiedOnly>
+
   <DialogTitle>Backgrounds</DialogTitle>
 
   <div class="relative -m-6 flex-1">
