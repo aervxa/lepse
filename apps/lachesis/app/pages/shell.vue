@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useFullscreen, useLocalStorage } from '@vueuse/core'
-import { Expand, Lightbulb, LightbulbOff, Shrink, Wallpaper } from 'lucide-vue-next'
+import { Expand, Lightbulb, LightbulbOff, Shrink } from 'lucide-vue-next'
 import { getDailyQuote } from '~/lib/quotes'
 
 definePageMeta({

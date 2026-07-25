@@ -24,10 +24,6 @@ export const useDay = (date?: string) => {
     }
   }
 
-  if (currentDayTasks.value.length === 0) {
-    fetchDayTasks()
-  }
-
   const createDayTask = async (
     body: Parameters<typeof $clotho.api.day.tasks.store>['0']['body']
   ) => {

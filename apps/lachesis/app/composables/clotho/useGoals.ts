@@ -2,6 +2,7 @@ import type { Data } from '@lepse/clotho/data'
 
 export const useGoals = () => {
   const { $clotho } = useNuxtApp()
+  const { user } = useAuth()
   const goals = useState<Data.Goal[]>('goals', () => [])
 
   const fetchGoals = async () => {
@@ -14,7 +15,7 @@ export const useGoals = () => {
     }
   }
 
-  if (goals.value.length === 0) {
+  if (goals.value.length === 0 && user.value?.emailVerified) {
     fetchGoals()
   }
 

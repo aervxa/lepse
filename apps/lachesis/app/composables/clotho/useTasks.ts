@@ -2,6 +2,7 @@ import type { Data } from '@lepse/clotho/data'
 
 export const useTasks = () => {
   const { $clotho } = useNuxtApp()
+  const { user } = useAuth()
   const tasks = useState<Data.Task[]>('tasks', () => [])
 
   const fetchTasks = async () => {
@@ -14,7 +15,7 @@ export const useTasks = () => {
     }
   }
 
-  if (tasks.value.length === 0) {
+  if (tasks.value.length === 0 && user.value?.emailVerified) {
     fetchTasks()
   }
 
