@@ -18,7 +18,7 @@ export default defineNuxtConfig({
     },
   },
   compatibilityDate: '2025-07-15',
-  css: ['./app/assets/css/main.css'],
+  css: ['~/assets/css/main.css'],
   // Enables the development server to be discoverable by other devices when running on iOS physical devices
   devServer: {
     host: '0.0.0.0',
