@@ -103,6 +103,30 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/profile_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'backgrounds.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/backgrounds'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/backgrounds_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/backgrounds_controller').default['index']>>>
+    }
+  }
+  'backgrounds.select': {
+    methods: ["PATCH"]
+    pattern: '/api/v1/backgrounds/select'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/background').selectBackgroundValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/background').selectBackgroundValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/backgrounds_controller').default['select']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/backgrounds_controller').default['select']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'day.tasks.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/day/:date/tasks'
@@ -173,42 +197,6 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/focus_sessions_controller').default['destroy']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/focus_sessions_controller').default['destroy']>>>
-    }
-  }
-  'day.journal.show': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/day/:date/journal'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { date: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/journals_controller').default['show']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/journals_controller').default['show']>>>
-    }
-  }
-  'day.journal.update': {
-    methods: ["PATCH"]
-    pattern: '/api/v1/day/:date/journal'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/journal').updateJournalValidator)>>
-      paramsTuple: [ParamValue]
-      params: { date: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/journal').updateJournalValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/journals_controller').default['update']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/journals_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'journals.index': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/journals'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/journals_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/journals_controller').default['index']>>>
     }
   }
   'focus_sessions.index': {
@@ -389,234 +377,6 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/goals_controller').default['destroy']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/goals_controller').default['destroy']>>>
-    }
-  }
-  'scribbles.index': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/scribbles'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['index']>>>
-    }
-  }
-  'scribbles.create': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/scribbles/create'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['create']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['create']>>>
-    }
-  }
-  'scribbles.store': {
-    methods: ["POST"]
-    pattern: '/api/v1/scribbles'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/scribble').createScribbleValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/scribble').createScribbleValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'scribbles.show': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/scribbles/:id'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['show']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['show']>>>
-    }
-  }
-  'scribbles.edit': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/scribbles/:id/edit'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['edit']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['edit']>>>
-    }
-  }
-  'scribbles.update': {
-    methods: ["PUT","PATCH"]
-    pattern: '/api/v1/scribbles/:id'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/scribble').updateScribbleValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/scribble').updateScribbleValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['update']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'scribbles.destroy': {
-    methods: ["DELETE"]
-    pattern: '/api/v1/scribbles/:id'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/scribbles_controller').default['destroy']>>>
-    }
-  }
-  'habits.index': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/habits'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['index']>>>
-    }
-  }
-  'habits.create': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/habits/create'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['create']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['create']>>>
-    }
-  }
-  'habits.store': {
-    methods: ["POST"]
-    pattern: '/api/v1/habits'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/habit').createHabitValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/habit').createHabitValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'habits.show': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/habits/:id'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['show']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['show']>>>
-    }
-  }
-  'habits.edit': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/habits/:id/edit'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['edit']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['edit']>>>
-    }
-  }
-  'habits.update': {
-    methods: ["PUT","PATCH"]
-    pattern: '/api/v1/habits/:id'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/habit').updateHabitValidator)>>
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQuery<InferInput<(typeof import('#validators/habit').updateHabitValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['update']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'habits.destroy': {
-    methods: ["DELETE"]
-    pattern: '/api/v1/habits/:id'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/habits_controller').default['destroy']>>>
-    }
-  }
-  'habits.increment': {
-    methods: ["PATCH"]
-    pattern: '/api/v1/habits/:id/increment'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/habit_periods_controller').default['increment']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/habit_periods_controller').default['increment']>>>
-    }
-  }
-  'habits.decrement': {
-    methods: ["PATCH"]
-    pattern: '/api/v1/habits/:id/decrement'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/habit_periods_controller').default['decrement']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/habit_periods_controller').default['decrement']>>>
-    }
-  }
-  'habits.count': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/habits/:id/count'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: ExtractQueryForGet<InferInput<(typeof import('#validators/date_range').optionalDateRangeValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/habit_periods_controller').default['count']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/habit_periods_controller').default['count']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'backgrounds.index': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/backgrounds'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/backgrounds_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/backgrounds_controller').default['index']>>>
-    }
-  }
-  'backgrounds.select': {
-    methods: ["PATCH"]
-    pattern: '/api/v1/backgrounds/select'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/background').selectBackgroundValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/background').selectBackgroundValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/backgrounds_controller').default['select']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/backgrounds_controller').default['select']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
 }

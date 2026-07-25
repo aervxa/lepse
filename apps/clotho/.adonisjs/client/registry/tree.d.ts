@@ -27,6 +27,10 @@ export interface ApiDefinition {
       update: typeof routes['account.profile.update']
     }
   }
+  backgrounds: {
+    index: typeof routes['backgrounds.index']
+    select: typeof routes['backgrounds.select']
+  }
   day: {
     tasks: {
       index: typeof routes['day.tasks.index']
@@ -38,13 +42,6 @@ export interface ApiDefinition {
       update: typeof routes['day.session.update']
       destroy: typeof routes['day.session.destroy']
     }
-    journal: {
-      show: typeof routes['day.journal.show']
-      update: typeof routes['day.journal.update']
-    }
-  }
-  journals: {
-    index: typeof routes['journals.index']
   }
   focusSessions: {
     index: typeof routes['focus_sessions.index']
@@ -66,30 +63,5 @@ export interface ApiDefinition {
     edit: typeof routes['goals.edit']
     update: typeof routes['goals.update']
     destroy: typeof routes['goals.destroy']
-  }
-  scribbles: {
-    index: typeof routes['scribbles.index']
-    create: typeof routes['scribbles.create']
-    store: typeof routes['scribbles.store']
-    show: typeof routes['scribbles.show']
-    edit: typeof routes['scribbles.edit']
-    update: typeof routes['scribbles.update']
-    destroy: typeof routes['scribbles.destroy']
-  }
-  habits: {
-    index: typeof routes['habits.index']
-    create: typeof routes['habits.create']
-    store: typeof routes['habits.store']
-    show: typeof routes['habits.show']
-    edit: typeof routes['habits.edit']
-    update: typeof routes['habits.update']
-    destroy: typeof routes['habits.destroy']
-    increment: typeof routes['habits.increment']
-    decrement: typeof routes['habits.decrement']
-    count: typeof routes['habits.count']
-  }
-  backgrounds: {
-    index: typeof routes['backgrounds.index']
-    select: typeof routes['backgrounds.select']
   }
 }

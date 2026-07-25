@@ -18,6 +18,7 @@ router.get('/', () => {
 
 router
   .group(() => {
+    // Authentication
     router
       .group(() => {
         router.post('signup', [controllers.NewAccount, 'store'])
@@ -27,6 +28,7 @@ router
       .prefix('auth')
       .as('auth')
 
+    // Verification
     router
       .get('verify/email/request', [controllers.VerifyEmail, 'request'])
       .as('verify.email.request')
@@ -36,69 +38,84 @@ router
       .as('verify.email')
       .where('token', { match: /^.{64}$/, cast: String })
 
+    // Authenticated users only
     router
       .group(() => {
         router
           .group(() => {
             router.get('profile', [controllers.Profile, 'show'])
-            router.patch('profile', [controllers.Profile, 'update'])
+            router.patch('profile', [controllers.Profile, 'update']).use(middleware.verifiedEmail())
           })
           .prefix('account')
           .as('account')
 
-        router
-          .group(() => {
-            router
-              .group(() => {
-                router.get('', [controllers.TaskDays, 'index']).as('index')
-                router.post('', [controllers.TaskDays, 'store']).as('store')
-                router.delete(':id', [controllers.TaskDays, 'destroy']).as('destroy')
-              })
-              .prefix('tasks')
-              .as('tasks')
-
-            router
-              .group(() => {
-                router.get('', [controllers.FocusSessions, 'show']).as('show')
-                router.patch('', [controllers.FocusSessions, 'update']).as('update')
-                router.delete('', [controllers.FocusSessions, 'destroy']).as('destroy')
-              })
-              .prefix('session')
-              .as('session')
-
-            router
-              .group(() => {
-                router.get('', [controllers.Journals, 'show']).as('show')
-                router.patch('', [controllers.Journals, 'update']).as('update')
-              })
-              .prefix('journal')
-              .as('journal')
-          })
-          .prefix('day/:date')
-          .where('date', { match: DATE_REGEX })
-          .as('day')
-
-        // Have index (listing) have it's own endpoint since it doesn't belong in a specific date
-        router.get('journals', [controllers.Journals, 'index'])
-        router.get('focus-sessions', [controllers.FocusSessions, 'index'])
-
-        router.resource('tasks', controllers.Tasks).use(['update'], middleware.clientDate())
-        router.resource('goals', controllers.Goals)
-        router.resource('scribbles', controllers.Scribbles)
-
-        router.resource('habits', controllers.Habits).use(['update'], middleware.clientDate())
-        router
-          .group(() => {
-            router.patch('increment', [controllers.HabitPeriods, 'increment']).as('increment')
-            router.patch('decrement', [controllers.HabitPeriods, 'decrement']).as('decrement')
-            router.get('count', [controllers.HabitPeriods, 'count']).as('count')
-          })
-          .prefix('habits/:id')
-          .as('habits')
-          .use(middleware.clientDate())
-
+        // Backgrounds
         router.get('backgrounds', [controllers.Backgrounds, 'index'])
-        router.patch('backgrounds/select', [controllers.Backgrounds, 'select'])
+        router
+          .patch('backgrounds/select', [controllers.Backgrounds, 'select'])
+          .use(middleware.verifiedEmail())
+
+        // Verified users only (main app features)
+        router
+          .group(() => {
+            // Date specific
+            router
+              .group(() => {
+                // Taskdays
+                router
+                  .group(() => {
+                    router.get('', [controllers.TaskDays, 'index']).as('index')
+                    router.post('', [controllers.TaskDays, 'store']).as('store')
+                    router.delete(':id', [controllers.TaskDays, 'destroy']).as('destroy')
+                  })
+                  .prefix('tasks')
+                  .as('tasks')
+
+                // Focus sessions
+                router
+                  .group(() => {
+                    router.get('', [controllers.FocusSessions, 'show']).as('show')
+                    router.patch('', [controllers.FocusSessions, 'update']).as('update')
+                    router.delete('', [controllers.FocusSessions, 'destroy']).as('destroy')
+                  })
+                  .prefix('session')
+                  .as('session')
+
+                // Journals
+                // router
+                //   .group(() => {
+                //     router.get('', [controllers.Journals, 'show']).as('show')
+                //     router.patch('', [controllers.Journals, 'update']).as('update')
+                //   })
+                //   .prefix('journal')
+                //   .as('journal')
+              })
+              .prefix('day/:date')
+              .where('date', { match: DATE_REGEX })
+              .as('day')
+
+            // Have index (listing) have it's own endpoint since it doesn't belong in a specific date
+            // router.get('journals', [controllers.Journals, 'index'])
+            router.get('focus-sessions', [controllers.FocusSessions, 'index'])
+
+            // Habit periods
+            // router
+            //   .group(() => {
+            //     router.patch('increment', [controllers.HabitPeriods, 'increment']).as('increment')
+            //     router.patch('decrement', [controllers.HabitPeriods, 'decrement']).as('decrement')
+            //     router.get('count', [controllers.HabitPeriods, 'count']).as('count')
+            //   })
+            //   .prefix('habits/:id')
+            //   .as('habits')
+            //   .use(middleware.clientDate())
+
+            // Resources
+            router.resource('tasks', controllers.Tasks).use(['update'], middleware.clientDate())
+            router.resource('goals', controllers.Goals)
+            // router.resource('scribbles', controllers.Scribbles)
+            // router.resource('habits', controllers.Habits).use(['update'], middleware.clientDate())
+          })
+          .use(middleware.verifiedEmail())
       })
       .use(middleware.auth())
   })

@@ -46,6 +46,7 @@ router.use([
  * the routes or the routes group.
  */
 export const middleware = router.named({
+  verifiedEmail: () => import('#middleware/verified_email_middleware'),
   clientDate: () => import('#middleware/client_date_middleware'),
   auth: () => import('#middleware/auth_middleware'),
 })
