@@ -24,7 +24,8 @@ export default class extends BaseSeeder {
       }
     }
 
-    logger.info('Seeding backgrounds...')
+    if (rows.length === 0) logger.warn('No backgrounds were retrieved!')
+    else logger.info(`Seeded ${rows.length} backgrounds...`)
     logger.debug({ backgrounds: rows }, 'Retrieved backgrounds:')
 
     // updateOrCreate rows for each background
