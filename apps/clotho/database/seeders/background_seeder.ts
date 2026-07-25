@@ -1,14 +1,14 @@
 import Background from '#models/background'
+import logger from '@adonisjs/core/services/logger'
 import { DriveFile } from '@adonisjs/drive'
 import drive from '@adonisjs/drive/services/main'
 import { BaseSeeder } from '@adonisjs/lucid/seeders'
-import { ModelAttributes } from '@adonisjs/lucid/types/model'
+import { type ModelAttributes } from '@adonisjs/lucid/types/model'
 
 export default class extends BaseSeeder {
   async run() {
     // Get list of all backgrounds from drive
     const backgrounds = await drive.use().listAll('backgrounds', { recursive: true })
-
     // Append each accordingly into rows
     const rows: Pick<ModelAttributes<Background>, 'key' | 'name' | 'style'>[] = []
     for (const background of backgrounds.objects) {
@@ -23,6 +23,9 @@ export default class extends BaseSeeder {
         })
       }
     }
+
+    logger.info('Seeding backgrounds...')
+    logger.debug({ backgrounds: rows }, 'Retrieved backgrounds:')
 
     // updateOrCreate rows for each background
     await Background.updateOrCreateMany('key', rows)
