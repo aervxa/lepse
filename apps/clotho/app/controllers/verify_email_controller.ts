@@ -20,7 +20,7 @@ export default class VerifyEmailController {
     return response.noContent()
   }
 
-  async verify({ params, response, serialize }: HttpContext) {
+  async verify({ params, response }: HttpContext) {
     const user = await Token.getUser(params.token)
 
     if (!user) {
@@ -32,6 +32,6 @@ export default class VerifyEmailController {
 
     await Token.expireAll(user, 'VERIFY_EMAIL')
 
-    return serialize(UserTransformer.transform(user))
+    return response.noContent()
   }
 }

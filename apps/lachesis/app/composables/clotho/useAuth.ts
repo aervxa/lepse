@@ -69,12 +69,12 @@ export const useAuth = () => {
     }
   }
   const verifyEmail = async (token: string) => {
-    const [payload, error] = await $clotho.api.verify.email({ params: { token } }).safe()
-    if (payload) {
-      user.value = payload.data
-    } else {
+    const [, error] = await $clotho.api.verify.email({ params: { token } }).safe()
+    if (error) {
       console.error(error)
       return error
+    } else {
+      refreshUser()
     }
   }
 
