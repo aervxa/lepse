@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useFullscreen, useLocalStorage } from '@vueuse/core'
 import { Copy, Expand, Lightbulb, LightbulbOff, Shrink } from 'lucide-vue-next'
+import { toast } from 'vue-sonner'
 import { getDailyQuote } from '~/lib/quotes'
 
 definePageMeta({
@@ -17,6 +18,17 @@ const {
   isSupported: isFullscreenSupported,
   toggle: toggleFullscreen,
 } = useFullscreen()
+
+const quote = useTemplateRef('quote')
+const copyQuote = async () => {
+  try {
+    if (!quote.value?.innerText) throw new Error('no quote elm')
+    await navigator.clipboard.writeText(quote.value.innerText)
+    toast.success('Quote copied!')
+  } catch {
+    toast.error("Couldn't copy quote :(")
+  }
+}
 </script>
 
 <template>
@@ -54,11 +66,13 @@ const {
       >
         <ContextMenu>
           <ContextMenuTrigger>
-            <p class="w-full max-w-[28ch] font-medium text-pretty">"{{ getDailyQuote() }}"</p>
+            <p ref="quote" class="w-full max-w-[28ch] font-medium text-pretty">
+              "{{ getDailyQuote() }}"
+            </p>
           </ContextMenuTrigger>
 
           <ContextMenuContent>
-            <ContextMenuItem>
+            <ContextMenuItem @select="copyQuote">
               <Copy />
               Copy
             </ContextMenuItem>
