@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useFullscreen, useLocalStorage } from '@vueuse/core'
-import { Expand, Lightbulb, LightbulbOff, Shrink } from 'lucide-vue-next'
+import { Copy, Expand, Lightbulb, LightbulbOff, Shrink } from 'lucide-vue-next'
 import { getDailyQuote } from '~/lib/quotes'
 
 definePageMeta({
@@ -23,7 +23,9 @@ const {
   <!-- Header | logo -->
   <div class="flex items-start justify-between gap-8">
     <img src="/logo.png" class="pointer-events-none h-10 not-dark:invert sm:h-12" />
-    <div class="flex items-start gap-4">
+    <div
+      class="from-background/40 via-background/20 -m-2 flex items-start gap-4 rounded-xs rounded-tr-2xl bg-linear-to-l to-transparent p-2 backdrop-blur-sm rtl:bg-linear-to-r"
+    >
       <FocusSessions />
       <Profile />
       <SettingsDialog />
@@ -42,17 +44,27 @@ const {
   <div class="flex items-end justify-between gap-8">
     <div>
       <BubbleNav />
-      <p
-        class="w-full max-w-[28ch] text-lg text-pretty"
+      <div
         :class="
           cn(
-            'opacity-80 peer-data-[float=true]:md:text-xl peer-data-[float=true]:md:font-medium',
-            'peer-data-[float=false]:absolute peer-data-[float=false]:bottom-[20vh] peer-data-[float=false]:left-1/2 peer-data-[float=false]:-translate-x-1/2 peer-data-[float=false]:text-center peer-data-[float=false]:font-normal peer-data-[float=false]:italic'
+            'from-background/40 via-background/20 peer-data-[float=false]:via-background/40 -m-2 rounded-xs bg-linear-to-r to-transparent px-3 py-2 text-lg opacity-80 backdrop-blur-sm peer-data-[float=false]:from-transparent peer-data-[float=true]:rounded-bl-2xl peer-data-[float=true]:md:text-xl rtl:bg-linear-to-l',
+            'peer-data-[float=false]:absolute peer-data-[float=false]:bottom-[20vh] peer-data-[float=false]:left-1/2 peer-data-[float=false]:-translate-x-1/2 peer-data-[float=false]:text-center peer-data-[float=false]:italic'
           )
         "
       >
-        "{{ getDailyQuote() }}"
-      </p>
+        <ContextMenu>
+          <ContextMenuTrigger>
+            <p class="w-full max-w-[28ch] font-medium text-pretty">"{{ getDailyQuote() }}"</p>
+          </ContextMenuTrigger>
+
+          <ContextMenuContent>
+            <ContextMenuItem>
+              <Copy />
+              Copy
+            </ContextMenuItem>
+          </ContextMenuContent>
+        </ContextMenu>
+      </div>
     </div>
 
     <div class="flex gap-2">
