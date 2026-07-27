@@ -111,7 +111,7 @@ onBeforeUnmount(() => {
       <slot />
 
       <Item
-        v-if="!user?.emailVerified"
+        v-if="user && !user?.emailVerified"
         variant="outline"
         class="bg-card/90 absolute top-4 left-1/2 w-sm -translate-x-1/2 backdrop-blur-lg"
       >
@@ -125,7 +125,7 @@ onBeforeUnmount(() => {
       </Item>
 
       <Item
-        v-if="!user?.backgroundId"
+        v-if="user && !user?.backgroundId"
         variant="outline"
         class="bg-card/80 absolute bottom-4 left-1/2 w-sm -translate-x-1/2 backdrop-blur-lg"
       >
