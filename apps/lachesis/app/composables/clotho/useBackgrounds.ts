@@ -29,7 +29,7 @@ export const useBackgrounds = () => {
 
   if (backgrounds.value.length === 0) {
     fetchBackgrounds().then(() => {
-      activeBackgroundId.value = getRandomBackgroundId()
+      activeBackgroundId.value = user.value?.backgroundId ?? getRandomBackgroundId()
     })
   }
 
