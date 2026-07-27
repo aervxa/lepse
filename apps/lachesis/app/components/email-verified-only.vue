@@ -5,7 +5,7 @@ const { user } = useAuth()
 <template>
   <div
     v-if="!user?.emailVerified"
-    class="absolute inset-0 isolate z-50 grid place-content-center bg-black/80 supports-backdrop-filter:backdrop-blur-xs"
+    class="absolute inset-0 z-50 grid place-content-center bg-black/80 backdrop-blur-xs"
   >
     <Empty>
       <EmptyHeader>

@@ -2,9 +2,13 @@
 import type { ContextMenuCheckboxItemEmits, ContextMenuCheckboxItemProps } from 'reka-ui'
 
 import type { HTMLAttributes } from 'vue'
+import { CheckIcon } from '@lucide/vue'
 import { reactiveOmit } from '@vueuse/core'
-import { CheckIcon } from 'lucide-vue-next'
-import { ContextMenuCheckboxItem, ContextMenuItemIndicator, useForwardPropsEmits } from 'reka-ui'
+import {
+  ContextMenuCheckboxItem,
+  ContextMenuItemIndicator,
+  useForwardPropsEmits,
+} from 'reka-ui'
 import { cn } from '@/utils'
 
 const props = defineProps<ContextMenuCheckboxItemProps & { class?: HTMLAttributes['class'] }>()
@@ -19,14 +23,12 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
   <ContextMenuCheckboxItem
     data-slot="context-menu-checkbox-item"
     v-bind="forwarded"
-    :class="
-      cn(
-        'focus:bg-accent focus:text-accent-foreground relative flex cursor-default items-center gap-2 rounded-xl py-2 pr-8 pl-3 text-sm outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 data-inset:pl-9.5 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*=size-])]:size-4',
-        props.class
-      )
-    "
+    :class="cn(
+      'focus:bg-accent focus:text-accent-foreground gap-2 rounded-xl py-2 pr-8 pl-3 text-sm data-inset:pl-9.5 [&_svg:not([class*=size-])]:size-4 relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0',
+      props.class,
+    )"
   >
-    <span class="pointer-events-none absolute right-2">
+    <span class="absolute right-2 pointer-events-none">
       <ContextMenuItemIndicator>
         <slot name="indicator-icon">
           <CheckIcon />
