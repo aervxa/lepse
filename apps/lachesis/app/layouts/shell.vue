@@ -57,7 +57,7 @@ onBeforeUnmount(() => {
       v-show="!isFullscreen"
       data-slot="titlebar"
       data-tauri-drag-region
-      class="-mb-2 flex h-8 items-center justify-between select-none"
+      class="-mb-2 flex h-8 items-center justify-between"
       @pointerdown.stop
     >
       <div class="pointer-events-none px-2">
@@ -105,7 +105,7 @@ onBeforeUnmount(() => {
         <Image
           v-if="activeBackgroundId"
           :src="backgrounds.find((b) => b.id === activeBackgroundId)?.url"
-          class="pointer-events-none -z-10 size-full object-cover select-none"
+          class="pointer-events-none -z-10 size-full object-cover"
         />
       </div>
       <slot />

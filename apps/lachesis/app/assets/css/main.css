@@ -140,7 +140,7 @@
     @apply border-border/50 outline-ring/50;
   }
   html {
-    @apply overflow-hidden;
+    @apply overflow-hidden select-none;
   }
   body {
     @apply text-foreground bg-transparent;
