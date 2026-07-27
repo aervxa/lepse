@@ -90,7 +90,6 @@ const { isFullscreen } = useFullscreen()
           ' ' +
           (isFullscreen ? 'left-4' : 'left-2'),
     ]"
-    :data-float="mode !== 'drawer-bottom'"
   >
     <Motion
       v-if="!open && mode !== 'drawer-bottom'"

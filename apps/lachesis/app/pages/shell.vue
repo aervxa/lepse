@@ -56,29 +56,23 @@ const copyQuote = async () => {
   <div class="flex items-end justify-between gap-8">
     <div>
       <BubbleNav />
-      <div
-        :class="
-          cn(
-            'from-background/40 via-background/20 peer-data-[float=false]:via-background/40 -m-2 rounded-xs bg-linear-to-r to-transparent px-3 py-2 text-lg opacity-80 backdrop-blur-sm peer-data-[float=false]:from-transparent peer-data-[float=true]:rounded-bl-2xl peer-data-[float=true]:md:text-xl rtl:bg-linear-to-l',
-            'peer-data-[float=false]:absolute peer-data-[float=false]:bottom-[20vh] peer-data-[float=false]:left-1/2 peer-data-[float=false]:-translate-x-1/2 peer-data-[float=false]:text-center peer-data-[float=false]:italic'
-          )
-        "
-      >
-        <ContextMenu>
-          <ContextMenuTrigger>
-            <p ref="quote" class="w-full max-w-[28ch] font-medium text-pretty">
-              "{{ getDailyQuote() }}"
-            </p>
-          </ContextMenuTrigger>
+      <ContextMenu>
+        <ContextMenuTrigger>
+          <p
+            ref="quote"
+            class="from-background/40 via-background/20 max-sm:via-background/40 -m-2 w-full max-w-[28ch] rounded-xs bg-linear-to-r to-transparent px-3 py-2 text-lg font-medium text-pretty opacity-80 backdrop-blur-sm max-sm:absolute max-sm:bottom-[20vh] max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:from-transparent max-sm:text-center max-sm:italic sm:rounded-bl-2xl md:text-xl rtl:bg-linear-to-l"
+          >
+            "{{ getDailyQuote() }}"
+          </p>
+        </ContextMenuTrigger>
 
-          <ContextMenuContent>
-            <ContextMenuItem @select="copyQuote">
-              <Copy />
-              Copy
-            </ContextMenuItem>
-          </ContextMenuContent>
-        </ContextMenu>
-      </div>
+        <ContextMenuContent>
+          <ContextMenuItem @select="copyQuote">
+            <Copy />
+            Copy
+          </ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
     </div>
 
     <div class="flex gap-2">
