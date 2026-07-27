@@ -123,6 +123,22 @@ onBeforeUnmount(() => {
           <EmailVerifyButton />
         </ItemActions>
       </Item>
+
+      <Item
+        v-if="!user?.backgroundId"
+        variant="outline"
+        class="bg-card/80 absolute bottom-4 left-1/2 w-sm -translate-x-1/2 backdrop-blur-lg"
+      >
+        <ItemContent>
+          <ItemTitle>You haven't selected a background!</ItemTitle>
+          <ItemDescription>No worries, we'll pick a random one.</ItemDescription>
+        </ItemContent>
+        <ItemActions>
+          <Button variant="outline" as-child>
+            <NuxtLink to="/shell/settings/background">Select</NuxtLink>
+          </Button>
+        </ItemActions>
+      </Item>
     </section>
   </main>
 </template>
