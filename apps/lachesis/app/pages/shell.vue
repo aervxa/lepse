@@ -34,9 +34,9 @@ const copyQuote = async () => {
 <template>
   <!-- Header | logo -->
   <div class="flex items-start justify-between gap-8">
-    <img src="/logo.png" class="pointer-events-none h-10 not-dark:invert sm:h-12" />
+    <Logo />
     <div
-      class="from-background/40 via-background/20 -m-2 flex items-start gap-4 rounded-xs rounded-tr-2xl bg-linear-to-l to-transparent p-2 backdrop-blur-sm rtl:bg-linear-to-r"
+      class="from-background/40 via-background/20 -m-2 flex items-start gap-4 rounded-xs rounded-tr-2xl bg-linear-to-l to-transparent p-2 ps-3 backdrop-blur-sm rtl:rounded-tl-2xl rtl:bg-linear-to-r"
     >
       <FocusSessions />
       <Profile />
@@ -60,7 +60,7 @@ const copyQuote = async () => {
         <ContextMenuTrigger>
           <p
             ref="quote"
-            class="from-background/40 via-background/20 max-sm:via-background/40 -m-2 w-full max-w-[28ch] rounded-xs bg-linear-to-r to-transparent px-3 py-2 text-lg font-medium text-pretty opacity-80 backdrop-blur-sm max-sm:absolute max-sm:bottom-[20vh] max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:from-transparent max-sm:text-center max-sm:italic sm:rounded-bl-2xl md:text-xl rtl:bg-linear-to-l"
+            class="sm:from-background/40 sm:via-background/20 via-background/40 -m-2 w-full max-w-[28ch] rounded-xs bg-linear-to-r from-transparent to-transparent px-3 py-2 text-lg font-medium text-pretty opacity-80 backdrop-blur-sm max-sm:absolute max-sm:bottom-[20vh] max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:text-center max-sm:italic sm:rounded-bl-2xl md:text-xl rtl:bg-linear-to-l sm:rtl:rounded-br-2xl"
           >
             "{{ getDailyQuote() }}"
           </p>
