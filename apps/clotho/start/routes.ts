@@ -11,10 +11,14 @@ import { middleware } from '#start/kernel'
 import router from '@adonisjs/core/services/router'
 import { controllers } from '#generated/controllers'
 import { DATE_REGEX } from '../app/lib/util/date.ts'
+import { apiThrottle, throttle } from './limiter.ts'
+import limiter from '@adonisjs/limiter/services/main'
 
-router.get('/', () => {
-  return { hello: 'world' }
-})
+router
+  .get('/', () => {
+    return { hello: 'what are you looking for?' }
+  })
+  .use(throttle)
 
 router
   .group(() => {
@@ -33,6 +37,7 @@ router
       .get('verify/email/request', [controllers.VerifyEmail, 'request'])
       .as('verify.email.request')
       .use(middleware.auth())
+      .use(limiter.define('verifyEmailRequest', () => limiter.allowRequests(1).every('1 minute')))
     router
       .get('verify/email/:token', [controllers.VerifyEmail, 'verify'])
       .as('verify.email')
@@ -120,3 +125,4 @@ router
       .use(middleware.auth())
   })
   .prefix('/api/v1')
+  .use(apiThrottle)

@@ -59,7 +59,8 @@ export default defineConfig({
     () => import('@adonisjs/bouncer/bouncer_provider'),
     () => import('@adonisjs/drive/drive_provider'),
     () => import('@adonisjs/mail/mail_provider'),
-    () => import('@adonisjs/core/providers/edge_provider')
+    () => import('@adonisjs/core/providers/edge_provider'),
+    () => import('@adonisjs/limiter/limiter_provider')
   ],
 
   /*
