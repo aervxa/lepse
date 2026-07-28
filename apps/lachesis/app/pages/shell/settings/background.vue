@@ -45,6 +45,7 @@ const select = async (id: number) => {
               variant="ghost"
               class="flex h-auto flex-col gap-2 rounded-2xl p-2"
               :class="[background.id === activeBackgroundId && 'bg-muted!']"
+              :disabled="background.id === activeBackgroundId"
               @click="select(background.id)"
             >
               <img
