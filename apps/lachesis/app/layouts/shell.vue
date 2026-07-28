@@ -63,7 +63,10 @@ onBeforeUnmount(() => {
       <div class="pointer-events-none px-2">
         <img src="/favicon.svg" class="size-5 grayscale" />
       </div>
-      <div v-if="appWindow" class="z-377 [&>button]:pointer-events-auto [&>button]:rounded-none">
+      <div
+        v-if="appWindow"
+        class="z-377 [&>button]:pointer-events-auto [&>button]:rounded-none [&>button]:backdrop-blur-none"
+      >
         <Button
           variant="ghost"
           size="icon-sm"
@@ -98,7 +101,7 @@ onBeforeUnmount(() => {
     <!-- Main App -->
     <section
       data-vaul-drawer-wrapper
-      class="bg-background relative z-0 flex min-h-0 flex-1 flex-col overflow-hidden border-2"
+      class="bg-background outline-border/50 relative z-0 flex min-h-0 flex-1 flex-col overflow-hidden outline-2"
       :class="[isFullscreen ? 'p-6' : 'm-2 rounded-lg p-4']"
     >
       <div class="absolute inset-0 -z-10">
