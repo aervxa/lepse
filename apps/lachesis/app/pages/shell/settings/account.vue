@@ -7,8 +7,6 @@ const isEmailVisible = ref(false)
 </script>
 
 <template>
-  <DialogTitle>Account</DialogTitle>
-
   <div class="flex flex-col">
     <p class="mb-2 font-mono text-[10px] font-medium tracking-widest uppercase opacity-80">Info</p>
     <Item size="xs" class="px-0">

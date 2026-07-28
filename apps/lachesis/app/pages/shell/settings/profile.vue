@@ -66,8 +66,6 @@ const save = async () => {
     </DialogClose>
   </EmailVerifiedOnly>
 
-  <DialogTitle>Edit profile</DialogTitle>
-
   <!-- Avatar -->
   <div class="flex flex-col gap-2">
     <ImageCropDialog v-slot="{ open }" @crop="stageAvatar">

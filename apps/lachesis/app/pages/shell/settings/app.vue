@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { isTauri } from '@tauri-apps/api/core'
-import { platform } from '@tauri-apps/plugin-os'
 
 definePageMeta({
   validate: isTauri,
@@ -25,7 +24,6 @@ const { windowTransparency, minimizeToTray } = useSettings()
 </script>
 
 <template>
-  <DialogTitle class="capitalize">{{ platform() }}</DialogTitle>
   <div class="flex flex-col">
     <template v-for="[group, settings] in Object.entries(settingGroups)">
       <p class="mb-2 font-mono text-[10px] font-medium tracking-widest uppercase opacity-80">
