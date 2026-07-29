@@ -15,7 +15,7 @@
         "title": "lepse",
         "width": 1280,
         "height": 768,
-        "minWidth": 442,
+        "minWidth": 448,
         "minHeight": 512,
         "resizable": true,
         "fullscreen": false,

@@ -102,7 +102,7 @@ onBeforeUnmount(() => {
     <section
       data-vaul-drawer-wrapper
       class="bg-background outline-border/50 relative z-0 flex min-h-0 flex-1 flex-col overflow-hidden outline-2"
-      :class="[isFullscreen ? 'p-6' : 'm-2 rounded-lg p-4']"
+      :class="[!isFullscreen && 'm-2 rounded-lg']"
     >
       <div class="absolute inset-0 -z-10">
         <Image
@@ -111,7 +111,18 @@ onBeforeUnmount(() => {
           class="pointer-events-none -z-10 size-full object-cover"
         />
       </div>
-      <slot />
+
+      <ScrollArea class="flex-1">
+        <div
+          class="relative flex min-h-128 min-w-md flex-1 flex-col"
+          :class="[isFullscreen ? 'p-6' : 'p-4']"
+        >
+          <slot />
+        </div>
+
+        <!-- No need for vertical scrollbar since it exists by default -->
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
 
       <Item
         v-if="user && !user?.emailVerified"
