@@ -8,7 +8,7 @@ import { useFullscreen } from '@vueuse/core'
 
 const { user } = useAuth()
 const { backgrounds, activeBackgroundId } = useBackgrounds()
-const { windowTransparency } = useSettings()
+const { windowTransparency, nativeDecorations } = useSettings()
 const { isFullscreen } = useFullscreen()
 
 const showSkeleton = ref(false)
@@ -17,6 +17,17 @@ onMounted(() => {
     showSkeleton.value = true
   }, SKELETON_DELAY_MS)
 })
+
+// setup to update var only once (when the app is started ideally)
+const hideCustomDecorations = ref<boolean | undefined>(undefined)
+const stop = watch(
+  [nativeDecorations],
+  () => {
+    hideCustomDecorations.value = nativeDecorations?.value
+    if (hideCustomDecorations.value !== undefined) nextTick(stop) // nexttick cuz stop is not yet defined due to immediate: true
+  },
+  { immediate: true }
+)
 
 // ─── Tauri ──────────────────────────────────────────────────────── start ───
 
@@ -53,7 +64,7 @@ onBeforeUnmount(() => {
     ]"
   >
     <div
-      v-if="isApp"
+      v-if="isApp && !hideCustomDecorations"
       v-show="!isFullscreen"
       data-slot="titlebar"
       data-tauri-drag-region

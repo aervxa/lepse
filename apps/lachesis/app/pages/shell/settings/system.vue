@@ -13,14 +13,19 @@ const settingGroups = {
       description: "If your OS doesn't have a blur effect, this will look off.",
     },
     {
+      key: 'nativeDecorations' as const,
+      title: 'Native decorations',
+      description: 'Use system frame/titlebar (restart required).',
+    },
+    {
       key: 'minimizeToTray' as const,
       title: 'Minimize to tray',
-      description: 'Closing (clicking X) will minimize to tray instead of fully exiting the app',
+      description: 'Closing (clicking X) will minimize to tray instead of fully exiting the app.',
     },
   ],
 }
 
-const { windowTransparency, minimizeToTray } = useSettings()
+const { windowTransparency, nativeDecorations, minimizeToTray } = useSettings()
 </script>
 
 <template>
@@ -38,6 +43,7 @@ const { windowTransparency, minimizeToTray } = useSettings()
         </ItemContent>
         <ItemActions class="self-start">
           <Switch v-if="setting.key === 'windowTransparency'" v-model="windowTransparency" />
+          <Switch v-if="setting.key === 'nativeDecorations'" v-model="nativeDecorations" />
           <Switch v-if="setting.key === 'minimizeToTray'" v-model="minimizeToTray" />
         </ItemActions>
       </Item>

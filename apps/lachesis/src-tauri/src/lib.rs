@@ -28,6 +28,20 @@ pub fn run() {
             .build(),
         )?;
       }
+
+      // if nativeDecorations is true, set native decors to true
+      if app
+        .store("settings.json")
+        .ok()
+        .and_then(|store| store.get("nativeDecorations"))
+        .and_then(|v| v.as_bool())
+        .unwrap_or(false)
+      {
+        let _ = app
+          .get_webview_window("main")
+          .map(|window| window.set_decorations(true));
+      }
+
       setup_tray(app.app_handle())?;
       Ok(())
     })

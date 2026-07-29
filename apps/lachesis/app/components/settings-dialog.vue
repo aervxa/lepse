@@ -8,7 +8,7 @@ const items = [
   { name: 'Account', path: '/shell/settings/account', icon: User },
   { name: 'Backgrounds', path: '/shell/settings/background', icon: Image },
   ...(isTauri()
-    ? [{ name: `System (${platform()})`, path: '/shell/settings/app', icon: MonitorCog }]
+    ? [{ name: `System (${platform()})`, path: '/shell/settings/system', icon: MonitorCog }]
     : []),
 ]
 const item = computed(() => [...items, headerItem].find((i) => route.path.startsWith(i.path)))
