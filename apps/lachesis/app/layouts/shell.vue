@@ -47,7 +47,7 @@ onBeforeUnmount(() => {
 
 <template>
   <main
-    class="flex h-dvh flex-col"
+    class="flex h-dvh flex-col [--titlebar-height:--spacing(8)]"
     :class="[
       os === 'windows' ? 'bg-transparent' : windowTransparency ? 'bg-sidebar/60' : 'bg-sidebar',
     ]"
@@ -57,11 +57,11 @@ onBeforeUnmount(() => {
       v-show="!isFullscreen"
       data-slot="titlebar"
       data-tauri-drag-region
-      class="-mb-2 flex h-8 items-center justify-between"
+      class="-mb-2 flex h-(--titlebar-height) items-center justify-between"
       @pointerdown.stop
     >
       <div class="pointer-events-none px-2">
-        <img src="/favicon.svg" class="size-5 grayscale" />
+        <img src="/favicon.svg" class="size-5 brightness-150 grayscale" />
       </div>
       <div
         v-if="appWindow"
@@ -101,8 +101,8 @@ onBeforeUnmount(() => {
     <!-- Main App -->
     <section
       data-vaul-drawer-wrapper
-      class="bg-background outline-border/50 relative z-0 flex min-h-0 flex-1 flex-col overflow-hidden outline-2"
-      :class="[!isFullscreen && 'm-2 rounded-lg']"
+      class="bg-background outline-border/50 relative z-0 flex min-h-0 flex-1 flex-col overflow-hidden outline-2 [--inset:--spacing(2)]"
+      :class="[!isFullscreen && 'm-(--inset) rounded-lg']"
     >
       <div class="absolute inset-0 -z-10">
         <Image
@@ -114,7 +114,7 @@ onBeforeUnmount(() => {
 
       <ScrollArea class="flex-1">
         <div
-          class="relative flex min-h-128 min-w-md flex-1 flex-col"
+          class="relative flex min-h-[calc(512px-var(--titlebar-height)-var(--inset))] min-w-[calc(448px-var(--inset)*2)] flex-1 flex-col"
           :class="[isFullscreen ? 'p-6' : 'p-4']"
         >
           <slot />
