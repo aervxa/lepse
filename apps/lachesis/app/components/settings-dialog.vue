@@ -26,6 +26,7 @@ const open = computed({
 })
 
 const { user } = useAuth()
+const container = useTemplateRef('container')
 </script>
 
 <template>
@@ -33,68 +34,80 @@ const { user } = useAuth()
     <DialogContent
       class="h-152 max-h-[calc(100%-2rem)] overflow-hidden p-0 sm:h-128 md:max-w-2xl lg:max-w-3xl"
     >
-      <DialogTitle class="sr-only">Settings</DialogTitle>
-      <DialogDescription class="sr-only">adjust ur likings and preferences</DialogDescription>
+      <div ref="container" class="contents">
+        <DialogTitle class="sr-only">Settings</DialogTitle>
+        <DialogDescription class="sr-only">adjust ur likings and preferences</DialogDescription>
 
-      <SidebarProvider class="min-h-full">
-        <Sidebar collapsible="none" class="hidden border-r md:flex">
-          <SidebarHeader v-if="headerItem">
-            <SidebarMenuButton
-              size="lg"
-              class="group gap-3 rounded-tl-4xl"
-              :is-active="route.path.startsWith(headerItem.path)"
-              as-child
-            >
-              <NuxtLink :to="headerItem.path">
-                <Avatar size="lg">
-                  <AvatarImage :src="user?.avatarUrl ?? ''" />
-                  <AvatarFallback :delay-ms="SKELETON_DELAY_MS">
-                    {{ user?.initials }}
-                  </AvatarFallback>
-                </Avatar>
-                <div class="flex flex-1 flex-col gap-1">
-                  <span class="truncate text-xs tracking-wide">{{ user?.fullName }}</span>
-                  <div
-                    class="group-hover:text-foreground text-muted-foreground flex items-center gap-1 text-xs leading-none font-light"
-                  >
-                    <span>{{ headerItem.name }}</span>
-                    <component :is="headerItem.icon" class="size-3!" />
+        <SidebarProvider class="min-h-full" v-slot="{ isMobile }">
+          <Sidebar
+            :container="container ?? undefined"
+            :collapsible="isMobile ? 'offcanvas' : 'none'"
+            class="hidden border-r md:flex"
+          >
+            <SidebarHeader v-if="headerItem">
+              <SidebarMenuButton
+                size="lg"
+                class="group gap-3 rounded-tl-4xl"
+                :is-active="route.path.startsWith(headerItem.path)"
+                close-mobile-on-click
+                as-child
+              >
+                <NuxtLink :to="headerItem.path">
+                  <Avatar size="lg">
+                    <AvatarImage :src="user?.avatarUrl ?? ''" />
+                    <AvatarFallback :delay-ms="SKELETON_DELAY_MS">
+                      {{ user?.initials }}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div class="flex flex-1 flex-col gap-1">
+                    <span class="truncate text-xs tracking-wide">{{ user?.fullName }}</span>
+                    <div
+                      class="group-hover:text-foreground text-muted-foreground flex items-center gap-1 text-xs leading-none font-light"
+                    >
+                      <span>{{ headerItem.name }}</span>
+                      <component :is="headerItem.icon" class="size-3!" />
+                    </div>
                   </div>
-                </div>
-              </NuxtLink>
-            </SidebarMenuButton>
-          </SidebarHeader>
+                </NuxtLink>
+              </SidebarMenuButton>
+            </SidebarHeader>
 
-          <SidebarContent>
-            <SidebarGroup>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem v-for="item in items" :key="item.name">
-                    <SidebarMenuButton :is-active="route.path.startsWith(item.path)" as-child>
-                      <NuxtLink :to="item.path">
-                        <component :is="item.icon" />
-                        <span>{{ item.name }}</span>
-                      </NuxtLink>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </SidebarContent>
-        </Sidebar>
+            <SidebarContent>
+              <SidebarGroup>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    <SidebarMenuItem v-for="item in items" :key="item.name">
+                      <SidebarMenuButton
+                        :is-active="route.path.startsWith(item.path)"
+                        close-mobile-on-click
+                        as-child
+                      >
+                        <NuxtLink :to="item.path">
+                          <component :is="item.icon" />
+                          <span>{{ item.name }}</span>
+                        </NuxtLink>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            </SidebarContent>
+          </Sidebar>
 
-        <section class="md:bg-background relative flex flex-1 flex-col">
-          <div class="border-border flex gap-2 border-b p-6">
-            <DialogTitle>{{ item?.name }}</DialogTitle>
-          </div>
-
-          <ScrollArea class="flex-1">
-            <div class="flex flex-1 flex-col gap-8 p-6">
-              <NuxtPage />
+          <section class="md:bg-background relative flex flex-1 flex-col">
+            <div class="border-border flex items-center gap-2 border-b px-6 py-4">
+              <SidebarTrigger v-if="isMobile" />
+              <DialogTitle>{{ item?.name }}</DialogTitle>
             </div>
-          </ScrollArea>
-        </section>
-      </SidebarProvider>
+
+            <ScrollArea class="flex-1">
+              <div class="flex flex-1 flex-col gap-8 p-6">
+                <NuxtPage />
+              </div>
+            </ScrollArea>
+          </section>
+        </SidebarProvider>
+      </div>
     </DialogContent>
   </Dialog>
 </template>

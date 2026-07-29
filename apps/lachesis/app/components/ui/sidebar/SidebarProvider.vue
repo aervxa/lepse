@@ -91,7 +91,7 @@ provideSidebarContext({
       "
       v-bind="$attrs"
     >
-      <slot />
+      <slot :state :open :setOpen :isMobile :openMobile :setOpenMobile :toggleSidebar />
     </div>
   </TooltipProvider>
 </template>

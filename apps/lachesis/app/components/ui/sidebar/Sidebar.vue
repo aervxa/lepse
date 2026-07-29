@@ -11,7 +11,7 @@ defineOptions({
   inheritAttrs: false,
 })
 
-const props = withDefaults(defineProps<SidebarProps>(), {
+const props = withDefaults(defineProps<SidebarProps & { container?: string | HTMLElement }>(), {
   side: 'left',
   variant: 'sidebar',
   collapsible: 'offcanvas',
@@ -34,6 +34,7 @@ const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
 
   <Sheet v-else-if="isMobile" :open="openMobile" v-bind="$attrs" @update:open="setOpenMobile">
     <SheetContent
+      :container
       data-sidebar="sidebar"
       data-slot="sidebar"
       data-mobile="true"
