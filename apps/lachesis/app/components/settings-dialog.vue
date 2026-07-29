@@ -27,6 +27,16 @@ const open = computed({
 
 const { user } = useAuth()
 const container = useTemplateRef('container')
+
+// Open the sidebar on mobile only when coming "generally", and not to a specific page (/settings is written to redirect into /account)
+const defaultMobileOpen = ref(false)
+watch(open, () => {
+  if (route.redirectedFrom?.path === '/shell/settings') {
+    defaultMobileOpen.value = true
+  } else {
+    defaultMobileOpen.value = false
+  }
+})
 </script>
 
 <template>
@@ -38,7 +48,7 @@ const container = useTemplateRef('container')
         <DialogTitle class="sr-only">Settings</DialogTitle>
         <DialogDescription class="sr-only">adjust ur likings and preferences</DialogDescription>
 
-        <SidebarProvider class="min-h-full" v-slot="{ isMobile }">
+        <SidebarProvider :default-mobile-open class="min-h-full" v-slot="{ isMobile }">
           <Sidebar
             :container="container ?? undefined"
             :collapsible="isMobile ? 'offcanvas' : 'none'"

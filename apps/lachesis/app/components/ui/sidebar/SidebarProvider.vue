@@ -16,11 +16,13 @@ import {
 const props = withDefaults(
   defineProps<{
     defaultOpen?: boolean
+    defaultMobileOpen?: boolean
     open?: boolean
     class?: HTMLAttributes['class']
   }>(),
   {
     defaultOpen: !defaultDocument?.cookie.includes(`${SIDEBAR_COOKIE_NAME}=false`),
+    defaultMobileOpen: false,
     open: undefined,
   }
 )
@@ -30,7 +32,7 @@ const emits = defineEmits<{
 }>()
 
 const isMobile = useMediaQuery('(max-width: 768px)')
-const openMobile = ref(false)
+const openMobile = ref(props.defaultMobileOpen)
 
 const open = useVModel(props, 'open', emits, {
   defaultValue: props.defaultOpen ?? false,
