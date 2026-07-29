@@ -45,6 +45,7 @@ const copyQuote = async () => {
   </div>
 
   <!-- Center | clock -->
+  <!-- TODO: better center -->
   <div
     class="relative mx-auto my-auto flex flex-col items-center gap-4 pt-[8vh] pb-[16vh] max-sm:pb-[20vh]"
   >

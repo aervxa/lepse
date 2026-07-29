@@ -158,7 +158,7 @@ function skipPomo() {
   </template>
   <!-- Stopwatch/Pomo main display -->
   <p class="relative flex font-semibold tabular-nums">
-    <span class="h-min text-7xl leading-none sm:text-8xl">
+    <span class="2xl:text-10xl h-min text-8xl leading-none sm:text-9xl">
       {{
         method === 'stopwatch'
           ? formatted.slice(stopwatch.elapsed.value > 3600000 ? 0 : 3, -4)
