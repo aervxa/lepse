@@ -9,7 +9,7 @@ const nowStr = computed(() => now.value.toLocaleTimeString([], { timeStyle: 'sho
 
 const blurClock = ref(false)
 const COLORS = [
-  '', // default
+  'var(--foreground)', // default
   '#EF8B76', // red
   '#EDB35C', // amber
   '#DDCB6B', // yellow
@@ -23,7 +23,7 @@ const COLORS = [
   '#CE76BA', // magenta
   '#DD7692', // rose
 ]
-const color = useLocalStorage('clockColor', '')
+const color = useLocalStorage('clockColor', COLORS[0])
 </script>
 
 <template>
@@ -36,7 +36,7 @@ const color = useLocalStorage('clockColor', '')
     <ContextMenuTrigger>
       <p
         :style="{
-          '--color': `${color || 'var(--foreground)'}`,
+          '--color': color,
         }"
         class="relative flex font-semibold text-(--color) tabular-nums transition-[filter] duration-500 ease-out"
         :class="[blurClock ? 'blur-xs brightness-75 duration-500' : 'duration-300']"
@@ -82,8 +82,7 @@ const color = useLocalStorage('clockColor', '')
         >
           <ContextMenuItem class="contents" @select="color = c">
             <button
-              :style="{ backgroundColor: c || 'var(--foreground)' }"
-              class="absolute inset-0 rounded-full border border-black/10"
+              class="absolute inset-0 rounded-full border border-black/10 bg-(--color)"
               :class="[i === 0 && 'grid place-content-center']"
             >
               <RotateCcw v-if="i === 0" class="text-muted-foreground size-(--inner-radius)" />
