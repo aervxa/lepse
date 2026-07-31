@@ -20,14 +20,17 @@ onMounted(() => {
 
 // setup to update var only once (when the app is started ideally)
 const hideCustomDecorations = ref<boolean | undefined>(undefined)
-const stop = watch(
-  [nativeDecorations],
-  () => {
-    hideCustomDecorations.value = nativeDecorations?.value
-    if (hideCustomDecorations.value !== undefined) nextTick(stop) // nexttick cuz stop is not yet defined due to immediate: true
-  },
-  { immediate: true }
-)
+onMounted(() => {
+  if (nativeDecorations === undefined) return
+  const stop = watch(
+    [nativeDecorations],
+    () => {
+      hideCustomDecorations.value = nativeDecorations?.value
+      if (hideCustomDecorations.value !== undefined) nextTick(stop) // nexttick cuz stop is not yet defined due to immediate: true
+    },
+    { immediate: true }
+  )
+})
 
 // ─── Tauri ──────────────────────────────────────────────────────── start ───
 
