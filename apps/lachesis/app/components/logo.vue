@@ -6,7 +6,7 @@ import { ArrowUpRight, Download, Info } from '@lucide/vue'
   <ContextMenu>
     <ContextMenuTrigger class="-m-2 p-2">
       <div
-        class="bg-foreground-fixed aspect-6/2 h-8 mask-[url('/logo.png')] mask-contain mask-no-repeat brightness-75 sm:h-10"
+        class="bg-foreground-fixed fixed-color-clock:bg-foreground aspect-6/2 h-8 mask-[url('/logo.png')] mask-contain mask-no-repeat brightness-75 sm:h-10"
       ></div>
     </ContextMenuTrigger>
 

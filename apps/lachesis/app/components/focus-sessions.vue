@@ -15,7 +15,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="text-foreground-fixed flex flex-col items-end gap-2">
+  <div
+    class="text-foreground-fixed fixed-color-clock:text-foreground flex flex-col items-end gap-2"
+  >
     <p class="font-mono text-[10px] font-black tracking-widest uppercase opacity-80 sm:text-xs">
       Session totals
     </p>

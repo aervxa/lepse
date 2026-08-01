@@ -4,6 +4,7 @@
 @import './themes.css';
 
 @custom-variant dark (&);
+@custom-variant fixed-color-clock (&:where([data-fixed-color-clock] *));
 
 @theme inline {
   --radius: 0.625rem;
