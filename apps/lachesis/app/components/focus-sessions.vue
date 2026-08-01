@@ -15,8 +15,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-col items-end gap-2">
-    <p class="font-mono text-[10px] font-bold tracking-widest uppercase opacity-80 sm:text-xs">
+  <div class="text-foreground-fixed flex flex-col items-end gap-2">
+    <p class="font-mono text-[10px] font-black tracking-widest uppercase opacity-80 sm:text-xs">
       Session totals
     </p>
 
@@ -44,7 +44,7 @@ onMounted(() => {
           class="flex items-center gap-1 sm:gap-1.5"
         >
           <component :is="item.icon" class="size-3 opacity-80 sm:size-4" />
-          <p class="text-xs leading-none font-medium opacity-60 sm:text-sm">{{ item.label }}</p>
+          <p class="text-xs leading-none font-semibold opacity-60 sm:text-sm">{{ item.label }}</p>
         </div>
       </template>
     </div>

@@ -5,7 +5,9 @@ import { ArrowUpRight, Download, Info } from '@lucide/vue'
 <template>
   <ContextMenu>
     <ContextMenuTrigger class="-m-2 p-2">
-      <img src="/logo.png" class="pointer-events-none h-10 not-dark:invert sm:h-12" />
+      <div
+        class="bg-foreground-fixed aspect-6/2 h-8 mask-[url('/logo.png')] mask-contain mask-no-repeat brightness-75 sm:h-10"
+      ></div>
     </ContextMenuTrigger>
 
     <ContextMenuContent>

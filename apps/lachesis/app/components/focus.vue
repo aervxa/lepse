@@ -157,7 +157,7 @@ function skipPomo() {
     </div>
   </template>
   <!-- Stopwatch/Pomo main display -->
-  <p class="relative flex font-semibold tabular-nums">
+  <p class="text-foreground-fixed relative flex font-semibold tabular-nums">
     <span class="2xl:text-10xl h-min text-8xl leading-none sm:text-9xl">
       {{
         method === 'stopwatch'

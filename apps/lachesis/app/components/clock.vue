@@ -1,6 +1,6 @@
 <script setup>
 import { RotateCcw, X } from '@lucide/vue'
-import { useLocalStorage, useNow } from '@vueuse/core'
+import { useNow } from '@vueuse/core'
 import { getGreeting } from '~/lib/greetings'
 
 const { user } = useAuth()
@@ -8,41 +8,24 @@ const now = useNow()
 const nowStr = computed(() => now.value.toLocaleTimeString([], { timeStyle: 'short' }))
 
 const blurClock = ref(false)
-const COLORS = [
-  'var(--foreground)', // default
-  '#EF8B76', // red
-  '#EDB35C', // amber
-  '#DDCB6B', // yellow
-  '#AFCE6B', // lime
-  '#71CE8C', // green
-  '#6BCEB2', // teal
-  '#6BB4CE', // cyan
-  '#7591DD', // blue
-  '#9284DD', // indigo
-  '#B476DD', // violet
-  '#CE76BA', // magenta
-  '#DD7692', // rose
-]
-const color = useLocalStorage('clockColor', COLORS[0])
+const { THEMES, theme } = useSettings()
 </script>
 
 <template>
   <p
-    class="max-w-xs text-center text-base leading-relaxed font-medium tracking-wide text-pretty sm:max-w-sm sm:text-xl 2xl:text-2xl"
+    class="text-foreground-fixed max-w-xs text-center text-base leading-relaxed font-semibold tracking-wide text-pretty sm:max-w-sm sm:text-xl 2xl:text-2xl"
   >
     {{ getGreeting(now).replace('{name}', user?.fullName ?? 'User') }}
   </p>
   <ContextMenu v-model:open="blurClock">
     <ContextMenuTrigger>
       <p
-        :style="{
-          '--color': color,
-        }"
-        class="relative flex font-semibold text-(--color) tabular-nums transition-[filter] duration-500 ease-out"
+        :aria-label="nowStr"
+        class="text-foreground-fixed relative flex font-semibold tabular-nums transition-[filter] duration-500 ease-out"
         :class="[blurClock ? 'blur-xs brightness-75 duration-500' : 'duration-300']"
       >
         <span
-          class="2xl:text-10xl h-min text-8xl leading-none text-shadow-(color:--color)/60 text-shadow-lg sm:text-9xl"
+          class="2xl:text-10xl text-shadow-foreground-fixed/40 h-min text-8xl leading-none text-shadow-lg sm:text-9xl"
         >
           {{ nowStr.slice(0, -3) }}
         </span>
@@ -70,19 +53,19 @@ const color = useLocalStorage('clockColor', COLORS[0])
           </button>
         </ContextMenuItem>
         <div
-          v-for="(c, i) in COLORS"
+          v-for="(t, i) in THEMES"
           :style="{
-            '--color': c,
-            '--angle': `calc(360deg / ${COLORS.length} * ${i} + 90deg)`,
+            '--angle': `calc(360deg / ${THEMES.length} * ${i} + 90deg)`,
             'transform':
               'rotate(var(--angle)) translateX(calc(var(--radius) - var(--inner-radius))) rotate(calc(-1 * var(--angle)))',
           }"
           class="absolute size-full rounded-full"
           :class="[i === 0 ? 'z-10' : 'z-0']"
+          :data-theme="t"
         >
-          <ContextMenuItem class="contents" @select="color = c">
+          <ContextMenuItem class="contents" @select="theme = t">
             <button
-              class="absolute inset-0 rounded-full border border-black/10 bg-(--color)"
+              class="bg-foreground-fixed absolute inset-0 rounded-full border border-black/10"
               :class="[i === 0 && 'grid place-content-center']"
             >
               <RotateCcw v-if="i === 0" class="text-muted-foreground size-(--inner-radius)" />

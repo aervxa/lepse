@@ -61,7 +61,7 @@ const copyQuote = async () => {
         <ContextMenuTrigger>
           <p
             ref="quote"
-            class="sm:from-background/40 sm:via-background/20 via-background/40 -m-2 w-full max-w-[28ch] rounded-xs bg-linear-to-r from-transparent to-transparent px-3 py-2 text-lg font-medium text-pretty opacity-80 backdrop-blur-sm max-sm:absolute max-sm:bottom-1/5 max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:text-center max-sm:italic sm:rounded-bl-2xl md:text-xl rtl:bg-linear-to-l sm:rtl:rounded-br-2xl"
+            class="text-foreground-fixed sm:from-background/40 sm:via-background/20 via-background/40 -m-2 w-full max-w-[28ch] rounded-xs bg-linear-to-r from-transparent to-transparent px-3 py-2 text-lg font-medium text-pretty italic opacity-80 backdrop-blur-sm max-sm:absolute max-sm:bottom-1/5 max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:text-center sm:rounded-bl-2xl sm:text-xl 2xl:text-2xl 2xl:font-semibold rtl:bg-linear-to-l sm:rtl:rounded-br-2xl"
           >
             "{{ getDailyQuote() }}"
           </p>
