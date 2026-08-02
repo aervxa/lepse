@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { isTauri } from '@tauri-apps/api/core'
 import { platform } from '@tauri-apps/plugin-os'
-import { Image, MonitorCog, Pencil, User } from 'lucide-vue-next'
+import { Image, MonitorCog, Palette, Pencil, User } from '@lucide/vue'
 
 const headerItem = { name: 'Edit profile', path: '/shell/settings/profile', icon: Pencil }
 const items = [
   { name: 'Account', path: '/shell/settings/account', icon: User },
+  { name: 'Appearance', path: '/shell/settings/appearance', icon: Palette },
   { name: 'Backgrounds', path: '/shell/settings/background', icon: Image },
   ...(isTauri()
     ? [{ name: `System (${platform()})`, path: '/shell/settings/system', icon: MonitorCog }]
@@ -107,7 +108,7 @@ watch(open, () => {
           <section class="md:bg-background relative flex flex-1 flex-col">
             <div class="border-border flex items-center gap-2 border-b px-6 py-4">
               <SidebarTrigger v-if="isMobile" />
-              <DialogTitle>{{ item?.name }}</DialogTitle>
+              <DialogTitle class="leading-8">{{ item?.name }}</DialogTitle>
             </div>
 
             <ScrollArea class="flex-1">

@@ -24,7 +24,22 @@ export const useSettings = () => {
     THEMES[Math.floor(Math.random() * THEMES.length)]!
   )
 
-  const appearanceSettings = { THEMES, theme }
+  const THEME_OPTIONS = [
+    'data-fixed-color-clock',
+    'data-fixed-color-image',
+    'data-fixed-color-all',
+  ] as const
+  const THEME_OPTION_LABELS = {
+    'data-fixed-color-clock': 'Clock only',
+    'data-fixed-color-image': 'Over image only',
+    'data-fixed-color-all': 'All',
+  } as const satisfies Record<(typeof THEME_OPTIONS)[number], string>
+  const themeOptions = useLocalStorage<(typeof THEME_OPTIONS)[number]>(
+    'themeOptions',
+    'data-fixed-color-clock'
+  )
+
+  const appearanceSettings = { THEMES, theme, THEME_OPTIONS, THEME_OPTION_LABELS, themeOptions }
 
   // App settings
   const windowTransparency = useLocalStorage('windowTransparency', false)
