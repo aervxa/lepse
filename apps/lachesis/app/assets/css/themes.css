@@ -565,7 +565,7 @@
     --card-foreground: var(--foreground-fixed);
     --popover-foreground: var(--foreground-fixed);
     --secondary-foreground: var(--foreground-fixed);
-    --muted-foreground: var(--foreground-fixed);
+    --muted-foreground: color-mix(black 25%, var(--foreground-fixed) 75%);
     --accent-foreground: var(--foreground-fixed);
     --sidebar-foreground: var(--foreground-fixed);
     --sidebar-accent-foreground: var(--foreground-fixed);
