@@ -137,14 +137,17 @@ function skipPomo() {
 
 <template>
   <div
-    class="relative mx-auto grid flex-1 grid-rows-[1fr_auto_1fr] gap-8 *:first:self-end *:last:self-start"
+    class="mx-auto grid flex-1 grid-rows-[minmax(160px,1fr)_auto_minmax(160px,1fr)] gap-8 *:first:self-end *:last:self-start"
   >
     <!-- Div wrapper to hold children together as one row -->
     <div class="flex flex-col items-center">
       <!-- inFocus specific -->
       <template v-if="inFocus">
-        <!-- TODO: Move task selector away to the top part of the page -->
-        <div class="w-full" :class="[focusMethod === 'stopwatch' ? 'mb-8' : 'mb-14']">
+        <!-- task selector -->
+        <div
+          class="from-background/40 to-background/20 absolute top-1/6 flex -translate-y-1/2 flex-col items-center gap-1 rounded-md bg-linear-to-t px-3 py-2 backdrop-blur-sm"
+        >
+          <p class="font-mono text-[10px] tracking-widest uppercase opacity-60">working on</p>
           <Combobox
             :items="tasks"
             @select="(i) => selectTask(i.id)"
@@ -153,16 +156,35 @@ function skipPomo() {
             empty="No tasks found."
             placeholder="Search a task"
             align="center"
+            class="w-xs md:w-sm"
+            :side-offset="12"
           >
-            <Button variant="outline" role="combobox" class="w-full justify-between">
-              {{ task ? task.name : 'Select task...' }}
-              <ChevronsUpDown class="ml-2 size-4 shrink-0 opacity-60" />
-            </Button>
+            <div
+              class="group flex w-fit max-w-sm cursor-pointer items-center justify-center gap-2 md:max-w-md"
+            >
+              <p
+                class="truncate pr-[1ch] text-2xl"
+                :class="[task ? 'font-light' : 'font-extralight italic']"
+              >
+                {{ task?.name ?? 'No task selected' }}
+              </p>
+              <Button
+                variant="ghost"
+                size="icon-xs"
+                :disabled="stopwatch.running.value"
+                class="text-muted-foreground group-hover:text-foreground -ml-[1ch]"
+              >
+                <ChevronsUpDown />
+              </Button>
+            </div>
           </Combobox>
         </div>
 
         <!-- Pomo-specific state tabs -->
-        <div v-if="focusMethod === 'pomodoro'" class="flex gap-2">
+        <div
+          v-if="focusMethod === 'pomodoro'"
+          class="bg-background/40 mb-2 flex gap-1 rounded-full p-1 backdrop-blur-sm [&>button]:backdrop-blur-none"
+        >
           <Button
             v-for="state in pomoStates"
             :key="state"

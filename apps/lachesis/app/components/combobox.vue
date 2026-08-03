@@ -31,7 +31,7 @@ const search = ref('')
     <PopoverTrigger as-child>
       <slot />
     </PopoverTrigger>
-    <PopoverContent :align class="p-0">
+    <PopoverContent :align class="p-0" v-bind="$attrs">
       <Command highlight-on-hover class="rounded-[inherit] bg-transparent backdrop-blur-none">
         <CommandInput :placeholder="props.placeholder" v-model="search" />
         <CommandList>
