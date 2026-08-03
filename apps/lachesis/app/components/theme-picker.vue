@@ -1,40 +1,18 @@
 <script setup>
 import { RotateCcw, X } from '@lucide/vue'
-import { useNow } from '@vueuse/core'
-import { getGreeting } from '~/lib/greetings'
 
-const { user } = useAuth()
-const now = useNow()
-const nowStr = computed(() => now.value.toLocaleTimeString([], { timeStyle: 'short' }))
-
-const blurClock = ref(false)
+const open = ref(false)
 const { THEMES, theme } = useSettings()
 </script>
 
 <template>
-  <p
-    class="fixed-color-clock:text-foreground text-foreground-fixed max-w-xs text-center text-base leading-relaxed font-semibold tracking-wide text-pretty sm:max-w-sm sm:text-xl 2xl:text-2xl"
-  >
-    {{ getGreeting(now).replace('{name}', user?.fullName ?? 'User') }}
-  </p>
-  <ContextMenu v-model:open="blurClock">
-    <ContextMenuTrigger>
-      <p
-        :aria-label="nowStr"
-        class="text-foreground-fixed relative flex font-semibold tabular-nums transition-[filter] duration-500 ease-out"
-        :class="[blurClock ? 'blur-xs brightness-75 duration-500' : 'duration-300']"
-      >
-        <span
-          class="2xl:text-10xl text-shadow-foreground-fixed/40 h-min text-8xl leading-none text-shadow-lg sm:text-9xl"
-        >
-          {{ nowStr.slice(0, -3) }}
-        </span>
-        <span
-          class="absolute bottom-1.25 left-full translate-x-4 text-lg tracking-wider opacity-80 sm:bottom-2.25 sm:translate-x-6 sm:text-xl 2xl:bottom-3.25 2xl:text-2xl"
-        >
-          {{ nowStr.slice(-2) }}
-        </span>
-      </p>
+  <ContextMenu v-model:open="open">
+    <ContextMenuTrigger
+      as-child
+      class="transition-[filter] ease-out"
+      :class="[open ? 'blur-xs brightness-75 duration-500' : 'duration-300']"
+    >
+      <slot />
     </ContextMenuTrigger>
     <ContextMenuContent
       style="--radius: calc(var(--spacing) * 14)"
@@ -44,10 +22,10 @@ const { THEMES, theme } = useSettings()
         style="--inner-radius: calc(var(--spacing) * 3.5)"
         class="relative top-1/2 left-1/2 size-[calc(var(--inner-radius)*2)] -translate-1/2 rounded-full [&_button]:transition-transform [&_button]:duration-100 [&_button]:ease-out [&_button]:outline-none [&_button]:hover:scale-140 [&_button]:active:scale-125"
       >
-        <ContextMenuItem v-show="blurClock" class="contents" @select.once.prevent>
+        <ContextMenuItem v-show="open" class="contents" @select.once.prevent>
           <button
             class="text-destructive absolute grid size-full place-content-center rounded-full hover:contrast-200"
-            @click="blurClock = false"
+            @click="open = false"
           >
             <X class="size-5 stroke-3" />
           </button>
