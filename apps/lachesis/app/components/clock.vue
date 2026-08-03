@@ -44,7 +44,7 @@ const { THEMES, theme } = useSettings()
         style="--inner-radius: calc(var(--spacing) * 3.5)"
         class="relative top-1/2 left-1/2 size-[calc(var(--inner-radius)*2)] -translate-1/2 rounded-full [&_button]:transition-transform [&_button]:duration-100 [&_button]:ease-out [&_button]:outline-none [&_button]:hover:scale-140 [&_button]:active:scale-125"
       >
-        <ContextMenuItem class="contents" @select.once.prevent>
+        <ContextMenuItem v-show="blurClock" class="contents" @select.once.prevent>
           <button
             class="text-destructive absolute grid size-full place-content-center rounded-full hover:contrast-200"
             @click="blurClock = false"
@@ -64,12 +64,30 @@ const { THEMES, theme } = useSettings()
           :data-theme="t"
         >
           <ContextMenuItem class="contents" @select="theme = t">
-            <button
+            <Motion
+              as="button"
+              :initial="{ opacity: 0, scale: 0.8 }"
+              :animate="{
+                opacity: 1,
+                scale: 1,
+                transition: {
+                  delay: (0.5 / THEMES.length) * i,
+                  ...popoverTransition.after(),
+                },
+              }"
+              :exit="{
+                opacity: 0,
+                scale: 0.8,
+                transition: {
+                  delay: 0.2 - (0.2 / THEMES.length) * i,
+                  ...popoverTransition.before(),
+                },
+              }"
               class="bg-foreground-fixed absolute inset-0 rounded-full border border-black/10"
               :class="[i === 0 && 'grid place-content-center']"
             >
               <RotateCcw v-if="i === 0" class="text-muted-foreground size-(--inner-radius)" />
-            </button>
+            </Motion>
           </ContextMenuItem>
         </div>
       </div>
