@@ -6,7 +6,7 @@ const dbConfig = defineConfig({
   /**
    * Default connection used for all queries.
    */
-  connection: 'libsql',
+  connection: 'pg',
 
   connections: {
     /**
@@ -53,21 +53,22 @@ const dbConfig = defineConfig({
      * PostgreSQL connection.
      * Install package to switch: npm install pg
      */
-    // pg: {
-    //   client: 'pg',
-    //   connection: {
-    //     host: process.env.PG_HOST,
-    //     port: Number(process.env.PG_PORT || 5432),
-    //     user: process.env.PG_USER,
-    //     password: process.env.PG_PASSWORD,
-    //     database: process.env.PG_DB_NAME,
-    //   },
-    //   migrations: {
-    //     naturalSort: true,
-    //     paths: ['database/migrations'],
-    //   },
-    //   debug: app.inDev,
-    // },
+    pg: {
+      client: 'pg',
+      connection: {
+        host: env.get('DB_HOST'),
+        port: env.get('DB_PORT'),
+        user: env.get('DB_USER'),
+        password: env.get('DB_PASSWORD'),
+        database: env.get('DB_DATABASE'),
+        ssl: true,
+      },
+      migrations: {
+        naturalSort: true,
+        paths: ['database/migrations'],
+      },
+      debug: app.inDev,
+    },
 
     /**
      * MySQL / MariaDB connection.
@@ -111,20 +112,21 @@ const dbConfig = defineConfig({
 
     /**
      * libSQL (Turso) connection.
-     * Install package to switch: npm install @libsql/sqlite3
+     * Install package to switch: npm install @libsql/client
      */
-    libsql: {
-      client: 'libsql',
-      connection: {
-        filename: env.get('DB_DATABASE', 'tmp/db.sqlite3'),
-      },
-      useNullAsDefault: true,
-      migrations: {
-        naturalSort: true,
-        paths: ['database/migrations'],
-      },
-      debug: app.inDev,
-    },
+    // libsql: {
+    //   client: 'libsql',
+    //   connection: {
+    //     url: process.env.LIBSQL_URL,
+    //     authToken: process.env.LIBSQL_AUTH_TOKEN,
+    //   },
+    //   useNullAsDefault: true,
+    //   migrations: {
+    //     naturalSort: true,
+    //     paths: ['database/migrations'],
+    //   },
+    //   debug: app.inDev,
+    // },
   },
 })
 

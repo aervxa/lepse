@@ -5,14 +5,12 @@ const limiterConfig = defineConfig({
   default: env.get('LIMITER_STORE'),
   stores: {
     /**
-     * Redis store to save rate limiting data inside a
-     * redis database.
-     *
-     * It is recommended to use a separate database for
-     * the limiter connection.
+     * Database store to save rate limiting data inside a
+     * MYSQL or PostgreSQL database.
      */
-    // TODO: actually setup redis store (also enable option in env.ts)
-    // redis: stores.redis({}),
+    database: stores.database({
+      tableName: 'rate_limits',
+    }),
 
     /**
      * Memory store could be used during
