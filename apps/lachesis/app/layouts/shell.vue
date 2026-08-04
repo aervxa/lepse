@@ -153,7 +153,7 @@ onBeforeUnmount(() => {
       </Item>
 
       <Item
-        v-if="user && !user?.backgroundId"
+        v-if="user?.emailVerified && !user?.backgroundId"
         variant="outline"
         class="bg-card/80 absolute bottom-4 left-1/2 w-sm -translate-x-1/2 backdrop-blur-lg"
       >
