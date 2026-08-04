@@ -32,6 +32,7 @@
     "@parcel/watcher": true,
     "@swc/core": true,
     "better-sqlite3": true,
-    "esbuild": true
+    "esbuild": true,
+    "sqlite3": true
   }
 }

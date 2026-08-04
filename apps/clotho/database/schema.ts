@@ -152,17 +152,6 @@ export class JournalSchema extends BaseModel {
   declare userId: number
 }
 
-export class RateLimitSchema extends BaseModel {
-  static $columns = ['expire', 'key', 'points'] as const
-  $columns = RateLimitSchema.$columns
-  @column()
-  declare expire: bigint | number | null
-  @column({ isPrimary: true })
-  declare key: string
-  @column()
-  declare points: number
-}
-
 export class ScribbleSchema extends BaseModel {
   static $columns = ['body', 'createdAt', 'id', 'title', 'updatedAt', 'userId'] as const
   $columns = ScribbleSchema.$columns

@@ -1,3 +1,4 @@
+import env from '#start/env'
 import app from '@adonisjs/core/services/app'
 import { defineConfig } from '@adonisjs/lucid'
 
@@ -5,7 +6,7 @@ const dbConfig = defineConfig({
   /**
    * Default connection used for all queries.
    */
-  connection: 'sqlite',
+  connection: 'libsql',
 
   connections: {
     /**
@@ -110,21 +111,20 @@ const dbConfig = defineConfig({
 
     /**
      * libSQL (Turso) connection.
-     * Install package to switch: npm install @libsql/client
+     * Install package to switch: npm install @libsql/sqlite3
      */
-    // libsql: {
-    //   client: 'libsql',
-    //   connection: {
-    //     url: process.env.LIBSQL_URL,
-    //     authToken: process.env.LIBSQL_AUTH_TOKEN,
-    //   },
-    //   useNullAsDefault: true,
-    //   migrations: {
-    //     naturalSort: true,
-    //     paths: ['database/migrations'],
-    //   },
-    //   debug: app.inDev,
-    // },
+    libsql: {
+      client: 'libsql',
+      connection: {
+        filename: env.get('DB_DATABASE', 'tmp/db.sqlite3'),
+      },
+      useNullAsDefault: true,
+      migrations: {
+        naturalSort: true,
+        paths: ['database/migrations'],
+      },
+      debug: app.inDev,
+    },
   },
 })
 
