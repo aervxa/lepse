@@ -18,8 +18,6 @@ export default class extends BaseSchema {
         .enum('status', ['todo', 'in_progress', 'done', 'canceled'])
         .defaultTo('todo')
         .notNullable()
-      table.integer('time_estimate_min').nullable()
-      table.timestamp('deadline').nullable()
 
       table.integer('pomo_count').defaultTo(0).notNullable()
       table.integer('stopwatch_ms').defaultTo(0).notNullable()
