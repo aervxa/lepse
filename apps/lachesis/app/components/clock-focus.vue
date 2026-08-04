@@ -205,7 +205,7 @@ function skipPomo() {
         v-if="!inFocus"
         class="fixed-color-clock:text-foreground text-foreground-fixed max-w-xs text-center text-base leading-relaxed font-semibold tracking-wide text-pretty sm:max-w-sm sm:text-xl 2xl:text-2xl"
       >
-        {{ getGreeting(now).replace('{name}', user?.fullName ?? 'User') }}
+        {{ getGreeting(now).replace('{name}', user?.name ?? 'User') }}
       </p>
     </div>
 

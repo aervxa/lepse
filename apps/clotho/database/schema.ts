@@ -246,10 +246,8 @@ export class TokenSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = ['avatar', 'backgroundId', 'createdAt', 'email', 'emailVerified', 'fullName', 'id', 'password', 'updatedAt'] as const
+  static $columns = ['backgroundId', 'createdAt', 'email', 'emailVerified', 'id', 'name', 'password', 'updatedAt'] as const
   $columns = UserSchema.$columns
-  @column()
-  declare avatar: string | null
   @column()
   declare backgroundId: number | null
   @column.dateTime({ autoCreate: true })
@@ -258,10 +256,10 @@ export class UserSchema extends BaseModel {
   declare email: string
   @column()
   declare emailVerified: boolean
-  @column()
-  declare fullName: string | null
   @column({ isPrimary: true })
   declare id: number
+  @column()
+  declare name: string | null
   @column({ serializeAs: null })
   declare password: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })

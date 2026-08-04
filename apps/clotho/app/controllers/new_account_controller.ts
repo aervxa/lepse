@@ -5,10 +5,10 @@ import UserTransformer from '#transformers/user_transformer'
 
 export default class NewAccountController {
   async store({ request, serialize }: HttpContext) {
-    const { fullName, email, password } = await request.validateUsing(signupValidator)
+    const { name, email, password } = await request.validateUsing(signupValidator)
 
     const user = await User.create({
-      fullName: fullName ?? email.split('@')[0] /* Fallback to email prefix */,
+      name: name ?? email.split('@')[0] /* Fallback to email prefix */,
       email,
       password,
     })

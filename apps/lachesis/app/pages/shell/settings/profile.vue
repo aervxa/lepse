@@ -23,12 +23,12 @@ const removeAvatar = () => {
 const name = ref('')
 const nameEl = useTemplateRef('nameEl')
 const resetName = () => {
-  if (nameEl.value) nameEl.value.textContent = user.value?.fullName ?? ''
-  name.value = user.value?.fullName ?? ''
+  if (nameEl.value) nameEl.value.textContent = user.value?.name ?? ''
+  name.value = user.value?.name ?? ''
 }
 
 const avatarDirty = computed(() => (avatar.value || null) !== user.value?.avatarUrl)
-const nameDirty = computed(() => name.value !== user.value?.fullName)
+const nameDirty = computed(() => name.value !== user.value?.name)
 const dirty = computed(() => avatarDirty.value || nameDirty.value)
 const reset = () => {
   resetAvatar()

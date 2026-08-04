@@ -359,7 +359,7 @@ const inActivity = computed(() => stopwatch.running.value || pomoStopwatch.runni
         <div class="flex flex-col items-center gap-4 pb-12">
           <p class="max-w-sm text-center text-xl font-medium tracking-wide">
             Hey Hey Hey Hey Hey Hey,
-            {{ user?.fullName?.replace(' ', '&nbsp;') }}
+            {{ user?.name?.replace(' ', '&nbsp;') }}
           </p>
           <p class="relative flex gap-6 font-semibold tabular-nums">
             <span class="text-shadow-ring h-min text-9xl leading-none text-shadow-lg">

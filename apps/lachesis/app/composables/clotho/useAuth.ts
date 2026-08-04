@@ -6,13 +6,13 @@ export const useAuth = () => {
   const user = useState<Data.User | undefined>('user', () => undefined)
 
   const signup = async (
-    fullName: string,
+    name: string,
     email: string,
     password: string,
     passwordConfirmation: string
   ) => {
     const [payload, error] = await $clotho.api.auth.newAccount
-      .store({ body: { fullName, email, password, passwordConfirmation } })
+      .store({ body: { name, email, password, passwordConfirmation } })
       .safe()
     if (payload) {
       token.value = payload.data.token

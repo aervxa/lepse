@@ -17,7 +17,7 @@ export default class ProfileController {
     const payload = await request.validateUsing(updateValidator)
 
     if (payload.name !== undefined) {
-      user.fullName = payload.name
+      user.name = payload.name
     }
 
     if (payload.avatar !== undefined) {

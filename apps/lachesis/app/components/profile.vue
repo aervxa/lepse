@@ -83,7 +83,7 @@ const [DefineAvatar, ReuseAvatar] = createReusableTemplate<{ state: 'after' | 'b
                 </div>
               </NuxtLink>
             </div>
-            <p class="font-medium">Hi, {{ user?.fullName }}!</p>
+            <p class="font-medium">Hi, {{ user?.name }}!</p>
           </div>
 
           <div class="flex items-end justify-between gap-2">

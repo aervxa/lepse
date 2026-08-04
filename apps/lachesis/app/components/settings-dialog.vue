@@ -71,7 +71,7 @@ watch(open, () => {
                     </AvatarFallback>
                   </Avatar>
                   <div class="flex flex-1 flex-col gap-1">
-                    <span class="truncate text-xs tracking-wide">{{ user?.fullName }}</span>
+                    <span class="truncate text-xs tracking-wide">{{ user?.name }}</span>
                     <div
                       class="group-hover:text-foreground text-muted-foreground flex items-center gap-1 text-xs leading-none font-light"
                     >

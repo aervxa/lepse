@@ -9,7 +9,7 @@ const { signup } = useAuth()
 
 const formSchema = z
   .object({
-    fullName: z.string().optional(),
+    name: z.string().optional(),
     email: z.string().email('Invalid email address'),
     password: z.string().min(8, 'Password must be at least 8 characters long'),
     passwordConfirmation: z.string(),
@@ -21,7 +21,7 @@ const formSchema = z
 
 const { handleSubmit, setFieldError, isSubmitting } = useForm({
   validationSchema: toTypedSchema(formSchema),
-  initialValues: { fullName: '', email: '', password: '', passwordConfirmation: '' },
+  initialValues: { name: '', email: '', password: '', passwordConfirmation: '' },
 })
 
 const pwError = useFieldError('password')
@@ -29,14 +29,14 @@ const confirmError = useFieldError('passwordConfirmation')
 
 const onSubmit = handleSubmit(async (values) => {
   const error = await signup(
-    values.fullName || '',
+    values.name || '',
     values.email,
     values.password,
     values.passwordConfirmation
   )
   if (error?.isValidationError()) {
     const errors = mapErrors(error.response.errors)
-    if (errors.fullName) setFieldError('fullName', errors.fullName.message)
+    if (errors.name) setFieldError('name', errors.name.message)
     if (errors.email) setFieldError('email', errors.email.message)
     if (errors.password) setFieldError('password', errors.password.message)
     if (errors.passwordConfirmation)
@@ -70,12 +70,12 @@ const onSubmit = handleSubmit(async (values) => {
         <CardContent>
           <form @submit="onSubmit">
             <FieldGroup>
-              <!-- Full Name -->
-              <VeeField v-slot="{ field, errors }" name="fullName">
+              <!-- Name -->
+              <VeeField v-slot="{ field, errors }" name="name">
                 <Field :data-invalid="!!errors.length">
-                  <FieldLabel for="fullName">Full Name</FieldLabel>
+                  <FieldLabel for="name">Name</FieldLabel>
                   <Input
-                    id="fullName"
+                    id="name"
                     v-bind="field"
                     placeholder="Laughing Fox"
                     :aria-invalid="!!errors.length"
