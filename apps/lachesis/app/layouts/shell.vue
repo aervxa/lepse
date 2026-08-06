@@ -139,9 +139,24 @@ onBeforeUnmount(() => {
       </ScrollArea>
 
       <Item
-        v-if="user && !user?.emailVerified"
+        v-if="!user"
         variant="outline"
-        class="bg-card/90 absolute top-4 left-1/2 w-sm -translate-x-1/2 backdrop-blur-lg"
+        class="bg-card/80 absolute top-4 left-1/2 w-sm -translate-x-1/2 backdrop-blur-lg"
+      >
+        <ItemContent>
+          <ItemTitle>Login to unlock all features!</ItemTitle>
+          <ItemDescription>You can create an account too.</ItemDescription>
+        </ItemContent>
+        <ItemActions>
+          <Button as-child>
+            <NuxtLink to="/login">Login</NuxtLink>
+          </Button>
+        </ItemActions>
+      </Item>
+      <Item
+        v-else-if="!user?.emailVerified"
+        variant="outline"
+        class="bg-card/80 absolute top-4 left-1/2 w-sm -translate-x-1/2 backdrop-blur-lg"
       >
         <ItemContent>
           <ItemTitle>Verify your email to unlock all features!</ItemTitle>
@@ -153,17 +168,21 @@ onBeforeUnmount(() => {
       </Item>
 
       <Item
-        v-if="user?.emailVerified && !user?.backgroundId"
+        v-if="!user?.backgroundId"
         variant="outline"
         class="bg-card/80 absolute bottom-4 left-1/2 w-sm -translate-x-1/2 backdrop-blur-lg"
       >
         <ItemContent>
           <ItemTitle>You haven't selected a background!</ItemTitle>
-          <ItemDescription>No worries, we'll pick random ones until you do.</ItemDescription>
+          <ItemDescription>{{
+            user
+              ? 'We will pick random ones until you do. &nbsp;^^'
+              : 'Login to change your background.'
+          }}</ItemDescription>
         </ItemContent>
         <ItemActions>
-          <Button variant="outline" as-child>
-            <NuxtLink to="/settings/background">Select</NuxtLink>
+          <Button variant="outline" @click="navigateTo('/settings/background')" :disabled="!user">
+            Select
           </Button>
         </ItemActions>
       </Item>
