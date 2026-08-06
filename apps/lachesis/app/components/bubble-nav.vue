@@ -136,7 +136,8 @@ const { isFullscreen } = useFullscreen()
         align="center"
         :side-offset="isFullscreen ? 12 : 8"
         unstyled
-        :class="[open && 'aspect-4/5 max-h-[67vh] w-sm']"
+        class="aspect-4/5 max-h-[67vh] w-sm"
+        :class="[!open && 'pointer-events-none']"
         @interact-outside="focusOutside"
       >
         <Motion
