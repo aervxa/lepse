@@ -1,5 +1,5 @@
 import type { Data } from '@lepse/clotho/data'
-import { useDebounceFn } from '@vueuse/core'
+import { useDebounceFn, useSessionStorage } from '@vueuse/core'
 
 export const useBackgrounds = () => {
   const { $clotho } = useNuxtApp()
@@ -16,12 +16,13 @@ export const useBackgrounds = () => {
     }
   }
 
-  let randomBackgroundId: number
+  let randomBackgroundId = useSessionStorage('randomBackgroundId', -1)
   const getRandomBackgroundId = () => {
+    if (randomBackgroundId.value > -1) return randomBackgroundId.value
     if (backgrounds.value.length > 0) {
       const ids = backgrounds.value.map((bg) => bg.id)
-      randomBackgroundId = ids[Math.floor(Math.random() * ids.length)]!
-      return randomBackgroundId
+      randomBackgroundId.value = ids[Math.floor(Math.random() * ids.length)]!
+      return randomBackgroundId.value
     } else {
       return -1
     }
@@ -49,7 +50,7 @@ export const useBackgrounds = () => {
     async (body: Parameters<typeof $clotho.api.backgrounds.select>['0']['body']) => {
       const [, error] = await $clotho.api.backgrounds.select({ body }).safe()
       if (error) {
-        activeBackgroundId.value = user.value?.backgroundId ?? randomBackgroundId
+        activeBackgroundId.value = user.value?.backgroundId ?? randomBackgroundId.value
         console.error(error)
         return error
       } else {
