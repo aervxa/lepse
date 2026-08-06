@@ -42,6 +42,12 @@ const routes = {
     tokens: [{"old":"/api/v1/verify/email/:token","type":0,"val":"api","end":""},{"old":"/api/v1/verify/email/:token","type":0,"val":"v1","end":""},{"old":"/api/v1/verify/email/:token","type":0,"val":"verify","end":""},{"old":"/api/v1/verify/email/:token","type":0,"val":"email","end":""},{"old":"/api/v1/verify/email/:token","type":1,"val":"token","end":""}],
     types: placeholder as Registry['verify.email']['types'],
   },
+  'backgrounds.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/backgrounds',
+    tokens: [{"old":"/api/v1/backgrounds","type":0,"val":"api","end":""},{"old":"/api/v1/backgrounds","type":0,"val":"v1","end":""},{"old":"/api/v1/backgrounds","type":0,"val":"backgrounds","end":""}],
+    types: placeholder as Registry['backgrounds.index']['types'],
+  },
   'account.profile.show': {
     methods: ["GET","HEAD"],
     pattern: '/api/v1/account/profile',
@@ -53,12 +59,6 @@ const routes = {
     pattern: '/api/v1/account/profile',
     tokens: [{"old":"/api/v1/account/profile","type":0,"val":"api","end":""},{"old":"/api/v1/account/profile","type":0,"val":"v1","end":""},{"old":"/api/v1/account/profile","type":0,"val":"account","end":""},{"old":"/api/v1/account/profile","type":0,"val":"profile","end":""}],
     types: placeholder as Registry['account.profile.update']['types'],
-  },
-  'backgrounds.index': {
-    methods: ["GET","HEAD"],
-    pattern: '/api/v1/backgrounds',
-    tokens: [{"old":"/api/v1/backgrounds","type":0,"val":"api","end":""},{"old":"/api/v1/backgrounds","type":0,"val":"v1","end":""},{"old":"/api/v1/backgrounds","type":0,"val":"backgrounds","end":""}],
-    types: placeholder as Registry['backgrounds.index']['types'],
   },
   'backgrounds.select': {
     methods: ["PATCH"],

@@ -21,15 +21,15 @@ export interface ApiDefinition {
       request: typeof routes['verify.email.request']
     }
   }
+  backgrounds: {
+    index: typeof routes['backgrounds.index']
+    select: typeof routes['backgrounds.select']
+  }
   account: {
     profile: {
       show: typeof routes['account.profile.show']
       update: typeof routes['account.profile.update']
     }
-  }
-  backgrounds: {
-    index: typeof routes['backgrounds.index']
-    select: typeof routes['backgrounds.select']
   }
   day: {
     tasks: {

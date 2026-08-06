@@ -10,9 +10,9 @@ export type ScannedRoutes = {
     'auth.access_token.destroy': { paramsTuple?: []; params?: {} }
     'verify.email.request': { paramsTuple?: []; params?: {} }
     'verify.email': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
+    'backgrounds.index': { paramsTuple?: []; params?: {} }
     'account.profile.show': { paramsTuple?: []; params?: {} }
     'account.profile.update': { paramsTuple?: []; params?: {} }
-    'backgrounds.index': { paramsTuple?: []; params?: {} }
     'backgrounds.select': { paramsTuple?: []; params?: {} }
     'day.tasks.index': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'day.tasks.store': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
@@ -40,8 +40,8 @@ export type ScannedRoutes = {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
     'verify.email.request': { paramsTuple?: []; params?: {} }
     'verify.email': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
-    'account.profile.show': { paramsTuple?: []; params?: {} }
     'backgrounds.index': { paramsTuple?: []; params?: {} }
+    'account.profile.show': { paramsTuple?: []; params?: {} }
     'day.tasks.index': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'day.session.show': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'focus_sessions.index': { paramsTuple?: []; params?: {} }
@@ -58,8 +58,8 @@ export type ScannedRoutes = {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
     'verify.email.request': { paramsTuple?: []; params?: {} }
     'verify.email': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
-    'account.profile.show': { paramsTuple?: []; params?: {} }
     'backgrounds.index': { paramsTuple?: []; params?: {} }
+    'account.profile.show': { paramsTuple?: []; params?: {} }
     'day.tasks.index': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'day.session.show': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'focus_sessions.index': { paramsTuple?: []; params?: {} }

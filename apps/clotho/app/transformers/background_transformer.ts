@@ -1,5 +1,5 @@
 import { BaseTransformer } from '@adonisjs/core/transformers'
-import Background from '#models/background'
+import type Background from '#models/background'
 import drive from '@adonisjs/drive/services/main'
 
 export default class BackgroundTransformer extends BaseTransformer<Background> {

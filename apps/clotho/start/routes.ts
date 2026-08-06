@@ -43,6 +43,9 @@ router
       .as('verify.email')
       .where('token', { match: /^.{64}$/, cast: String })
 
+    // Backgrounds (index only)
+    router.get('backgrounds', [controllers.Backgrounds, 'index'])
+
     // Authenticated users only
     router
       .group(() => {
@@ -54,8 +57,7 @@ router
           .prefix('account')
           .as('account')
 
-        // Backgrounds
-        router.get('backgrounds', [controllers.Backgrounds, 'index'])
+        // Backgrounds (select only)
         router
           .patch('backgrounds/select', [controllers.Backgrounds, 'select'])
           .use(middleware.verifiedEmail())
