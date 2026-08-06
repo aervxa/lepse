@@ -163,7 +163,7 @@ onBeforeUnmount(() => {
         </ItemContent>
         <ItemActions>
           <Button variant="outline" as-child>
-            <NuxtLink to="/shell/settings/background">Select</NuxtLink>
+            <NuxtLink to="/settings/background">Select</NuxtLink>
           </Button>
         </ItemActions>
       </Item>

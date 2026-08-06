@@ -106,7 +106,7 @@ const onSubmit = handleSubmit(async (values) => {
             <ScrollArea class="size-full">
               <div class="flex flex-col gap-3 p-4">
                 <Item v-for="task in tasks" :key="task.id" variant="outline" size="sm" as-child>
-                  <NuxtLink :to="`/shell/tasks/${task.id}`" @click="openSubpage">
+                  <NuxtLink :to="`/tasks/${task.id}`" @click="openSubpage">
                     <!-- Task status  -->
                     <ItemMedia class="-my-3 -mr-1.5">
                       <TaskStatusDropdown :id="task.id" :status="task.status" />

@@ -4,8 +4,8 @@ import { Goal, ListTodo } from 'lucide-vue-next'
 import type { FocusOutsideEvent } from 'reka-ui'
 
 const items = [
-  { name: 'tasks', path: '/shell/tasks', icon: ListTodo },
-  { name: 'goals', path: '/shell/goals', icon: Goal },
+  { name: 'tasks', path: '/tasks', icon: ListTodo },
+  { name: 'goals', path: '/goals', icon: Goal },
 ]
 type Item = (typeof items)[number]
 
@@ -30,7 +30,7 @@ onMounted(() => {
 
 watch(open, async (value) => {
   if (!value) {
-    navigateTo('/shell')
+    navigateTo('/')
     activeItem.value = undefined
   }
 })

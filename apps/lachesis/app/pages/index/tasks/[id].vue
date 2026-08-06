@@ -147,7 +147,7 @@ const deleteTask = async () => {
         <ContextMenu v-if="goal">
           <ContextMenuTrigger as-child>
             <Button variant="ghost" size="xs" as-child>
-              <NuxtLink :to="`/shell/goals/${goal.id}`">
+              <NuxtLink :to="`/goals/${goal.id}`">
                 <Link />
                 {{ goal.name }}
               </NuxtLink>
@@ -155,7 +155,7 @@ const deleteTask = async () => {
           </ContextMenuTrigger>
           <ContextMenuContent>
             <ContextMenuItem as-child>
-              <NuxtLink :to="`/shell/goals/${goal.id}`">
+              <NuxtLink :to="`/goals/${goal.id}`">
                 <ArrowUpRight />
                 Open goal
               </NuxtLink>

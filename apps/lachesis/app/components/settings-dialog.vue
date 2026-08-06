@@ -3,13 +3,13 @@ import { isTauri } from '@tauri-apps/api/core'
 import { platform } from '@tauri-apps/plugin-os'
 import { Image, MonitorCog, Palette, Pencil, User } from '@lucide/vue'
 
-const headerItem = { name: 'Edit profile', path: '/shell/settings/profile', icon: Pencil }
+const headerItem = { name: 'Edit profile', path: '/settings/profile', icon: Pencil }
 const items = [
-  { name: 'Account', path: '/shell/settings/account', icon: User },
-  { name: 'Appearance', path: '/shell/settings/appearance', icon: Palette },
-  { name: 'Backgrounds', path: '/shell/settings/background', icon: Image },
+  { name: 'Account', path: '/settings/account', icon: User },
+  { name: 'Appearance', path: '/settings/appearance', icon: Palette },
+  { name: 'Backgrounds', path: '/settings/background', icon: Image },
   ...(isTauri()
-    ? [{ name: `System (${platform()})`, path: '/shell/settings/system', icon: MonitorCog }]
+    ? [{ name: `System (${platform()})`, path: '/settings/system', icon: MonitorCog }]
     : []),
 ]
 const item = computed(() => [...items, headerItem].find((i) => route.path.startsWith(i.path)))
@@ -17,10 +17,10 @@ const item = computed(() => [...items, headerItem].find((i) => route.path.starts
 const route = useRoute()
 
 const open = computed({
-  get: () => route.path.startsWith('/shell/settings'),
+  get: () => route.path.startsWith('/settings'),
   set: (value: boolean) => {
-    if (!value && route.path.startsWith('/shell/settings')) {
-      navigateTo('/shell')
+    if (!value && route.path.startsWith('/settings')) {
+      navigateTo('/')
     }
     return !value
   },
@@ -32,7 +32,7 @@ const container = useTemplateRef('container')
 // Open the sidebar on mobile only when coming "generally", and not to a specific page (/settings is written to redirect into /account)
 const defaultMobileOpen = ref(false)
 watch(open, () => {
-  if (route.redirectedFrom?.path === '/shell/settings') {
+  if (route.redirectedFrom?.path === '/settings') {
     defaultMobileOpen.value = true
   } else {
     defaultMobileOpen.value = false

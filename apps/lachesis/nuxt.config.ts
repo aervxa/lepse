@@ -35,8 +35,7 @@ export default defineNuxtConfig({
   },
   modules: ['@nuxt/fonts', 'motion-v/nuxt', 'shadcn-nuxt', 'vue-sonner/nuxt'],
   routeRules: {
-    '/': { redirect: '/shell' },
-    '/shell/settings': { redirect: '/shell/settings/account' },
+    '/settings': { redirect: '/settings/account' },
   },
   runtimeConfig: {
     public: {

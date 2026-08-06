@@ -188,7 +188,7 @@ const deleteGoal = async () => {
                 <ContextMenu v-for="task in goalTasks" :key="task.id">
                   <ContextMenuTrigger>
                     <Item size="sm" as-child>
-                      <NuxtLink :to="`/shell/tasks/${task.id}`">
+                      <NuxtLink :to="`/tasks/${task.id}`">
                         <!-- Task status  -->
                         <ItemMedia class="-my-3 -mr-1.5">
                           <TaskStatusDropdown :id="task.id" :status="task.status" />
@@ -223,7 +223,7 @@ const deleteGoal = async () => {
                   </ContextMenuTrigger>
                   <ContextMenuContent>
                     <ContextMenuItem as-child>
-                      <NuxtLink :to="`/shell/tasks/${task.id}`">
+                      <NuxtLink :to="`/tasks/${task.id}`">
                         <ArrowUpRight />
                         Open task
                       </NuxtLink>

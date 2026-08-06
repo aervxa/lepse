@@ -105,7 +105,7 @@ const onSubmit = handleSubmit(async (values) => {
             <ScrollArea class="size-full">
               <div class="flex flex-col gap-3 p-4">
                 <Item v-for="goal in goals" :key="goal.id" variant="outline" as-child>
-                  <NuxtLink :to="`/shell/goals/${goal.id}`" @click="openSubpage">
+                  <NuxtLink :to="`/goals/${goal.id}`" @click="openSubpage">
                     <ItemContent>
                       <ItemTitle>{{ goal.name }}</ItemTitle>
                       <ItemDescription :class="[!goal.description && 'italic']">
