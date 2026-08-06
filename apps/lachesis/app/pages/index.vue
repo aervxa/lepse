@@ -8,6 +8,8 @@ definePageMeta({
   layout: 'shell',
 })
 
+const { user } = useAuth()
+
 const inFocus = ref(false)
 const focusMethod = useLocalStorage<'stopwatch' | 'pomodoro'>('focus_method', 'stopwatch')
 const focusMethodToggleable = ref(true)
@@ -36,11 +38,18 @@ const copyQuote = async () => {
   <div class="flex h-16 items-start justify-between gap-8">
     <Logo />
     <div
-      class="from-background/40 via-background/20 -m-2 flex items-start gap-4 rounded-xs rounded-tr-2xl bg-linear-to-l to-transparent p-2 ps-3 backdrop-blur-sm rtl:rounded-tl-2xl rtl:bg-linear-to-r"
+      class="flex items-start gap-4"
+      :class="[
+        user?.emailVerified &&
+          'from-background/40 via-background/20 -m-2 rounded-xs rounded-tr-2xl bg-linear-to-l to-transparent p-2 ps-3 backdrop-blur-sm rtl:rounded-tl-2xl rtl:bg-linear-to-r',
+      ]"
     >
-      <FocusSessions />
-      <Profile />
-      <SettingsDialog />
+      <template v-if="user">
+        <FocusSessions v-if="user?.emailVerified" />
+        <Profile />
+        <SettingsDialog />
+      </template>
+      <Button v-else @click="navigateTo('/login')">Login</Button>
     </div>
   </div>
 

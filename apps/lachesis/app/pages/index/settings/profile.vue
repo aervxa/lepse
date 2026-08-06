@@ -60,11 +60,7 @@ const save = async () => {
 </script>
 
 <template>
-  <EmailVerifiedOnly>
-    <DialogClose as-child>
-      <Button>Close</Button>
-    </DialogClose>
-  </EmailVerifiedOnly>
+  <Gatekeep :check="user?.emailVerified" title="Please verify your email to edit your profile." />
 
   <!-- Avatar -->
   <div class="flex flex-col gap-2">

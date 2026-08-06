@@ -34,9 +34,6 @@ export default defineNuxtConfig({
     dirs: ['~/composables/**'],
   },
   modules: ['@nuxt/fonts', 'motion-v/nuxt', 'shadcn-nuxt', 'vue-sonner/nuxt'],
-  routeRules: {
-    '/settings': { redirect: '/settings/account' },
-  },
   runtimeConfig: {
     public: {
       apiUrl: process.env.NUXT_PUBLIC_API_URL || 'http://localhost:3333',

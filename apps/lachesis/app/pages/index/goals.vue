@@ -9,6 +9,7 @@ import z from 'zod'
 const source = inject(bubbleNavSourceKey)
 
 const route = useRoute()
+const { user } = useAuth()
 const { goals, createGoal } = useGoals()
 
 const inSubpage = computed(() => /goals\/\d+/.test(route.path))
@@ -52,11 +53,18 @@ const onSubmit = handleSubmit(async (values) => {
 })
 </script>
 <template>
-  <EmailVerifiedOnly>
-    <PopoverClose as-child>
-      <Button>Close</Button>
-    </PopoverClose>
-  </EmailVerifiedOnly>
+  <Gatekeep
+    v-if="user"
+    :check="user?.emailVerified"
+    title="Please verify your email to create goals."
+  />
+  <Gatekeep
+    v-else
+    :check="false"
+    title="You must be logged in to create goals."
+    action-label="Login"
+    :action="() => navigateTo('/login')"
+  />
 
   <div class="flex size-full flex-1 flex-col" :class="[source === 'drawer' && 'mx-auto max-w-sm']">
     <AnimatePresence mode="popLayout">

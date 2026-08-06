@@ -145,6 +145,7 @@ function skipPomo() {
       <template v-if="inFocus">
         <!-- task selector -->
         <div
+          v-if="user?.emailVerified"
           class="from-background/40 to-background/20 absolute top-1/6 flex -translate-y-1/2 flex-col items-center gap-1 rounded-md bg-linear-to-t px-3 py-2 backdrop-blur-sm"
         >
           <p class="font-mono text-[10px] tracking-widest uppercase opacity-60">working on</p>
@@ -205,7 +206,7 @@ function skipPomo() {
         v-if="!inFocus"
         class="fixed-color-clock:text-foreground text-foreground-fixed max-w-xs text-center text-base leading-relaxed font-semibold tracking-wide text-pretty sm:max-w-sm sm:text-xl 2xl:text-2xl"
       >
-        {{ getGreeting(now).replace('{name}', user?.name ?? 'User') }}
+        {{ getGreeting(now).replace('{name}', user?.name ?? 'wraith') }}
       </p>
     </div>
 

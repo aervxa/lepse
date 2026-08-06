@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { toast } from 'vue-sonner'
 
+const { user } = useAuth()
 const { backgrounds, activeBackgroundId, selectBackground } = useBackgrounds()
 
 const groupedBackgrounds = computed(() =>
@@ -21,11 +22,10 @@ const select = async (id: number) => {
 </script>
 
 <template>
-  <EmailVerifiedOnly>
-    <DialogClose as-child>
-      <Button>Close</Button>
-    </DialogClose>
-  </EmailVerifiedOnly>
+  <Gatekeep
+    :check="user?.emailVerified"
+    title="Please verify your email to change your background."
+  />
 
   <div class="2xs:grid-cols-2 grid grid-cols-1 gap-2">
     <template v-for="([style, backgrounds], index) in groupedBackgrounds" :key="index">

@@ -14,15 +14,15 @@ const groups = {
   ],
 }
 
+const { user } = useAuth()
 const { THEMES, theme, THEME_OPTIONS, THEME_OPTION_LABELS, themeOptions } = useSettings()
 </script>
 
 <template>
-  <EmailVerifiedOnly>
-    <DialogClose as-child>
-      <Button>Close</Button>
-    </DialogClose>
-  </EmailVerifiedOnly>
+  <Gatekeep
+    :check="user?.emailVerified"
+    title="Please verify your email to customize the appearance."
+  />
 
   <SettingsPrimitive :groups v-slot="{ setting }">
     <Select v-if="setting.key === 'theme'" v-model="theme">

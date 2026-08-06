@@ -144,7 +144,7 @@ onBeforeUnmount(() => {
         class="bg-card/90 absolute top-4 left-1/2 w-sm -translate-x-1/2 backdrop-blur-lg"
       >
         <ItemContent>
-          <ItemTitle>Please verify your email!</ItemTitle>
+          <ItemTitle>Verify your email to unlock all features!</ItemTitle>
           <ItemDescription>Check if we already sent you a link</ItemDescription>
         </ItemContent>
         <ItemActions>
@@ -159,7 +159,7 @@ onBeforeUnmount(() => {
       >
         <ItemContent>
           <ItemTitle>You haven't selected a background!</ItemTitle>
-          <ItemDescription>No worries, we'll pick a random one.</ItemDescription>
+          <ItemDescription>No worries, we'll pick random ones until you do.</ItemDescription>
         </ItemContent>
         <ItemActions>
           <Button variant="outline" as-child>
