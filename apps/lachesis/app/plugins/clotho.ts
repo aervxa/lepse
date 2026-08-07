@@ -1,7 +1,6 @@
 import { createTuyau } from '@tuyau/core/client'
 import { registry } from '@lepse/clotho/registry'
 import { toast } from 'vue-sonner'
-import { formatTimeAgo } from '@vueuse/core'
 
 export default defineNuxtPlugin({
   name: 'clotho',
