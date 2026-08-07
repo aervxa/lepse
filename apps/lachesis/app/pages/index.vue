@@ -8,6 +8,7 @@ definePageMeta({
   layout: 'shell',
 })
 
+const route = useRoute()
 const { user } = useAuth()
 
 const inFocus = ref(false)
@@ -49,7 +50,10 @@ const copyQuote = async () => {
         <Profile />
         <SettingsDialog />
       </template>
-      <Button v-else @click="navigateTo('/login')">Login</Button>
+      <div v-else class="flex gap-2">
+        <Button variant="outline" @click="navigateTo('/signup')">Sign Up</Button>
+        <Button @click="navigateTo('/login')">Login</Button>
+      </div>
     </div>
   </div>
 
@@ -102,4 +106,21 @@ const copyQuote = async () => {
       </Button>
     </div>
   </div>
+
+  <!-- overrides for overlays that don't have nested routes
+       for nested routes, it's own component is better for route handling
+   -->
+  <Dialog
+    v-if="route.meta.overlay"
+    open
+    @update:open="
+      (v) => {
+        v || navigateTo('/')
+      }
+    "
+  >
+    <DialogContent>
+      <NuxtPage />
+    </DialogContent>
+  </Dialog>
 </template>
