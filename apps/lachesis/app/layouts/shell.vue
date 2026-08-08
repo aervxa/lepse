@@ -6,7 +6,6 @@ import { getCurrentWebviewWindow, type WebviewWindow } from '@tauri-apps/api/web
 import type { UnlistenFn } from '@tauri-apps/api/event'
 import { useFullscreen } from '@vueuse/core'
 
-const { user } = useAuth()
 const { backgrounds, activeBackgroundId } = useBackgrounds()
 const { windowTransparency, nativeDecorations } = useSettings()
 const { isFullscreen } = useFullscreen()
@@ -137,55 +136,6 @@ onBeforeUnmount(() => {
         <!-- No need for vertical scrollbar since it exists by default -->
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
-
-      <Item
-        v-if="!user"
-        variant="outline"
-        class="bg-card/80 absolute top-4 left-1/2 w-sm -translate-x-1/2 backdrop-blur-lg"
-      >
-        <ItemContent>
-          <ItemTitle>Login to unlock all features!</ItemTitle>
-          <ItemDescription>You can create an account too.</ItemDescription>
-        </ItemContent>
-        <ItemActions>
-          <Button as-child>
-            <NuxtLink to="/login">Login</NuxtLink>
-          </Button>
-        </ItemActions>
-      </Item>
-      <Item
-        v-else-if="!user?.emailVerified"
-        variant="outline"
-        class="bg-card/80 absolute top-4 left-1/2 w-sm -translate-x-1/2 backdrop-blur-lg"
-      >
-        <ItemContent>
-          <ItemTitle>Verify your email to unlock all features!</ItemTitle>
-          <ItemDescription>Check if we already sent you a link</ItemDescription>
-        </ItemContent>
-        <ItemActions>
-          <EmailVerifyButton />
-        </ItemActions>
-      </Item>
-
-      <Item
-        v-if="!user?.backgroundId"
-        variant="outline"
-        class="bg-card/80 absolute bottom-4 left-1/2 w-sm -translate-x-1/2 backdrop-blur-lg"
-      >
-        <ItemContent>
-          <ItemTitle>You haven't selected a background!</ItemTitle>
-          <ItemDescription>{{
-            user
-              ? 'We will pick random ones until you do. &nbsp;^^'
-              : 'Login to change your background.'
-          }}</ItemDescription>
-        </ItemContent>
-        <ItemActions>
-          <Button variant="outline" @click="navigateTo('/settings/background')" :disabled="!user">
-            Select
-          </Button>
-        </ItemActions>
-      </Item>
     </section>
   </main>
 </template>
