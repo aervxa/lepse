@@ -25,7 +25,7 @@ onMounted(() => {
     [nativeDecorations],
     () => {
       hideCustomDecorations.value = nativeDecorations?.value
-      if (hideCustomDecorations.value !== undefined) nextTick(stop) // nexttick cuz stop is not yet defined due to immediate: true
+      if (hideCustomDecorations.value !== undefined) nextTick(() => stop()) // nexttick cuz stop is not yet defined due to immediate: true
     },
     { immediate: true }
   )
