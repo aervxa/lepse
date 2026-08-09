@@ -48,7 +48,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 [data-reka-popper-content-wrapper] {
   pointer-events: none;
 }
-[data-slot='popover-content'] {
+[data-slot='popover-content']:not([data-state='closed']) {
   pointer-events: auto;
 }
 </style>
