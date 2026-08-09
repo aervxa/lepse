@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { useFullscreen, useLocalStorage } from '@vueuse/core'
+import { CircleAlert } from '@lucide/vue'
+import { createReusableTemplate, useFullscreen, useLocalStorage } from '@vueuse/core'
 import { Copy, Expand, Lightbulb, LightbulbOff, Shrink } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
+import EmailVerifyButton from '~/components/email-verify-button.vue'
 import { getDailyQuote } from '~/lib/quotes'
 
 definePageMeta({
@@ -39,14 +41,15 @@ const copyQuote = async () => {
   <div class="flex h-16 items-start justify-between gap-8">
     <Logo />
     <div
-      class="flex items-start gap-4"
+      class="relative flex items-start gap-4"
       :class="[
         user?.emailVerified &&
           'from-background/40 via-background/20 -m-2 rounded-xs rounded-tr-2xl bg-linear-to-l to-transparent p-2 ps-3 backdrop-blur-sm rtl:rounded-tl-2xl rtl:bg-linear-to-r',
       ]"
     >
       <template v-if="user">
-        <FocusSessions v-if="user?.emailVerified" />
+        <FocusSessions v-if="user.emailVerified" />
+        <EmailVerifyButton v-else class="-mr-2" />
         <Profile />
         <SettingsDialog />
       </template>
@@ -54,6 +57,32 @@ const copyQuote = async () => {
         <Button variant="outline" @click="navigateTo('/signup')">Sign Up</Button>
         <Button @click="navigateTo('/login')">Login</Button>
       </div>
+
+      <Item
+        v-if="!user || !user.emailVerified"
+        variant="outline"
+        class="bg-card/80 absolute top-full right-0 -z-10 w-max translate-y-3 backdrop-blur-lg rtl:left-0"
+      >
+        <ItemMedia variant="icon">
+          <CircleAlert />
+        </ItemMedia>
+        <ItemContent class="mr-2">
+          <ItemTitle>
+            {{
+              !user
+                ? 'Login to unlock all features!'
+                : !user?.emailVerified && 'Verify your email to unlock all features!'
+            }}
+          </ItemTitle>
+          <ItemDescription>
+            {{
+              !user
+                ? 'You can create an account too.'
+                : !user?.emailVerified && 'Check if we already sent you a link'
+            }}
+          </ItemDescription>
+        </ItemContent>
+      </Item>
     </div>
   </div>
 
@@ -107,36 +136,8 @@ const copyQuote = async () => {
     </div>
   </div>
 
-  <Item
-    v-if="!user"
-    variant="outline"
-    class="bg-card/80 absolute top-4 left-1/2 w-sm -translate-x-1/2 backdrop-blur-lg"
-  >
-    <ItemContent>
-      <ItemTitle>Login to unlock all features!</ItemTitle>
-      <ItemDescription>You can create an account too.</ItemDescription>
-    </ItemContent>
-    <ItemActions>
-      <Button as-child>
-        <NuxtLink to="/login">Login</NuxtLink>
-      </Button>
-    </ItemActions>
-  </Item>
-  <Item
-    v-else-if="!user?.emailVerified"
-    variant="outline"
-    class="bg-card/80 absolute top-4 left-1/2 w-sm -translate-x-1/2 backdrop-blur-lg"
-  >
-    <ItemContent>
-      <ItemTitle>Verify your email to unlock all features!</ItemTitle>
-      <ItemDescription>Check if we already sent you a link</ItemDescription>
-    </ItemContent>
-    <ItemActions>
-      <EmailVerifyButton />
-    </ItemActions>
-  </Item>
-
-  <Item
+  <!-- TODO: Show background trivia near logo or smt -->
+  <!-- <Item
     v-if="!user?.backgroundId"
     variant="outline"
     class="bg-card/80 absolute bottom-4 left-1/2 w-sm -translate-x-1/2 backdrop-blur-lg"
@@ -154,7 +155,7 @@ const copyQuote = async () => {
         Select
       </Button>
     </ItemActions>
-  </Item>
+  </Item> -->
 
   <!-- overrides for overlays that don't have nested routes
        for nested routes, it's own component is better for route handling
