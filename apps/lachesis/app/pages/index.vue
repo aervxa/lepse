@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { CircleAlert } from '@lucide/vue'
-import { createReusableTemplate, useFullscreen, useLocalStorage } from '@vueuse/core'
-import { Copy, Expand, Lightbulb, LightbulbOff, Shrink } from 'lucide-vue-next'
+import { CircleAlert, Copy, Expand, Lightbulb, LightbulbOff, Shrink } from '@lucide/vue'
+import { useFullscreen, useLocalStorage } from '@vueuse/core'
 import { toast } from 'vue-sonner'
 import EmailVerifyButton from '~/components/email-verify-button.vue'
 import { getDailyQuote } from '~/lib/quotes'
@@ -135,27 +134,6 @@ const copyQuote = async () => {
       </Button>
     </div>
   </div>
-
-  <!-- TODO: Show background trivia near logo or smt -->
-  <!-- <Item
-    v-if="!user?.backgroundId"
-    variant="outline"
-    class="bg-card/80 absolute bottom-4 left-1/2 w-sm -translate-x-1/2 backdrop-blur-lg"
-  >
-    <ItemContent>
-      <ItemTitle>You haven't selected a background!</ItemTitle>
-      <ItemDescription>{{
-        user
-          ? 'We will pick random ones until you do. &nbsp;^^'
-          : 'Login to change your background.'
-      }}</ItemDescription>
-    </ItemContent>
-    <ItemActions>
-      <Button variant="outline" @click="navigateTo('/settings/background')" :disabled="!user">
-        Select
-      </Button>
-    </ItemActions>
-  </Item> -->
 
   <!-- overrides for overlays that don't have nested routes
        for nested routes, it's own component is better for route handling
