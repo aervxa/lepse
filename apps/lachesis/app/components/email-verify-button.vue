@@ -22,16 +22,20 @@ const request = async () => {
 onMounted(() => {
   start()
 })
+
+const lucky = Math.random() < 0.04
 </script>
 
 <template>
   <LoadingButton :disabled="remaining > 0" :action="request" force-slot>
     {{
       remaining
-        ? `${hasReset ? 'Resend' : 'Send link'} in ${remaining}s`
+        ? `${hasReset ? 'Resend' : lucky ? 'Sned lnik' : 'Send link'} in ${remaining}s`
         : hasReset
           ? 'Resend'
-          : 'Send link'
+          : lucky
+            ? 'Sned lnik'
+            : 'Send link'
     }}
   </LoadingButton>
 </template>
