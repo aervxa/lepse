@@ -28,9 +28,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <NuxtLayout>
-    <NuxtPage />
-  </NuxtLayout>
+  <TooltipProvider>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+  </TooltipProvider>
   <Toaster position="top-center" richColors class="font-[inherit]!" />
   <DialogRenderer />
 </template>
