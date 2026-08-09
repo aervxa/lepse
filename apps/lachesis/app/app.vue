@@ -31,6 +31,6 @@ onMounted(() => {
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
-  <Toaster position="top-center" richColors />
+  <Toaster position="top-center" richColors class="font-[inherit]!" />
   <DialogRenderer />
 </template>
