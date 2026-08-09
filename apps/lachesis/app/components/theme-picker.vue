@@ -1,5 +1,6 @@
 <script setup>
 import { RotateCcw, X } from '@lucide/vue'
+import { Check } from 'lucide-vue-next'
 
 const open = ref(false)
 const { THEMES, theme } = useSettings()
@@ -61,10 +62,10 @@ const { THEMES, theme } = useSettings()
                   ...popoverTransition.before(),
                 },
               }"
-              class="bg-foreground-fixed absolute inset-0 rounded-full border border-black/10"
-              :class="[i === 0 && 'grid place-content-center']"
+              class="bg-foreground-fixed [&>svg]:text-primary-foreground/40 absolute inset-0 grid place-content-center rounded-full border border-black/10 [&>svg]:size-(--inner-radius)"
             >
-              <RotateCcw v-if="i === 0" class="text-muted-foreground size-(--inner-radius)" />
+              <Check v-if="theme === t" />
+              <RotateCcw v-else-if="i === 0" />
             </Motion>
           </ContextMenuItem>
         </div>
