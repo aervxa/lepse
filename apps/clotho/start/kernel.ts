@@ -23,9 +23,9 @@ server.errorHandler(() => import('#exceptions/handler'))
  * the request URL.
  */
 server.use([
-  () => import('#middleware/force_json_response_middleware'),
   () => import('#middleware/container_bindings_middleware'),
   () => import('@adonisjs/cors/cors_middleware'),
+  () => import('@adonisjs/vite/vite_middleware'),
 ])
 
 /**
@@ -46,6 +46,7 @@ router.use([
  * the routes or the routes group.
  */
 export const middleware = router.named({
+  forceJsonResponse: () => import('#middleware/force_json_response_middleware'),
   verifiedEmail: () => import('#middleware/verified_email_middleware'),
   clientDate: () => import('#middleware/client_date_middleware'),
   auth: () => import('#middleware/auth_middleware'),

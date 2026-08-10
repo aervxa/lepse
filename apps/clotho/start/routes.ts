@@ -15,10 +15,12 @@ import { apiThrottle, throttle } from './limiter.ts'
 import limiter from '@adonisjs/limiter/services/main'
 
 router
-  .get('/', () => {
-    return { hello: 'what are you looking for?' }
-  })
+  .on('/ping')
+  .setHandler(() => 'pong')
   .use(throttle)
+
+// TODO: redirect to actual homepage later on (atropos)
+router.on('/').render('pages/home').as('home').use(throttle)
 
 router
   .group(() => {
@@ -124,4 +126,5 @@ router
       .use(middleware.auth())
   })
   .prefix('/api/v1')
+  .use(middleware.forceJsonResponse())
   .use(apiThrottle)
