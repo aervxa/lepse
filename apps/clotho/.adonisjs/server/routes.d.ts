@@ -5,7 +5,7 @@ type ParamValue = string | number | bigint | boolean
 export type ScannedRoutes = {
   ALL: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
-    'home': { paramsTuple?: []; params?: {} }
+    'web.home': { paramsTuple?: []; params?: {} }
     'auth.new_account.store': { paramsTuple?: []; params?: {} }
     'auth.access_token.store': { paramsTuple?: []; params?: {} }
     'auth.access_token.destroy': { paramsTuple?: []; params?: {} }
@@ -39,7 +39,7 @@ export type ScannedRoutes = {
   }
   GET: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
-    'home': { paramsTuple?: []; params?: {} }
+    'web.home': { paramsTuple?: []; params?: {} }
     'verify.email.request': { paramsTuple?: []; params?: {} }
     'verify.email': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
     'backgrounds.index': { paramsTuple?: []; params?: {} }
@@ -58,7 +58,7 @@ export type ScannedRoutes = {
   }
   HEAD: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
-    'home': { paramsTuple?: []; params?: {} }
+    'web.home': { paramsTuple?: []; params?: {} }
     'verify.email.request': { paramsTuple?: []; params?: {} }
     'verify.email': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
     'backgrounds.index': { paramsTuple?: []; params?: {} }

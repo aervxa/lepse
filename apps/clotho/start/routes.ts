@@ -19,9 +19,15 @@ router
   .setHandler(() => 'pong')
   .use(throttle)
 
-// TODO: redirect to actual homepage later on (atropos)
-router.on('/').render('pages/home').as('home').use(throttle)
+// WEB ROUTES (routes that users access on the server)
+router
+  .group(() => {
+    // TODO: redirect to actual homepage later on (atropos)
+    router.on('/').render('pages/home').as('home').use(throttle)
+  })
+  .as('web')
 
+// API
 router
   .group(() => {
     // Authentication

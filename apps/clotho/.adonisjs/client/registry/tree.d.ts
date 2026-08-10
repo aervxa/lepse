@@ -7,7 +7,6 @@ export interface ApiDefinition {
       serve: typeof routes['drive.fs.serve']
     }
   }
-  home: typeof routes['home']
   auth: {
     newAccount: {
       store: typeof routes['auth.new_account.store']

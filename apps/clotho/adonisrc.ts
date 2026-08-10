@@ -128,7 +128,7 @@ export default defineConfig({
       indexEntities({
         transformers: { enabled: true },
       }),
-      generateRegistry(),
+      generateRegistry({ routes: { except: [(n) => n.startsWith('web')] } }),
       indexPolicies(),
     ],
     buildStarting: [() => import('@adonisjs/vite/build_hook')],
