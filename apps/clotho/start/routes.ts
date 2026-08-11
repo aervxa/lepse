@@ -24,6 +24,7 @@ router
   .group(() => {
     // TODO: redirect to actual homepage later on (atropos)
     router.on('/').render('pages/home').as('home').use(throttle)
+    router.get('verify/email/:token', [controllers.VerifyEmail, 'verify']).as('verify.email')
   })
   .as('web')
 
@@ -46,7 +47,6 @@ router
       .as('verify.email.request')
       .use(middleware.auth())
       .use(limiter.define('verifyEmailRequest', () => limiter.allowRequests(1).every('1 minute')))
-    router.get('verify/email/:token', [controllers.VerifyEmail, 'verify']).as('verify.email')
 
     // Backgrounds (index only)
     router.get('backgrounds', [controllers.Backgrounds, 'index'])

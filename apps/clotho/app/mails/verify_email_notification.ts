@@ -1,6 +1,6 @@
 import type User from '#models/user'
-import env from '#start/env'
 import { BaseMail } from '@adonisjs/mail'
+import { urlFor } from '@adonisjs/core/services/url_builder'
 
 export default class VerifyEmailNotification extends BaseMail {
   subject = ''
@@ -17,11 +17,11 @@ export default class VerifyEmailNotification extends BaseMail {
    * the email is sent or queued.
    */
   prepare() {
-    const url = env.get('FRONTEND_URL') + `/verify/email?token=${this.token}`
+    const data = { user: this.user, url: urlFor('web.verify.email', { token: this.token }) }
     this.message
       .to(this.user.email)
       .subject('Please verify your email!')
-      .htmlView('emails/verify_email_html', { user: this.user, url })
-      .textView('emails/verify_email_text', { user: this.user, url })
+      .htmlView('emails/verify_email_html', data)
+      .textView('emails/verify_email_text', data)
   }
 }

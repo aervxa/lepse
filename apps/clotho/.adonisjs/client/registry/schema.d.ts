@@ -67,18 +67,6 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/verify_email_controller').default['request']>>>
     }
   }
-  'verify.email': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/verify/email/:token'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { token: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/verify_email_controller').default['verify']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/verify_email_controller').default['verify']>>>
-    }
-  }
   'backgrounds.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/backgrounds'

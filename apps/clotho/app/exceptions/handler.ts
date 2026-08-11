@@ -1,5 +1,6 @@
 import app from '@adonisjs/core/services/app'
 import { type HttpContext, ExceptionHandler } from '@adonisjs/core/http'
+import type { StatusPageRange, StatusPageRenderer } from '@adonisjs/core/types/http'
 
 export default class HttpExceptionHandler extends ExceptionHandler {
   /**
@@ -7,6 +8,11 @@ export default class HttpExceptionHandler extends ExceptionHandler {
    * with pretty printed stack traces.
    */
   protected debug = !app.inProduction
+
+  protected renderStatusPages = true // force see status pages even in dev
+  protected statusPages: Record<StatusPageRange, StatusPageRenderer> = {
+    '400..599': (error, { view }) => view.render('pages/error', { error }),
+  }
 
   /**
    * The method is used for handling errors and returning

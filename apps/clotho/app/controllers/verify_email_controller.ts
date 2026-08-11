@@ -1,5 +1,6 @@
 import User from '#models/user'
 import token_service from '#services/token_service'
+import { Exception } from '@adonisjs/core/exceptions'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class VerifyEmailController {
@@ -11,17 +12,17 @@ export default class VerifyEmailController {
     return response.noContent()
   }
 
-  async verify({ params, response }: HttpContext) {
+  async verify({ params, view }: HttpContext) {
     const payload = token_service.verifyEmailVerificationToken(params.token)
 
     if (!payload) {
-      return response.unauthorized('Your token is invalid or expired')
+      throw new Exception('Your token is invalid or expired!', { status: 401 })
     }
 
     const user = await User.findOrFail(payload.userId)
     user.emailVerified = true
     await user.save()
 
-    return response.noContent()
+    return view.render('pages/verify/email')
   }
 }

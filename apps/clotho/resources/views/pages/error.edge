@@ -1,0 +1,13 @@
+@layout()
+  <div class="m-auto flex flex-col gap-4 p-4 text-center sm:gap-8">
+    <p class="text-6xl font-bold sm:text-8xl">{{ error.status }}</p>
+    <p class="text-xl font-semibold tracking-wider uppercase sm:text-2xl">
+      {{ error.message ?? 'Something went wrong.' }}
+    </p>
+  </div>
+  <p
+    class="fixed bottom-0 left-1/2 -translate-x-1/2 translate-y-2/5 text-[min(512px,50vw)] leading-none font-bold opacity-5 sm:translate-y-1/2"
+  >
+    {{ error.status }}
+  </p>
+@end

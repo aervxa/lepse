@@ -17,7 +17,7 @@ export interface ApiDefinition {
     }
   }
   verify: {
-    email: typeof routes['verify.email'] & {
+    email: {
       request: typeof routes['verify.email.request']
     }
   }
