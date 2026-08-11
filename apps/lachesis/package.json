@@ -1,7 +1,8 @@
 {
   "name": "@lepse/lachesis",
-  "type": "module",
+  "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",

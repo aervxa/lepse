@@ -11,7 +11,7 @@ Lepse is an aesthetic clock + simple productivity tool to help u focus. Have a s
 
 Lepse's aim is to make being productive simpler and more enjoyable/comfortable. I've tried other tools/apps and it was a tremendous amount of work to setup/use, hence why I started Lepse. (and also I always found myself having an AFK clock, shout-out [relaxingclock.com](https://relaxingclock-com.netlify.app/))
 
-The base of the app is pretty simple, you create tasks, and when u run pomos/stopwatches, you can select a task, and the time spend on the task will be tracked for u to see. You could optionally conect tasks to a bigger goal (something big, like a project, goal in life, etc). highly recommended so that you  would constantly know exactly what you are doing.
+The base of the app is pretty simple, you create tasks, and when u run pomos/stopwatches, you can select a task, and the time spend on the task will be tracked for u to see. You could optionally conect tasks to a bigger goal (something big, like a project, goal in life, etc). highly recommended so that you would constantly know exactly what you are doing.
 
 ## Features
 
@@ -35,3 +35,7 @@ The base of the app is pretty simple, you create tasks, and when u run pomos/sto
 
 > [!TIP]
 > Zero AI slop! (Sad to have to even say this), so actually think before throwing assumptions/accusations
+
+### License
+
+All apps and packages in this repository are licensed under the Komorebi License 2.0.0, which is found in the LICENSE.md file at the root of this repository.

@@ -1,6 +1,11 @@
-# Nuxt Minimal Starter
+# Lachesis (@lepse/lachesis)
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+This is the AdonisJS backend for lepse.
+
+> [!NOTE]
+> Below are parts of the default README I deemed useful.
+
+---
 
 ## Setup
 
@@ -71,5 +76,3 @@ yarn preview
 # bun
 bun run preview
 ```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.

@@ -1,10 +1,9 @@
 {
   "name": "lepse",
-  "version": "0.0.0",
   "private": true,
   "type": "module",
   "description": "A batteries-included AdonisJS starter kit for building modern APIs with type-safe frontend integration",
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE.md",
   "workspaces": [
     "apps/*"
   ],
