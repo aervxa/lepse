@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T extends { id: number; name: string }">
-import { Plus } from 'lucide-vue-next'
+import { Plus } from '@lucide/vue'
 import type { PopoverContentProps } from 'reka-ui'
 
 const props = withDefaults(

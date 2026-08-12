@@ -1,6 +1,5 @@
 <script setup>
-import { RotateCcw, X } from '@lucide/vue'
-import { Check } from 'lucide-vue-next'
+import { Check, RotateCcw, X } from '@lucide/vue'
 
 const open = ref(false)
 const { THEMES, theme } = useSettings()

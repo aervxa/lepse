@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { createReusableTemplate } from '@vueuse/core'
-import { LogOut, Pencil, Settings, Smile, X } from 'lucide-vue-next'
+import { LogOut, Pencil, Settings, Smile, X } from '@lucide/vue'
 
 const { user, logout } = useAuth()
 const open = ref(false)

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { clamp } from '@vueuse/core'
-import { ImageIcon, RotateCcw } from 'lucide-vue-next'
+import { ImageIcon, RotateCcw } from '@lucide/vue'
 import { toast } from 'vue-sonner'
 
 const SIZE = 224

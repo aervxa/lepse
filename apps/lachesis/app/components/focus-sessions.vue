@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Clock, ClockFading } from 'lucide-vue-next'
+import { Clock, ClockFading } from '@lucide/vue'
 import { formatDuration } from '~/lib/time'
 
 const { focusSession, fetchFocusSession } = useDay()

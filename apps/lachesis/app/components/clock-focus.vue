@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useDebounceFn, useIntervalFn, useNow } from '@vueuse/core'
-import { ChevronsUpDown, FastForward, Pause, Play, RefreshCw } from 'lucide-vue-next'
+import { ChevronsUpDown, FastForward, Pause, Play, RefreshCw } from '@lucide/vue'
 import { toast } from 'vue-sonner'
 import { getGreeting } from '~/lib/greetings'
 import { formatDuration, Stopwatch } from '~/lib/time'

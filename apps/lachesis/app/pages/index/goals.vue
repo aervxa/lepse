@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { revalidateLogic, useForm } from '@tanstack/vue-form'
-import { ChevronRight, Plus, X } from 'lucide-vue-next'
+import { ChevronRight, Plus, X } from '@lucide/vue'
 import { PopoverClose } from 'reka-ui'
 import { toast } from 'vue-sonner'
 import z from 'zod'

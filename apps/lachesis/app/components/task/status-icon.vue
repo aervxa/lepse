@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CircleCheck, CircleDashed, CircleX, Loader } from 'lucide-vue-next'
+import { CircleCheck, CircleDashed, CircleX, Loader } from '@lucide/vue'
 
 defineProps<{
   status: string

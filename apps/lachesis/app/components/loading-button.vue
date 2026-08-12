@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { LoaderCircle } from 'lucide-vue-next'
+import { LoaderCircle } from '@lucide/vue'
 import { Button } from './ui/button'
 
 type ButtonProps = InstanceType<typeof Button>['$props']

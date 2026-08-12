@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Minus, SquareDashedTopSolid, SquaresIntersect, X } from 'lucide-vue-next'
+import { Minus, SquareDashedTopSolid, SquaresIntersect, X } from '@lucide/vue'
 import { isTauri } from '@tauri-apps/api/core'
 import { platform, type Platform } from '@tauri-apps/plugin-os'
 import { getCurrentWebviewWindow, type WebviewWindow } from '@tauri-apps/api/webviewWindow'

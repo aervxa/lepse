@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CircleAlert, CircleSlash, SignalHigh, SignalLow, SignalMedium } from 'lucide-vue-next'
+import { CircleAlert, CircleSlash, SignalHigh, SignalLow, SignalMedium } from '@lucide/vue'
 
 defineProps<{
   priority: string

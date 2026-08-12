@@ -9,7 +9,7 @@ import {
   MoreHorizontal,
   Trash,
   Unlink,
-} from 'lucide-vue-next'
+} from '@lucide/vue'
 import { toast } from 'vue-sonner'
 import { formatDuration } from '~/lib/time'
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CircleStar, CircleX, Crosshair } from 'lucide-vue-next'
+import { CircleStar, CircleX, Crosshair } from '@lucide/vue'
 
 defineProps<{
   status: string

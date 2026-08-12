@@ -66,7 +66,6 @@ export default defineNuxtConfig({
         'change-case',
         'class-variance-authority',
         'clsx',
-        'lucide-vue-next',
         'reka-ui',
         'tailwind-merge',
         'vaul-vue',
