@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import { toTypedSchema } from '@vee-validate/zod'
-import { useForm, Field as VeeField, useFieldError } from 'vee-validate'
-import { z } from 'zod'
+import { revalidateLogic, useForm } from '@tanstack/vue-form'
 import { toast } from 'vue-sonner'
+import { z } from 'zod'
 
 definePageMeta({ overlay: true })
 
 const { signup } = useAuth()
 
-const formSchema = z
+const schema = z
   .object({
-    name: z.string().optional(),
+    name: z.string(),
     email: z.string().email('Invalid email address'),
     password: z.string().min(8, 'Password must be at least 8 characters long'),
     passwordConfirmation: z.string(),
@@ -20,34 +19,41 @@ const formSchema = z
     path: ['passwordConfirmation'],
   })
 
-const { handleSubmit, setFieldError, isSubmitting } = useForm({
-  validationSchema: toTypedSchema(formSchema),
-  initialValues: { name: '', email: '', password: '', passwordConfirmation: '' },
-})
-
-const pwError = useFieldError('password')
-const confirmError = useFieldError('passwordConfirmation')
-
-const onSubmit = handleSubmit(async (values) => {
-  const error = await signup(
-    values.name || '',
-    values.email,
-    values.password,
-    values.passwordConfirmation
-  )
-  if (error?.isValidationError()) {
-    const errors = mapErrors(error.response.errors)
-    if (errors.name) setFieldError('name', errors.name.message)
-    if (errors.email) setFieldError('email', errors.email.message)
-    if (errors.password) setFieldError('password', errors.password.message)
-    if (errors.passwordConfirmation)
-      setFieldError('passwordConfirmation', errors.passwordConfirmation.message)
-  } else if (error) {
-    toast.error('Something went wrong', { description: error.message })
-  } else {
+const {
+  handleSubmit,
+  Field: FormField,
+  Subscribe: FormSubscribe,
+} = useForm({
+  validationLogic: revalidateLogic(),
+  validators: {
+    onDynamic: schema,
+    onSubmitAsync: async ({ value }) => {
+      const error = await signup(
+        value.name,
+        value.email,
+        value.password,
+        value.passwordConfirmation
+      )
+      if (!error) return null
+      if (error.isValidationError()) {
+        const errors = mapErrors(error.response.errors)
+        return {
+          fields: {
+            name: errors.name?.message,
+            email: errors.email?.message,
+            password: errors.password?.message,
+            passwordConfirmation: errors.passwordConfirmation?.message,
+          },
+        }
+      } else toast.error('Something went wrong', { description: error.message })
+      return 'Signup failed!'
+    },
+  },
+  defaultValues: { name: '', email: '', password: '', passwordConfirmation: '' },
+  onSubmit: () => {
     toast.success('Signed up successfully')
     navigateTo('/')
-  }
+  },
 })
 </script>
 
@@ -56,83 +62,105 @@ const onSubmit = handleSubmit(async (values) => {
     <DialogTitle class="text-xl">Create your account</DialogTitle>
     <DialogDescription>Enter your details below to create your account</DialogDescription>
   </DialogHeader>
-  <form @submit="onSubmit">
+  <form @submit.prevent="handleSubmit">
     <FieldGroup>
       <!-- Name -->
-      <VeeField v-slot="{ field, errors }" name="name">
-        <Field :data-invalid="!!errors.length">
-          <FieldLabel for="name">Name</FieldLabel>
+      <FormField name="name" v-slot="{ field }">
+        <Field :data-invalid="!field.state.meta.isValid">
+          <FieldLabel :for="field.name">Name</FieldLabel>
           <Input
-            id="name"
-            v-bind="field"
+            :id="field.name"
+            :name="field.name"
+            :model-value="field.state.value"
+            :aria-invalid="!field.state.meta.isValid"
             placeholder="Laughing Fox"
-            :aria-invalid="!!errors.length"
+            @blur="field.handleBlur"
+            @input="field.handleChange($event.target.value)"
           />
-          <FieldError v-if="errors.length" :errors="errors" />
+          <FieldError v-if="!field.state.meta.isValid" :errors="field.state.meta.errors" />
         </Field>
-      </VeeField>
+      </FormField>
 
       <!-- Email -->
-      <VeeField v-slot="{ field, errors }" name="email">
-        <Field :data-invalid="!!errors.length">
-          <FieldLabel for="email">Email</FieldLabel>
+      <FormField name="email" v-slot="{ field }">
+        <Field :data-invalid="!field.state.meta.isValid">
+          <FieldLabel :for="field.name">Email</FieldLabel>
           <Input
-            id="email"
-            v-bind="field"
             type="email"
+            :id="field.name"
+            :name="field.name"
+            :model-value="field.state.value"
+            :aria-invalid="!field.state.meta.isValid"
             autocomplete="username"
             placeholder="me@gmail.com"
-            :aria-invalid="!!errors.length"
+            @blur="field.handleBlur"
+            @input="field.handleChange($event.target.value)"
           />
-          <FieldError v-if="errors.length" :errors="errors" />
+          <FieldError v-if="!field.state.meta.isValid" :errors="field.state.meta.errors" />
         </Field>
-      </VeeField>
+      </FormField>
 
       <!-- Passwords -->
       <Field>
         <div class="grid grid-cols-2 gap-4 @max-xs:grid-cols-1">
-          <VeeField v-slot="{ field, errors }" name="password">
-            <Field :data-invalid="!!errors.length">
-              <FieldLabel for="password">Password</FieldLabel>
+          <FormField name="password" v-slot="{ field }">
+            <Field :data-invalid="!field.state.meta.isValid">
+              <FieldLabel :for="field.name">Password</FieldLabel>
               <Input
-                id="password"
                 type="password"
-                v-bind="field"
+                :id="field.name"
+                :name="field.name"
+                :model-value="field.state.value"
+                :aria-invalid="!field.state.meta.isValid"
                 autocomplete="new-password"
-                :aria-invalid="!!errors.length"
+                @blur="field.handleBlur"
+                @input="field.handleChange($event.target.value)"
               />
             </Field>
-          </VeeField>
+          </FormField>
 
-          <VeeField v-slot="{ field, errors }" name="passwordConfirmation">
-            <Field :data-invalid="!!errors.length">
-              <FieldLabel for="passwordConfirmation">Confirm Password</FieldLabel>
+          <FormField name="passwordConfirmation" v-slot="{ field }">
+            <Field :data-invalid="!field.state.meta.isValid">
+              <FieldLabel :for="field.name">Confirm Password</FieldLabel>
               <Input
-                id="passwordConfirmation"
                 type="password"
-                v-bind="field"
+                :id="field.name"
+                :name="field.name"
+                :model-value="field.state.value"
+                :aria-invalid="!field.state.meta.isValid"
                 autocomplete="new-password"
-                :aria-invalid="!!errors.length"
+                @blur="field.handleBlur"
+                @input="field.handleChange($event.target.value)"
               />
             </Field>
-          </VeeField>
+          </FormField>
         </div>
 
         <!-- Shared error block for both password fields -->
-        <FieldError v-if="pwError || confirmError">
-          {{ pwError || confirmError }}
-        </FieldError>
-        <FieldDescription v-else>Must be at least 8 characters long.</FieldDescription>
+        <FormSubscribe v-slot="{ fieldMeta }">
+          <FieldError
+            v-if="!fieldMeta.password?.isValid || !fieldMeta.passwordConfirmation?.isValid"
+            :errors="[
+              ...(fieldMeta.password?.errors ?? []),
+              ...(fieldMeta.passwordConfirmation?.errors ?? []),
+            ]"
+          />
+          <FieldDescription v-else>Must be at least 8 characters long.</FieldDescription>
+        </FormSubscribe>
       </Field>
 
       <!-- Submit -->
-      <Field>
-        <Button type="submit" class="w-full" :disabled="isSubmitting">Create Account</Button>
-        <p class="text-muted-foreground text-center text-sm">
-          Already have an account?
-          <NuxtLink to="/login" class="text-foreground underline">Login</NuxtLink>
-        </p>
-      </Field>
+      <FormSubscribe v-slot="{ canSubmit, isPristine, isSubmitting }">
+        <Field>
+          <LoadingButton type="submit" :disabled="!canSubmit || isPristine" :loading="isSubmitting">
+            Create Account
+          </LoadingButton>
+          <p class="text-muted-foreground text-center text-sm">
+            Already have an account?
+            <NuxtLink to="/login" class="text-foreground underline">Login</NuxtLink>
+          </p>
+        </Field>
+      </FormSubscribe>
     </FieldGroup>
   </form>
 </template>

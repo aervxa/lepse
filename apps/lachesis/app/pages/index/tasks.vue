@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { toTypedSchema } from '@vee-validate/zod'
+import { revalidateLogic, useForm } from '@tanstack/vue-form'
 import { ChevronRight, Plus, X } from 'lucide-vue-next'
 import { PopoverClose } from 'reka-ui'
-import { useForm, Field as VeeField } from 'vee-validate'
 import { toast } from 'vue-sonner'
 import z from 'zod'
 
@@ -30,26 +29,37 @@ const openSubpage = () => {
 const createOpen = ref(false)
 const schema = z.object({
   name: z.string().min(1, 'Name is required').max(255),
-  description: z.string().max(2500).optional(),
+  description: z.string().max(2500),
 })
 
-const { handleSubmit, setFieldError, isSubmitting, meta } = useForm({
-  validationSchema: toTypedSchema(schema),
-})
-
-const onSubmit = handleSubmit(async (values) => {
-  const error = await createTask(values)
-  if (error?.isValidationError()) {
-    const errors = mapErrors(error.response.errors)
-    for (const [field, err] of Object.entries(errors)) {
-      setFieldError(field as any, err.message)
-    }
-  } else if (error) {
-    toast.error('Something went wrong!', { description: error.message })
-  } else {
+const {
+  handleSubmit,
+  Field: FormField,
+  Subscribe: FormSubscribe,
+} = useForm({
+  validationLogic: revalidateLogic(),
+  validators: {
+    onDynamic: schema,
+    onSubmitAsync: async ({ value }) => {
+      const error = await createTask(value)
+      if (!error) return null
+      if (error.isValidationError()) {
+        const errors = mapErrors(error.response.errors)
+        return {
+          fields: {
+            name: errors.name?.message,
+            description: errors.description?.message,
+          },
+        }
+      } else toast.error('Something went wrong!', { description: error.message })
+      return 'Creating task failed!'
+    },
+  },
+  defaultValues: { name: '', description: '' },
+  onSubmit: () => {
     toast.success('Task created!')
     createOpen.value = false
-  }
+  },
 })
 </script>
 
@@ -140,7 +150,7 @@ const onSubmit = handleSubmit(async (values) => {
             </Button>
           </DialogTrigger>
           <DialogContent>
-            <form class="contents" @submit="onSubmit">
+            <form class="contents" @submit.prevent="handleSubmit">
               <DialogHeader>
                 <DialogTitle>New Task</DialogTitle>
                 <DialogDescription>Remember to complete this task</DialogDescription>
@@ -148,49 +158,61 @@ const onSubmit = handleSubmit(async (values) => {
 
               <FieldGroup>
                 <!-- Name -->
-                <VeeField v-slot="{ field, errors }" name="name">
-                  <Field :data-invalid="!!errors.length">
-                    <FieldLabel for="name">Name *</FieldLabel>
+                <FormField name="name" v-slot="{ field }">
+                  <Field :data-invalid="!field.state.meta.isValid">
+                    <FieldLabel :for="field.name">Name *</FieldLabel>
                     <Input
-                      id="name"
-                      v-bind="field"
-                      :model-value="field.value"
+                      :id="field.name"
+                      :name="field.name"
+                      :model-value="field.state.value"
+                      :aria-invalid="!field.state.meta.isValid"
                       placeholder="e.g. Do xyz"
-                      :aria-invalid="!!errors.length"
+                      @blur="field.handleBlur"
+                      @input="field.handleChange($event.target.value)"
                     />
-                    <FieldError v-if="errors.length" :errors="errors" />
+                    <FieldError
+                      v-if="!field.state.meta.isValid"
+                      :errors="field.state.meta.errors"
+                    />
                   </Field>
-                </VeeField>
+                </FormField>
 
                 <!-- Description -->
-                <VeeField v-slot="{ field, errors }" name="description">
-                  <Field :data-invalid="!!errors.length">
-                    <FieldLabel for="description">Description</FieldLabel>
+                <FormField name="description" v-slot="{ field }">
+                  <Field :data-invalid="!field.state.meta.isValid">
+                    <FieldLabel :for="field.name">Description</FieldLabel>
                     <Textarea
-                      id="description"
-                      v-bind="field"
-                      :model-value="field.value"
+                      :id="field.name"
+                      :name="field.name"
+                      :model-value="field.state.value"
+                      :aria-invalid="!field.state.meta.isValid"
                       rows="3"
                       class="resize-none"
                       placeholder="Add context..."
-                      :aria-invalid="!!errors.length"
+                      @blur="field.handleBlur"
+                      @input="field.handleChange($event.target.value)"
                     />
-                    <FieldError v-if="errors.length" :errors="errors" />
+                    <FieldError
+                      v-if="!field.state.meta.isValid"
+                      :errors="field.state.meta.errors"
+                    />
                   </Field>
-                </VeeField>
+                </FormField>
               </FieldGroup>
 
               <DialogFooter>
                 <DialogClose>
                   <Button variant="outline" type="button">Cancel</Button>
                 </DialogClose>
-                <LoadingButton
-                  type="submit"
-                  :disabled="isSubmitting || !meta.valid"
-                  :loading="isSubmitting"
-                >
-                  Create Task
-                </LoadingButton>
+                <FormSubscribe v-slot="{ canSubmit, isPristine, isSubmitting }">
+                  <LoadingButton
+                    type="submit"
+                    :disabled="!canSubmit || isPristine"
+                    :loading="isSubmitting"
+                  >
+                    Create Task
+                  </LoadingButton>
+                </FormSubscribe>
               </DialogFooter>
             </form>
           </DialogContent>
