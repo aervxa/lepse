@@ -53,7 +53,8 @@ export default defineNuxtConfig({
     envPrefix: ['VITE_', 'TAURI_'],
     optimizeDeps: {
       include: [
-        '@internationalized/date',
+        '@lucide/vue',
+        '@tanstack/vue-form',
         '@tauri-apps/api/core',
         '@tauri-apps/api/webviewWindow',
         '@tauri-apps/plugin-os',
@@ -62,11 +63,11 @@ export default defineNuxtConfig({
         '@vue/devtools-core',
         '@vue/devtools-kit',
         '@vueuse/core',
+        'change-case',
         'class-variance-authority',
         'clsx',
         'lucide-vue-next',
         'reka-ui',
-        'reka-ui/date',
         'tailwind-merge',
         'vaul-vue',
         'zod',
