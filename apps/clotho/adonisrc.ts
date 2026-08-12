@@ -62,6 +62,7 @@ export default defineConfig({
     () => import('@adonisjs/core/providers/edge_provider'),
     () => import('@adonisjs/limiter/limiter_provider'),
     () => import('@adonisjs/vite/vite_provider'),
+    () => import('@adonisjs/static/static_provider'),
   ],
 
   /*
