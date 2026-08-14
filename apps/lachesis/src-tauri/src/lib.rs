@@ -6,6 +6,8 @@ use tauri::{
 };
 use tauri_plugin_store::StoreExt;
 
+mod commands;
+
 #[cfg(feature = "cef")]
 use tauri_runtime_cef::CefRuntime;
 
@@ -17,6 +19,7 @@ pub fn run() {
   let builder = tauri::Builder::default();
 
   builder
+    .invoke_handler(tauri::generate_handler![commands::get_os])
     .plugin(tauri_plugin_updater::Builder::new().build())
     .plugin(tauri_plugin_opener::init())
     .plugin(tauri_plugin_os::init())

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { isTauri } from '@tauri-apps/api/core'
+import { getVersion, getName } from '@tauri-apps/api/app'
+import { invoke, isTauri } from '@tauri-apps/api/core'
 import { platform } from '@tauri-apps/plugin-os'
 import { Image, MonitorCog, Palette, Pencil, User } from '@lucide/vue'
 
@@ -37,6 +38,20 @@ watch(open, () => {
   } else {
     defaultMobileOpen.value = false
   }
+})
+
+const appInfo = shallowRef<{
+  os: string
+  name: string
+  version: string
+}>()
+onMounted(async () => {
+  isTauri() &&
+    (appInfo.value = {
+      os: await invoke('get_os_string'),
+      name: await getName(),
+      version: await getVersion(),
+    })
 })
 </script>
 
@@ -103,6 +118,16 @@ watch(open, () => {
                 </SidebarGroupContent>
               </SidebarGroup>
             </SidebarContent>
+            <SidebarFooter v-if="appInfo" class="flex-row items-center px-4 py-2">
+              <!-- TODO: make button do smt cool -->
+              <Button variant="ghost" size="icon-lg">
+                <img src="/favicon.svg" class="size-7" />
+              </Button>
+              <div class="text-muted-foreground flex flex-col gap-1.5 *:leading-none *:capitalize">
+                <p class="text-sm">{{ appInfo.name }} {{ appInfo.version }}</p>
+                <p class="text-[11px] font-light">{{ appInfo.os }}</p>
+              </div>
+            </SidebarFooter>
           </Sidebar>
 
           <section class="md:bg-background relative flex flex-1 flex-col">
