@@ -75,7 +75,7 @@ pub fn run() {
 fn setup_tray<R: Runtime>(app: &AppHandle<R>) -> Result<TrayIcon<R>> {
   Ok(
     TrayIconBuilder::new()
-      .icon(Image::from_path("icons/tray.png")?)
+      .icon(app.default_window_icon().unwrap().clone())
       .menu(&Menu::with_items(
         app,
         &[
