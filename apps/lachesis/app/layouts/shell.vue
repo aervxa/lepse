@@ -78,8 +78,10 @@ onBeforeUnmount(() => {
       </div>
       <div
         v-if="appWindow"
-        class="z-377 [&>button]:pointer-events-auto [&>button]:rounded-none [&>button]:backdrop-blur-none"
+        class="z-377 [&_button]:pointer-events-auto [&_button]:rounded-none [&_button]:backdrop-blur-none"
       >
+        <Updater />
+        <span class="bg-border/50 mx-1 inline-block h-4 w-px first:hidden" />
         <Button
           variant="ghost"
           size="icon-sm"
