@@ -1,5 +1,4 @@
 use tauri::{
-  image::Image,
   menu::{Menu, MenuItem, PredefinedMenuItem},
   tray::{TrayIcon, TrayIconBuilder, TrayIconEvent},
   AppHandle, Manager, Result, Runtime,

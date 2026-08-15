@@ -80,7 +80,7 @@ const update = async () => {
         />
       </Button>
     </HoverCardTrigger>
-    <HoverCardContent align="end" class="flex flex-col gap-2">
+    <HoverCardContent v-if="hasStartedDownload" align="end" class="flex flex-col gap-2">
       <p class="font-medium sm:text-lg">Downloading new update...</p>
       <Progress
         :model-value="downloaded && contentLength ? (downloaded / contentLength) * 100 : 0"
