@@ -73,7 +73,7 @@ const {
     :check="false"
     title="You must be logged in to create goals."
     action-label="Login"
-    :action="() => navigateTo('/login')"
+    :action="async () => (await navigateTo('/'), await navigateTo('/login'))"
   />
 
   <div class="flex size-full flex-1 flex-col" :class="[source === 'drawer' && 'mx-auto max-w-sm']">

@@ -74,7 +74,7 @@ const {
     :check="false"
     title="You must be logged in to create tasks."
     action-label="Login"
-    :action="() => navigateTo('/login')"
+    :action="async () => (await navigateTo('/'), await navigateTo('/login'))"
   />
 
   <div class="flex size-full flex-1 flex-col" :class="[source === 'drawer' && 'mx-auto max-w-sm']">
