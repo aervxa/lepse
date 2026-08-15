@@ -18,7 +18,13 @@ const corsConfig = defineConfig({
    * In production, keep an explicit allowlist (empty by default, so no
    * cross-origin browser access is allowed until configured).
    */
-  origin: app.inDev ? true : [],
+  origin: app.inDev
+    ? true
+    : [
+        'tauri://localhost', // tauri
+        'http://tauri.localhost', // cuz windows and android can't do tauri:// ig
+        'http://localhost:3000', // for dev
+      ],
 
   /**
    * HTTP methods accepted for cross-origin requests.
