@@ -57,12 +57,11 @@ jobs:
 
       - name: install npm dependencies
         working-directory: .
-        env:
-          NUXT_PUBLIC_API_URL: ${{ vars.PUBLIC_API_URL }}
         run: npm install --workspace=apps/lachesis
 
       - uses: tauri-apps/tauri-action@v1
         env:
+          NUXT_PUBLIC_API_URL: ${{ vars.PUBLIC_API_URL }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
