@@ -48,7 +48,7 @@ const appInfo = shallowRef<{
 onMounted(async () => {
   isTauri() &&
     (appInfo.value = {
-      os: await invoke('get_os_string'),
+      os: await invoke('get_os'),
       name: await getName(),
       version: await getVersion(),
     })
