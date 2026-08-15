@@ -36,7 +36,7 @@ export default defineNuxtConfig({
   modules: ['@nuxt/fonts', 'motion-v/nuxt', 'shadcn-nuxt', 'vue-sonner/nuxt'],
   runtimeConfig: {
     public: {
-      apiUrl: process.env.NUXT_PUBLIC_API_URL || 'http://localhost:3333',
+      apiUrl: process.env.NUXT_PUBLIC_API_URL,
     },
   },
   shadcn: {
