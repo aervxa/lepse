@@ -62,7 +62,7 @@ onBeforeUnmount(() => {
   <main
     class="flex h-dvh flex-col [--titlebar-height:--spacing(8)]"
     :class="[
-      os === 'windows' ? 'bg-transparent' : windowTransparency ? 'bg-sidebar/60' : 'bg-sidebar',
+      windowTransparency ? (os === 'windows' ? 'bg-transparent' : 'bg-sidebar/60') : 'bg-sidebar',
     ]"
   >
     <div
