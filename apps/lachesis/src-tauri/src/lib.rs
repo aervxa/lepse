@@ -1,6 +1,6 @@
 use tauri::{
   menu::{Menu, MenuItem, PredefinedMenuItem},
-  tray::{TrayIcon, TrayIconBuilder, TrayIconEvent},
+  tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconBuilder, TrayIconEvent},
   AppHandle, Manager, Result, Runtime,
 };
 use tauri_plugin_store::StoreExt;
@@ -97,7 +97,11 @@ fn setup_tray<R: Runtime>(app: &AppHandle<R>) -> Result<TrayIcon<R>> {
         _ => {}
       })
       .on_tray_icon_event(|tray, event| match event {
-        TrayIconEvent::Click { .. } => {
+        TrayIconEvent::Click {
+          button: MouseButton::Left,
+          button_state: MouseButtonState::Up,
+          ..
+        } => {
           let app = tray.app_handle();
           if let Some(window) = app.get_webview_window("main") {
             let _ = window.unminimize();
