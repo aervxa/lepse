@@ -68,6 +68,5 @@ jobs:
           tagName: v__VERSION__ # the action automatically replaces __VERSION__ with the app version.
           releaseName: 'Lepse v__VERSION__'
           releaseBody: "Below are all assets for this version. It's recommended to [download the app from the site](https://lepse.app), but if you know what you're doing, go ahead!"
-          releaseDraft: true
           projectPath: ./apps/lachesis
           args: ${{ matrix.args }}
