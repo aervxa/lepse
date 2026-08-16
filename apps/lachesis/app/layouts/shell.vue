@@ -4,7 +4,6 @@ import { isTauri } from '@tauri-apps/api/core'
 import { platform, type Platform } from '@tauri-apps/plugin-os'
 import { getCurrentWebviewWindow, type WebviewWindow } from '@tauri-apps/api/webviewWindow'
 import type { UnlistenFn } from '@tauri-apps/api/event'
-import { useFullscreen } from '@vueuse/core'
 
 const { backgrounds, activeBackgroundId } = useBackgrounds()
 const { windowTransparency, nativeDecorations } = useSettings()

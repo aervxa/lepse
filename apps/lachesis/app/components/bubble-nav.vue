@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useFullscreen, useWindowSize } from '@vueuse/core'
+import { useWindowSize } from '@vueuse/core'
 import { Goal, ListTodo } from '@lucide/vue'
 import type { FocusOutsideEvent } from 'reka-ui'
 
