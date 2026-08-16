@@ -170,8 +170,17 @@ function skipPomo() {
         <!-- task selector -->
         <div
           v-if="user?.emailVerified"
-          class="from-background/40 to-background/20 absolute top-1/6 flex -translate-y-1/2 flex-col items-center gap-1 rounded-md bg-linear-to-t py-2 backdrop-blur-sm"
+          class="from-background/40 to-background/20 absolute top-1/6 flex -translate-y-1/2 flex-col items-center gap-1 overflow-hidden rounded-md bg-linear-to-t py-2 backdrop-blur-sm"
         >
+          <Button
+            v-if="task"
+            variant="ghost-destructive"
+            size="icon-sm"
+            class="absolute top-0 right-0 rounded-tl-none rounded-tr-none rounded-br-none border-0 not-hover:opacity-60"
+            @click.stop="() => selectTask(-1)"
+          >
+            <X class="translate-x-1/5 -translate-y-1/5" />
+          </Button>
           <p class="font-mono text-[10px] tracking-widest uppercase opacity-60">working on</p>
           <Combobox
             :items="tasks"
@@ -185,7 +194,7 @@ function skipPomo() {
             :side-offset="12"
           >
             <div
-              class="group relative flex max-w-sm min-w-48 cursor-pointer items-center justify-center sm:min-w-64 md:max-w-md"
+              class="flex max-w-sm min-w-48 cursor-pointer items-center justify-center sm:min-w-64 md:max-w-md"
             >
               <p
                 class="flex items-center gap-3 truncate px-6 text-center text-2xl transition-opacity hover:opacity-80"
@@ -194,15 +203,6 @@ function skipPomo() {
                 {{ task?.name ?? 'No task selected' }}
                 <ChevronsUpDown v-if="!task" class="size-4 opacity-60" />
               </p>
-              <Button
-                v-if="task"
-                variant="ghost-destructive"
-                size="icon-sm"
-                class="absolute top-[calc(100%+16px)] left-1/2 -translate-x-1/2 not-hover:opacity-60"
-                @click.stop="() => selectTask(-1)"
-              >
-                <X />
-              </Button>
             </div>
           </Combobox>
         </div>
