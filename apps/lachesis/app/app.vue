@@ -1,7 +1,14 @@
 <script setup lang="ts">
+import { onKeyStroke, useFullscreen } from '@vueuse/core'
 import { camelCase } from 'change-case'
 
 const { theme, THEME_OPTIONS, themeOptions } = useSettings()
+const { toggle: toggleFullscreen } = useFullscreen()
+
+onKeyStroke('F11', (e) => {
+  e.preventDefault()
+  toggleFullscreen()
+})
 
 onMounted(() => {
   watch(
