@@ -44,6 +44,7 @@ export default defineNuxtConfig({
   },
   // Enable SSG
   ssr: false,
+  telemetry: false,
   vite: {
     // Better support for Tauri CLI output
     clearScreen: false,
