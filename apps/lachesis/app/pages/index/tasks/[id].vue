@@ -2,6 +2,7 @@
 import { formatDate } from '@vueuse/core'
 import {
   ArrowUpRight,
+  ChevronDown,
   ChevronLeft,
   Clock,
   ClockFading,
@@ -234,6 +235,7 @@ const deleteTask = async () => {
             <Button variant="outline" size="xs">
               <TaskStatusIcon :status="task.status" />
               {{ task.status }}
+              <ChevronDown />
             </Button>
           </TaskStatusDropdown>
         </div>
@@ -246,6 +248,7 @@ const deleteTask = async () => {
             <Button variant="outline" size="xs">
               <TaskPriorityIcon :priority="task.priority" />
               {{ task.priority }}
+              <ChevronDown />
             </Button>
           </TaskPriorityDropdown>
         </div>
