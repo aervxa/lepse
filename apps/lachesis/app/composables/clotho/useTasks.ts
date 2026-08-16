@@ -4,6 +4,7 @@ export const useTasks = () => {
   const { $clotho } = useNuxtApp()
   const { user } = useAuth()
   const tasks = useState<Data.Task[]>('tasks', () => [])
+  const focusedTaskId = useState<number | null>('focusedTaskId', () => null)
 
   const fetchTasks = async () => {
     const [payload, error] = await $clotho.api.tasks.index({}).safe()
@@ -52,5 +53,5 @@ export const useTasks = () => {
     tasks.value = tasks.value.filter((t) => t.id !== id)
   }
 
-  return { tasks, fetchTasks, createTask, updateTask, destroyTask }
+  return { tasks, focusedTaskId, fetchTasks, createTask, updateTask, destroyTask }
 }

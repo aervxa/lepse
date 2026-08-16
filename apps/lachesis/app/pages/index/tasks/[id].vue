@@ -6,6 +6,7 @@ import {
   ChevronLeft,
   Clock,
   ClockFading,
+  Lightbulb,
   LoaderCircle,
   MoreHorizontal,
   Trash,
@@ -22,7 +23,7 @@ const route = useRoute()
 const { id } = route.params
 const source = inject(bubbleNavSourceKey)
 
-const { tasks, updateTask, destroyTask } = useTasks()
+const { tasks, focusedTaskId, updateTask, destroyTask } = useTasks()
 const nameEl = useTemplateRef('nameEl')
 const descriptionEl = useTemplateRef('descriptionEl')
 const task = computed(() => {
@@ -94,6 +95,13 @@ const deleteTask = async () => {
     navigateBack()
   }
 }
+
+const enterFocus = inject(enterFocusKey)
+const focusTask = async () => {
+  navigateTo('/')
+  focusedTaskId.value = Number(task.value?.id)
+  enterFocus?.()
+}
 </script>
 
 <template>
@@ -109,20 +117,27 @@ const deleteTask = async () => {
       Go back
     </Button>
 
-    <!-- More options -->
-    <DropdownMenu>
-      <DropdownMenuTrigger as-child>
-        <Button variant="ghost" size="icon-sm">
-          <MoreHorizontal />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent class="min-w-40" align="end">
-        <DropdownMenuItem variant="destructive" @select="deleteTask">
-          <Trash />
-          Delete
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div class="flex items-center gap-2">
+      <!-- FOCUS -->
+      <Button size="xs" class="font-mono text-[10px] tracking-widest uppercase" @click="focusTask">
+        <Lightbulb />
+        Focus
+      </Button>
+      <!-- More options -->
+      <DropdownMenu>
+        <DropdownMenuTrigger as-child>
+          <Button variant="ghost" size="icon-sm">
+            <MoreHorizontal />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent class="min-w-40" align="end">
+          <DropdownMenuItem variant="destructive" @select="deleteTask">
+            <Trash />
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   </div>
 
   <div

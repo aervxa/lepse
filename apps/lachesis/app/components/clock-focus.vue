@@ -25,13 +25,12 @@ const { focusSession, updateFocusSession } = useDay(getClientDate())
 
 // ─── Task ───────────────────────────────────────────────────────────────────
 
-const { tasks, updateTask, createTask } = useTasks()
-const taskId = ref<number | null>(null)
-const task = computed(() => tasks.value.find((t) => t.id === taskId.value))
+const { tasks, focusedTaskId, updateTask, createTask } = useTasks()
+const task = computed(() => tasks.value.find((t) => t.id === focusedTaskId.value))
 
 const selectTask = (id: number) => {
   stopwatch.reset()
-  taskId.value = id
+  focusedTaskId.value = id
 }
 
 const createNewTask = async (search: string) => {

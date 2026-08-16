@@ -16,6 +16,9 @@ const inFocus = ref(false)
 const focusMethod = useLocalStorage<'stopwatch' | 'pomodoro'>('focus_method', 'stopwatch')
 const focusMethodToggleable = ref(true)
 provide(focusMethodToggleableKey, focusMethodToggleable)
+provide(enterFocusKey, () => {
+  inFocus.value = true
+})
 
 const {
   isFullscreen,
