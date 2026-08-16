@@ -4,7 +4,7 @@ export const useTasks = () => {
   const { $clotho } = useNuxtApp()
   const { user } = useAuth()
   const tasks = useState<Data.Task[]>('tasks', () => [])
-  const focusedTaskId = useState<number | null>('focusedTaskId', () => null)
+  const focusedTaskId = useState<number>('focusedTaskId', () => -1)
 
   const fetchTasks = async () => {
     const [payload, error] = await $clotho.api.tasks.index({}).safe()
