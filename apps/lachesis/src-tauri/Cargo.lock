@@ -2538,6 +2538,7 @@ dependencies = [
  "tauri-plugin-store",
  "tauri-plugin-updater",
  "tauri-runtime-cef",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]

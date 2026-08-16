@@ -18,7 +18,12 @@ pub fn run() {
   let builder = tauri::Builder::default();
 
   builder
-    .invoke_handler(tauri::generate_handler![commands::get_os])
+    .invoke_handler(tauri::generate_handler![
+      commands::get_os,
+      commands::is_fullscreen,
+      commands::set_fullscreen,
+      commands::toggle_fullscreen
+    ])
     .plugin(tauri_plugin_updater::Builder::new().build())
     .plugin(tauri_plugin_opener::init())
     .plugin(tauri_plugin_os::init())
@@ -34,16 +39,17 @@ pub fn run() {
       }
 
       // if nativeDecorations is true, set native decors to true
-      if app
+      let use_native_decors = app
         .store("settings.json")
         .ok()
         .and_then(|store| store.get("nativeDecorations"))
         .and_then(|v| v.as_bool())
-        .unwrap_or(false)
-      {
-        let _ = app
-          .get_webview_window("main")
-          .map(|window| window.set_decorations(true));
+        .unwrap_or(false);
+
+      if use_native_decors {
+        if let Some(window) = app.get_webview_window("main") {
+          let _ = window.set_decorations(true);
+        }
       }
 
       setup_tray(app.app_handle())?;
