@@ -29,8 +29,17 @@ const { tasks, focusedTaskId, updateTask, createTask } = useTasks()
 const task = computed(() => tasks.value.find((t) => t.id === focusedTaskId.value))
 
 const selectTask = (id: number) => {
-  stopwatch.reset()
-  focusedTaskId.value = id
+  const r = () => {
+    stopwatch.reset()
+    focusedTaskId.value = id
+  }
+  if (focusDirty?.value) {
+    dialog({ title: 'Are you sure?', description: 'Switching tasks will reset your timer.' }).then(
+      (v) => v && r()
+    )
+  } else {
+    r()
+  }
 }
 
 const createNewTask = async (search: string) => {
