@@ -19,6 +19,28 @@ provide(focusMethodToggleableKey, focusMethodToggleable)
 provide(enterFocusKey, () => {
   inFocus.value = true
 })
+const focusDirty = ref(false)
+provide(focusDirtyKey, focusDirty)
+const toggleFocusMethod = () => {
+  const r = () => (focusMethod.value = focusMethod.value === 'stopwatch' ? 'pomodoro' : 'stopwatch')
+  if (focusDirty.value) {
+    dialog({ title: 'Are you sure?', description: 'Switching will reset your timer.' }).then(
+      (v) => v && r()
+    )
+  } else {
+    r()
+  }
+}
+const toggleFocus = () => {
+  const r = () => (inFocus.value = !inFocus.value)
+  if (focusDirty.value) {
+    dialog({ title: 'Are you sure?', description: 'Leaving will reset your timer.' }).then(
+      (v) => v && r()
+    )
+  } else {
+    r()
+  }
+}
 
 const {
   isFullscreen,
@@ -117,7 +139,7 @@ const copyQuote = async () => {
         v-if="inFocus"
         variant="outline"
         class="font-mono text-[10px] tracking-widest uppercase"
-        @click="focusMethod = focusMethod === 'stopwatch' ? 'pomodoro' : 'stopwatch'"
+        @click="toggleFocusMethod"
         :disabled="!focusMethodToggleable"
       >
         {{ focusMethod === 'stopwatch' ? 'Pomodoro' : 'Stopwatch' }}
@@ -125,7 +147,7 @@ const copyQuote = async () => {
       <Button
         :variant="inFocus ? 'secondary' : 'default'"
         class="font-mono text-[11px] tracking-widest uppercase"
-        @click="inFocus = !inFocus"
+        @click="toggleFocus"
       >
         <LightbulbOff v-if="inFocus" />
         <Lightbulb v-else />

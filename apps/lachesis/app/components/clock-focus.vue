@@ -40,15 +40,20 @@ const createNewTask = async (search: string) => {
 
 // ─── Shared stopwatch class ─────────────────────────────────────────────────
 
+const focusDirty = inject(focusDirtyKey)
 const stopwatch = new Stopwatch({
   onStart: () => {
     if (focusMethod === 'stopwatch') stopwatchSyncInterval.resume()
+    focusDirty && (focusDirty.value = true)
   },
   onStop: () => {
     if (focusMethod === 'stopwatch') {
       syncStopwatch()
       stopwatchSyncInterval.pause()
     }
+  },
+  onReset: () => {
+    focusDirty && (focusDirty.value = false)
   },
 })
 
@@ -72,7 +77,7 @@ const focusMethodToggleable = inject(focusMethodToggleableKey)
 
 // Update focusMethodToggleable when stopwatch running state changes
 watch(
-  [stopwatch.running],
+  stopwatch.running,
   () => {
     if (focusMethodToggleable) focusMethodToggleable.value = !stopwatch.running.value
   },
