@@ -219,7 +219,7 @@ function skipPomo() {
       <!-- Out of focus greeting title -->
       <p
         v-if="!inFocus"
-        class="fixed-color-clock:text-foreground text-foreground-fixed max-w-xs text-center text-base leading-relaxed font-semibold tracking-wide text-pretty sm:max-w-sm sm:text-xl 2xl:text-2xl"
+        class="fixed-color-clock:text-foreground text-foreground-fixed max-w-xs text-center text-lg leading-relaxed font-medium text-pretty sm:max-w-sm sm:text-xl md:text-2xl 2xl:text-3xl"
       >
         {{ getGreeting(now).replace('{name}', user?.name ?? 'wraith') }}
       </p>
