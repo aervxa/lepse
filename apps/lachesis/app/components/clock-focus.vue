@@ -30,13 +30,24 @@ const task = computed(() => tasks.value.find((t) => t.id === focusedTaskId.value
 
 const selectTask = (id: number) => {
   const r = () => {
-    stopwatch.reset()
     focusedTaskId.value = id
   }
   if (focusDirty?.value) {
-    dialog({ title: 'Are you sure?', description: 'Switching tasks will reset your timer.' }).then(
-      (v) => v && r()
-    )
+    dialog({
+      title: 'Are you sure?',
+      description: 'Switching will carry over your progress to the new task.',
+    }).then((v) => {
+      if (v) {
+        if (focusMethod === 'stopwatch' && task.value) {
+          updateTask(task.value.id, { stopwatchMs: task.value.stopwatchMs - stopwatchSyncedMs }) // remove from old task
+          r() // update `task`
+          updateTask(task.value.id, { stopwatchMs: task.value.stopwatchMs + stopwatchSyncedMs }) // add to new task
+          stopwatchSyncedMs = 0
+        } else {
+          r()
+        }
+      }
+    })
   } else {
     r()
   }
