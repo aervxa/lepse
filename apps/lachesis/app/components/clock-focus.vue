@@ -32,16 +32,26 @@ const selectTask = (id: number) => {
   const r = () => {
     focusedTaskId.value = id
   }
-  if (focusDirty?.value) {
+  if (focusDirty?.value && focusedTaskId.value !== -1) {
     dialog({
       title: 'Are you sure?',
-      description: 'Switching will carry over your progress to the new task.',
+      description:
+        id > -1
+          ? 'Switching will carry over your progress to the new task.'
+          : 'Cancelling will result in your progress being lost.',
     }).then((v) => {
       if (v) {
         if (focusMethod === 'stopwatch' && task.value) {
-          updateTask(task.value.id, { stopwatchMs: task.value.stopwatchMs - stopwatchSyncedMs }) // remove from old task
+          // remove from old task
+          updateTask(task.value.id, { stopwatchMs: task.value.stopwatchMs - stopwatchSyncedMs })
           r() // update `task`
-          updateTask(task.value.id, { stopwatchMs: task.value.stopwatchMs + stopwatchSyncedMs }) // add to new task
+          // If user is not cancelling, add to new task
+          if (id > -1) {
+            updateTask(task.value.id, { stopwatchMs: task.value.stopwatchMs + stopwatchSyncedMs })
+          } else {
+            // If user cancels, reset stopwatch
+            stopwatch.reset()
+          }
           stopwatchSyncedMs = 0
         } else {
           r()
@@ -70,6 +80,7 @@ const stopwatch = new Stopwatch({
     if (focusMethod === 'stopwatch') {
       syncStopwatch()
       stopwatchSyncInterval.pause()
+      focusDirty && (focusDirty.value = false) // not dirty since progress synced
     }
   },
   onReset: () => {
