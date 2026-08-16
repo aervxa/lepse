@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { CircleAlert, Copy, Expand, Lightbulb, LightbulbOff, Shrink } from '@lucide/vue'
-import { useFullscreen, useLocalStorage } from '@vueuse/core'
+import { useLocalStorage } from '@vueuse/core'
 import { toast } from 'vue-sonner'
 import EmailVerifyButton from '~/components/email-verify-button.vue'
 import { getDailyQuote } from '~/lib/quotes'
