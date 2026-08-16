@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useDebounceFn, useIntervalFn, useNow } from '@vueuse/core'
-import { ChevronsUpDown, FastForward, Pause, Play, RefreshCw } from '@lucide/vue'
+import { ChevronsUpDown, FastForward, Pause, Play, RefreshCw, X } from '@lucide/vue'
 import { toast } from 'vue-sonner'
 import { getGreeting } from '~/lib/greetings'
 import { formatDuration, Stopwatch } from '~/lib/time'
@@ -25,13 +25,21 @@ const { focusSession, updateFocusSession } = useDay(getClientDate())
 
 // ─── Task ───────────────────────────────────────────────────────────────────
 
-const { tasks, updateTask, createTask } = useTasks()
-const taskId = ref<number | null>(null)
-const task = computed(() => tasks.value.find((t) => t.id === taskId.value))
+const { tasks, focusedTaskId, updateTask, createTask } = useTasks()
+const task = computed(() => tasks.value.find((t) => t.id === focusedTaskId.value))
 
 const selectTask = (id: number) => {
-  stopwatch.reset()
-  taskId.value = id
+  const r = () => {
+    stopwatch.reset()
+    focusedTaskId.value = id
+  }
+  if (focusDirty?.value) {
+    dialog({ title: 'Are you sure?', description: 'Switching tasks will reset your timer.' }).then(
+      (v) => v && r()
+    )
+  } else {
+    r()
+  }
 }
 
 const createNewTask = async (search: string) => {
@@ -41,15 +49,20 @@ const createNewTask = async (search: string) => {
 
 // ─── Shared stopwatch class ─────────────────────────────────────────────────
 
+const focusDirty = inject(focusDirtyKey)
 const stopwatch = new Stopwatch({
   onStart: () => {
     if (focusMethod === 'stopwatch') stopwatchSyncInterval.resume()
+    focusDirty && (focusDirty.value = true)
   },
   onStop: () => {
     if (focusMethod === 'stopwatch') {
       syncStopwatch()
       stopwatchSyncInterval.pause()
     }
+  },
+  onReset: () => {
+    focusDirty && (focusDirty.value = false)
   },
 })
 
@@ -73,7 +86,7 @@ const focusMethodToggleable = inject(focusMethodToggleableKey)
 
 // Update focusMethodToggleable when stopwatch running state changes
 watch(
-  [stopwatch.running],
+  stopwatch.running,
   () => {
     if (focusMethodToggleable) focusMethodToggleable.value = !stopwatch.running.value
   },
@@ -146,7 +159,7 @@ function skipPomo() {
         <!-- task selector -->
         <div
           v-if="user?.emailVerified"
-          class="from-background/40 to-background/20 absolute top-1/6 flex -translate-y-1/2 flex-col items-center gap-1 rounded-md bg-linear-to-t px-3 py-2 backdrop-blur-sm"
+          class="from-background/40 to-background/20 absolute top-1/6 flex -translate-y-1/2 flex-col items-center gap-1 rounded-md bg-linear-to-t py-2 backdrop-blur-sm"
         >
           <p class="font-mono text-[10px] tracking-widest uppercase opacity-60">working on</p>
           <Combobox
@@ -157,25 +170,27 @@ function skipPomo() {
             empty="No tasks found."
             placeholder="Search a task"
             align="center"
-            class="w-xs md:w-sm"
+            class="max-w-64 sm:max-w-80"
             :side-offset="12"
           >
             <div
-              class="group flex w-fit max-w-sm cursor-pointer items-center justify-center gap-2 md:max-w-md"
+              class="group relative flex max-w-sm min-w-48 cursor-pointer items-center justify-center sm:min-w-64 md:max-w-md"
             >
               <p
-                class="truncate pr-[1ch] text-2xl"
-                :class="[task ? 'font-light' : 'font-extralight italic']"
+                class="flex items-center gap-3 truncate px-6 text-center text-2xl transition-opacity hover:opacity-80"
+                :class="[task ? 'font-light' : 'font-extralight italic opacity-60']"
               >
                 {{ task?.name ?? 'No task selected' }}
+                <ChevronsUpDown v-if="!task" class="size-4 opacity-60" />
               </p>
               <Button
-                variant="ghost"
-                size="icon-xs"
-                :disabled="stopwatch.running.value"
-                class="text-muted-foreground group-hover:text-foreground -ml-[1ch]"
+                v-if="task"
+                variant="ghost-destructive"
+                size="icon-sm"
+                class="absolute top-[calc(100%+16px)] left-1/2 -translate-x-1/2 not-hover:opacity-60"
+                @click.stop="() => selectTask(-1)"
               >
-                <ChevronsUpDown />
+                <X />
               </Button>
             </div>
           </Combobox>

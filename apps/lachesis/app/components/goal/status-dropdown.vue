@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { DropdownMenuContentProps } from 'reka-ui';
+import { ChevronDown } from '@lucide/vue'
+import type { DropdownMenuContentProps } from 'reka-ui'
 import { toast } from 'vue-sonner'
 
 defineProps<{
@@ -28,6 +29,7 @@ const setStatus = async (
         <Button variant="outline" size="xs">
           <GoalStatusIcon :status="status" />
           {{ status }}
+          <ChevronDown />
         </Button>
       </slot>
     </DropdownMenuTrigger>
