@@ -43,11 +43,15 @@ const selectTask = (id: number) => {
       if (v) {
         if (focusMethod === 'stopwatch' && task.value) {
           // remove from old task
-          updateTask(task.value.id, { stopwatchMs: task.value.stopwatchMs - stopwatchSyncedMs })
+          updateTask(task.value.id, {
+            stopwatchMs: Math.round(task.value.stopwatchMs - stopwatchSyncedMs),
+          })
           r() // update `task`
           // If user is not cancelling, add to new task
           if (id > -1) {
-            updateTask(task.value.id, { stopwatchMs: task.value.stopwatchMs + stopwatchSyncedMs })
+            updateTask(task.value.id, {
+              stopwatchMs: Math.round(task.value.stopwatchMs + stopwatchSyncedMs),
+            })
           } else {
             // If user cancels, reset stopwatch
             stopwatch.reset()
@@ -130,12 +134,12 @@ const syncStopwatch = useDebounceFn(() => {
 
   // Update focus session's stopwatchMs
   updateFocusSession({
-    stopwatchMs: (focusSession.value?.stopwatchMs ?? 0) + (elapsed - stopwatchSyncedMs),
+    stopwatchMs: Math.round((focusSession.value?.stopwatchMs ?? 0) + (elapsed - stopwatchSyncedMs)),
   })
   // Update selected task
   if (task.value)
     updateTask(task.value.id, {
-      stopwatchMs: task.value.stopwatchMs + (elapsed - stopwatchSyncedMs),
+      stopwatchMs: Math.round(task.value.stopwatchMs + (elapsed - stopwatchSyncedMs)),
     })
 
   stopwatchSyncedMs = elapsed
