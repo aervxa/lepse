@@ -143,10 +143,10 @@ const syncStopwatch = useDebounceFn(() => {
     })
 
   stopwatchSyncedMs = elapsed
-}, 1_000)
+}, 5_000)
 
 // Sync every 10 seconds if stopwatch is running
-const stopwatchSyncInterval = useIntervalFn(syncStopwatch, 10_000, { immediate: false })
+const stopwatchSyncInterval = useIntervalFn(syncStopwatch, 60_000, { immediate: false })
 
 // ─── Pomo ───────────────────────────────────────────────────────────────────
 
