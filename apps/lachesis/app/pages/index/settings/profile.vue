@@ -80,7 +80,7 @@ const save = async () => {
             <Pencil />
             Edit avatar
           </Button>
-          <Button variant="ghost-destructive" size="sm" @click="removeAvatar">
+          <Button variant="ghost-destructive" size="sm" @click="removeAvatar" :disabled="!avatar"">
             <Trash />
             Remove avatar
           </Button>
