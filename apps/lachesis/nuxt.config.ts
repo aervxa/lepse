@@ -14,13 +14,17 @@ export default defineNuxtConfig({
       ],
     },
   },
+
   compatibilityDate: '2025-07-15',
   css: ['~/assets/css/main.css'],
+
   // Enables the development server to be discoverable by other devices when running on iOS physical devices
   devServer: {
     host: '0.0.0.0',
   },
+
   devtools: { enabled: true },
+
   fonts: {
     defaults: {
       weights: ['100 900'],
@@ -28,23 +32,37 @@ export default defineNuxtConfig({
     },
     families: [{ name: 'Outfit' }, { name: 'DM Mono' }],
   },
+
   // Avoids error [unhandledRejection] EMFILE: too many open files, watch
   ignore: ['**/src-tauri/**'],
+
   imports: {
     dirs: ['~/composables/**'],
   },
-  modules: ['@nuxt/fonts', 'motion-v/nuxt', 'shadcn-nuxt', 'vue-sonner/nuxt'],
+
+  modules: [
+    '@nuxt/fonts',
+    'motion-v/nuxt',
+    'shadcn-nuxt',
+    'vue-sonner/nuxt',
+    'nitro-cloudflare-dev',
+  ],
+
   runtimeConfig: {
     public: {
       apiUrl: process.env.NUXT_PUBLIC_API_URL || 'https://clotho.lepse.app',
     },
   },
+
   shadcn: {
     prefix: '',
   },
-  // Enable SSG
+
+  // Enable CSR
   ssr: false,
+
   telemetry: false,
+
   vite: {
     // Better support for Tauri CLI output
     clearScreen: false,
@@ -77,6 +95,15 @@ export default defineNuxtConfig({
     server: {
       // Tauri requires a consistent port
       strictPort: true,
+    },
+  },
+
+  nitro: {
+    preset: 'cloudflare_module',
+
+    cloudflare: {
+      deployConfig: false,
+      nodeCompat: true,
     },
   },
 })
