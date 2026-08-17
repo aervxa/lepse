@@ -129,7 +129,7 @@ onBeforeUnmount(() => {
 
       <ScrollArea class="flex-1">
         <div
-          class="relative flex min-h-[calc(512px-var(--titlebar-height)-var(--inset))] min-w-[calc(448px-var(--inset)*2)] flex-1 flex-col"
+          class="relative flex min-h-[calc(512px-var(--titlebar-height)-var(--inset))] min-w-[calc(320px-var(--inset)*2)] flex-1 flex-col"
           :class="[isFullscreen ? 'p-6' : 'p-4']"
         >
           <slot />

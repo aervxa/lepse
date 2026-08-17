@@ -1,6 +1,14 @@
 <script setup lang="ts">
-import { CircleAlert, Copy, Expand, Lightbulb, LightbulbOff, Shrink } from '@lucide/vue'
-import { useFullscreen, useLocalStorage } from '@vueuse/core'
+import {
+  CircleAlert,
+  Copy,
+  Expand,
+  Lightbulb,
+  LightbulbOff,
+  MoreHorizontal,
+  Shrink,
+} from '@lucide/vue'
+import { useFullscreen, useLocalStorage, useWindowSize } from '@vueuse/core'
 import { toast } from 'vue-sonner'
 import EmailVerifyButton from '~/components/email-verify-button.vue'
 import { getDailyQuote } from '~/lib/quotes'
@@ -58,6 +66,8 @@ const copyQuote = async () => {
     toast.error("Couldn't copy quote :(")
   }
 }
+
+const { width } = useWindowSize()
 </script>
 
 <template>
@@ -114,13 +124,13 @@ const copyQuote = async () => {
   <ClockFocus :in-focus :focus-method />
 
   <!-- Footer | actions -->
-  <div class="flex h-16 items-end justify-between gap-8">
+  <div class="flex h-16 items-end justify-between gap-4">
     <BubbleNav />
     <ContextMenu>
       <ContextMenuTrigger as-child>
         <p
           ref="quote"
-          class="fixed-color-clock:text-foreground text-foreground-fixed sm:from-background/40 sm:via-background/20 via-background/40 -m-2 w-fit max-w-[28ch] rounded-xs bg-linear-to-r from-transparent to-transparent px-3 py-2 text-lg font-medium text-pretty italic opacity-80 backdrop-blur-sm max-sm:absolute max-sm:bottom-1/5 max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:translate-y-1/2 max-sm:text-center sm:rounded-bl-2xl sm:text-xl 2xl:text-2xl 2xl:font-semibold rtl:bg-linear-to-l sm:rtl:rounded-br-2xl"
+          class="fixed-color-clock:text-foreground text-foreground-fixed sm:from-background/40 sm:via-background/20 via-background/40 -m-2 w-[28ch] max-w-[80%] rounded-xs bg-linear-to-r from-transparent to-transparent px-3 py-2 text-lg font-medium text-pretty italic opacity-80 backdrop-blur-sm max-sm:absolute max-sm:bottom-1/5 max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:translate-y-1/2 max-sm:text-center sm:rounded-bl-2xl sm:text-xl 2xl:text-2xl 2xl:font-semibold rtl:bg-linear-to-l sm:rtl:rounded-br-2xl"
         >
           "{{ getDailyQuote() }}"
         </p>
@@ -136,27 +146,47 @@ const copyQuote = async () => {
 
     <div class="flex gap-2">
       <Button
-        v-if="inFocus"
-        variant="outline"
-        class="font-mono text-[10px] tracking-widest uppercase"
-        @click="toggleFocusMethod"
-        :disabled="!focusMethodToggleable"
-      >
-        {{ focusMethod === 'stopwatch' ? 'Pomodoro' : 'Stopwatch' }}
-      </Button>
-      <Button
         :variant="inFocus ? 'secondary' : 'default'"
+        :size="width < 448 ? 'icon' : undefined"
         class="font-mono text-[11px] tracking-widest uppercase"
         @click="toggleFocus"
       >
         <LightbulbOff v-if="inFocus" />
         <Lightbulb v-else />
-        {{ inFocus ? 'Exit' : 'Focus' }}
+        <span class="max-2xs:sr-only">{{ inFocus ? 'Exit' : 'Focus' }}</span>
       </Button>
-      <Button v-if="isFullscreenSupported" variant="ghost" size="icon" @click="toggleFullscreen">
-        <Shrink v-if="isFullscreen" />
-        <Expand v-else />
-      </Button>
+      <template v-if="width >= 512">
+        <Button
+          v-if="inFocus"
+          variant="outline"
+          class="-order-1 font-mono text-[10px] tracking-widest uppercase"
+          @click="toggleFocusMethod"
+          :disabled="!focusMethodToggleable"
+        >
+          {{ focusMethod === 'stopwatch' ? 'Pomodoro' : 'Stopwatch' }}
+        </Button>
+        <Button v-if="isFullscreenSupported" variant="ghost" size="icon" @click="toggleFullscreen">
+          <Shrink v-if="isFullscreen" />
+          <Expand v-else />
+        </Button>
+      </template>
+      <template v-else>
+        <DropdownMenu>
+          <DropdownMenuTrigger as-child>
+            <Button size="icon" variant="outline">
+              <MoreHorizontal />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem>Use Stopwatch</DropdownMenuItem>
+            <DropdownMenuItem>
+              Enter Fullscreen
+              <DropdownMenuShortcut>F11</DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </template>
     </div>
   </div>
 

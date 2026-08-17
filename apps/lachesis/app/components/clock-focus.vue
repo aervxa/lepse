@@ -264,7 +264,7 @@ function skipPomo() {
         </span>
         <span
           v-if="focusMethod !== 'pomodoro'"
-          class="absolute bottom-1.25 left-full translate-x-4 text-lg tracking-wider brightness-90 sm:bottom-2.25 sm:translate-x-6 sm:text-xl 2xl:bottom-3.25 2xl:text-2xl"
+          class="max-2xs:hidden absolute bottom-1.25 left-full translate-x-4 text-lg tracking-wider brightness-90 sm:bottom-2.25 sm:translate-x-6 sm:text-xl 2xl:bottom-3.25 2xl:text-2xl"
         >
           {{ !inFocus ? nowStr.slice(-2) : formatted.slice(-3, -1) }}
         </span>
