@@ -15,25 +15,25 @@ import { ArrowUpRight, Download, Info } from '@lucide/vue'
 
     <ContextMenuContent>
       <!-- TODO: Link actual homepage -->
-      <ContextMenuItem>
+      <ContextMenuItem disabled>
         <ArrowUpRight />
         Open homepage in new tab
       </ContextMenuItem>
       <ContextMenuItem as-child>
-        <a href="/logo.png" target="_blank">
+        <a href="https://os.lepse.app/logo.png" target="_blank">
           <Download />
           Download logo
         </a>
       </ContextMenuItem>
       <ContextMenuItem as-child>
-        <a href="/favicon-96x96.png" target="_blank">
+        <a href="https://os.lepse.app/favicon-96x96.png" target="_blank">
           <Download />
           Download favicon
         </a>
       </ContextMenuItem>
       <ContextMenuSeparator />
       <!-- TODO: Link actual about page -->
-      <ContextMenuItem>
+      <ContextMenuItem disabled>
         <Info />
         About
       </ContextMenuItem>
