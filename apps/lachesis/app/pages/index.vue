@@ -178,10 +178,11 @@ const { width } = useWindowSize()
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>Use Stopwatch</DropdownMenuItem>
-            <DropdownMenuItem>
-              Enter Fullscreen
+            <DropdownMenuItem @select="toggleFocusMethod" :disabled="!focusMethodToggleable">
+              Use {{ focusMethod === 'pomodoro' ? 'Stopwatch' : 'Pomodoro' }}
+            </DropdownMenuItem>
+            <DropdownMenuItem v-if="isFullscreenSupported" @select="toggleFullscreen">
+              {{ isFullscreen ? 'Exit' : 'Enter' }} Fullscreen
               <DropdownMenuShortcut>F11</DropdownMenuShortcut>
             </DropdownMenuItem>
           </DropdownMenuContent>
