@@ -24,6 +24,7 @@ const corsConfig = defineConfig({
         'tauri://localhost', // tauri
         'http://tauri.localhost', // cuz windows and android can't do tauri:// ig
         'http://localhost:3000', // for dev
+        'https://os.lepse.app', // for prod
       ],
 
   /**
