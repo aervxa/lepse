@@ -2,8 +2,9 @@ import type User from '#models/user'
 import { BaseMail } from '@adonisjs/mail'
 import { urlFor } from '@adonisjs/core/services/url_builder'
 import { appUrl } from '#config/app'
+import config from '@adonisjs/core/services/config'
 
-export default class VerifyEmailNotification extends BaseMail {
+export default class PasswordResetNotification extends BaseMail {
   subject = ''
 
   constructor(
@@ -20,12 +21,12 @@ export default class VerifyEmailNotification extends BaseMail {
   prepare() {
     const data = {
       user: this.user,
-      url: urlFor('web.verify.email', { token: this.token }, { prefixUrl: appUrl }),
+      url: urlFor('web.verify.password-reset', { token: this.token }, { prefixUrl: appUrl }),
     }
     this.message
       .to(this.user.email)
-      .subject('Verify your email')
-      .htmlView('emails/verify_email_html', data)
-      .textView('emails/verify_email_text', data)
+      .subject(`Reset your ${config.get('mail.globals.brandName')} password`)
+      .htmlView('emails/password_reset_html', data)
+      .textView('emails/password_reset_text', data)
   }
 }

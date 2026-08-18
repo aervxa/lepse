@@ -20,6 +20,9 @@ export interface ApiDefinition {
     email: {
       request: typeof routes['verify.email.request']
     }
+    passwordReset: {
+      request: typeof routes['verify.password-reset.request']
+    }
   }
   backgrounds: {
     index: typeof routes['backgrounds.index']

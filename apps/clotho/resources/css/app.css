@@ -1,2 +1,8 @@
 @import 'tailwindcss';
 @source "../views";
+
+@layer base {
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+}

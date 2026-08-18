@@ -7,10 +7,13 @@ export type ScannedRoutes = {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
     'web.home': { paramsTuple?: []; params?: {} }
     'web.verify.email': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
+    'web.verify.password-reset': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
+    'web.reset-password': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
     'auth.new_account.store': { paramsTuple?: []; params?: {} }
     'auth.access_token.store': { paramsTuple?: []; params?: {} }
     'auth.access_token.destroy': { paramsTuple?: []; params?: {} }
     'verify.email.request': { paramsTuple?: []; params?: {} }
+    'verify.password-reset.request': { paramsTuple?: []; params?: {} }
     'backgrounds.index': { paramsTuple?: []; params?: {} }
     'account.profile.show': { paramsTuple?: []; params?: {} }
     'account.profile.update': { paramsTuple?: []; params?: {} }
@@ -41,7 +44,9 @@ export type ScannedRoutes = {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
     'web.home': { paramsTuple?: []; params?: {} }
     'web.verify.email': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
+    'web.verify.password-reset': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
     'verify.email.request': { paramsTuple?: []; params?: {} }
+    'verify.password-reset.request': { paramsTuple?: []; params?: {} }
     'backgrounds.index': { paramsTuple?: []; params?: {} }
     'account.profile.show': { paramsTuple?: []; params?: {} }
     'day.tasks.index': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
@@ -60,7 +65,9 @@ export type ScannedRoutes = {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
     'web.home': { paramsTuple?: []; params?: {} }
     'web.verify.email': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
+    'web.verify.password-reset': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
     'verify.email.request': { paramsTuple?: []; params?: {} }
+    'verify.password-reset.request': { paramsTuple?: []; params?: {} }
     'backgrounds.index': { paramsTuple?: []; params?: {} }
     'account.profile.show': { paramsTuple?: []; params?: {} }
     'day.tasks.index': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
@@ -76,6 +83,7 @@ export type ScannedRoutes = {
     'goals.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   POST: {
+    'web.reset-password': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
     'auth.new_account.store': { paramsTuple?: []; params?: {} }
     'auth.access_token.store': { paramsTuple?: []; params?: {} }
     'auth.access_token.destroy': { paramsTuple?: []; params?: {} }

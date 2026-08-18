@@ -25,8 +25,15 @@ router
     // TODO: redirect to actual homepage later on (atropos)
     router.on('/').render('pages/home').as('home').use(throttle)
     router.get('verify/email/:token', [controllers.VerifyEmail, 'verify']).as('verify.email')
+    router
+      .get('verify/password-reset/:token', [controllers.PasswordReset, 'verify'])
+      .as('verify.password-reset')
+    router
+      .post('verify/password-reset/:token', [controllers.PasswordReset, 'reset'])
+      .as('reset-password')
   })
   .as('web')
+  .use(throttle)
 
 // API
 router
@@ -41,12 +48,16 @@ router
       .prefix('auth')
       .as('auth')
 
-    // Verification
+    // Verification requests
     router
       .get('verify/email/request', [controllers.VerifyEmail, 'request'])
       .as('verify.email.request')
       .use(middleware.auth())
       .use(limiter.define('verifyEmailRequest', () => limiter.allowRequests(1).every('1 minute')))
+    router
+      .get('verify/password-reset/request', [controllers.PasswordReset, 'request'])
+      .as('verify.password-reset.request')
+      .use(limiter.define('PasswordResetRequest', () => limiter.allowRequests(1).every('1 minute')))
 
     // Backgrounds (index only)
     router.get('backgrounds', [controllers.Backgrounds, 'index'])

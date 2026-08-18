@@ -67,6 +67,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/verify_email_controller').default['request']>>>
     }
   }
+  'verify.password-reset.request': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/verify/password-reset/request'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/password_reset_controller').default['request']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/password_reset_controller').default['request']>>>
+    }
+  }
   'backgrounds.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/backgrounds'
