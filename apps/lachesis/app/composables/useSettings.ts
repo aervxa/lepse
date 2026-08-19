@@ -19,10 +19,7 @@ export const useSettings = () => {
     'rose',
     'espresso',
   ] as const
-  const theme = useLocalStorage<(typeof THEMES)[number]>(
-    'theme',
-    THEMES[Math.floor(Math.random() * THEMES.length)]!
-  )
+  const theme = useLocalStorage<(typeof THEMES)[number]>('theme', 'white')
 
   const THEME_OPTIONS = [
     'data-fixed-color-clock',

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useDebounceFn, useIntervalFn, useNow } from '@vueuse/core'
+import { useDebounceFn, useIntervalFn, useLocalStorage, useNow } from '@vueuse/core'
 import { ChevronsUpDown, FastForward, Pause, Play, RefreshCw, X } from '@lucide/vue'
 import { toast } from 'vue-sonner'
 import { getGreeting } from '~/lib/greetings'
@@ -172,6 +172,8 @@ function skipPomo() {
   }
   stopwatch.reset()
 }
+
+const hasCustomizedAccent = useLocalStorage('hasCustomizedAccent', false)
 </script>
 
 <template>
@@ -302,5 +304,11 @@ function skipPomo() {
         <FastForward />
       </Button>
     </div>
+    <p
+      v-else-if="!hasCustomizedAccent"
+      class="font-xs text-muted-foreground text-center tracking-wide"
+    >
+      Right click clock to change accent color
+    </p>
   </div>
 </template>
