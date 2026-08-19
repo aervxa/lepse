@@ -12,10 +12,10 @@ export const controllers = {
   Habits: () => import('#controllers/habits_controller'),
   Journals: () => import('#controllers/journals_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
+  PasswordReset: () => import('#controllers/password_reset_controller'),
   Profile: () => import('#controllers/profile_controller'),
   Scribbles: () => import('#controllers/scribbles_controller'),
   TaskDays: () => import('#controllers/task_days_controller'),
   Tasks: () => import('#controllers/tasks_controller'),
   VerifyEmail: () => import('#controllers/verify_email_controller'),
-  PasswordReset: () => import('#controllers/password_reset_controller'),
 }
