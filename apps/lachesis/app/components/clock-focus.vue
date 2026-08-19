@@ -254,8 +254,10 @@ const hasCustomizedAccent = useLocalStorage('hasCustomizedAccent', false)
     </div>
 
     <!-- Clock -->
-    <ThemePicker>
-      <p class="text-foreground-fixed relative flex font-semibold tabular-nums">
+    <ThemePicker @update:open="hasCustomizedAccent = true">
+      <p
+        class="text-foreground-fixed relative w-fit place-self-center text-center font-semibold tabular-nums"
+      >
         <span
           class="2xl:text-10xl text-shadow-foreground-fixed/40 -mt-3 h-min text-8xl leading-none text-shadow-lg sm:text-9xl"
         >
@@ -269,7 +271,7 @@ const hasCustomizedAccent = useLocalStorage('hasCustomizedAccent', false)
           }}
         </span>
         <span
-          v-if="focusMethod !== 'pomodoro'"
+          v-if="!inFocus || focusMethod !== 'pomodoro'"
           class="max-2xs:hidden absolute bottom-1.25 left-full translate-x-4 text-lg tracking-wider brightness-90 sm:bottom-2.25 sm:translate-x-6 sm:text-xl 2xl:bottom-3.25 2xl:text-2xl"
         >
           {{ !inFocus ? nowStr.slice(-2) : formatted.slice(-3, -1) }}
