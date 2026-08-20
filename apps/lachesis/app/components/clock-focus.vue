@@ -276,6 +276,12 @@ const hasCustomizedAccent = useLocalStorage('hasCustomizedAccent', false)
         >
           {{ !inFocus ? nowStr.slice(-2) : formatted.slice(-3, -1) }}
         </span>
+      <p
+        v-if="!inFocus && !hasCustomizedAccent"
+        class="absolute top-[calc(100%+var(--spacing)*6)] left-1/2 -translate-x-1/2 w-max font-xs text-muted-foreground rounded-sm px-2 text-center font-light tracking-wide backdrop-blur-sm backdrop-brightness-75"
+      >
+        Right click to change accent
+      </p>
       </p>
     </ThemePicker>
 
@@ -306,11 +312,5 @@ const hasCustomizedAccent = useLocalStorage('hasCustomizedAccent', false)
         <FastForward />
       </Button>
     </div>
-    <p
-      v-else-if="!hasCustomizedAccent"
-      class="font-xs text-muted-foreground text-center tracking-wide"
-    >
-      Right click clock to change accent color
-    </p>
   </div>
 </template>
