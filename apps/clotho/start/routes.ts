@@ -137,6 +137,10 @@ router
             router.resource('goals', controllers.Goals)
             // router.resource('scribbles', controllers.Scribbles)
             // router.resource('habits', controllers.Habits).use(['update'], middleware.clientDate())
+
+            // Task Goal linking
+            router.post('tasks/:taskId/goals/:goalId', [controllers.Tasks, 'attachGoal'])
+            router.delete('tasks/:taskId/goals/:goalId', [controllers.Tasks, 'detachGoal'])
           })
           .use(middleware.verifiedEmail())
       })

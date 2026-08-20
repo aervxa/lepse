@@ -68,6 +68,17 @@ export class FocusSessionSchema extends BaseModel {
   declare userId: number
 }
 
+export class GoalTaskSchema extends BaseModel {
+  static $columns = ['goalId', 'id', 'taskId'] as const
+  $columns = GoalTaskSchema.$columns
+  @column()
+  declare goalId: number
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare taskId: number
+}
+
 export class GoalSchema extends BaseModel {
   static $columns = ['createdAt', 'description', 'id', 'name', 'status', 'updatedAt', 'userId'] as const
   $columns = GoalSchema.$columns
@@ -200,14 +211,12 @@ export class TaskDaySchema extends BaseModel {
 }
 
 export class TaskSchema extends BaseModel {
-  static $columns = ['createdAt', 'description', 'goalId', 'id', 'name', 'pomoCount', 'priority', 'status', 'stopwatchMs', 'updatedAt', 'userId'] as const
+  static $columns = ['createdAt', 'description', 'id', 'name', 'pomoCount', 'priority', 'status', 'stopwatchMs', 'updatedAt', 'userId'] as const
   $columns = TaskSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
   @column()
   declare description: string | null
-  @column()
-  declare goalId: number | null
   @column({ isPrimary: true })
   declare id: number
   @column()

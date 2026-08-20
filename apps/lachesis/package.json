@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@lepse/clotho": "*",
-    "@lucide/vue": "^1.31.0",
+    "@lucide/vue": "^1.33.0",
     "@nuxt/fonts": "^0.14.0",
     "@tailwindcss/vite": "^4.2.2",
     "@tanstack/vue-form": "^1.33.5",
@@ -34,7 +34,7 @@
     "motion-v": "^2.3.0",
     "nuxt": "^4.4.2",
     "reka-ui": "^2.10.3",
-    "shadcn-vue": "^2.7.4",
+    "shadcn-vue": "^2.8.2",
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.2.2",
     "vaul-vue": "^0.4.1",

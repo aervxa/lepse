@@ -192,6 +192,18 @@ const routes = {
     tokens: [{"old":"/api/v1/goals/:id","type":0,"val":"api","end":""},{"old":"/api/v1/goals/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/goals/:id","type":0,"val":"goals","end":""},{"old":"/api/v1/goals/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['goals.destroy']['types'],
   },
+  'tasks.attach_goal': {
+    methods: ["POST"],
+    pattern: '/api/v1/tasks/:taskId/goals/:goalId',
+    tokens: [{"old":"/api/v1/tasks/:taskId/goals/:goalId","type":0,"val":"api","end":""},{"old":"/api/v1/tasks/:taskId/goals/:goalId","type":0,"val":"v1","end":""},{"old":"/api/v1/tasks/:taskId/goals/:goalId","type":0,"val":"tasks","end":""},{"old":"/api/v1/tasks/:taskId/goals/:goalId","type":1,"val":"taskId","end":""},{"old":"/api/v1/tasks/:taskId/goals/:goalId","type":0,"val":"goals","end":""},{"old":"/api/v1/tasks/:taskId/goals/:goalId","type":1,"val":"goalId","end":""}],
+    types: placeholder as Registry['tasks.attach_goal']['types'],
+  },
+  'tasks.detach_goal': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/tasks/:taskId/goals/:goalId',
+    tokens: [{"old":"/api/v1/tasks/:taskId/goals/:goalId","type":0,"val":"api","end":""},{"old":"/api/v1/tasks/:taskId/goals/:goalId","type":0,"val":"v1","end":""},{"old":"/api/v1/tasks/:taskId/goals/:goalId","type":0,"val":"tasks","end":""},{"old":"/api/v1/tasks/:taskId/goals/:goalId","type":1,"val":"taskId","end":""},{"old":"/api/v1/tasks/:taskId/goals/:goalId","type":0,"val":"goals","end":""},{"old":"/api/v1/tasks/:taskId/goals/:goalId","type":1,"val":"goalId","end":""}],
+    types: placeholder as Registry['tasks.detach_goal']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

@@ -44,6 +44,32 @@ export const useTasks = () => {
     }
   }
 
+  const attachGoal = async (taskId: number, goalId: number) => {
+    const [payload, error] = await $clotho.api.tasks
+      .attachGoal({ params: { taskId, goalId } })
+      .safe()
+    if (payload) {
+      const index = tasks.value.findIndex((t) => t.id === taskId)
+      if (index !== -1) tasks.value[index] = payload.data
+    } else {
+      console.error(error)
+      return error
+    }
+  }
+
+  const detachGoal = async (taskId: number, goalId: number) => {
+    const [payload, error] = await $clotho.api.tasks
+      .detachGoal({ params: { taskId, goalId } })
+      .safe()
+    if (payload) {
+      const index = tasks.value.findIndex((t) => t.id === taskId)
+      if (index !== -1) tasks.value[index] = payload.data
+    } else {
+      console.error(error)
+      return error
+    }
+  }
+
   const destroyTask = async (id: number) => {
     const [, error] = await $clotho.api.tasks.destroy({ params: { id } }).safe()
     if (error) {
@@ -53,5 +79,14 @@ export const useTasks = () => {
     tasks.value = tasks.value.filter((t) => t.id !== id)
   }
 
-  return { tasks, focusedTaskId, fetchTasks, createTask, updateTask, destroyTask }
+  return {
+    tasks,
+    focusedTaskId,
+    fetchTasks,
+    createTask,
+    updateTask,
+    attachGoal,
+    detachGoal,
+    destroyTask,
+  }
 }

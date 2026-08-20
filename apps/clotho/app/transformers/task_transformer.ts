@@ -3,16 +3,18 @@ import type Task from '#models/task'
 
 export default class TaskTransformer extends BaseTransformer<Task> {
   toObject() {
-    return this.pick(this.resource, [
-      'id',
-      'name',
-      'description',
-      'priority',
-      'status',
-      'pomoCount',
-      'stopwatchMs',
-      'createdAt',
-      'goalId',
-    ])
+    return {
+      ...this.pick(this.resource, [
+        'id',
+        'name',
+        'description',
+        'priority',
+        'status',
+        'pomoCount',
+        'stopwatchMs',
+        'createdAt',
+      ]),
+      goalIds: this.resource.goals?.map((goal) => goal.id) ?? [],
+    }
   }
 }

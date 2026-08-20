@@ -8,7 +8,6 @@ export const createTaskValidator = vine.create(
     status: vine.enum(['todo', 'in_progress', 'done', 'canceled']).optional(),
     pomoCount: vine.number().withoutDecimals().min(0).optional(),
     stopwatchMs: vine.number().withoutDecimals().min(0).optional(),
-    goalId: vine.number().exists({ table: 'goals', column: 'id' }).nullable().optional(),
   })
 )
 

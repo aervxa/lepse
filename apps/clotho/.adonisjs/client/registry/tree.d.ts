@@ -57,6 +57,8 @@ export interface ApiDefinition {
     edit: typeof routes['tasks.edit']
     update: typeof routes['tasks.update']
     destroy: typeof routes['tasks.destroy']
+    attachGoal: typeof routes['tasks.attach_goal']
+    detachGoal: typeof routes['tasks.detach_goal']
   }
   goals: {
     index: typeof routes['goals.index']

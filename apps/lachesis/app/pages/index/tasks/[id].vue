@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { formatDate } from '@vueuse/core'
 import {
-  ArrowUpRight,
   ChevronDown,
   ChevronLeft,
   Clock,
@@ -9,8 +8,9 @@ import {
   Lightbulb,
   LoaderCircle,
   MoreHorizontal,
+  Plus,
   Trash,
-  Unlink,
+  X,
 } from '@lucide/vue'
 import { toast } from 'vue-sonner'
 import { formatDuration } from '~/lib/time'
@@ -23,7 +23,7 @@ const route = useRoute()
 const { id } = route.params
 const source = inject(bubbleNavSourceKey)
 
-const { tasks, focusedTaskId, updateTask, destroyTask } = useTasks()
+const { tasks, focusedTaskId, updateTask, attachGoal, detachGoal, destroyTask } = useTasks()
 const nameEl = useTemplateRef('nameEl')
 const descriptionEl = useTemplateRef('descriptionEl')
 const task = computed(() => {
@@ -72,13 +72,23 @@ const formattedDate = computed(() =>
 )
 
 const { goals, createGoal } = useGoals()
-const goal = computed(() => goals.value.find((g) => g.id === task.value?.goalId))
+const taskGoals = computed(() =>
+  goals.value.filter((goal) => task.value?.goalIds?.includes(goal.id))
+)
 
-const linkGoal = async (goalId: number | null) => {
+const linkGoal = async (goalId: number) => {
   if (task.value) {
-    const error = await updateTask(task.value.id, { goalId })
+    const error = await attachGoal(task.value.id, goalId)
     if (error) toast.error('Failed to link goal.')
-    else toast.success(goalId === null ? 'Goal unlinked.' : 'Goal linked.')
+    else toast.success('Goal linked.')
+  }
+}
+
+const unlinkGoal = async (goalId: number) => {
+  if (task.value) {
+    const error = await detachGoal(task.value.id, goalId)
+    if (error) toast.error('Failed to unlink goal.')
+    else toast.success('Goal unlinked.')
   }
 }
 
@@ -158,33 +168,24 @@ const focusTask = async () => {
       ></p>
 
       <!-- Goal linking -->
-      <div class="flex items-center">
-        <p class="text-xs font-light opacity-80">Linked to</p>
-        <ContextMenu v-if="goal">
-          <ContextMenuTrigger as-child>
-            <Button variant="ghost" size="xs" as-child>
-              <NuxtLink :to="`/goals/${goal.id}`">
-                <Link />
-                {{ goal.name }}
-              </NuxtLink>
+      <div class="mb-1 flex flex-wrap items-center gap-x-1 gap-y-0.5">
+        <p class="text-xs font-light opacity-80">Linked Goals:</p>
+        <Badge v-for="goal in taskGoals" :key="goal.id" variant="secondary" as-child>
+          <NuxtLink :to="`/goals/${goal.id}`">
+            <Link />
+            {{ goal.name }}
+            <Button
+              variant="ghost-destructive"
+              size="icon-xs"
+              class="-mr-1.5 size-4"
+              @click.stop.prevent="unlinkGoal(goal.id)"
+            >
+              <X class="size-3" />
             </Button>
-          </ContextMenuTrigger>
-          <ContextMenuContent>
-            <ContextMenuItem as-child>
-              <NuxtLink :to="`/goals/${goal.id}`">
-                <ArrowUpRight />
-                Open goal
-              </NuxtLink>
-            </ContextMenuItem>
-            <ContextMenuItem @select="linkGoal(null)">
-              <Unlink />
-              Unlink
-            </ContextMenuItem>
-          </ContextMenuContent>
-        </ContextMenu>
+          </NuxtLink>
+        </Badge>
         <Combobox
-          v-else
-          :items="goals"
+          :items="goals.filter((g) => !taskGoals.includes(g))"
           @select="
             (item) => {
               linkGoal(item.id)
@@ -194,9 +195,8 @@ const focusTask = async () => {
           empty="No goals found."
           placeholder="Search a goal"
         >
-          <Button variant="ghost" size="xs">
-            <Link />
-            <span class="text-muted-foreground italic">none</span>
+          <Button variant="ghost" size="icon-xs">
+            <Plus />
           </Button>
         </Combobox>
       </div>

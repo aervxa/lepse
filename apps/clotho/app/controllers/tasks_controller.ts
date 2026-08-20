@@ -4,6 +4,7 @@ import TaskPolicy from '#policies/task_policy'
 import TaskTransformer from '#transformers/task_transformer'
 import { createTaskValidator, updateTaskValidator } from '#validators/task'
 import TaskDay from '#models/task_day'
+import Goal from '#models/goal'
 
 export default class TasksController {
   /**
@@ -15,6 +16,7 @@ export default class TasksController {
       .where('user_id', user.id)
       .orderBy('priority', 'desc')
       .orderBy('created_at', 'asc')
+      .preload('goals', (query) => query.select('id'))
 
     return serialize(TaskTransformer.transform(tasks))
   }
@@ -46,6 +48,7 @@ export default class TasksController {
   async show({ params, bouncer, serialize }: HttpContext) {
     const task = await Task.findOrFail(params.id)
     await bouncer.with(TaskPolicy).authorize('show', task)
+    await task.load('goals', (query) => query.select('id'))
 
     return serialize(TaskTransformer.transform(task))
   }
@@ -74,6 +77,7 @@ export default class TasksController {
     }
 
     await task.save()
+    await task.load('goals', (query) => query.select('id'))
 
     return serialize(TaskTransformer.transform(task))
   }
@@ -88,5 +92,27 @@ export default class TasksController {
     await task.delete()
 
     return response.noContent()
+  }
+
+  async attachGoal({ params, bouncer, serialize }: HttpContext) {
+    const task = await Task.findOrFail(params.taskId)
+    const goal = await Goal.findOrFail(params.goalId)
+    await bouncer.with(TaskPolicy).authorize('attachGoal', task, goal)
+
+    await task.related('goals').attach([goal.id]) // attack goal
+    await task.load('goals', (query) => query.select('id')) // load updated goals
+
+    return serialize(TaskTransformer.transform(task))
+  }
+
+  async detachGoal({ params, bouncer, serialize }: HttpContext) {
+    const task = await Task.findOrFail(params.taskId)
+    const goal = await Goal.findOrFail(params.goalId)
+    await bouncer.with(TaskPolicy).authorize('detachGoal', task, goal)
+
+    await task.related('goals').detach([goal.id]) // detach goal
+    await task.load('goals', (query) => query.select('id')) // load updated goals
+
+    return serialize(TaskTransformer.transform(task))
   }
 }

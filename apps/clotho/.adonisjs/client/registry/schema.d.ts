@@ -379,4 +379,28 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/goals_controller').default['destroy']>>>
     }
   }
+  'tasks.attach_goal': {
+    methods: ["POST"]
+    pattern: '/api/v1/tasks/:taskId/goals/:goalId'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue, ParamValue]
+      params: { taskId: ParamValue; goalId: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/tasks_controller').default['attachGoal']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/tasks_controller').default['attachGoal']>>>
+    }
+  }
+  'tasks.detach_goal': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/tasks/:taskId/goals/:goalId'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue, ParamValue]
+      params: { taskId: ParamValue; goalId: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/tasks_controller').default['detachGoal']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/tasks_controller').default['detachGoal']>>>
+    }
+  }
 }
