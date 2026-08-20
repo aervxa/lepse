@@ -15,5 +15,5 @@ class TokenService {
     return encryption.decrypt<{ userId: string }>(token, 'password-reset')
   }
 }
+
 export default new TokenService()
-]
