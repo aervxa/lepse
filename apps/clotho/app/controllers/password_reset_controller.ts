@@ -1,15 +1,23 @@
 import PasswordResetNotification from '#mails/password_reset_notification'
 import User from '#models/user'
 import token_service from '#services/token_service'
-import { resetPasswordValidator } from '#validators/user'
+import { resetPasswordRequestValidator, resetPasswordValidator } from '#validators/user'
 import { Exception } from '@adonisjs/core/exceptions'
 import type { HttpContext } from '@adonisjs/core/http'
+import limiter from '@adonisjs/limiter/services/main'
 import mail from '@adonisjs/mail/services/main'
 import { ValidationError } from '@vinejs/vine'
 
+const requestLimiter = limiter.use({ requests: 1, duration: '1 minute' })
+
 export default class VerifyEmailController {
-  async request({ auth, response }: HttpContext) {
-    const user = auth.getUserOrFail()
+  async request({ request, response }: HttpContext) {
+    const { email } = await request.validateUsing(resetPasswordRequestValidator)
+
+    const user = await User.findByOrFail('email', email)
+
+    // Consume limit only if user found
+    await requestLimiter.consume(`${user.id}.password-reset`)
 
     const token = token_service.createPasswordResetToken(user.id)
     await mail.sendLater(new PasswordResetNotification(user, token))

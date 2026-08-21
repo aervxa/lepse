@@ -5,11 +5,10 @@ import { z } from 'zod'
 
 definePageMeta({ overlay: true })
 
-const { login } = useAuth()
+const { passwordResetRequest } = useAuth()
 
 const schema = z.object({
   email: z.string().email('Invalid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters long'),
 })
 
 const {
@@ -21,7 +20,7 @@ const {
   validators: {
     onDynamic: schema,
     onSubmitAsync: async ({ value }) => {
-      const error = await login(value.email, value.password)
+      const error = await passwordResetRequest(value.email)
       if (!error) return null
       if (error.isValidationError()) {
         const errors = mapErrors(error.response.errors)
@@ -31,23 +30,24 @@ const {
             password: errors.password?.message,
           },
         }
-      } else if (error.isStatus(400)) toast.error('Invalid credentials!')
+      } else if (error.isStatus(404))
+        toast.error('User not found!', { description: 'Please create a new account.' })
       else toast.error('Something went wrong', { description: error.message })
-      return 'Login failed!'
+      return 'Password reset request failed!'
     },
   },
-  defaultValues: { email: '', password: '' },
+  defaultValues: { email: '' },
   onSubmit: () => {
-    toast.success('Logged in successfully')
-    navigateTo('/')
+    toast.success('Password reset link sent!')
+    navigateTo('/login')
   },
 })
 </script>
 
 <template>
   <DialogHeader class="text-center">
-    <DialogTitle class="text-xl">Welcome back</DialogTitle>
-    <DialogDescription>Login with your email and password.</DialogDescription>
+    <DialogTitle class="text-xl">Welp, Reset password</DialogTitle>
+    <DialogDescription>Send a password reset link to your email.</DialogDescription>
   </DialogHeader>
   <form @submit.prevent="handleSubmit">
     <FieldGroup>
@@ -70,41 +70,15 @@ const {
         </Field>
       </FormField>
 
-      <!-- Password -->
-      <FormField name="password" v-slot="{ field }">
-        <Field :data-invalid="!field.state.meta.isValid">
-          <div class="flex items-center justify-between">
-            <FieldLabel :for="field.name">Password</FieldLabel>
-            <NuxtLink
-              to="/reset-password"
-              class="text-muted-foreground text-xs tracking-wide underline"
-            >
-              Forget your password?
-            </NuxtLink>
-          </div>
-          <Input
-            type="password"
-            :id="field.name"
-            :name="field.name"
-            :model-value="field.state.value"
-            :aria-invalid="!field.state.meta.isValid"
-            autocomplete="current-password"
-            @blur="field.handleBlur"
-            @input="field.handleChange($event.target.value)"
-          />
-          <FieldError v-if="!field.state.meta.isValid" :errors="field.state.meta.errors" />
-        </Field>
-      </FormField>
-
       <!-- Submit -->
       <FormSubscribe v-slot="{ canSubmit, isPristine, isSubmitting }">
         <Field>
           <LoadingButton type="submit" :disabled="!canSubmit || isPristine" :loading="isSubmitting">
-            Login
+            Reset password
           </LoadingButton>
           <p class="text-muted-foreground text-center text-sm">
-            Don't have an account?
-            <NuxtLink to="/signup" class="text-foreground underline">Sign up</NuxtLink>
+            Know your password?
+            <NuxtLink to="/login" class="text-foreground underline">Login</NuxtLink>
           </p>
         </Field>
       </FormSubscribe>

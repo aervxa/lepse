@@ -37,7 +37,7 @@ const routes = {
     types: placeholder as Registry['verify.email.request']['types'],
   },
   'verify.password-reset.request': {
-    methods: ["GET","HEAD"],
+    methods: ["POST"],
     pattern: '/api/v1/verify/password-reset/request',
     tokens: [{"old":"/api/v1/verify/password-reset/request","type":0,"val":"api","end":""},{"old":"/api/v1/verify/password-reset/request","type":0,"val":"v1","end":""},{"old":"/api/v1/verify/password-reset/request","type":0,"val":"verify","end":""},{"old":"/api/v1/verify/password-reset/request","type":0,"val":"password-reset","end":""},{"old":"/api/v1/verify/password-reset/request","type":0,"val":"request","end":""}],
     types: placeholder as Registry['verify.password-reset.request']['types'],

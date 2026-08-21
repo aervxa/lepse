@@ -68,13 +68,11 @@ export const useAuth = () => {
       return error
     }
   }
-  const verifyEmail = async (token: string) => {
-    const [, error] = await $clotho.api.verify.email({ params: { token } }).safe()
+  const passwordResetRequest = async (email: string) => {
+    const [, error] = await $clotho.api.verify.passwordReset.request({ body: { email } }).safe()
     if (error) {
       console.error(error)
       return error
-    } else {
-      refreshUser()
     }
   }
 
@@ -96,8 +94,8 @@ export const useAuth = () => {
     login,
     logout,
     refreshUser,
-    verifyEmail,
     verifyEmailRequest,
+    passwordResetRequest,
     updateProfile,
   }
 }

@@ -68,15 +68,15 @@ export interface Registry {
     }
   }
   'verify.password-reset.request': {
-    methods: ["GET","HEAD"]
+    methods: ["POST"]
     pattern: '/api/v1/verify/password-reset/request'
     types: {
-      body: {}
+      body: ExtractBody<InferInput<(typeof import('#validators/user').resetPasswordRequestValidator)>>
       paramsTuple: []
       params: {}
-      query: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/user').resetPasswordRequestValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/password_reset_controller').default['request']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/password_reset_controller').default['request']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/password_reset_controller').default['request']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'backgrounds.index': {

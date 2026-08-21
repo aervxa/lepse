@@ -28,3 +28,4 @@ export const loginValidator = vine.create({
 export const resetPasswordValidator = vine.create(
   signupValidator.schema.pick(['password', 'passwordConfirmation'])
 )
+export const resetPasswordRequestValidator = vine.create({ email: email() })
