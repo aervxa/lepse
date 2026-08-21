@@ -40,6 +40,6 @@ onMounted(() => {
       <NuxtPage />
     </NuxtLayout>
   </TooltipProvider>
-  <Toaster position="top-center" richColors class="font-[inherit]!" />
+  <Toaster position="top-center" richColors class="font-[inherit]! **:pointer-events-auto" />
   <DialogRenderer />
 </template>
