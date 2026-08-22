@@ -63,6 +63,9 @@ const dbConfig = defineConfig({
         database: env.get('DB_DATABASE'),
         ssl: true,
       },
+      pool: {
+        min: 0,
+      },
       migrations: {
         naturalSort: true,
         paths: ['database/migrations'],
