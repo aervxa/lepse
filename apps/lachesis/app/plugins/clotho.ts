@@ -1,37 +1,51 @@
-import { createTuyau } from '@tuyau/core/client'
 import { registry } from '@lepse/clotho/registry'
+import { createTuyau } from '@tuyau/core/client'
+import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query'
+import { createTuyauVueQueryClient } from '@tuyau/vue-query'
 import { toast } from 'vue-sonner'
 
 export default defineNuxtPlugin({
   name: 'clotho',
-  async setup() {
+  async setup(app) {
     const config = useRuntimeConfig()
     const token = useCookie('auth_token')
 
-    const clotho = createTuyau({
-      baseUrl: config.public.apiUrl,
-      registry,
-      hooks: {
-        beforeRequest: [
-          (request) => {
-            if (token.value) {
-              request.headers.set('Authorization', `Bearer ${token.value}`)
-            }
-            request.headers.set('x-client-date', getClientDate())
-          },
-        ],
-        afterResponse: [
-          (request, _, response) => {
-            if (response.status === 429) {
-              toast.error('Alright, you gotta chill -_-', {
-                description: 'You got rate limited. Retry again later.',
-              })
-            }
-          },
-        ],
-      },
+    // Use tanstack/vue-query
+    const queryClient = new QueryClient()
+    app.vueApp.use(VueQueryPlugin, { queryClient })
+
+    // the tuyau vue-query client
+    const api = createTuyauVueQueryClient({
+      client: createTuyau({
+        baseUrl: config.public.apiUrl,
+        registry,
+        hooks: {
+          beforeRequest: [
+            (request) => {
+              if (token.value) {
+                request.headers.set('Authorization', `Bearer ${token.value}`)
+              }
+              request.headers.set('x-client-date', getClientDate())
+            },
+          ],
+          afterResponse: [
+            (_request, _options, response) => {
+              if (response.status === 429) {
+                toast.error('Alright, you gotta chill -_-', {
+                  description: 'You got rate limited. Retry again later.',
+                })
+              }
+            },
+          ],
+        },
+      }),
     })
 
-    return { provide: { clotho } }
+    return {
+      provide: {
+        queryClient, // queries without context (in plugins for example)
+        api, // for type-safe query and mutation options
+      },
+    }
   },
 })
