@@ -17,7 +17,6 @@ import limiter from '@adonisjs/limiter/services/main'
 router
   .on('/ping')
   .setHandler(() => 'pong')
-  .use(throttle)
 
 // WEB ROUTES (routes that users access on the server)
 router
