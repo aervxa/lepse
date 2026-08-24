@@ -24,12 +24,12 @@ router
   .group(() => {
     // TODO: redirect to actual homepage later on (atropos)
     router.on('/').render('pages/home').as('home').use(throttle)
-    router.get('verify/email/:token', [controllers.VerifyEmail, 'verify']).as('verify.email')
+    router.get('verify/email/:token', [controllers.VerifyEmail, 'index']).as('verify.email')
     router
-      .get('verify/password-reset/:token', [controllers.PasswordReset, 'verify'])
+      .get('verify/password-reset/:token', [controllers.PasswordReset, 'index'])
       .as('verify.password-reset')
     router
-      .post('verify/password-reset/:token', [controllers.PasswordReset, 'reset'])
+      .post('verify/password-reset/:token', [controllers.PasswordReset, 'update'])
       .as('reset-password')
   })
   .as('web')
@@ -50,12 +50,12 @@ router
 
     // Verification requests
     router
-      .get('verify/email/request', [controllers.VerifyEmail, 'request'])
+      .post('verify/email/request', [controllers.VerifyEmail, 'store'])
       .as('verify.email.request')
       .use(middleware.auth())
       .use(limiter.define('verifyEmailRequest', () => limiter.allowRequests(1).every('1 minute')))
     router
-      .post('verify/password-reset/request', [controllers.PasswordReset, 'request'])
+      .post('verify/password-reset/request', [controllers.PasswordReset, 'store'])
       .as('verify.password-reset.request')
 
     // Backgrounds (index only)
