@@ -65,6 +65,6 @@ export default class ProfileController {
       await user.save()
     }
 
-    return response.created(await serialize(UserTransformer.transform(user)))
+    return serialize({ user: UserTransformer.transform(user) })
   }
 }
