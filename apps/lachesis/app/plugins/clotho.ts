@@ -1,5 +1,5 @@
 import { registry } from '@lepse/clotho/registry'
-import { createTuyau } from '@tuyau/core/client'
+import { createTuyau, TuyauHTTPError } from '@tuyau/core/client'
 import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query'
 import { createTuyauVueQueryClient } from '@tuyau/vue-query'
 import { toast } from 'vue-sonner'
@@ -11,7 +11,18 @@ export default defineNuxtPlugin({
     const token = useCookie('auth_token')
 
     // Use tanstack/vue-query
-    const queryClient = new QueryClient()
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: (failureCount, error) => {
+            if (error instanceof TuyauHTTPError && [401, 429].includes(error.status ?? 0)) {
+              return false
+            }
+            return failureCount < 3
+          },
+        },
+      },
+    })
     app.vueApp.use(VueQueryPlugin, { queryClient })
 
     // the tuyau vue-query client
