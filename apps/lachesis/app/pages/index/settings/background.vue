@@ -2,22 +2,26 @@
 import { toast } from 'vue-sonner'
 
 const { user } = useAuth()
-const { backgrounds, activeBackgroundId, selectBackground } = useBackgrounds()
+const { backgrounds, backgroundSelectMutation } = useBackgrounds()
 
 const groupedBackgrounds = computed(() =>
   Object.entries(
-    backgrounds.value.reduce<Record<string, typeof backgrounds.value>>((acc, bg) => {
+    backgrounds.value?.reduce<Record<string, typeof backgrounds.value>>((acc, bg) => {
       ;(acc[bg.style] ??= []).push(bg)
       return acc
-    }, {})
+    }, {}) ?? {}
   ).sort(([style1], [style2]) => style1.localeCompare(style2))
 )
 
-const select = async (id: number) => {
-  const error = await selectBackground({ id })
-  if (error) {
-    toast.error('Failed to update background!', { description: error.message })
-  }
+const select = (id: number) => {
+  backgroundSelectMutation.mutate(
+    { body: { id } },
+    {
+      onError: (err) => {
+        toast.error('Failed to update background!', { description: err.message })
+      },
+    }
+  )
 }
 </script>
 
@@ -39,8 +43,8 @@ const select = async (id: number) => {
         :key="background.id"
         variant="ghost"
         class="flex h-auto flex-col gap-2 rounded-2xl p-2"
-        :class="[background.id === activeBackgroundId && 'bg-muted!']"
-        :disabled="background.id === activeBackgroundId"
+        :class="[background.id === user?.backgroundId && 'bg-muted!']"
+        :disabled="background.id === user?.backgroundId"
         @click="select(background.id)"
       >
         <img
