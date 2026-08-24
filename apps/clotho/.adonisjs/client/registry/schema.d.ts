@@ -67,7 +67,7 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/verify_email_controller').default['store']>>>
     }
   }
-  'verify.password-reset.request': {
+  'reset.password.request': {
     methods: ["POST"]
     pattern: '/api/v1/verify/password-reset/request'
     types: {

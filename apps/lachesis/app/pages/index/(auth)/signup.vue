@@ -5,7 +5,7 @@ import { z } from 'zod'
 
 definePageMeta({ overlay: true })
 
-const { signup } = useAuth()
+const { signupMutation } = useAuth()
 
 const schema = z
   .object({
@@ -28,25 +28,38 @@ const {
   validators: {
     onDynamic: schema,
     onSubmitAsync: async ({ value }) => {
-      const error = await signup(
-        value.name,
-        value.email,
-        value.password,
-        value.passwordConfirmation
-      )
-      if (!error) return null
-      if (error.isValidationError()) {
-        const errors = mapErrors(error.response.errors)
-        return {
-          fields: {
-            name: errors.name?.message,
-            email: errors.email?.message,
-            password: errors.password?.message,
-            passwordConfirmation: errors.passwordConfirmation?.message,
+      let validationError = null
+
+      await signupMutation.mutateAsync(
+        {
+          body: {
+            name: value.name,
+            email: value.email,
+            password: value.password,
+            passwordConfirmation: value.passwordConfirmation,
+          },
+        },
+        {
+          onError: (err) => {
+            if (err.isValidationError()) {
+              const errors = mapErrors(err.response.errors)
+              validationError = {
+                fields: {
+                  name: errors.name?.message,
+                  email: errors.email?.message,
+                  password: errors.password?.message,
+                  passwordConfirmation: errors.passwordConfirmation?.message,
+                },
+              }
+            } else {
+              toast.error('Something went wrong!', { description: err.message })
+              validationError = 'Signup failed!'
+            }
           },
         }
-      } else toast.error('Something went wrong', { description: error.message })
-      return 'Signup failed!'
+      )
+
+      return validationError
     },
   },
   defaultValues: { name: '', email: '', password: '', passwordConfirmation: '' },

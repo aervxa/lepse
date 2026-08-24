@@ -56,7 +56,7 @@ router
       .use(limiter.define('verifyEmailRequest', () => limiter.allowRequests(1).every('1 minute')))
     router
       .post('verify/password-reset/request', [controllers.PasswordReset, 'store'])
-      .as('verify.password-reset.request')
+      .as('reset.password.request')
 
     // Backgrounds (index only)
     router.get('backgrounds', [controllers.Backgrounds, 'index'])

@@ -2,7 +2,7 @@
 import { createReusableTemplate } from '@vueuse/core'
 import { LogOut, Pencil, Settings, Smile, X } from '@lucide/vue'
 
-const { user, logout } = useAuth()
+const { user, logoutMutation } = useAuth()
 const open = ref(false)
 
 const [DefineAvatar, ReuseAvatar] = createReusableTemplate<{ state: 'after' | 'before' }>({
@@ -106,7 +106,7 @@ const [DefineAvatar, ReuseAvatar] = createReusableTemplate<{ state: 'after' | 'b
                     action: 'Logout',
                   }).then((value) => {
                     if (value === true) {
-                      return logout()
+                      return logoutMutation.mutateAsync({})
                     }
                   })
               "

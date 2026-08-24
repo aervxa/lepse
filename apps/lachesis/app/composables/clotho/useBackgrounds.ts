@@ -3,7 +3,7 @@ import { useDebounceFn, useSessionStorage } from '@vueuse/core'
 
 export const useBackgrounds = () => {
   const { $clotho } = useNuxtApp()
-  const { user, refreshUser } = useAuth()
+  const { user, userQuery } = useAuth()
   const backgrounds = useState<Data.Background[]>('backgrounds', () => [])
 
   const fetchBackgrounds = async () => {
@@ -54,7 +54,7 @@ export const useBackgrounds = () => {
         console.error(error)
         return error
       } else {
-        await refreshUser()
+        await userQuery.refetch()
       }
     },
     1000

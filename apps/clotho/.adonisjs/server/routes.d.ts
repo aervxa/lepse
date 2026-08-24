@@ -13,7 +13,7 @@ export type ScannedRoutes = {
     'auth.access_token.store': { paramsTuple?: []; params?: {} }
     'auth.access_token.destroy': { paramsTuple?: []; params?: {} }
     'verify.email.request': { paramsTuple?: []; params?: {} }
-    'verify.password-reset.request': { paramsTuple?: []; params?: {} }
+    'reset.password.request': { paramsTuple?: []; params?: {} }
     'backgrounds.index': { paramsTuple?: []; params?: {} }
     'account.profile.show': { paramsTuple?: []; params?: {} }
     'account.profile.update': { paramsTuple?: []; params?: {} }
@@ -86,7 +86,7 @@ export type ScannedRoutes = {
     'auth.access_token.store': { paramsTuple?: []; params?: {} }
     'auth.access_token.destroy': { paramsTuple?: []; params?: {} }
     'verify.email.request': { paramsTuple?: []; params?: {} }
-    'verify.password-reset.request': { paramsTuple?: []; params?: {} }
+    'reset.password.request': { paramsTuple?: []; params?: {} }
     'day.tasks.store': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'tasks.store': { paramsTuple?: []; params?: {} }
     'goals.store': { paramsTuple?: []; params?: {} }

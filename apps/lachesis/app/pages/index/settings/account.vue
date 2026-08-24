@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { LogOut } from '@lucide/vue'
 
-const { user, logout } = useAuth()
+const { user, logoutMutation } = useAuth()
 
 const isEmailVisible = ref(false)
 </script>
@@ -51,7 +51,7 @@ const isEmailVisible = ref(false)
               action: 'Logout',
             }).then((value) => {
               if (value === true) {
-                return logout()
+                return logoutMutation.mutateAsync({})
               }
             })
         "

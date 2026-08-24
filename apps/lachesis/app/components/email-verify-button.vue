@@ -4,19 +4,26 @@ import { toast } from 'vue-sonner'
 
 const emits = defineEmits(['success'])
 
-const { verifyEmailRequest } = useAuth()
+const { requestEmailVerificationMutation } = useAuth()
 const { remaining, start, reset } = useCountdown(60)
 const hasReset = ref(false)
 
-const request = async () => {
-  const error = await verifyEmailRequest()
-  if (!error) {
-    toast.success('Sent!', { description: 'please check your email!' })
-    reset()
-    hasReset.value = true
-    start()
-    emits('success')
-  }
+const request = () => {
+  return requestEmailVerificationMutation.mutateAsync(
+    {},
+    {
+      onSuccess: () => {
+        toast.success('Sent!', { description: 'please check your email!' })
+        reset()
+        hasReset.value = true
+        start()
+        emits('success')
+      },
+      onError: (err) => {
+        toast.error('Something went wrong', { description: err.message })
+      },
+    }
+  )
 }
 
 onMounted(() => {

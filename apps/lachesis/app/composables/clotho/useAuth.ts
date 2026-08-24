@@ -1,101 +1,58 @@
-import type { Data } from '@lepse/clotho/data'
+import { useMutation, useQuery } from '@tanstack/vue-query'
 
 export const useAuth = () => {
-  const { $clotho } = useNuxtApp()
+  const { $api, $queryClient } = useNuxtApp()
+
   const token = useCookie('auth_token', { maxAge: 60 * 60 * 24 * 365 /* one  year */ })
-  const user = useState<Data.User | undefined>('user', () => undefined)
+  const userQuery = useQuery($api.account.profile.show.queryOptions())
+  const user = computed(() => userQuery.data.value?.data)
 
-  const signup = async (
-    name: string,
-    email: string,
-    password: string,
-    passwordConfirmation: string
-  ) => {
-    const [payload, error] = await $clotho.api.auth.newAccount
-      .store({ body: { name, email, password, passwordConfirmation } })
-      .safe()
-    if (payload) {
-      token.value = payload.data.token
-      user.value = payload.data.user
-    } else {
-      console.error(error)
-      return error
-    }
-  }
+  const loginMutation = useMutation(
+    $api.auth.accessToken.store.mutationOptions({
+      onSuccess: ({ data }) => {
+        token.value = data.token
+        $queryClient.setQueryData($api.account.profile.show.queryKey(), { data: data.user })
+      },
+    })
+  )
 
-  const login = async (email: string, password: string) => {
-    const [payload, error] = await $clotho.api.auth.accessToken
-      .store({ body: { email, password } })
-      .safe()
-    if (payload) {
-      token.value = payload.data.token
-      user.value = payload.data.user
-    } else {
-      console.error(error)
-      return error
-    }
-  }
+  const signupMutation = useMutation(
+    $api.auth.newAccount.store.mutationOptions({
+      onSuccess: ({ data }) => {
+        token.value = data.token
+        $queryClient.setQueryData($api.account.profile.show.queryKey(), { data: data.user })
+      },
+    })
+  )
 
-  const logout = async () => {
-    await $clotho.api.auth.accessToken.destroy({})
-    token.value = null
-    user.value = undefined
-    navigateTo('/')
-  }
+  const logoutMutation = useMutation(
+    $api.auth.accessToken.destroy.mutationOptions({
+      onSuccess: () => {
+        token.value = null
+        $queryClient.removeQueries({ queryKey: $api.account.profile.show.queryKey() })
+      },
+    })
+  )
 
-  const refreshUser = async () => {
-    if (token.value) {
-      const [payload, error] = await $clotho.api.account.profile.show({}).safe()
-      if (payload) {
-        user.value = payload.data
-      } else {
-        // If user is not authorized (user doesn't exist in the server)
-        if (error.isStatus(401)) {
-          token.value = null
-          user.value = undefined
-          navigateTo('/')
-        }
-        console.error(error)
-        return error
-      }
-    }
-  }
+  const requestEmailVerificationMutation = useMutation($api.verify.email.request.mutationOptions())
+  const requestPasswordResetMutation = useMutation($api.reset.password.request.mutationOptions())
 
-  const verifyEmailRequest = async () => {
-    const [, error] = await $clotho.api.verify.email.request({}).safe()
-    if (error) {
-      console.error(error)
-      return error
-    }
-  }
-  const passwordResetRequest = async (email: string) => {
-    const [, error] = await $clotho.api.verify.passwordReset.request({ body: { email } }).safe()
-    if (error) {
-      console.error(error)
-      return error
-    }
-  }
-
-  const updateProfile = async (
-    body: Parameters<typeof $clotho.api.account.profile.update>['0']['body']
-  ) => {
-    const [payload, error] = await $clotho.api.account.profile.update({ body }).safe()
-    if (payload) {
-      user.value = payload.data
-    } else {
-      console.error(error)
-      return error
-    }
-  }
+  const updateProfileMutation = useMutation(
+    $api.account.profile.update.mutationOptions({
+      onSuccess: ({ data }) => {
+        $queryClient.setQueryData($api.account.profile.show.queryKey(), { data: data.user })
+      },
+    })
+  )
 
   return {
+    userQuery,
     user,
-    signup,
-    login,
-    logout,
-    refreshUser,
-    verifyEmailRequest,
-    passwordResetRequest,
-    updateProfile,
+    loginMutation,
+    signupMutation,
+    logoutMutation,
+    requestEmailVerificationMutation,
+    requestPasswordResetMutation,
+    updateProfileMutation,
   }
 }
