@@ -98,17 +98,13 @@ const [DefineAvatar, ReuseAvatar] = createReusableTemplate<{ state: 'after' | 'b
             <LoadingButton
               variant="destructive"
               size="icon-sm"
-              :action="
-                () =>
-                  dialog({
-                    title: 'Are you sure you want to logout?',
-                    description: 'This will end this session and return you to the login page.',
-                    action: 'Logout',
-                  }).then((value) => {
-                    if (value === true) {
-                      return logoutMutation.mutateAsync({})
-                    }
-                  })
+              :loading="logoutMutation.isPending.value"
+              @click="
+                dialog({
+                  title: 'Are you sure you want to logout?',
+                  description: 'This will end this session and return you to the login page.',
+                  action: 'Logout',
+                }).then((v) => v && logoutMutation.mutate({}))
               "
             >
               <LogOut />

@@ -29,7 +29,7 @@ export const useAuth = () => {
     $api.auth.accessToken.destroy.mutationOptions({
       onSuccess: () => {
         token.value = null
-        $queryClient.removeQueries({ queryKey: $api.account.profile.show.queryKey() })
+        $queryClient.resetQueries({ queryKey: $api.account.profile.show.queryKey() })
       },
     })
   )
