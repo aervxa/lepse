@@ -15,7 +15,7 @@ export default defineNuxtPlugin({
       defaultOptions: {
         queries: {
           retry: (failureCount, error) => {
-            if (error instanceof TuyauHTTPError && [401, 429].includes(error.status ?? 0)) {
+            if (error instanceof TuyauHTTPError && [401, 404, 429].includes(error.status ?? 0)) {
               return false
             }
             return failureCount < 3

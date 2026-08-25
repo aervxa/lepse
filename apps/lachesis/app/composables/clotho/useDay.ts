@@ -1,163 +1,39 @@
-import type { Data } from '@lepse/clotho/data'
+import { useMutation, useQuery } from '@tanstack/vue-query'
 
-export const useDay = (date?: string) => {
-  date = date ?? getClientDate()
-  const { $clotho } = useNuxtApp()
-
-  // ─── Tasks ────────────────────────────────────────────────────────────────
-
-  const dayTasks = useState<Data.TaskDay[]>('dayTasks', () => [])
-  const currentDayTasks = computed(() => dayTasks.value.filter((dt) => dt.date?.startsWith(date)))
-
-  const fetchDayTasks = async () => {
-    const [payload, error] = await $clotho.api.day.tasks
-      .index({
-        params: { date },
-      })
-      .safe()
-    if (payload) {
-      // Reload tasks of only the current date
-      dayTasks.value = [...dayTasks.value.filter((dt) => dt.date !== date), ...payload.data]
-    } else {
-      console.error(error)
-      return error
-    }
-  }
-
-  const createDayTask = async (
-    body: Parameters<typeof $clotho.api.day.tasks.store>['0']['body']
-  ) => {
-    // Don't create if already exists for the same date
-    if (currentDayTasks.value.some((dt) => dt.taskId === body.taskId)) return
-
-    const [payload, error] = await $clotho.api.day.tasks.store({ params: { date }, body }).safe()
-    if (payload) {
-      dayTasks.value.push(payload.data)
-    } else {
-      console.error(error)
-      return error
-    }
-  }
-
-  const destroyDayTask = async (id: number) => {
-    const [, error] = await $clotho.api.day.tasks.destroy({ params: { date, id } }).safe()
-    if (error) {
-      console.error(error)
-      return error
-    }
-    dayTasks.value = dayTasks.value.filter((dt) => dt.id !== id)
-  }
-
-  const taskReturns = {
-    dayTasks: currentDayTasks,
-    fetchDayTasks,
-    createDayTask,
-    destroyDayTask,
-  }
+export const useDay = (date: string = getClientDate()) => {
+  const { $api, $queryClient } = useNuxtApp()
 
   // ─── Session ──────────────────────────────────────────────────────────────
 
-  const focusSessions = useState<Data.FocusSession[]>('focusSessions', () => [])
-  const currentFocusSession = computed(() =>
-    focusSessions.value.find((fs) => fs.date?.startsWith(date))
+  const focusSessionQuery = useQuery($api.day.session.show.queryOptions({ params: { date } }))
+  const focusSession = computed(() => focusSessionQuery.data.value?.data)
+
+  const updateFocusSessionMutation = useMutation(
+    $api.day.session.update.mutationOptions({
+      onSuccess: (data) => {
+        $queryClient.setQueryData($api.day.session.show.queryKey({ params: { date } }), data)
+      },
+    })
   )
 
-  const fetchFocusSession = async () => {
-    const [payload, error] = await $clotho.api.day.session
-      .show({
-        params: { date },
-      })
-      .safe()
-    if (payload) {
-      // Reload session of only the current date
-      focusSessions.value = [
-        ...focusSessions.value.filter((fs) => fs.date !== payload.data.date),
-        payload.data,
-      ]
-    } else {
-      // Ignore 404 due to session not existing until update
-      if (error.isStatus(404)) {
-        console.info("404 is expected since session won't exist until first update")
-        return
-      }
-      console.error(error)
-      return error
-    }
-  }
-
-  const updateFocusSession = async (
-    body: Parameters<typeof $clotho.api.day.session.update>['0']['body']
-  ) => {
-    const [payload, error] = await $clotho.api.day.session.update({ params: { date }, body }).safe()
-    if (payload) {
-      // Reload session of only the current date
-      focusSessions.value = [
-        ...focusSessions.value.filter((fs) => fs.date !== payload.data.date),
-        payload.data,
-      ]
-    } else {
-      console.error(error)
-      return error
-    }
-  }
-
-  const destroyFocusSession = async () => {
-    const [, error] = await $clotho.api.day.session.destroy({ params: { date } }).safe()
-    if (error) {
-      console.error(error)
-      return error
-    }
-    focusSessions.value = focusSessions.value.filter((fs) => !fs.date?.startsWith(date))
-  }
+  const destroyFocusSessionMutation = useMutation(
+    $api.day.session.destroy.mutationOptions({
+      onSuccess: () => {
+        $queryClient.resetQueries({
+          queryKey: $api.day.session.show.queryKey({ params: { date } }),
+        })
+      },
+    })
+  )
 
   const sessionReturns = {
-    focusSession: currentFocusSession,
-    fetchFocusSession,
-    updateFocusSession,
-    destroyFocusSession,
+    focusSessionQuery,
+    focusSession,
+    updateFocusSessionMutation,
+    destroyFocusSessionMutation,
   }
-
-  // ─── Journal ──────────────────────────────────────────────────────────────
-
-  const journals = useState<Data.Journal[]>('journalsByDay', () => [])
-  const currentJournal = computed(() => journals.value.find((j) => j.date?.startsWith(date)))
-
-  const fetchJournal = async () => {
-    const [payload, error] = await $clotho.api.day.journal
-      .show({
-        params: { date },
-      })
-      .safe()
-    if (payload) {
-      // Reload journal of only the current date
-      journals.value = [...journals.value.filter((j) => j.date !== payload.data.date), payload.data]
-    } else {
-      // Ignore 404 due to journal not existing until update
-      if (error.isStatus(404)) {
-        console.info("404 is expected since journal won't exist until first update")
-        return
-      }
-      console.error(error)
-      return error
-    }
-  }
-
-  const updateJournal = async (
-    body: Parameters<typeof $clotho.api.day.journal.update>['0']['body']
-  ) => {
-    const [payload, error] = await $clotho.api.day.journal.update({ params: { date }, body }).safe()
-    if (payload) {
-      // Reload journal of only the current date
-      journals.value = [...journals.value.filter((j) => j.date !== payload.data.date), payload.data]
-    } else {
-      console.error(error)
-      return error
-    }
-  }
-
-  const journalReturns = { journal: currentJournal, fetchJournal, updateJournal }
 
   // ─── Returns ──────────────────────────────────────────────────────────────
 
-  return { ...taskReturns, ...sessionReturns, ...journalReturns }
+  return { ...sessionReturns }
 }

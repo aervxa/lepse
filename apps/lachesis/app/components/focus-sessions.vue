@@ -2,16 +2,9 @@
 import { Clock, ClockFading } from '@lucide/vue'
 import { formatDuration } from '~/lib/time'
 
-const { focusSession, fetchFocusSession } = useDay()
-const { user } = useAuth()
+const { focusSession } = useDay()
 
 const isLoading = ref(false)
-
-onMounted(() => {
-  if (!focusSession.value && user.value?.emailVerified) {
-    skeletonLoad(fetchFocusSession(), isLoading)
-  }
-})
 </script>
 
 <template>

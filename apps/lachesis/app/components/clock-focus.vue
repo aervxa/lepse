@@ -21,7 +21,8 @@ const { user } = useAuth()
 const now = useNow()
 const nowStr = computed(() => now.value.toLocaleTimeString([], { timeStyle: 'short' }))
 
-const { focusSession, updateFocusSession } = useDay(getClientDate())
+const date = getClientDate()
+const { focusSession, updateFocusSessionMutation } = useDay(date)
 
 // ─── Task ───────────────────────────────────────────────────────────────────
 
@@ -133,8 +134,13 @@ const syncStopwatch = useDebounceFn(() => {
   const elapsed = stopwatch.elapsed.value
 
   // Update focus session's stopwatchMs
-  updateFocusSession({
-    stopwatchMs: Math.round((focusSession.value?.stopwatchMs ?? 0) + (elapsed - stopwatchSyncedMs)),
+  updateFocusSessionMutation.mutate({
+    params: { date },
+    body: {
+      stopwatchMs: Math.round(
+        (focusSession.value?.stopwatchMs ?? 0) + (elapsed - stopwatchSyncedMs)
+      ),
+    },
   })
   // Update selected task
   if (task.value)
@@ -164,7 +170,10 @@ function skipPomo() {
     pomoState.value = pomoCount.value % 4 === 0 ? 'long-break' : 'break'
 
     // Increment focus session's pomoCount
-    updateFocusSession({ pomoCount: (focusSession.value?.pomoCount ?? 0) + 1 })
+    updateFocusSessionMutation.mutate({
+      params: { date },
+      body: { pomoCount: (focusSession.value?.pomoCount ?? 0) + 1 },
+    })
     // Update selected task
     if (task.value) updateTask(task.value.id, { pomoCount: task.value.pomoCount + 1 })
   } else {
@@ -276,12 +285,12 @@ const hasCustomizedAccent = useLocalStorage('hasCustomizedAccent', false)
         >
           {{ !inFocus ? nowStr.slice(-2) : formatted.slice(-3, -1) }}
         </span>
+      </p>
       <p
         v-if="!inFocus && !hasCustomizedAccent"
-        class="absolute top-[calc(100%+var(--spacing)*6)] left-1/2 -translate-x-1/2 w-max font-xs text-muted-foreground rounded-sm px-2 text-center font-light tracking-wide backdrop-blur-sm backdrop-brightness-75"
+        class="font-xs text-muted-foreground absolute top-[calc(100%+var(--spacing)*6)] left-1/2 w-max -translate-x-1/2 rounded-sm px-2 text-center font-light tracking-wide backdrop-blur-sm backdrop-brightness-75"
       >
         Right click to change accent
-      </p>
       </p>
     </ThemePicker>
 
