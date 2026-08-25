@@ -15,11 +15,15 @@ export default defineNuxtPlugin({
       defaultOptions: {
         queries: {
           retry: (failureCount, error) => {
-            if (error instanceof TuyauHTTPError && [401, 404, 429].includes(error.status ?? 0)) {
+            if (
+              error instanceof TuyauHTTPError &&
+              ([401, 404, 429].includes(error.status ?? 0) || /^5\d\d$/.test(String(error.status)))
+            ) {
               return false
             }
             return failureCount < 3
           },
+          staleTime: Infinity,
         },
       },
     })
