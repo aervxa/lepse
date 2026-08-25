@@ -25,36 +25,40 @@ export default defineNuxtPlugin({
     })
     app.vueApp.use(VueQueryPlugin, { queryClient })
 
+    // the tuyau client
+    const client = createTuyau({
+      baseUrl: config.public.apiUrl,
+      registry,
+      hooks: {
+        beforeRequest: [
+          (request) => {
+            if (token.value) {
+              request.headers.set('Authorization', `Bearer ${token.value}`)
+            }
+            request.headers.set('x-client-date', getClientDate())
+          },
+        ],
+        afterResponse: [
+          (_request, _options, response) => {
+            if (response.status === 429) {
+              toast.error('Alright, you gotta chill -_-', {
+                description: 'You got rate limited. Retry again later.',
+              })
+            }
+          },
+        ],
+      },
+    })
+
     // the tuyau vue-query client
     const api = createTuyauVueQueryClient({
-      client: createTuyau({
-        baseUrl: config.public.apiUrl,
-        registry,
-        hooks: {
-          beforeRequest: [
-            (request) => {
-              if (token.value) {
-                request.headers.set('Authorization', `Bearer ${token.value}`)
-              }
-              request.headers.set('x-client-date', getClientDate())
-            },
-          ],
-          afterResponse: [
-            (_request, _options, response) => {
-              if (response.status === 429) {
-                toast.error('Alright, you gotta chill -_-', {
-                  description: 'You got rate limited. Retry again later.',
-                })
-              }
-            },
-          ],
-        },
-      }),
+      client,
     })
 
     return {
       provide: {
         queryClient, // queries without context (in plugins for example)
+        client, // for overriding and using client directly instead of type safe options
         api, // for type-safe query and mutation options
       },
     }

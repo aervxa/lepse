@@ -135,7 +135,6 @@ const syncStopwatch = useDebounceFn(() => {
 
   // Update focus session's stopwatchMs
   updateFocusSessionMutation.mutate({
-    params: { date },
     body: {
       stopwatchMs: Math.round(
         (focusSession.value?.stopwatchMs ?? 0) + (elapsed - stopwatchSyncedMs)
@@ -171,7 +170,6 @@ function skipPomo() {
 
     // Increment focus session's pomoCount
     updateFocusSessionMutation.mutate({
-      params: { date },
       body: { pomoCount: (focusSession.value?.pomoCount ?? 0) + 1 },
     })
     // Update selected task
