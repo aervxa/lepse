@@ -7,6 +7,262 @@
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
+export class TursoInternalMvccMetaSchema extends BaseModel {
+  static $columns = ['k', 'v'] as const
+  $columns = TursoInternalMvccMetaSchema.$columns
+  @column()
+  declare k: string | null
+  @column()
+  declare v: number
+}
+
+export class TursoInternalSeqTursoInternalAutoincrementAdonisSchemaSchema extends BaseModel {
+  static $columns = ['cycle', 'inc', 'isCalled', 'max', 'min', 'start', 'value'] as const
+  $columns = TursoInternalSeqTursoInternalAutoincrementAdonisSchemaSchema.$columns
+  @column()
+  declare cycle: number | null
+  @column()
+  declare inc: number | null
+  @column()
+  declare isCalled: number | null
+  @column()
+  declare max: number | null
+  @column()
+  declare min: number | null
+  @column()
+  declare start: number | null
+  @column({ isPrimary: true })
+  declare value: number
+}
+
+export class TursoInternalSeqTursoInternalAutoincrementAuthAccessTokenSchema extends BaseModel {
+  static $columns = ['cycle', 'inc', 'isCalled', 'max', 'min', 'start', 'value'] as const
+  $columns = TursoInternalSeqTursoInternalAutoincrementAuthAccessTokenSchema.$columns
+  @column()
+  declare cycle: number | null
+  @column()
+  declare inc: number | null
+  @column()
+  declare isCalled: number | null
+  @column()
+  declare max: number | null
+  @column()
+  declare min: number | null
+  @column()
+  declare start: number | null
+  @column({ isPrimary: true })
+  declare value: number
+}
+
+export class TursoInternalSeqTursoInternalAutoincrementBackgroundSchema extends BaseModel {
+  static $columns = ['cycle', 'inc', 'isCalled', 'max', 'min', 'start', 'value'] as const
+  $columns = TursoInternalSeqTursoInternalAutoincrementBackgroundSchema.$columns
+  @column()
+  declare cycle: number | null
+  @column()
+  declare inc: number | null
+  @column()
+  declare isCalled: number | null
+  @column()
+  declare max: number | null
+  @column()
+  declare min: number | null
+  @column()
+  declare start: number | null
+  @column({ isPrimary: true })
+  declare value: number
+}
+
+export class TursoInternalSeqTursoInternalAutoincrementFocusSessionSchema extends BaseModel {
+  static $columns = ['cycle', 'inc', 'isCalled', 'max', 'min', 'start', 'value'] as const
+  $columns = TursoInternalSeqTursoInternalAutoincrementFocusSessionSchema.$columns
+  @column()
+  declare cycle: number | null
+  @column()
+  declare inc: number | null
+  @column()
+  declare isCalled: number | null
+  @column()
+  declare max: number | null
+  @column()
+  declare min: number | null
+  @column()
+  declare start: number | null
+  @column({ isPrimary: true })
+  declare value: number
+}
+
+export class TursoInternalSeqTursoInternalAutoincrementGoalTaskSchema extends BaseModel {
+  static $columns = ['cycle', 'inc', 'isCalled', 'max', 'min', 'start', 'value'] as const
+  $columns = TursoInternalSeqTursoInternalAutoincrementGoalTaskSchema.$columns
+  @column()
+  declare cycle: number | null
+  @column()
+  declare inc: number | null
+  @column()
+  declare isCalled: number | null
+  @column()
+  declare max: number | null
+  @column()
+  declare min: number | null
+  @column()
+  declare start: number | null
+  @column({ isPrimary: true })
+  declare value: number
+}
+
+export class TursoInternalSeqTursoInternalAutoincrementGoalSchema extends BaseModel {
+  static $columns = ['cycle', 'inc', 'isCalled', 'max', 'min', 'start', 'value'] as const
+  $columns = TursoInternalSeqTursoInternalAutoincrementGoalSchema.$columns
+  @column()
+  declare cycle: number | null
+  @column()
+  declare inc: number | null
+  @column()
+  declare isCalled: number | null
+  @column()
+  declare max: number | null
+  @column()
+  declare min: number | null
+  @column()
+  declare start: number | null
+  @column({ isPrimary: true })
+  declare value: number
+}
+
+export class TursoInternalSeqTursoInternalAutoincrementHabitPeriodSchema extends BaseModel {
+  static $columns = ['cycle', 'inc', 'isCalled', 'max', 'min', 'start', 'value'] as const
+  $columns = TursoInternalSeqTursoInternalAutoincrementHabitPeriodSchema.$columns
+  @column()
+  declare cycle: number | null
+  @column()
+  declare inc: number | null
+  @column()
+  declare isCalled: number | null
+  @column()
+  declare max: number | null
+  @column()
+  declare min: number | null
+  @column()
+  declare start: number | null
+  @column({ isPrimary: true })
+  declare value: number
+}
+
+export class TursoInternalSeqTursoInternalAutoincrementHabitSchema extends BaseModel {
+  static $columns = ['cycle', 'inc', 'isCalled', 'max', 'min', 'start', 'value'] as const
+  $columns = TursoInternalSeqTursoInternalAutoincrementHabitSchema.$columns
+  @column()
+  declare cycle: number | null
+  @column()
+  declare inc: number | null
+  @column()
+  declare isCalled: number | null
+  @column()
+  declare max: number | null
+  @column()
+  declare min: number | null
+  @column()
+  declare start: number | null
+  @column({ isPrimary: true })
+  declare value: number
+}
+
+export class TursoInternalSeqTursoInternalAutoincrementJournalSchema extends BaseModel {
+  static $columns = ['cycle', 'inc', 'isCalled', 'max', 'min', 'start', 'value'] as const
+  $columns = TursoInternalSeqTursoInternalAutoincrementJournalSchema.$columns
+  @column()
+  declare cycle: number | null
+  @column()
+  declare inc: number | null
+  @column()
+  declare isCalled: number | null
+  @column()
+  declare max: number | null
+  @column()
+  declare min: number | null
+  @column()
+  declare start: number | null
+  @column({ isPrimary: true })
+  declare value: number
+}
+
+export class TursoInternalSeqTursoInternalAutoincrementScribbleSchema extends BaseModel {
+  static $columns = ['cycle', 'inc', 'isCalled', 'max', 'min', 'start', 'value'] as const
+  $columns = TursoInternalSeqTursoInternalAutoincrementScribbleSchema.$columns
+  @column()
+  declare cycle: number | null
+  @column()
+  declare inc: number | null
+  @column()
+  declare isCalled: number | null
+  @column()
+  declare max: number | null
+  @column()
+  declare min: number | null
+  @column()
+  declare start: number | null
+  @column({ isPrimary: true })
+  declare value: number
+}
+
+export class TursoInternalSeqTursoInternalAutoincrementTaskDaySchema extends BaseModel {
+  static $columns = ['cycle', 'inc', 'isCalled', 'max', 'min', 'start', 'value'] as const
+  $columns = TursoInternalSeqTursoInternalAutoincrementTaskDaySchema.$columns
+  @column()
+  declare cycle: number | null
+  @column()
+  declare inc: number | null
+  @column()
+  declare isCalled: number | null
+  @column()
+  declare max: number | null
+  @column()
+  declare min: number | null
+  @column()
+  declare start: number | null
+  @column({ isPrimary: true })
+  declare value: number
+}
+
+export class TursoInternalSeqTursoInternalAutoincrementTaskSchema extends BaseModel {
+  static $columns = ['cycle', 'inc', 'isCalled', 'max', 'min', 'start', 'value'] as const
+  $columns = TursoInternalSeqTursoInternalAutoincrementTaskSchema.$columns
+  @column()
+  declare cycle: number | null
+  @column()
+  declare inc: number | null
+  @column()
+  declare isCalled: number | null
+  @column()
+  declare max: number | null
+  @column()
+  declare min: number | null
+  @column()
+  declare start: number | null
+  @column({ isPrimary: true })
+  declare value: number
+}
+
+export class TursoInternalSeqTursoInternalAutoincrementUserSchema extends BaseModel {
+  static $columns = ['cycle', 'inc', 'isCalled', 'max', 'min', 'start', 'value'] as const
+  $columns = TursoInternalSeqTursoInternalAutoincrementUserSchema.$columns
+  @column()
+  declare cycle: number | null
+  @column()
+  declare inc: number | null
+  @column()
+  declare isCalled: number | null
+  @column()
+  declare max: number | null
+  @column()
+  declare min: number | null
+  @column()
+  declare start: number | null
+  @column({ isPrimary: true })
+  declare value: number
+}
+
 export class AuthAccessTokenSchema extends BaseModel {
   static $columns = ['abilities', 'createdAt', 'expiresAt', 'hash', 'id', 'lastUsedAt', 'name', 'tokenableId', 'type', 'updatedAt'] as const
   $columns = AuthAccessTokenSchema.$columns
