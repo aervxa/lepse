@@ -123,7 +123,8 @@ onBeforeUnmount(() => {
       <div class="absolute inset-0 -z-10">
         <Image
           v-if="backgrounds"
-          :src="backgrounds.find((b) => b.id === (user?.backgroundId ?? 0))?.url"
+          :src="backgrounds.find((b) => b.id === (user?.backgroundId ?? 7))?.url"
+          :data-a="JSON.stringify(backgrounds)"
           class="pointer-events-none -z-10 size-full object-cover"
         />
       </div>
