@@ -23,26 +23,28 @@ const {
     onSubmitAsync: async ({ value }) => {
       let validationError = null
 
-      await loginMutation.mutateAsync(
-        { body: { email: value.email, password: value.password } },
-        {
-          onError: (err) => {
-            if (err.isValidationError()) {
-              const errors = mapErrors(err.response.errors)
-              validationError = {
-                fields: {
-                  email: errors.email?.message,
-                  password: errors.password?.message,
-                },
+      await loginMutation
+        .mutateAsync(
+          { body: { email: value.email, password: value.password } },
+          {
+            onError: (err) => {
+              if (err.isValidationError()) {
+                const errors = mapErrors(err.response.errors)
+                validationError = {
+                  fields: {
+                    email: errors.email?.message,
+                    password: errors.password?.message,
+                  },
+                }
+              } else {
+                if (err.isStatus(400)) toast.error('Invalid credentials!')
+                else toast.error('Something went wrong!', { description: err.message })
+                validationError = 'Login failed!'
               }
-            } else {
-              if (err.isStatus(400)) toast.error('Invalid credentials!')
-              else toast.error('Something went wrong!', { description: err.message })
-              validationError = 'Login failed!'
-            }
-          },
-        }
-      )
+            },
+          }
+        )
+        .catch(() => {})
 
       return validationError
     },

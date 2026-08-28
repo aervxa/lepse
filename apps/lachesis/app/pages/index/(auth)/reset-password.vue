@@ -22,28 +22,30 @@ const {
     onSubmitAsync: async ({ value }) => {
       let validationError = null
 
-      await requestPasswordResetMutation.mutateAsync(
-        { body: { email: value.email } },
-        {
-          onError: (err) => {
-            if (err.isValidationError()) {
-              const errors = mapErrors(err.response.errors)
-              validationError = {
-                fields: {
-                  email: errors.email?.message,
-                },
+      await requestPasswordResetMutation
+        .mutateAsync(
+          { body: { email: value.email } },
+          {
+            onError: (err) => {
+              if (err.isValidationError()) {
+                const errors = mapErrors(err.response.errors)
+                validationError = {
+                  fields: {
+                    email: errors.email?.message,
+                  },
+                }
+              } else {
+                if (err.isStatus(404)) {
+                  toast.error('Something went wrong!', {
+                    description: 'Please check the email address you entered.',
+                  })
+                } else toast.error('Something went wrong!', { description: err.message })
+                validationError = 'Password reset request failed!'
               }
-            } else {
-              if (err.isStatus(404)) {
-                toast.error('Something went wrong!', {
-                  description: 'Please check the email address you entered.',
-                })
-              } else toast.error('Something went wrong!', { description: err.message })
-              validationError = 'Password reset request failed!'
-            }
-          },
-        }
-      )
+            },
+          }
+        )
+        .catch(() => {})
 
       return validationError
     },

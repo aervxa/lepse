@@ -8,22 +8,24 @@ const { requestEmailVerificationMutation } = useAuth()
 const { remaining, start, reset } = useCountdown(60)
 const hasReset = ref(false)
 
-const request = () => {
-  return requestEmailVerificationMutation.mutateAsync(
-    {},
-    {
-      onSuccess: () => {
-        toast.success('Sent!', { description: 'please check your email!' })
-        reset()
-        hasReset.value = true
-        start()
-        emits('success')
-      },
-      onError: (err) => {
-        toast.error('Something went wrong', { description: err.message })
-      },
-    }
-  )
+const request = async () => {
+  await requestEmailVerificationMutation
+    .mutateAsync(
+      {},
+      {
+        onSuccess: () => {
+          toast.success('Sent!', { description: 'please check your email!' })
+          reset()
+          hasReset.value = true
+          start()
+          emits('success')
+        },
+        onError: (err) => {
+          toast.error('Something went wrong', { description: err.message })
+        },
+      }
+    )
+    .catch(() => {})
 }
 
 onMounted(() => {

@@ -43,25 +43,27 @@ const {
     onSubmitAsync: async ({ value }) => {
       let validationError = null
 
-      await createGoalMutation.mutateAsync(
-        { body: { name: value.name, description: value.description } },
-        {
-          onError: (err) => {
-            if (err.isValidationError()) {
-              const errors = mapErrors(err.response.errors)
-              validationError = {
-                fields: {
-                  name: errors.name?.message,
-                  description: errors.description?.message,
-                },
+      await createGoalMutation
+        .mutateAsync(
+          { body: { name: value.name, description: value.description } },
+          {
+            onError: (err) => {
+              if (err.isValidationError()) {
+                const errors = mapErrors(err.response.errors)
+                validationError = {
+                  fields: {
+                    name: errors.name?.message,
+                    description: errors.description?.message,
+                  },
+                }
+              } else {
+                toast.error('Something went wrong!', { description: err.message })
+                validationError = 'Creating goal failed!'
               }
-            } else {
-              toast.error('Something went wrong!', { description: err.message })
-              validationError = 'Creating goal failed!'
-            }
-          },
-        }
-      )
+            },
+          }
+        )
+        .catch(() => {})
 
       return validationError
     },

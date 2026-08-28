@@ -30,34 +30,36 @@ const {
     onSubmitAsync: async ({ value }) => {
       let validationError = null
 
-      await signupMutation.mutateAsync(
-        {
-          body: {
-            name: value.name,
-            email: value.email,
-            password: value.password,
-            passwordConfirmation: value.passwordConfirmation,
+      await signupMutation
+        .mutateAsync(
+          {
+            body: {
+              name: value.name,
+              email: value.email,
+              password: value.password,
+              passwordConfirmation: value.passwordConfirmation,
+            },
           },
-        },
-        {
-          onError: (err) => {
-            if (err.isValidationError()) {
-              const errors = mapErrors(err.response.errors)
-              validationError = {
-                fields: {
-                  name: errors.name?.message,
-                  email: errors.email?.message,
-                  password: errors.password?.message,
-                  passwordConfirmation: errors.passwordConfirmation?.message,
-                },
+          {
+            onError: (err) => {
+              if (err.isValidationError()) {
+                const errors = mapErrors(err.response.errors)
+                validationError = {
+                  fields: {
+                    name: errors.name?.message,
+                    email: errors.email?.message,
+                    password: errors.password?.message,
+                    passwordConfirmation: errors.passwordConfirmation?.message,
+                  },
+                }
+              } else {
+                toast.error('Something went wrong!', { description: err.message })
+                validationError = 'Signup failed!'
               }
-            } else {
-              toast.error('Something went wrong!', { description: err.message })
-              validationError = 'Signup failed!'
-            }
-          },
-        }
-      )
+            },
+          }
+        )
+        .catch(() => {})
 
       return validationError
     },

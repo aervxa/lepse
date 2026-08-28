@@ -40,25 +40,27 @@ onMounted(() => {
 })
 
 const saveBtn = useTemplateRef('saveBtn')
-const save = () => {
-  return updateProfileMutation.mutateAsync(
-    {
-      body: {
-        name: nameDirty.value ? name.value || null : undefined,
-        avatar: avatarDirty.value
-          ? avatarBlob.value
-            ? new File([avatarBlob.value], 'avatar', {
-                type: avatarBlob.value.type,
-              })
-            : null
-          : undefined,
+const save = async () => {
+  await updateProfileMutation
+    .mutateAsync(
+      {
+        body: {
+          name: nameDirty.value ? name.value || null : undefined,
+          avatar: avatarDirty.value
+            ? avatarBlob.value
+              ? new File([avatarBlob.value], 'avatar', {
+                  type: avatarBlob.value.type,
+                })
+              : null
+            : undefined,
+        },
       },
-    },
-    {
-      onSuccess: () => toast.success('Profile saved!'),
-      onError: (err) => toast.error('Something went wrong!', { description: err.message }),
-    }
-  )
+      {
+        onSuccess: () => toast.success('Profile saved!'),
+        onError: (err) => toast.error('Something went wrong!', { description: err.message }),
+      }
+    )
+    .catch(() => {})
 }
 </script>
 

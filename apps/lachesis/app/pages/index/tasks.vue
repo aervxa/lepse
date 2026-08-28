@@ -43,25 +43,27 @@ const {
     onSubmitAsync: async ({ value }) => {
       let validationError = null
 
-      await createTaskMutation.mutateAsync(
-        { body: { name: value.name, description: value.description } },
-        {
-          onError: (err) => {
-            if (err.isValidationError()) {
-              const errors = mapErrors(err.response.errors)
-              validationError = {
-                fields: {
-                  name: errors.name?.message,
-                  description: errors.description?.message,
-                },
+      await createTaskMutation
+        .mutateAsync(
+          { body: { name: value.name, description: value.description } },
+          {
+            onError: (err) => {
+              if (err.isValidationError()) {
+                const errors = mapErrors(err.response.errors)
+                validationError = {
+                  fields: {
+                    name: errors.name?.message,
+                    description: errors.description?.message,
+                  },
+                }
+              } else {
+                toast.error('Something went wrong!', { description: err.message })
+                validationError = 'Creating task failed!'
               }
-            } else {
-              toast.error('Something went wrong!', { description: err.message })
-              validationError = 'Creating task failed!'
-            }
-          },
-        }
-      )
+            },
+          }
+        )
+        .catch(() => {})
 
       return validationError
     },

@@ -76,12 +76,14 @@ const linkTask = (taskId: number, unlink?: boolean) => {
 }
 
 const createNewTask = (search: string) =>
-  createTaskMutation.mutateAsync(
-    { body: { name: search } },
-    {
-      onError: (err) => toast.error('Failed to create task!', { description: err.message }),
-    }
-  )
+  createTaskMutation
+    .mutateAsync(
+      { body: { name: search } },
+      {
+        onError: (err) => toast.error('Failed to create task!', { description: err.message }),
+      }
+    )
+    .catch(() => {})
 
 const deleteGoal = () => {
   destroyGoalMutation.mutate(
