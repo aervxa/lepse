@@ -24,6 +24,8 @@ export default defineNuxtPlugin({
             return failureCount < 3
           },
           staleTime: Infinity,
+          // refetch happens even with staleTime set to Infinity for queries that fail.
+          refetchOnWindowFocus: false,
         },
       },
     })
