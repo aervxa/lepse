@@ -1,6 +1,11 @@
 <script setup lang="ts">
 withDefaults(
-  defineProps<{ check?: boolean; title?: string; actionLabel?: string; action?: () => void }>(),
+  defineProps<{
+    check?: boolean | number
+    title?: string
+    actionLabel?: string
+    action?: () => void
+  }>(),
   {
     title: 'Access denied.',
     actionLabel: 'Go back',
@@ -10,7 +15,7 @@ withDefaults(
 
 <template>
   <div
-    v-if="check !== true"
+    v-if="!check"
     class="absolute inset-0 z-50 grid place-content-center bg-black/80 backdrop-blur-xs"
   >
     <Empty>
