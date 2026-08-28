@@ -11,7 +11,19 @@ import { ValidationError } from '@vinejs/vine'
 const requestLimiter = limiter.use({ requests: 1, duration: '1 minute' })
 
 export default class VerifyEmailController {
-  async request({ request, response }: HttpContext) {
+  // Web view for password reset form
+  async index({ params, view }: HttpContext) {
+    const payload = token_service.verifyPasswordResetToken(params.token)
+
+    if (!payload) {
+      throw new Exception('Your token is invalid or expired!', { status: 401 })
+    }
+
+    return view.render('pages/verify/password-reset', { token: params.token })
+  }
+
+  // Request password reset link to email
+  async store({ request, response }: HttpContext) {
     const { email } = await request.validateUsing(resetPasswordRequestValidator)
 
     const user = await User.findByOrFail('email', email)
@@ -25,17 +37,8 @@ export default class VerifyEmailController {
     return response.noContent()
   }
 
-  async verify({ params, view }: HttpContext) {
-    const payload = token_service.verifyPasswordResetToken(params.token)
-
-    if (!payload) {
-      throw new Exception('Your token is invalid or expired!', { status: 401 })
-    }
-
-    return view.render('pages/verify/password-reset', { token: params.token })
-  }
-
-  async reset({ params, request, session, response }: HttpContext) {
+  // Password reset
+  async update({ params, request, session, response }: HttpContext) {
     const payload = token_service.verifyPasswordResetToken(params.token)
 
     if (!payload) {

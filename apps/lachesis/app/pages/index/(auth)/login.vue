@@ -5,7 +5,7 @@ import { z } from 'zod'
 
 definePageMeta({ overlay: true })
 
-const { login } = useAuth()
+const { loginMutation } = useAuth()
 
 const schema = z.object({
   email: z.string().email('Invalid email address'),
@@ -21,19 +21,30 @@ const {
   validators: {
     onDynamic: schema,
     onSubmitAsync: async ({ value }) => {
-      const error = await login(value.email, value.password)
-      if (!error) return null
-      if (error.isValidationError()) {
-        const errors = mapErrors(error.response.errors)
-        return {
-          fields: {
-            email: errors.email?.message,
-            password: errors.password?.message,
+      let validationError = null
+
+      await loginMutation.mutateAsync(
+        { body: { email: value.email, password: value.password } },
+        {
+          onError: (err) => {
+            if (err.isValidationError()) {
+              const errors = mapErrors(err.response.errors)
+              validationError = {
+                fields: {
+                  email: errors.email?.message,
+                  password: errors.password?.message,
+                },
+              }
+            } else {
+              if (err.isStatus(400)) toast.error('Invalid credentials!')
+              else toast.error('Something went wrong!', { description: err.message })
+              validationError = 'Login failed!'
+            }
           },
         }
-      } else if (error.isStatus(400)) toast.error('Invalid credentials!')
-      else toast.error('Something went wrong', { description: error.message })
-      return 'Login failed!'
+      )
+
+      return validationError
     },
   },
   defaultValues: { email: '', password: '' },

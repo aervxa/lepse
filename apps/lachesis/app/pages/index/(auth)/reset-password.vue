@@ -5,7 +5,7 @@ import { z } from 'zod'
 
 definePageMeta({ overlay: true })
 
-const { passwordResetRequest } = useAuth()
+const { requestPasswordResetMutation } = useAuth()
 
 const schema = z.object({
   email: z.string().email('Invalid email address'),
@@ -20,20 +20,32 @@ const {
   validators: {
     onDynamic: schema,
     onSubmitAsync: async ({ value }) => {
-      const error = await passwordResetRequest(value.email)
-      if (!error) return null
-      if (error.isValidationError()) {
-        const errors = mapErrors(error.response.errors)
-        return {
-          fields: {
-            email: errors.email?.message,
-            password: errors.password?.message,
+      let validationError = null
+
+      await requestPasswordResetMutation.mutateAsync(
+        { body: { email: value.email } },
+        {
+          onError: (err) => {
+            if (err.isValidationError()) {
+              const errors = mapErrors(err.response.errors)
+              validationError = {
+                fields: {
+                  email: errors.email?.message,
+                },
+              }
+            } else {
+              if (err.isStatus(404)) {
+                toast.error('Something went wrong!', {
+                  description: 'Please check the email address you entered.',
+                })
+              } else toast.error('Something went wrong!', { description: err.message })
+              validationError = 'Password reset request failed!'
+            }
           },
         }
-      } else if (error.isStatus(404))
-        toast.error('User not found!', { description: 'Please create a new account.' })
-      else toast.error('Something went wrong', { description: error.message })
-      return 'Password reset request failed!'
+      )
+
+      return validationError
     },
   },
   defaultValues: { email: '' },

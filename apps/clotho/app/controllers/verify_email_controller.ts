@@ -4,15 +4,8 @@ import { Exception } from '@adonisjs/core/exceptions'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class VerifyEmailController {
-  async request({ auth, response }: HttpContext) {
-    const user = auth.getUserOrFail()
-
-    await user.sendVerifyEmail()
-
-    return response.noContent()
-  }
-
-  async verify({ params, view }: HttpContext) {
+  // Web view to show user their email is verified
+  async index({ params, view }: HttpContext) {
     const payload = token_service.verifyEmailVerificationToken(params.token)
 
     if (!payload) {
@@ -24,5 +17,14 @@ export default class VerifyEmailController {
     await user.save()
 
     return view.render('pages/verify/email')
+  }
+
+  // Request email verification link to email
+  async store({ auth, response }: HttpContext) {
+    const user = auth.getUserOrFail()
+
+    await user.sendVerifyEmail()
+
+    return response.noContent()
   }
 }

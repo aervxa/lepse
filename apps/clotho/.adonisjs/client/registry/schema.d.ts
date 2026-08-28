@@ -56,18 +56,18 @@ export interface Registry {
     }
   }
   'verify.email.request': {
-    methods: ["GET","HEAD"]
+    methods: ["POST"]
     pattern: '/api/v1/verify/email/request'
     types: {
       body: {}
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/verify_email_controller').default['request']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/verify_email_controller').default['request']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/verify_email_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/verify_email_controller').default['store']>>>
     }
   }
-  'verify.password-reset.request': {
+  'reset.password.request': {
     methods: ["POST"]
     pattern: '/api/v1/verify/password-reset/request'
     types: {
@@ -75,8 +75,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: ExtractQuery<InferInput<(typeof import('#validators/user').resetPasswordRequestValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/password_reset_controller').default['request']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/password_reset_controller').default['request']>>> | { status: 422; response: { errors: SimpleError[] } }
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/password_reset_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/password_reset_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'backgrounds.index': {

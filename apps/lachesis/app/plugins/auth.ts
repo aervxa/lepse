@@ -1,8 +1,9 @@
 export default defineNuxtPlugin({
   name: 'auth',
   dependsOn: ['clotho'],
-  async setup() {
-    const { refreshUser } = useAuth()
-    await refreshUser()
+  async setup(app) {
+    await app.$queryClient.prefetchQuery(
+      app.$api.account.profile.show.queryOptions({}, { retry: false })
+    )
   },
 })

@@ -6,7 +6,8 @@ import { getCurrentWebviewWindow, type WebviewWindow } from '@tauri-apps/api/web
 import type { UnlistenFn } from '@tauri-apps/api/event'
 import { useFullscreen } from '@vueuse/core'
 
-const { backgrounds, activeBackgroundId } = useBackgrounds()
+const { user } = useAuth()
+const { backgrounds } = useBackgrounds()
 const { windowTransparency, nativeDecorations } = useSettings()
 const { isFullscreen } = useFullscreen()
 
@@ -121,8 +122,8 @@ onBeforeUnmount(() => {
     >
       <div class="absolute inset-0 -z-10">
         <Image
-          v-if="activeBackgroundId"
-          :src="backgrounds.find((b) => b.id === activeBackgroundId)?.url"
+          v-if="backgrounds"
+          :src="backgrounds.find((b) => b.id === (user?.backgroundId ?? 0))?.url"
           class="pointer-events-none -z-10 size-full object-cover"
         />
       </div>

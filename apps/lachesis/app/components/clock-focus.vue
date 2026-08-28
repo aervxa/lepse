@@ -21,14 +21,16 @@ const { user } = useAuth()
 const now = useNow()
 const nowStr = computed(() => now.value.toLocaleTimeString([], { timeStyle: 'short' }))
 
-const { focusSession, updateFocusSession } = useDay(getClientDate())
+const date = getClientDate()
+const { focusSession, updateFocusSessionMutation } = useDay(date)
 
 // ─── Task ───────────────────────────────────────────────────────────────────
 
-const { tasks, focusedTaskId, updateTask, createTask } = useTasks()
-const task = computed(() => tasks.value.find((t) => t.id === focusedTaskId.value))
+const { tasks, focusedTaskId, updateTaskMutation, createTaskMutation } = useTasks()
+const task = computed(() => tasks.value?.find((t) => t.id === focusedTaskId.value))
 
 const selectTask = (id: number) => {
+  // fn SHOULD change focusedTaskId
   const r = () => {
     focusedTaskId.value = id
   }
@@ -43,14 +45,16 @@ const selectTask = (id: number) => {
       if (v) {
         if (focusMethod === 'stopwatch' && task.value) {
           // remove from old task
-          updateTask(task.value.id, {
-            stopwatchMs: Math.round(task.value.stopwatchMs - stopwatchSyncedMs),
+          updateTaskMutation.mutate({
+            params: { id: task.value.id },
+            body: { stopwatchMs: Math.round(task.value.stopwatchMs - stopwatchSyncedMs) },
           })
           r() // update `task`
           // If user is not cancelling, add to new task
           if (id > -1) {
-            updateTask(task.value.id, {
-              stopwatchMs: Math.round(task.value.stopwatchMs + stopwatchSyncedMs),
+            updateTaskMutation.mutate({
+              params: { id: task.value.id },
+              body: { stopwatchMs: Math.round(task.value.stopwatchMs + stopwatchSyncedMs) },
             })
           } else {
             // If user cancels, reset stopwatch
@@ -68,8 +72,12 @@ const selectTask = (id: number) => {
 }
 
 const createNewTask = async (search: string) => {
-  const error = await createTask({ name: search })
-  if (error) toast.error('Failed to create task!', { description: error.message })
+  createTaskMutation.mutate(
+    { body: { name: search } },
+    {
+      onError: (err) => toast.error('Failed to create task!', { description: err.message }),
+    }
+  )
 }
 
 // ─── Shared stopwatch class ─────────────────────────────────────────────────
@@ -133,13 +141,18 @@ const syncStopwatch = useDebounceFn(() => {
   const elapsed = stopwatch.elapsed.value
 
   // Update focus session's stopwatchMs
-  updateFocusSession({
-    stopwatchMs: Math.round((focusSession.value?.stopwatchMs ?? 0) + (elapsed - stopwatchSyncedMs)),
+  updateFocusSessionMutation.mutate({
+    body: {
+      stopwatchMs: Math.round(
+        (focusSession.value?.stopwatchMs ?? 0) + (elapsed - stopwatchSyncedMs)
+      ),
+    },
   })
   // Update selected task
   if (task.value)
-    updateTask(task.value.id, {
-      stopwatchMs: Math.round(task.value.stopwatchMs + (elapsed - stopwatchSyncedMs)),
+    updateTaskMutation.mutate({
+      params: { id: task.value.id },
+      body: { stopwatchMs: Math.round(task.value.stopwatchMs + (elapsed - stopwatchSyncedMs)) },
     })
 
   stopwatchSyncedMs = elapsed
@@ -164,9 +177,15 @@ function skipPomo() {
     pomoState.value = pomoCount.value % 4 === 0 ? 'long-break' : 'break'
 
     // Increment focus session's pomoCount
-    updateFocusSession({ pomoCount: (focusSession.value?.pomoCount ?? 0) + 1 })
+    updateFocusSessionMutation.mutate({
+      body: { pomoCount: (focusSession.value?.pomoCount ?? 0) + 1 },
+    })
     // Update selected task
-    if (task.value) updateTask(task.value.id, { pomoCount: task.value.pomoCount + 1 })
+    if (task.value)
+      updateTaskMutation.mutate({
+        params: { id: task.value.id },
+        body: { pomoCount: task.value.pomoCount + 1 },
+      })
   } else {
     pomoState.value = 'work'
   }
@@ -276,12 +295,12 @@ const hasCustomizedAccent = useLocalStorage('hasCustomizedAccent', false)
         >
           {{ !inFocus ? nowStr.slice(-2) : formatted.slice(-3, -1) }}
         </span>
+      </p>
       <p
         v-if="!inFocus && !hasCustomizedAccent"
-        class="absolute top-[calc(100%+var(--spacing)*6)] left-1/2 -translate-x-1/2 w-max font-xs text-muted-foreground rounded-sm px-2 text-center font-light tracking-wide backdrop-blur-sm backdrop-brightness-75"
+        class="font-xs text-muted-foreground absolute top-[calc(100%+var(--spacing)*6)] left-1/2 w-max -translate-x-1/2 rounded-sm px-2 text-center font-light tracking-wide backdrop-blur-sm backdrop-brightness-75"
       >
         Right click to change accent
-      </p>
       </p>
     </ThemePicker>
 

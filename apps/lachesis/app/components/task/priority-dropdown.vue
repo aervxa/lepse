@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { DropdownMenuContentProps } from 'reka-ui';
+import type { DropdownMenuContentProps } from 'reka-ui'
 import { toast } from 'vue-sonner'
 
 defineProps<{
@@ -12,16 +12,7 @@ defineProps<{
 }>()
 const open = defineModel<boolean>('open')
 
-const { updateTask } = useTasks()
-
-const setPriority = async (
-  taskId: number,
-  priority: NonNullable<Parameters<typeof updateTask>[1]>['priority']
-) => {
-  const error = await updateTask(taskId, { priority })
-  if (error) toast.error('Failed to update priority.')
-  else toast.success('Task priority updated.')
-}
+const { updateTaskMutation } = useTasks()
 </script>
 
 <template>
@@ -38,7 +29,16 @@ const setPriority = async (
         v-for="p in ['none', 'urgent', 'high', 'medium', 'low'] as const"
         :key="p"
         :model-value="priority === p"
-        @click="setPriority(id, p)"
+        @click="
+          updateTaskMutation.mutate(
+            { params: { id }, body: { priority: p } },
+            {
+              onError: (err) =>
+                toast.error('Failed to update priority.', { description: err.message }),
+              onSuccess: () => toast.success('Task priority updated.'),
+            }
+          )
+        "
       >
         <TaskPriorityIcon :priority="p" />
         {{ p.replace('_', ' ') }}

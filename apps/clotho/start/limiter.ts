@@ -9,6 +9,7 @@
 |
 */
 
+import app from '@adonisjs/core/services/app'
 import limiter from '@adonisjs/limiter/services/main'
 
 export const throttle = limiter.define('global', () => {
@@ -16,6 +17,8 @@ export const throttle = limiter.define('global', () => {
 })
 
 export const apiThrottle = limiter.define('api', (ctx) => {
+  if (app.inDev) return null
+
   /**
    * Authenticated users get 100 requests per minute,
    * tracked by their user ID.

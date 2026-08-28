@@ -1,56 +1,43 @@
-import type { Data } from '@lepse/clotho/data'
+import { useMutation, useQuery } from '@tanstack/vue-query'
 
 export const useGoals = () => {
-  const { $clotho } = useNuxtApp()
-  const { user } = useAuth()
-  const goals = useState<Data.Goal[]>('goals', () => [])
+  const { $api, $queryClient } = useNuxtApp()
 
-  const fetchGoals = async () => {
-    const [payload, error] = await $clotho.api.goals.index({}).safe()
-    if (payload) {
-      goals.value = payload.data
-    } else {
-      console.error(error)
-      return error
-    }
-  }
+  const goalsQuery = useQuery($api.goals.index.queryOptions())
+  const goals = computed(() => goalsQuery.data.value?.data)
 
-  if (goals.value.length === 0 && user.value?.emailVerified) {
-    fetchGoals()
-  }
+  const createGoalMutation = useMutation(
+    $api.goals.store.mutationOptions({
+      onSuccess: ({ data }) => {
+        $queryClient.setQueryData(
+          $api.goals.index.queryKey(),
+          (old) => old && { ...old, data: [...old.data.filter((i) => i.id !== data.id), data] }
+        )
+      },
+    })
+  )
 
-  const createGoal = async (body: Parameters<typeof $clotho.api.goals.store>['0']['body']) => {
-    const [payload, error] = await $clotho.api.goals.store({ body }).safe()
-    if (payload) {
-      goals.value.push(payload.data)
-    } else {
-      console.error(error)
-      return error
-    }
-  }
+  const updateGoalMutation = useMutation(
+    $api.goals.update.mutationOptions({
+      onSuccess: ({ data }) => {
+        $queryClient.setQueryData(
+          $api.goals.index.queryKey(),
+          (old) => old && { ...old, data: [...old.data.filter((i) => i.id !== data.id), data] }
+        )
+      },
+    })
+  )
 
-  const updateGoal = async (
-    id: number,
-    body: Parameters<typeof $clotho.api.goals.update>['0']['body']
-  ) => {
-    const [payload, error] = await $clotho.api.goals.update({ params: { id }, body }).safe()
-    if (payload) {
-      const index = goals.value.findIndex((g) => g.id === id)
-      if (index !== -1) goals.value[index] = payload.data
-    } else {
-      console.error(error)
-      return error
-    }
-  }
+  const destroyGoalMutation = useMutation(
+    $api.goals.destroy.mutationOptions({
+      onSuccess: (_, { params: { id } }) => {
+        $queryClient.setQueryData(
+          $api.goals.index.queryKey(),
+          (old) => old && { ...old, data: old.data.filter((i) => i.id !== id) }
+        )
+      },
+    })
+  )
 
-  const destroyGoal = async (id: number) => {
-    const [, error] = await $clotho.api.goals.destroy({ params: { id } }).safe()
-    if (error) {
-      console.error(error)
-      return error
-    }
-    goals.value = goals.value.filter((g) => g.id !== id)
-  }
-
-  return { goals, fetchGoals, createGoal, updateGoal, destroyGoal }
+  return { goalsQuery, goals, createGoalMutation, updateGoalMutation, destroyGoalMutation }
 }

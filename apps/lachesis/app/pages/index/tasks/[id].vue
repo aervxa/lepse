@@ -23,18 +23,24 @@ const route = useRoute()
 const { id } = route.params
 const source = inject(bubbleNavSourceKey)
 
-const { tasks, focusedTaskId, updateTask, attachGoal, detachGoal, destroyTask } = useTasks()
+const {
+  tasks,
+  focusedTaskId,
+  updateTaskMutation,
+  attachGoalMutation,
+  detachGoalMutation,
+  destroyTaskMutation,
+} = useTasks()
 const nameEl = useTemplateRef('nameEl')
 const descriptionEl = useTemplateRef('descriptionEl')
 const task = computed(() => {
-  const t = tasks.value.find((t) => t.id === Number(id))
+  const t = tasks.value?.find((t) => t.id === Number(id))
   if (t) {
     nameEl.value && (nameEl.value.textContent = t.name)
     descriptionEl.value && (descriptionEl.value.innerText = t.description ?? '')
   }
   return t
 })
-const isSaving = ref(false)
 
 const clearEmptyInput = (event: InputEvent) => {
   const target = event.currentTarget as HTMLElement
@@ -52,13 +58,9 @@ const save = async () => {
   const descriptionDirty = description !== task.value.description
   if (!nameDirty && !descriptionDirty) return
 
-  // skeletonLoad loading indicator to avoid flash
-  skeletonLoad(
-    (async () => {
-      const error = await updateTask(Number(id), { name, description })
-      if (error) toast.error('Failed to save task.')
-    })(),
-    isSaving
+  updateTaskMutation.mutate(
+    { params: { id: Number(id) }, body: { name, description } },
+    { onError: (err) => toast.error('Failed to save task.', { description: err.message }) }
   )
 }
 
@@ -71,43 +73,48 @@ const formattedDate = computed(() =>
   )
 )
 
-const { goals, createGoal } = useGoals()
+const { goals, createGoalMutation } = useGoals()
 const taskGoals = computed(() =>
-  goals.value.filter((goal) => task.value?.goalIds?.includes(goal.id))
+  goals.value?.filter((goal) => task.value?.goalIds?.includes(goal.id))
 )
 
-const linkGoal = async (goalId: number) => {
+const linkGoal = (goalId: number, unlink?: boolean) => {
   if (task.value) {
-    const error = await attachGoal(task.value.id, goalId)
-    if (error) toast.error('Failed to link goal.')
-    else toast.success('Goal linked.')
+    ;(unlink ? detachGoalMutation : attachGoalMutation).mutate(
+      {
+        params: { taskId: task.value.id, goalId },
+      },
+      {
+        onError: (err) => toast.error('Failed to link goal.', { description: err.message }),
+        onSuccess: () => toast.success(unlink ? 'Goal unlinked.' : 'Goal linked.'),
+      }
+    )
   }
 }
 
-const unlinkGoal = async (goalId: number) => {
-  if (task.value) {
-    const error = await detachGoal(task.value.id, goalId)
-    if (error) toast.error('Failed to unlink goal.')
-    else toast.success('Goal unlinked.')
-  }
-}
+const createNewGoal = (search: string) =>
+  createGoalMutation.mutateAsync(
+    { body: { name: search } },
+    {
+      onError: (err) => toast.error('Failed to create goal!', { description: err.message }),
+    }
+  )
 
-const createNewGoal = async (search: string) => {
-  const error = await createGoal({ name: search })
-  if (error) toast.error('Failed to create goal!', { description: error.message })
-}
-
-const deleteTask = async () => {
-  const error = await destroyTask(Number(id))
-  if (error) toast.error('Failed to delete task.', { description: error.message })
-  else {
-    toast.success('Task deleted successfully.')
-    navigateBack()
-  }
+const deleteTask = () => {
+  destroyTaskMutation.mutate(
+    { params: { id: Number(id) } },
+    {
+      onError: (err) => toast.error('Failed to delete task.', { description: err.message }),
+      onSuccess: () => {
+        toast.success('Task deleted successfully.')
+        navigateBack()
+      },
+    }
+  )
 }
 
 const enterFocus = inject(enterFocusKey)
-const focusTask = async () => {
+const focusTask = () => {
   navigateTo('/')
   focusedTaskId.value = Number(task.value?.id)
   enterFocus?.()
@@ -178,14 +185,14 @@ const focusTask = async () => {
               variant="ghost-destructive"
               size="icon-xs"
               class="-mr-1.5 size-4"
-              @click.stop.prevent="unlinkGoal(goal.id)"
+              @click.stop.prevent="linkGoal(goal.id, true)"
             >
               <X class="size-3" />
             </Button>
           </NuxtLink>
         </Badge>
         <Combobox
-          :items="goals.filter((g) => !taskGoals.includes(g))"
+          :items="goals?.filter((g) => !taskGoals?.includes(g))"
           @select="
             (item) => {
               linkGoal(item.id)
@@ -270,7 +277,10 @@ const focusTask = async () => {
         <!-- CREATED AT -->
         <p class="text-muted-foreground mt-1 text-xs">Created at {{ formattedDate }}</p>
       </div>
-      <LoaderCircle v-if="isSaving" class="text-muted-foreground animate-spin" />
+      <LoaderCircle
+        v-if="updateTaskMutation.isPending.value"
+        class="text-muted-foreground animate-spin"
+      />
     </div>
   </div>
 </template>

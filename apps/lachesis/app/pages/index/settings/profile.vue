@@ -2,7 +2,7 @@
 import { Pencil, Trash } from '@lucide/vue'
 import { toast } from 'vue-sonner'
 
-const { user, updateProfile } = useAuth()
+const { user, updateProfileMutation } = useAuth()
 
 const avatar = ref('')
 const avatarBlob = ref<Blob | undefined>()
@@ -40,22 +40,25 @@ onMounted(() => {
 })
 
 const saveBtn = useTemplateRef('saveBtn')
-const save = async () => {
-  const error = await updateProfile({
-    name: nameDirty.value ? name.value || null : undefined,
-    avatar: avatarDirty.value
-      ? avatarBlob.value
-        ? (new File([avatarBlob.value], 'avatar', {
-            type: avatarBlob.value.type,
-          }) as any) /* NOTE: File is accepted, but types expect some Multipart https://github.com/Julien-R44/tuyau/issues/110 */
-        : null
-      : undefined,
-  })
-  if (error) {
-    toast.error('Something went wrong', { description: error.message })
-  } else {
-    toast.success('Profile saved!')
-  }
+const save = () => {
+  return updateProfileMutation.mutateAsync(
+    {
+      body: {
+        name: nameDirty.value ? name.value || null : undefined,
+        avatar: avatarDirty.value
+          ? avatarBlob.value
+            ? new File([avatarBlob.value], 'avatar', {
+                type: avatarBlob.value.type,
+              })
+            : null
+          : undefined,
+      },
+    },
+    {
+      onSuccess: () => toast.success('Profile saved!'),
+      onError: (err) => toast.error('Something went wrong!', { description: err.message }),
+    }
+  )
 }
 </script>
 
@@ -80,7 +83,7 @@ const save = async () => {
             <Pencil />
             Edit avatar
           </Button>
-          <Button variant="ghost-destructive" size="sm" @click="removeAvatar" :disabled="!avatar"">
+          <Button variant="ghost-destructive" size="sm" @click="removeAvatar" :disabled="!avatar">
             <Trash />
             Remove avatar
           </Button>

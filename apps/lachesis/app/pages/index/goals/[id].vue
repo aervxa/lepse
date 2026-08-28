@@ -5,6 +5,7 @@ import {
   ChevronRight,
   Clock,
   ClockFading,
+  LoaderCircle,
   MoreHorizontal,
   Plus,
   Trash,
@@ -20,18 +21,17 @@ definePageMeta({
 const route = useRoute()
 const { id } = route.params
 
-const { goals, updateGoal, destroyGoal } = useGoals()
+const { goals, updateGoalMutation, destroyGoalMutation } = useGoals()
 const nameEl = useTemplateRef('nameEl')
 const descriptionEl = useTemplateRef('descriptionEl')
 const goal = computed(() => {
-  const g = goals.value.find((g) => g.id === Number(id))
+  const g = goals.value?.find((g) => g.id === Number(id))
   if (g) {
     nameEl.value && (nameEl.value.textContent = g.name)
     descriptionEl.value && (descriptionEl.value.innerText = g.description ?? '')
   }
   return g
 })
-const isSaving = ref(false)
 
 const clearEmptyInput = (event: InputEvent) => {
   const target = event.currentTarget as HTMLElement
@@ -39,7 +39,7 @@ const clearEmptyInput = (event: InputEvent) => {
   if (!target.textContent) target.textContent = null
 }
 
-const save = async () => {
+const save = () => {
   if (!goal.value || !nameEl.value || !descriptionEl.value) return
   const name = nameEl.value.textContent
   const description = descriptionEl.value.innerText
@@ -49,42 +49,51 @@ const save = async () => {
   const descriptionDirty = description !== goal.value.description
   if (!nameDirty && !descriptionDirty) return
 
-  // skeletonLoad loading indicator to avoid flash
-  skeletonLoad(
-    (async () => {
-      const error = await updateGoal(Number(id), { name, description })
-      if (error) toast.error('Failed to save goal.')
-    })(),
-    isSaving
+  updateGoalMutation.mutate(
+    { params: { id: Number(id) }, body: { name, description } },
+    { onError: (err) => toast.error('Failed to save goal.', { description: err.message }) }
   )
 }
 
-const { tasks, attachGoal, detachGoal, createTask } = useTasks()
+const { tasks, attachGoalMutation, detachGoalMutation, createTaskMutation } = useTasks()
 const goalTasks = computed(() =>
-  tasks.value.filter((task) => task.goalIds.includes(goal.value?.id ?? -1))
+  tasks.value?.filter((task) => task.goalIds.includes(goal.value?.id ?? -1))
 )
-const goalTasksDone = computed(() => goalTasks.value.filter((t) => t.status === 'done').length)
+const goalTasksDone = computed(() => goalTasks.value?.filter((t) => t.status === 'done').length)
 
-const linkTask = async (taskId: number, unlink?: boolean) => {
+const linkTask = (taskId: number, unlink?: boolean) => {
   if (goal.value) {
-    const error = await (unlink ? detachGoal : attachGoal)(taskId, goal.value.id)
-    if (error) toast.error('Failed to link task.')
-    else toast.success(unlink ? 'Task unlinked.' : 'Task linked.')
+    ;(unlink ? detachGoalMutation : attachGoalMutation).mutate(
+      {
+        params: { taskId, goalId: goal.value.id },
+      },
+      {
+        onError: (err) => toast.error('Failed to link task.', { description: err.message }),
+        onSuccess: () => toast.success(unlink ? 'Task unlinked.' : 'Task linked.'),
+      }
+    )
   }
 }
 
-const createNewTask = async (search: string) => {
-  const error = await createTask({ name: search })
-  if (error) toast.error('Failed to create task!', { description: error.message })
-}
+const createNewTask = (search: string) =>
+  createTaskMutation.mutateAsync(
+    { body: { name: search } },
+    {
+      onError: (err) => toast.error('Failed to create task!', { description: err.message }),
+    }
+  )
 
-const deleteGoal = async () => {
-  const error = await destroyGoal(Number(id))
-  if (error) toast.error('Failed to delete goal.', { description: error.message })
-  else {
-    toast.success('Goal deleted successfully.')
-    navigateBack()
-  }
+const deleteGoal = () => {
+  destroyGoalMutation.mutate(
+    { params: { id: Number(id) } },
+    {
+      onError: (err) => toast.error('Failed to delete goal.', { description: err.message }),
+      onSuccess: () => {
+        toast.success('Goal deleted successfully.')
+        navigateBack()
+      },
+    }
+  )
 }
 </script>
 
@@ -162,18 +171,18 @@ const deleteGoal = async () => {
                 </CollapsibleTrigger>
                 <div class="flex items-center gap-1.5 pr-6">
                   <CircularProgress
-                    :value="Math.max(4, (goalTasksDone / goalTasks.length) * 100)"
+                    :value="Math.max(4, ((goalTasksDone ?? 0) / (goalTasks?.length ?? 0)) * 100)"
                     :size="12"
                     :thickness="1.5"
                   />
                   <span class="text-muted-foreground text-xs">
-                    {{ goalTasksDone }}/{{ goalTasks.length }}
+                    {{ goalTasksDone ?? 0 }}/{{ goalTasks?.length ?? 0 }}
                   </span>
                 </div>
               </div>
 
               <Combobox
-                :items="tasks.filter((task) => !task.goalIds.includes(goal?.id ?? -1))"
+                :items="tasks?.filter((task) => !task.goalIds.includes(goal?.id ?? -1))"
                 @select="(t) => linkTask(t.id)"
                 :create="createNewTask"
                 empty="No tasks found."
@@ -243,4 +252,9 @@ const deleteGoal = async () => {
       </ScrollArea>
     </div>
   </div>
+
+  <LoaderCircle
+    v-if="updateGoalMutation.isPending.value"
+    class="text-muted-foreground absolute right-4 bottom-4 animate-spin"
+  />
 </template>

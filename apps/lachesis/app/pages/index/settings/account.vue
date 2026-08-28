@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { LogOut } from '@lucide/vue'
 
-const { user, logout } = useAuth()
+const { user, logoutMutation } = useAuth()
 
 const isEmailVisible = ref(false)
 </script>
@@ -43,17 +43,13 @@ const isEmailVisible = ref(false)
         variant="destructive"
         size="sm"
         class="self-start"
-        :action="
-          () =>
-            dialog({
-              title: 'Are you sure you want to logout?',
-              description: 'This will end this session and return you to the login page.',
-              action: 'Logout',
-            }).then((value) => {
-              if (value === true) {
-                return logout()
-              }
-            })
+        :loading="logoutMutation.isPending.value"
+        @click="
+          dialog({
+            title: 'Are you sure you want to logout?',
+            description: 'This will end this session and return you to the login page.',
+            action: 'Logout',
+          }).then((v) => v && logoutMutation.mutate({}))
         "
       >
         <LogOut />
