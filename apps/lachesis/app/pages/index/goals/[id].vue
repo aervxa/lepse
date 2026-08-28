@@ -20,18 +20,17 @@ definePageMeta({
 const route = useRoute()
 const { id } = route.params
 
-const { goals, updateGoal, destroyGoal } = useGoals()
+const { goals, updateGoalMutation, destroyGoalMutation } = useGoals()
 const nameEl = useTemplateRef('nameEl')
 const descriptionEl = useTemplateRef('descriptionEl')
 const goal = computed(() => {
-  const g = goals.value.find((g) => g.id === Number(id))
+  const g = goals.value?.find((g) => g.id === Number(id))
   if (g) {
     nameEl.value && (nameEl.value.textContent = g.name)
     descriptionEl.value && (descriptionEl.value.innerText = g.description ?? '')
   }
   return g
 })
-const isSaving = ref(false)
 
 const clearEmptyInput = (event: InputEvent) => {
   const target = event.currentTarget as HTMLElement
@@ -39,7 +38,7 @@ const clearEmptyInput = (event: InputEvent) => {
   if (!target.textContent) target.textContent = null
 }
 
-const save = async () => {
+const save = () => {
   if (!goal.value || !nameEl.value || !descriptionEl.value) return
   const name = nameEl.value.textContent
   const description = descriptionEl.value.innerText
@@ -49,13 +48,9 @@ const save = async () => {
   const descriptionDirty = description !== goal.value.description
   if (!nameDirty && !descriptionDirty) return
 
-  // skeletonLoad loading indicator to avoid flash
-  skeletonLoad(
-    (async () => {
-      const error = await updateGoal(Number(id), { name, description })
-      if (error) toast.error('Failed to save goal.')
-    })(),
-    isSaving
+  updateGoalMutation.mutate(
+    { params: { id: Number(id) }, body: { name, description } },
+    { onError: (err) => toast.error('Failed to save goal.', { description: err.message }) }
   )
 }
 
@@ -78,13 +73,17 @@ const createNewTask = async (search: string) => {
   if (error) toast.error('Failed to create task!', { description: error.message })
 }
 
-const deleteGoal = async () => {
-  const error = await destroyGoal(Number(id))
-  if (error) toast.error('Failed to delete goal.', { description: error.message })
-  else {
-    toast.success('Goal deleted successfully.')
-    navigateBack()
-  }
+const deleteGoal = () => {
+  destroyGoalMutation.mutate(
+    { params: { id: Number(id) } },
+    {
+      onError: (err) => toast.error('Failed to delete goal.', { description: err.message }),
+      onSuccess: () => {
+        toast.success('Goal deleted successfully.')
+        navigateBack()
+      },
+    }
+  )
 }
 </script>
 
@@ -243,4 +242,9 @@ const deleteGoal = async () => {
       </ScrollArea>
     </div>
   </div>
+
+  <LoaderCircle
+    v-if="updateGoalMutation.isPending.value"
+    class="text-muted-foreground absolute right-4 bottom-4 animate-spin"
+  />
 </template>

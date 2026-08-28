@@ -10,16 +10,7 @@ defineProps<{
   side?: DropdownMenuContentProps['side']
 }>()
 
-const { updateGoal } = useGoals()
-
-const setStatus = async (
-  goalId: number,
-  status: NonNullable<Parameters<typeof updateGoal>[1]>['status']
-) => {
-  const error = await updateGoal(goalId, { status })
-  if (error) toast.error('Failed to update status.')
-  else toast.success('Goal status updated.')
-}
+const { updateGoalMutation } = useGoals()
 </script>
 
 <template>
@@ -27,7 +18,7 @@ const setStatus = async (
     <DropdownMenuTrigger as-child :title="`status: ${status}`">
       <slot>
         <Button variant="outline" size="xs">
-          <GoalStatusIcon :status="status" />
+          <GoalStatusIcon :status />
           {{ status }}
           <ChevronDown />
         </Button>
@@ -38,7 +29,16 @@ const setStatus = async (
         v-for="s in ['active', 'completed', 'abandoned'] as const"
         :key="s"
         :model-value="status === s"
-        @click="setStatus(id, s)"
+        @click="
+          updateGoalMutation.mutate(
+            { params: { id }, body: { status: s } },
+            {
+              onError: (err) =>
+                toast.error('Failed to update status.', { description: err.message }),
+              onSuccess: () => toast.success('Goal status updated.'),
+            }
+          )
+        "
       >
         <GoalStatusIcon :status="s" />
         {{ s.replace('_', ' ') }}

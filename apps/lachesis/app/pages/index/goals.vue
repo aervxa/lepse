@@ -9,7 +9,7 @@ const source = inject(bubbleNavSourceKey)
 
 const route = useRoute()
 const { user } = useAuth()
-const { goals, createGoal } = useGoals()
+const { goals, createGoalMutation } = useGoals()
 
 const inSubpage = computed(() => /goals\/\d+/.test(route.path))
 
@@ -41,18 +41,29 @@ const {
   validators: {
     onDynamic: schema,
     onSubmitAsync: async ({ value }) => {
-      const error = await createGoal(value)
-      if (!error) return null
-      if (error.isValidationError()) {
-        const errors = mapErrors(error.response.errors)
-        return {
-          fields: {
-            name: errors.name?.message,
-            description: errors.description?.message,
+      let validationError = null
+
+      await createGoalMutation.mutateAsync(
+        { body: { name: value.name, description: value.description } },
+        {
+          onError: (err) => {
+            if (err.isValidationError()) {
+              const errors = mapErrors(err.response.errors)
+              validationError = {
+                fields: {
+                  name: errors.name?.message,
+                  description: errors.description?.message,
+                },
+              }
+            } else {
+              toast.error('Something went wrong!', { description: err.message })
+              validationError = 'Creating goal failed!'
+            }
           },
         }
-      } else toast.error('Something went wrong!', { description: error.message })
-      return 'Creating goal failed!'
+      )
+
+      return validationError
     },
   },
   defaultValues: { name: '', description: '' },
@@ -108,7 +119,7 @@ const {
           <PopoverDescription>Manage what matters.</PopoverDescription>
         </PopoverHeader>
 
-        <Empty v-if="goals.length === 0" class="mb-12">
+        <Empty v-if="goals?.length === 0" class="mb-12">
           <EmptyHeader>
             <EmptyTitle>No goals yet.</EmptyTitle>
             <EmptyDescription>You have yet to create any goals.</EmptyDescription>
@@ -142,7 +153,7 @@ const {
 
         <!-- Create -->
         <Dialog v-model:open="createOpen">
-          <DialogTrigger v-if="goals.length > 0" as-child>
+          <DialogTrigger v-if="(goals?.length ?? 0) > 0" as-child>
             <Button size="icon-lg" class="absolute right-4 bottom-4">
               <Plus />
             </Button>

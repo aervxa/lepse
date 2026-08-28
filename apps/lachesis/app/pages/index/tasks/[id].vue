@@ -71,9 +71,9 @@ const formattedDate = computed(() =>
   )
 )
 
-const { goals, createGoal } = useGoals()
+const { goals, createGoalMutation } = useGoals()
 const taskGoals = computed(() =>
-  goals.value.filter((goal) => task.value?.goalIds?.includes(goal.id))
+  goals.value?.filter((goal) => task.value?.goalIds?.includes(goal.id))
 )
 
 const linkGoal = async (goalId: number) => {
@@ -93,8 +93,12 @@ const unlinkGoal = async (goalId: number) => {
 }
 
 const createNewGoal = async (search: string) => {
-  const error = await createGoal({ name: search })
-  if (error) toast.error('Failed to create goal!', { description: error.message })
+  createGoalMutation.mutate(
+    { body: { name: search } },
+    {
+      onError: (err) => toast.error('Failed to create goal!', { description: err.message }),
+    }
+  )
 }
 
 const deleteTask = async () => {
@@ -185,7 +189,7 @@ const focusTask = async () => {
           </NuxtLink>
         </Badge>
         <Combobox
-          :items="goals.filter((g) => !taskGoals.includes(g))"
+          :items="goals?.filter((g) => !taskGoals?.includes(g))"
           @select="
             (item) => {
               linkGoal(item.id)
