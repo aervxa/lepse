@@ -33,5 +33,8 @@
     "better-sqlite3": true,
     "esbuild": true,
     "workerd@1.20260811.1": true
+  },
+  "patchedDependencies": {
+    "@adonisjs/auth@10.1.0": "patches/@adonisjs/auth@10.1.0.patch"
   }
 }

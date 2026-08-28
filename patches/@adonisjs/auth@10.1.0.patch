@@ -1,0 +1,23 @@
+--- a/build/modules/access_tokens_guard/main.js	
++++ b/build/modules/access_tokens_guard/main.js	
+@@ -1195,17 +1195,17 @@
+ 		if (!dbRow) return null;
+ 		/**
+ 		* Update last time the token is used
+ 		*/
+-		dbRow.last_used_at = /* @__PURE__ */ new Date();
++		const last_used_at = /* @__PURE__ */ new Date();
+ 		await db.from(this.table).where({
+ 			id: dbRow.id,
+ 			type: dbRow.type
+-		}).update({ last_used_at: dbRow.last_used_at });
++		}).update({ last_used_at });
+ 		/**
+ 		* Convert to access token instance
+ 		*/
+-		const accessToken = this.dbRowToAccessToken(dbRow);
++		const accessToken = this.dbRowToAccessToken({ ...dbRow, last_used_at });
+ 		/**
+ 		* Ensure the token secret matches the token hash
+ 		*/
+ 		if (!accessToken.verify(decodedToken.secret) || accessToken.isExpired()) return null;
