@@ -11,16 +11,7 @@ defineProps<{
 }>()
 const open = defineModel<boolean>('open')
 
-const { updateTask } = useTasks()
-
-const setStatus = async (
-  taskId: number,
-  status: NonNullable<Parameters<typeof updateTask>[1]>['status']
-) => {
-  const error = await updateTask(taskId, { status })
-  if (error) toast.error('Failed to update status.')
-  else toast.success('Task status updated.')
-}
+const { updateTaskMutation } = useTasks()
 </script>
 
 <template>
@@ -37,7 +28,16 @@ const setStatus = async (
         v-for="s in ['todo', 'in_progress', 'done', 'canceled'] as const"
         :key="s"
         :model-value="status === s"
-        @click="setStatus(id, s)"
+        @click="
+          updateTaskMutation.mutate(
+            { params: { id }, body: { status: s } },
+            {
+              onError: (err) =>
+                toast.error('Failed to update status.', { description: err.message }),
+              onSuccess: () => toast.success('Task status updated.'),
+            }
+          )
+        "
       >
         <TaskStatusIcon :status="s" />
         {{ s.replace('_', ' ') }}

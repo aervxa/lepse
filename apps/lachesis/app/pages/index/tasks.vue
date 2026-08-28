@@ -9,7 +9,7 @@ const source = inject(bubbleNavSourceKey)
 
 const route = useRoute()
 const { user } = useAuth()
-const { tasks, createTask } = useTasks()
+const { tasks, createTaskMutation } = useTasks()
 
 const inSubpage = computed(() => /tasks\/\d+/.test(route.path))
 
@@ -41,18 +41,29 @@ const {
   validators: {
     onDynamic: schema,
     onSubmitAsync: async ({ value }) => {
-      const error = await createTask(value)
-      if (!error) return null
-      if (error.isValidationError()) {
-        const errors = mapErrors(error.response.errors)
-        return {
-          fields: {
-            name: errors.name?.message,
-            description: errors.description?.message,
+      let validationError = null
+
+      await createTaskMutation.mutateAsync(
+        { body: { name: value.name, description: value.description } },
+        {
+          onError: (err) => {
+            if (err.isValidationError()) {
+              const errors = mapErrors(err.response.errors)
+              validationError = {
+                fields: {
+                  name: errors.name?.message,
+                  description: errors.description?.message,
+                },
+              }
+            } else {
+              toast.error('Something went wrong!', { description: err.message })
+              validationError = 'Creating task failed!'
+            }
           },
         }
-      } else toast.error('Something went wrong!', { description: error.message })
-      return 'Creating task failed!'
+      )
+
+      return validationError
     },
   },
   defaultValues: { name: '', description: '' },
@@ -109,7 +120,7 @@ const {
           <PopoverDescription>Manage your focus and productivity.</PopoverDescription>
         </PopoverHeader>
 
-        <Empty v-if="tasks.length === 0" class="mb-12">
+        <Empty v-if="tasks?.length === 0" class="mb-12">
           <EmptyHeader>
             <EmptyTitle>No tasks yet.</EmptyTitle>
             <EmptyDescription>You have yet to create any tasks.</EmptyDescription>
@@ -144,7 +155,7 @@ const {
 
         <!-- Create -->
         <Dialog v-model:open="createOpen">
-          <DialogTrigger v-if="tasks.length > 0" as-child>
+          <DialogTrigger v-if="(tasks?.length ?? 0) > 0" as-child>
             <Button size="icon-lg" class="absolute right-4 bottom-4">
               <Plus />
             </Button>

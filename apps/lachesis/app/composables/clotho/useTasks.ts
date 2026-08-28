@@ -1,92 +1,75 @@
-import type { Data } from '@lepse/clotho/data'
+import { useMutation, useQuery } from '@tanstack/vue-query'
 
 export const useTasks = () => {
-  const { $clotho } = useNuxtApp()
-  const { user } = useAuth()
-  const tasks = useState<Data.Task[]>('tasks', () => [])
+  const { $api, $queryClient } = useNuxtApp()
+
+  const tasksQuery = useQuery($api.tasks.index.queryOptions())
+  const tasks = computed(() => tasksQuery.data.value?.data)
   const focusedTaskId = useState<number>('focusedTaskId', () => -1)
 
-  const fetchTasks = async () => {
-    const [payload, error] = await $clotho.api.tasks.index({}).safe()
-    if (payload) {
-      tasks.value = payload.data
-    } else {
-      console.error(error)
-      return error
-    }
-  }
+  const createTaskMutation = useMutation(
+    $api.tasks.store.mutationOptions({
+      onSuccess: ({ data }) => {
+        $queryClient.setQueryData(
+          $api.tasks.index.queryKey(),
+          (old) => old && { ...old, data: [...old.data.filter((i) => i.id !== data.id), data] }
+        )
+      },
+    })
+  )
 
-  if (tasks.value.length === 0 && user.value?.emailVerified) {
-    fetchTasks()
-  }
+  const updateTaskMutation = useMutation(
+    $api.tasks.update.mutationOptions({
+      onSuccess: ({ data }) => {
+        $queryClient.setQueryData(
+          $api.tasks.index.queryKey(),
+          (old) => old && { ...old, data: [...old.data.filter((i) => i.id !== data.id), data] }
+        )
+      },
+    })
+  )
 
-  const createTask = async (body: Parameters<typeof $clotho.api.tasks.store>['0']['body']) => {
-    const [payload, error] = await $clotho.api.tasks.store({ body }).safe()
-    if (payload) {
-      tasks.value.push(payload.data)
-    } else {
-      console.error(error)
-      return error
-    }
-  }
+  const destroyTaskMutation = useMutation(
+    $api.tasks.destroy.mutationOptions({
+      onSuccess: (_, { params: { id } }) => {
+        $queryClient.setQueryData(
+          $api.tasks.index.queryKey(),
+          (old) => old && { ...old, data: old.data.filter((i) => i.id !== id) }
+        )
+      },
+    })
+  )
 
-  const updateTask = async (
-    id: number,
-    body: Parameters<typeof $clotho.api.tasks.update>['0']['body']
-  ) => {
-    const [payload, error] = await $clotho.api.tasks.update({ params: { id }, body }).safe()
-    if (payload) {
-      const index = tasks.value.findIndex((t) => t.id === id)
-      if (index !== -1) tasks.value[index] = payload.data
-    } else {
-      console.error(error)
-      return error
-    }
-  }
+  const attachGoalMutation = useMutation(
+    $api.tasks.attachGoal.mutationOptions({
+      onSuccess: ({ data }) => {
+        $queryClient.setQueryData(
+          $api.tasks.index.queryKey(),
+          (old) => old && { ...old, data: [...old.data.filter((i) => i.id !== data.id), data] }
+        )
+      },
+    })
+  )
 
-  const attachGoal = async (taskId: number, goalId: number) => {
-    const [payload, error] = await $clotho.api.tasks
-      .attachGoal({ params: { taskId, goalId } })
-      .safe()
-    if (payload) {
-      const index = tasks.value.findIndex((t) => t.id === taskId)
-      if (index !== -1) tasks.value[index] = payload.data
-    } else {
-      console.error(error)
-      return error
-    }
-  }
-
-  const detachGoal = async (taskId: number, goalId: number) => {
-    const [payload, error] = await $clotho.api.tasks
-      .detachGoal({ params: { taskId, goalId } })
-      .safe()
-    if (payload) {
-      const index = tasks.value.findIndex((t) => t.id === taskId)
-      if (index !== -1) tasks.value[index] = payload.data
-    } else {
-      console.error(error)
-      return error
-    }
-  }
-
-  const destroyTask = async (id: number) => {
-    const [, error] = await $clotho.api.tasks.destroy({ params: { id } }).safe()
-    if (error) {
-      console.error(error)
-      return error
-    }
-    tasks.value = tasks.value.filter((t) => t.id !== id)
-  }
+  const detachGoalMutation = useMutation(
+    $api.tasks.attachGoal.mutationOptions({
+      onSuccess: ({ data }) => {
+        $queryClient.setQueryData(
+          $api.tasks.index.queryKey(),
+          (old) => old && { ...old, data: [...old.data.filter((i) => i.id !== data.id), data] }
+        )
+      },
+    })
+  )
 
   return {
+    tasksQuery,
     tasks,
     focusedTaskId,
-    fetchTasks,
-    createTask,
-    updateTask,
-    attachGoal,
-    detachGoal,
-    destroyTask,
+    createTaskMutation,
+    updateTaskMutation,
+    destroyTaskMutation,
+    attachGoalMutation,
+    detachGoalMutation,
   }
 }

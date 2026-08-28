@@ -26,10 +26,11 @@ const { focusSession, updateFocusSessionMutation } = useDay(date)
 
 // ─── Task ───────────────────────────────────────────────────────────────────
 
-const { tasks, focusedTaskId, updateTask, createTask } = useTasks()
-const task = computed(() => tasks.value.find((t) => t.id === focusedTaskId.value))
+const { tasks, focusedTaskId, updateTaskMutation, createTaskMutation } = useTasks()
+const task = computed(() => tasks.value?.find((t) => t.id === focusedTaskId.value))
 
 const selectTask = (id: number) => {
+  // fn SHOULD change focusedTaskId
   const r = () => {
     focusedTaskId.value = id
   }
@@ -44,14 +45,16 @@ const selectTask = (id: number) => {
       if (v) {
         if (focusMethod === 'stopwatch' && task.value) {
           // remove from old task
-          updateTask(task.value.id, {
-            stopwatchMs: Math.round(task.value.stopwatchMs - stopwatchSyncedMs),
+          updateTaskMutation.mutate({
+            params: { id: task.value.id },
+            body: { stopwatchMs: Math.round(task.value.stopwatchMs - stopwatchSyncedMs) },
           })
           r() // update `task`
           // If user is not cancelling, add to new task
           if (id > -1) {
-            updateTask(task.value.id, {
-              stopwatchMs: Math.round(task.value.stopwatchMs + stopwatchSyncedMs),
+            updateTaskMutation.mutate({
+              params: { id: task.value.id },
+              body: { stopwatchMs: Math.round(task.value.stopwatchMs + stopwatchSyncedMs) },
             })
           } else {
             // If user cancels, reset stopwatch
@@ -69,8 +72,12 @@ const selectTask = (id: number) => {
 }
 
 const createNewTask = async (search: string) => {
-  const error = await createTask({ name: search })
-  if (error) toast.error('Failed to create task!', { description: error.message })
+  createTaskMutation.mutate(
+    { body: { name: search } },
+    {
+      onError: (err) => toast.error('Failed to create task!', { description: err.message }),
+    }
+  )
 }
 
 // ─── Shared stopwatch class ─────────────────────────────────────────────────
@@ -143,8 +150,9 @@ const syncStopwatch = useDebounceFn(() => {
   })
   // Update selected task
   if (task.value)
-    updateTask(task.value.id, {
-      stopwatchMs: Math.round(task.value.stopwatchMs + (elapsed - stopwatchSyncedMs)),
+    updateTaskMutation.mutate({
+      params: { id: task.value.id },
+      body: { stopwatchMs: Math.round(task.value.stopwatchMs + (elapsed - stopwatchSyncedMs)) },
     })
 
   stopwatchSyncedMs = elapsed
@@ -173,7 +181,11 @@ function skipPomo() {
       body: { pomoCount: (focusSession.value?.pomoCount ?? 0) + 1 },
     })
     // Update selected task
-    if (task.value) updateTask(task.value.id, { pomoCount: task.value.pomoCount + 1 })
+    if (task.value)
+      updateTaskMutation.mutate({
+        params: { id: task.value.id },
+        body: { pomoCount: task.value.pomoCount + 1 },
+      })
   } else {
     pomoState.value = 'work'
   }

@@ -5,6 +5,7 @@ import {
   ChevronRight,
   Clock,
   ClockFading,
+  LoaderCircle,
   MoreHorizontal,
   Plus,
   Trash,
@@ -54,24 +55,33 @@ const save = () => {
   )
 }
 
-const { tasks, attachGoal, detachGoal, createTask } = useTasks()
+const { tasks, attachGoalMutation, detachGoalMutation, createTaskMutation } = useTasks()
 const goalTasks = computed(() =>
-  tasks.value.filter((task) => task.goalIds.includes(goal.value?.id ?? -1))
+  tasks.value?.filter((task) => task.goalIds.includes(goal.value?.id ?? -1))
 )
-const goalTasksDone = computed(() => goalTasks.value.filter((t) => t.status === 'done').length)
+const goalTasksDone = computed(() => goalTasks.value?.filter((t) => t.status === 'done').length)
 
-const linkTask = async (taskId: number, unlink?: boolean) => {
+const linkTask = (taskId: number, unlink?: boolean) => {
   if (goal.value) {
-    const error = await (unlink ? detachGoal : attachGoal)(taskId, goal.value.id)
-    if (error) toast.error('Failed to link task.')
-    else toast.success(unlink ? 'Task unlinked.' : 'Task linked.')
+    ;(unlink ? detachGoalMutation : attachGoalMutation).mutate(
+      {
+        params: { taskId, goalId: goal.value.id },
+      },
+      {
+        onError: (err) => toast.error('Failed to link task.', { description: err.message }),
+        onSuccess: () => toast.success(unlink ? 'Task unlinked.' : 'Task linked.'),
+      }
+    )
   }
 }
 
-const createNewTask = async (search: string) => {
-  const error = await createTask({ name: search })
-  if (error) toast.error('Failed to create task!', { description: error.message })
-}
+const createNewTask = (search: string) =>
+  createTaskMutation.mutateAsync(
+    { body: { name: search } },
+    {
+      onError: (err) => toast.error('Failed to create task!', { description: err.message }),
+    }
+  )
 
 const deleteGoal = () => {
   destroyGoalMutation.mutate(
@@ -161,18 +171,18 @@ const deleteGoal = () => {
                 </CollapsibleTrigger>
                 <div class="flex items-center gap-1.5 pr-6">
                   <CircularProgress
-                    :value="Math.max(4, (goalTasksDone / goalTasks.length) * 100)"
+                    :value="Math.max(4, ((goalTasksDone ?? 0) / (goalTasks?.length ?? 0)) * 100)"
                     :size="12"
                     :thickness="1.5"
                   />
                   <span class="text-muted-foreground text-xs">
-                    {{ goalTasksDone }}/{{ goalTasks.length }}
+                    {{ goalTasksDone ?? 0 }}/{{ goalTasks?.length ?? 0 }}
                   </span>
                 </div>
               </div>
 
               <Combobox
-                :items="tasks.filter((task) => !task.goalIds.includes(goal?.id ?? -1))"
+                :items="tasks?.filter((task) => !task.goalIds.includes(goal?.id ?? -1))"
                 @select="(t) => linkTask(t.id)"
                 :create="createNewTask"
                 empty="No tasks found."
