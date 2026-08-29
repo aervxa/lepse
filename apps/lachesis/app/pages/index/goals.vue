@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { revalidateLogic, useForm } from '@tanstack/vue-form'
-import { ChevronRight, Plus, X } from '@lucide/vue'
+import { ChevronRight, Loader2, Plus, X } from '@lucide/vue'
 import { PopoverClose } from 'reka-ui'
 import { toast } from 'vue-sonner'
 import z from 'zod'
@@ -125,7 +125,13 @@ const {
           <PopoverDescription>Manage what matters.</PopoverDescription>
         </PopoverHeader>
 
-        <Empty v-if="goals?.length === 0" class="mb-12">
+        <div
+          v-if="goalsQuery.isLoading.value"
+          class="bg-background/40 pointer-events-none absolute z-50 h-full w-full rounded-2xl"
+        >
+          <Loader2 class="absolute bottom-4 left-4 size-8 animate-spin opacity-40" />
+        </div>
+        <Empty v-else-if="goals?.length === 0" class="mb-12">
           <EmptyHeader>
             <EmptyTitle>No goals yet.</EmptyTitle>
             <EmptyDescription>You have yet to create any goals.</EmptyDescription>
