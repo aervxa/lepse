@@ -104,15 +104,23 @@ const createNewGoal = async (search: string) => {
 }
 
 const deleteTask = () => {
-  destroyTaskMutation.mutate(
-    { params: { id: Number(id) } },
-    {
-      onError: (err) => toast.error('Failed to delete task.', { description: err.message }),
-      onSuccess: () => {
-        toast.success('Task deleted successfully.')
-        navigateBack()
-      },
-    }
+  dialog({
+    title: 'Are you sure?',
+    description: "This task will forever be lost. (linked goals won't be affected)",
+    action: 'Delete',
+  }).then(
+    (v) =>
+      v &&
+      destroyTaskMutation.mutate(
+        { params: { id: Number(id) } },
+        {
+          onError: (err) => toast.error('Failed to delete task.', { description: err.message }),
+          onSuccess: () => {
+            toast.success('Task deleted successfully.')
+            navigateBack()
+          },
+        }
+      )
   )
 }
 

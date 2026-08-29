@@ -86,15 +86,23 @@ const createNewTask = (search: string) =>
     .catch(() => {})
 
 const deleteGoal = () => {
-  destroyGoalMutation.mutate(
-    { params: { id: Number(id) } },
-    {
-      onError: (err) => toast.error('Failed to delete goal.', { description: err.message }),
-      onSuccess: () => {
-        toast.success('Goal deleted successfully.')
-        navigateBack()
-      },
-    }
+  dialog({
+    title: 'Are you sure?',
+    description: "This goal will forever be lost. (linked tasks won't be affected)",
+    action: 'Delete',
+  }).then(
+    (v) =>
+      v &&
+      destroyGoalMutation.mutate(
+        { params: { id: Number(id) } },
+        {
+          onError: (err) => toast.error('Failed to delete goal.', { description: err.message }),
+          onSuccess: () => {
+            toast.success('Goal deleted successfully.')
+            navigateBack()
+          },
+        }
+      )
   )
 }
 </script>
