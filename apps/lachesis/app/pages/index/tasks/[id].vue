@@ -4,6 +4,7 @@ import {
   ChevronDown,
   ChevronLeft,
   Clock,
+  ClockAlert,
   ClockFading,
   Lightbulb,
   LoaderCircle,
@@ -124,6 +125,26 @@ const deleteTask = () => {
   )
 }
 
+const resetTaskTime = () => {
+  dialog({
+    title: 'Are you sure?',
+    description: 'The time spent on this task will be reset to ZERO.',
+    action: 'Reset',
+  }).then(
+    (v) =>
+      v &&
+      updateTaskMutation.mutate(
+        { params: { id: Number(id) }, body: { stopwatchMs: 0, pomoCount: 0 } },
+        {
+          onError: (err) => toast.error('Failed to reset time.', { description: err.message }),
+          onSuccess: () => {
+            toast.success('Time reset successfully.')
+          },
+        }
+      )
+  )
+}
+
 const enterFocus = inject(enterFocusKey)
 const focusTask = () => {
   navigateTo('/')
@@ -162,6 +183,10 @@ const focusTask = () => {
           <DropdownMenuItem variant="destructive" @select="deleteTask">
             <Trash />
             Delete
+          </DropdownMenuItem>
+          <DropdownMenuItem variant="destructive" @select="resetTaskTime">
+            <ClockAlert />
+            Reset time
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
