@@ -9,7 +9,11 @@ const source = inject(bubbleNavSourceKey)
 
 const route = useRoute()
 const { user } = useAuth()
-const { goals, createGoalMutation } = useGoals()
+const { goals, goalsQuery, createGoalMutation } = useGoals()
+
+onMounted(() => {
+  goalsQuery.refetch()
+})
 
 const inSubpage = computed(() => /goals\/\d+/.test(route.path))
 
