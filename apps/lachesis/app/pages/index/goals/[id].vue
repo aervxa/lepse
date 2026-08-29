@@ -215,7 +215,14 @@ const deleteGoal = () => {
                           <TaskStatusDropdown :id="task.id" :status="task.status" />
                         </ItemMedia>
                         <ItemContent>
-                          <ItemTitle>{{ task.name }}</ItemTitle>
+                          <Tooltip>
+                            <TooltipTrigger as-child>
+                              <ItemTitle>{{ task.name }}</ItemTitle>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{{ task.name }}</p>
+                            </TooltipContent>
+                          </Tooltip>
                         </ItemContent>
                         <ItemActions>
                           <div
