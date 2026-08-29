@@ -15,7 +15,7 @@ pub fn run() {
   #[cfg(feature = "cef")]
   let builder = tauri::Builder::<CefRuntime<_>>::new();
   #[cfg(not(feature = "cef"))]
-  let builder = tauri::Builder::default();
+  let builder = tauri::Builder::default().plugin(tauri_plugin_notification::init());
 
   builder
     .invoke_handler(tauri::generate_handler![commands::get_os])

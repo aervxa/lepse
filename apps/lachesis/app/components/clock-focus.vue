@@ -4,6 +4,7 @@ import { ChevronsUpDown, FastForward, Pause, Play, RefreshCw, X } from '@lucide/
 import { toast } from 'vue-sonner'
 import { getGreeting } from '~/lib/greetings'
 import { formatDuration, Stopwatch } from '~/lib/time'
+import { toBreakMessages, toLongBreakMessages, toWorkMessages } from '~/lib/pomoMessages'
 
 const { inFocus, focusMethod } = defineProps<{
   inFocus: boolean
@@ -17,6 +18,7 @@ watch(
   }
 )
 
+const { send, requestPermission } = useNotification(false)
 const { user } = useAuth()
 const now = useNow()
 const nowStr = computed(() => now.value.toLocaleTimeString([], { timeStyle: 'short' }))
@@ -87,6 +89,7 @@ const stopwatch = new Stopwatch({
   onStart: () => {
     if (focusMethod === 'stopwatch') stopwatchSyncInterval.resume()
     focusDirty && (focusDirty.value = true)
+    if (focusMethod === 'pomodoro') requestPermission()
   },
   onStop: () => {
     if (focusMethod === 'stopwatch') {
@@ -186,8 +189,14 @@ function skipPomo() {
         params: { id: task.value.id },
         body: { pomoCount: task.value.pomoCount + 1 },
       })
+    send({
+      title: 'Work session over!',
+      body:
+        pomoState.value === 'break' ? pickRandom(toBreakMessages) : pickRandom(toLongBreakMessages),
+    })
   } else {
     pomoState.value = 'work'
+    send({ title: 'Break time over!', body: pickRandom(toWorkMessages) })
   }
   stopwatch.reset()
 }

@@ -38,9 +38,9 @@ const GREETINGS = [
   ],
 ] satisfies [string[], string[], string[], string[]] // for indexing from Periods
 
-export function getRandomGreeting(period: Periods): string {
+export function getRandomGreeting(period: Periods) {
   const g = GREETINGS[period]
-  return g[Math.floor(Math.random() * g.length)] || ''
+  return pickRandom(GREETINGS[period])
 }
 
 export function getGreeting(date: Date) {

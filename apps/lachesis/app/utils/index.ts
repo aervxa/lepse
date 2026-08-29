@@ -43,3 +43,7 @@ export const BREAKPOINTS = {
   'xl': 1280,
   '2xl': 1536,
 }
+
+export function pickRandom<T>(arr: T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)]!
+}

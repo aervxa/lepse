@@ -41,8 +41,8 @@ const QUOTES = [
   'Be yourself. Everyone else is already taken.',
 ]
 
-export function getRandomQuote(): string {
-  return QUOTES[Math.floor(Math.random() * QUOTES.length)] || ''
+export function getRandomQuote() {
+  return pickRandom(QUOTES)
 }
 
 export function getDailyQuote(): string {
