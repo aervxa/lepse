@@ -32,7 +32,7 @@ export const apiThrottle = limiter.define('api', (ctx) => {
    * tracked by their IP address.
    */
   return limiter
-    .allowRequests(10)
+    .allowRequests(50)
     .every('1 minute')
     .blockFor('10 minutes')
     .usingKey(`ip_${ctx.request.ip()}`)
