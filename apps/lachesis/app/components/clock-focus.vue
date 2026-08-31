@@ -6,6 +6,8 @@ import { getGreeting } from '~/lib/greetings'
 import { formatDuration, Stopwatch } from '~/lib/time'
 import { toBreakMessages, toLongBreakMessages, toWorkMessages } from '~/lib/pomoMessages'
 
+const hasCustomizedAccent = useLocalStorage('hasCustomizedAccent', false)
+
 const { inFocus, focusMethod } = defineProps<{
   inFocus: boolean
   focusMethod: 'stopwatch' | 'pomodoro'
@@ -107,12 +109,7 @@ const formatted = computed(() => {
   if (focusMethod === 'stopwatch') {
     return formatDuration(stopwatch.elapsed.value)
   } else if (focusMethod === 'pomodoro') {
-    const pomoElapsed =
-      (pomoState.value === 'work'
-        ? POMO_TIME
-        : pomoState.value === 'break'
-          ? SHORT_BREAK
-          : LONG_BREAK) - stopwatch.elapsed.value
+    const pomoElapsed = pomoStateDuration.value - stopwatch.elapsed.value
     return formatDuration(pomoElapsed, { format: 'mm:ss' })
   } else {
     return ''
@@ -129,7 +126,7 @@ watch(
   },
   { immediate: true }
 )
-// Reset stopwatch when focusMethod changes
+// Reset stopwatch (the global stopwatch) when focusMethod changes
 watch(
   () => focusMethod,
   () => {
@@ -168,6 +165,9 @@ const stopwatchSyncInterval = useIntervalFn(syncStopwatch, 60_000, { immediate: 
 
 const pomoStates = ['work', 'break', 'long-break'] as const
 const pomoState = ref<(typeof pomoStates)[number]>('work')
+const pomoStateDuration = computed(() =>
+  pomoState.value === 'work' ? POMO_TIME : pomoState.value === 'break' ? SHORT_BREAK : LONG_BREAK
+)
 const pomoCount = ref(0)
 
 const POMO_TIME = 25 * 60 * 1000
@@ -200,8 +200,10 @@ function skipPomo() {
   }
   stopwatch.reset()
 }
-
-const hasCustomizedAccent = useLocalStorage('hasCustomizedAccent', false)
+// Skip pomo when stopwatch reaches duration
+watch(stopwatch.elapsed, () => {
+  if (focusMethod === 'pomodoro' && stopwatch.elapsed.value >= pomoStateDuration.value) skipPomo()
+})
 </script>
 
 <template>
