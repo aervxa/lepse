@@ -1,5 +1,7 @@
 import { registry } from '@lepse/clotho/registry'
 import { createTuyau, TuyauHTTPError } from '@tuyau/core/client'
+import { persistQueryClient } from '@tanstack/query-persist-client-core'
+import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
 import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query'
 import { createTuyauVueQueryClient } from '@tuyau/vue-query'
 import { toast } from 'vue-sonner'
@@ -23,13 +25,22 @@ export default defineNuxtPlugin({
             }
             return failureCount < 3
           },
-          staleTime: Infinity,
-          // refetch happens even with staleTime set to Infinity for queries that fail.
+          // refetches will be done manually to avoid calling it so many times.
           refetchOnWindowFocus: false,
+          refetchOnMount: false,
+          gcTime: 1000 * 60 * 60 * 24 * 7,
         },
       },
     })
-    app.vueApp.use(VueQueryPlugin, { queryClient })
+    app.vueApp.use(VueQueryPlugin, {
+      queryClient,
+      clientPersister: (queryClient) =>
+        persistQueryClient({
+          queryClient,
+          maxAge: 1000 * 60 * 60 * 24 * 7,
+          persister: createAsyncStoragePersister({ storage: localStorage }),
+        }),
+    })
 
     // the tuyau client
     const client = createTuyau({
