@@ -8,7 +8,7 @@ import { useWebNotification } from '@vueuse/core'
 
 export const useNotification = (requestOnMount: boolean = true) => {
   if (isTauri()) {
-    const requestPermission = () => {
+    const reqPermission = () => {
       isPermissionGranted().then((granted) => {
         if (!granted) requestPermission()
       })
@@ -18,7 +18,7 @@ export const useNotification = (requestOnMount: boolean = true) => {
 
     return {
       send: sendNotification,
-      requestPermission,
+      requestPermission: reqPermission,
     }
   } else {
     const { show, ensurePermissions } = useWebNotification({ requestPermissions: requestOnMount })
