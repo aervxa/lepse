@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { effectScope, nextTick, ref } from 'vue'
+import { computed, effectScope, nextTick, ref } from 'vue'
 import { createTuyau } from '@tuyau/core/client'
 import { createTuyauVueQueryClient } from '@tuyau/vue-query'
 import {
@@ -12,6 +12,7 @@ import {
   useQuery,
 } from '@tanstack/vue-query'
 import { registry } from '@lepse/clotho/registry'
+import { accountCacheScope, accountQueryKey, accountQueryOptions } from '../app/lib/auth-cache.ts'
 import { appQueryDefaults } from '../app/lib/query-client-options.ts'
 import {
   profileQueryLifecycleOptions,
@@ -223,17 +224,23 @@ test('application defaults do not refetch a stale profile on focus without lifec
   }
 })
 
-test('profile query options use the application key shared by mutation writers', () => {
+test('profile query options use the scoped application key shared by mutation writers', () => {
   const token = ref<string | null>(null)
-  const profileOptions = profileEndpoint.queryOptions(undefined, profileQueryOptions(token))
+  const scope = ref(accountCacheScope('account-a'))
+  const profileOptions = accountQueryOptions(
+    profileEndpoint.queryOptions(undefined, profileQueryOptions(token)),
+    scope,
+    token
+  )
+  const scopedProfileKey = accountQueryKey(profileEndpoint.queryKey(), scope)
 
-  assert.deepEqual(profileOptions.queryKey, profileEndpoint.queryKey())
+  assert.deepEqual(profileOptions.queryKey.value, scopedProfileKey.value)
   assert.equal(profileOptions.enabled?.value, false)
   assert.notDeepEqual(profileEndpoint.queryOptions({}).queryKey, profileEndpoint.queryKey())
 
   const queryClient = createAppQueryClient()
   const profile = { emailVerified: false }
-  queryClient.setQueryData<ProfileResponse>(profileEndpoint.queryKey(), { data: profile })
+  queryClient.setQueryData<ProfileResponse>(scopedProfileKey, { data: profile })
 
   assert.deepEqual(queryClient.getQueryData<ProfileResponse>(profileOptions.queryKey), {
     data: profile,
@@ -244,13 +251,12 @@ test('profile query options use the application key shared by mutation writers',
 test('auth startup skips profile prefetch without a token', async () => {
   const globalObject = globalThis as Record<string, unknown>
   const previousDefineNuxtPlugin = globalObject.defineNuxtPlugin
-  const previousUseCookie = globalObject.useCookie
   const token = ref<string | null>(null)
+  const scope = computed(() => accountCacheScope(token.value))
   const queryOptionsCalls: unknown[][] = []
   let prefetches = 0
 
   globalObject.defineNuxtPlugin = (plugin) => plugin
-  globalObject.useCookie = () => token
 
   try {
     const { default: authPlugin } =
@@ -263,7 +269,7 @@ test('auth startup skips profile prefetch without a token', async () => {
             show: {
               queryOptions: (...args: unknown[]) => {
                 queryOptionsCalls.push(args)
-                return {}
+                return { queryKey: [] }
               },
             },
           },
@@ -274,6 +280,10 @@ test('auth startup skips profile prefetch without a token', async () => {
           prefetches += 1
         },
       },
+      $authToken: token,
+      $authScope: scope,
+      $authLifecycle: { markIdentityValidated: () => {} },
+      $queryPersistenceReady: Promise.resolve(),
     }
 
     await setup(app)
@@ -283,12 +293,11 @@ test('auth startup skips profile prefetch without a token', async () => {
     await setup(app)
     assert.equal(prefetches, 1)
     assert.equal(queryOptionsCalls[0]?.[0], undefined)
-    assert.deepEqual(queryOptionsCalls[0]?.[1], { retry: false })
+    assert.equal((queryOptionsCalls[0]?.[1] as { retry?: boolean }).retry, false)
+    assert.equal(typeof (queryOptionsCalls[0]?.[1] as { enabled?: unknown }).enabled, 'object')
   } finally {
     if (previousDefineNuxtPlugin === undefined) delete globalObject.defineNuxtPlugin
     else globalObject.defineNuxtPlugin = previousDefineNuxtPlugin
-    if (previousUseCookie === undefined) delete globalObject.useCookie
-    else globalObject.useCookie = previousUseCookie
   }
 })
 
