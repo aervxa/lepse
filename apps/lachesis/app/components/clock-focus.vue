@@ -292,12 +292,11 @@ watch(stopwatch.elapsed, () => {
           class="2xl:text-10xl text-shadow-foreground-fixed/40 -mt-3 h-min text-8xl leading-none text-shadow-lg sm:text-9xl"
         >
           {{
-            (!inFocus
+            !inFocus
               ? nowStr.slice(0, -3)
               : focusMethod === 'stopwatch'
                 ? formatted.slice(stopwatch.elapsed.value > 3600000 ? 0 : 3, -4)
                 : formatted
-            ).replace(':', '꞉' /* modifier colon is more centered */)
           }}
         </span>
         <span
