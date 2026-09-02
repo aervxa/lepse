@@ -1,10 +1,13 @@
 import { useMutation, useQuery } from '@tanstack/vue-query'
+import { profileQueryOptions } from '~/lib/profile-query-options'
 
 export const useAuth = () => {
   const { $api, $queryClient } = useNuxtApp()
 
   const token = useCookie('auth_token', { maxAge: 60 * 60 * 24 * 365 /* one  year */ })
-  const userQuery = useQuery($api.account.profile.show.queryOptions())
+  const userQuery = useQuery(
+    $api.account.profile.show.queryOptions(undefined, profileQueryOptions(token))
+  )
   const user = computed(() => userQuery.data.value?.data)
 
   const loginMutation = useMutation(
@@ -29,7 +32,7 @@ export const useAuth = () => {
     $api.auth.accessToken.destroy.mutationOptions({
       onSuccess: () => {
         token.value = null
-        $queryClient.resetQueries({ queryKey: $api.account.profile.show.queryKey() })
+        $queryClient.removeQueries({ queryKey: $api.account.profile.show.queryKey() })
       },
     })
   )
