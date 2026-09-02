@@ -37,10 +37,36 @@ export const useAuth = () => {
   const requestEmailVerificationMutation = useMutation($api.verify.email.request.mutationOptions())
   const requestPasswordResetMutation = useMutation($api.reset.password.request.mutationOptions())
 
+  const queryKey = $api.account.profile.show.queryKey()
   const updateProfileMutation = useMutation(
     $api.account.profile.update.mutationOptions({
+      onMutate: async ({ body }) => {
+        await $queryClient.cancelQueries({ queryKey })
+        const old = $queryClient.getQueryData(queryKey)
+
+        $queryClient.setQueryData(
+          queryKey,
+          (old) =>
+            old && {
+              data: {
+                ...old.data,
+                name: body?.name ?? old.data.name,
+                /* avatarUrl cannot be updated, since the url comes computed from the server (obviously) */
+              },
+            }
+        )
+
+        return { old }
+      },
+      onError: (_err, _req, onMutateResult) => {
+        $queryClient.setQueryData(queryKey, onMutateResult?.old)
+      },
       onSuccess: ({ data }) => {
-        $queryClient.setQueryData($api.account.profile.show.queryKey(), { data: data.user })
+        // If this is the only mutation (to have LAST entry take precedense)
+        if (
+          $queryClient.isMutating({ mutationKey: $api.account.profile.update.mutationKey() }) === 1
+        )
+          $queryClient.setQueryData(queryKey, { data: data.user })
       },
     })
   )
