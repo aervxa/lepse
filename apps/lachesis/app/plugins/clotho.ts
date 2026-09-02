@@ -1,10 +1,11 @@
 import { registry } from '@lepse/clotho/registry'
-import { createTuyau, TuyauHTTPError } from '@tuyau/core/client'
+import { createTuyau } from '@tuyau/core/client'
 import { persistQueryClient } from '@tanstack/query-persist-client-core'
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
-import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query'
+import { focusManager, QueryClient, VueQueryPlugin } from '@tanstack/vue-query'
 import { createTuyauVueQueryClient } from '@tuyau/vue-query'
 import { toast } from 'vue-sonner'
+import { appQueryDefaults } from '~/lib/query-client-options'
 
 export default defineNuxtPlugin({
   name: 'clotho',
@@ -12,26 +13,26 @@ export default defineNuxtPlugin({
     const config = useRuntimeConfig()
     const token = useCookie('auth_token')
 
-    // Use tanstack/vue-query
-    const queryClient = new QueryClient({
-      defaultOptions: {
-        queries: {
-          retry: (failureCount, error) => {
-            if (
-              error instanceof TuyauHTTPError &&
-              ([401, 404, 429].includes(error.status ?? 0) || /^5\d\d$/.test(String(error.status)))
-            ) {
-              return false
-            }
-            return failureCount < 3
-          },
-          // refetches will be done manually to avoid calling it so many times.
-          refetchOnWindowFocus: false,
-          refetchOnMount: false,
-          gcTime: 1000 * 60 * 60 * 24 * 7,
-        },
-      },
+    // Refetch opt-in queries when this window becomes active as well as when its tab becomes
+    // visible. The verification link is served by Clotho, so the app cannot use a same-origin
+    // cache event to notify this window.
+    focusManager.setEventListener((onFocus) => {
+      if (typeof window === 'undefined') return
+
+      const handleFocus = () => onFocus()
+      window.addEventListener('visibilitychange', handleFocus)
+      window.addEventListener('focus', handleFocus)
+
+      return () => {
+        window.removeEventListener('visibilitychange', handleFocus)
+        window.removeEventListener('focus', handleFocus)
+      }
     })
+
+    // Use tanstack/vue-query
+    // Most refetches are manual to avoid redundant requests. The authenticated profile query
+    // opts into focus and mount refetches in useAuth.
+    const queryClient = new QueryClient({ defaultOptions: appQueryDefaults })
     app.vueApp.use(VueQueryPlugin, {
       queryClient,
       clientPersister: (queryClient) =>
