@@ -15,7 +15,7 @@
     "cf-typegen": "wrangler types"
   },
   "dependencies": {
-    "@lepse/clotho": "*",
+    "@lepse/clotho": "workspace:*",
     "@lucide/vue": "^1.37.0",
     "@nuxt/fonts": "^0.14.0",
     "@tailwindcss/vite": "^4.2.2",
