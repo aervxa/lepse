@@ -1,0 +1,12 @@
+packages:
+  - apps/*
+
+onlyBuiltDependencies:
+  - '@swc/core'
+  - better-sqlite3
+  - esbuild
+  - vue-demi
+  - workerd
+
+patchedDependencies:
+  '@adonisjs/auth@10.1.0': patches/@adonisjs__auth@10.1.0.patch

@@ -1,7 +1,8 @@
---- a/build/modules/access_tokens_guard/main.js	
-+++ b/build/modules/access_tokens_guard/main.js	
-@@ -1195,17 +1195,17 @@
- 		if (!dbRow) return null;
+diff --git a/build/modules/access_tokens_guard/main.js b/build/modules/access_tokens_guard/main.js
+index 6305607086b6d17aca1e998dabf9e52a710d9f3b..906538943f3f36d2ca0aa1c3246d64b927e43508 100644
+--- a/build/modules/access_tokens_guard/main.js
++++ b/build/modules/access_tokens_guard/main.js
+@@ -1196,15 +1196,15 @@ var DbAccessTokensProvider = class DbAccessTokensProvider {
  		/**
  		* Update last time the token is used
  		*/
@@ -20,4 +21,3 @@
  		/**
  		* Ensure the token secret matches the token hash
  		*/
- 		if (!accessToken.verify(decodedToken.secret) || accessToken.isExpired()) return null;

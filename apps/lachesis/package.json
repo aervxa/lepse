@@ -8,6 +8,7 @@
     "dev": "nuxt dev",
     "tdev": "tauri dev",
     "tdev:cef": "tauri dev --features cef",
+    "tbuild": "tauri build",
     "generate": "nuxt generate",
     "preview": "npm run generate && wrangler dev",
     "postinstall": "nuxt prepare",
@@ -15,7 +16,7 @@
     "cf-typegen": "wrangler types"
   },
   "dependencies": {
-    "@lepse/clotho": "*",
+    "@lepse/clotho": "workspace:*",
     "@lucide/vue": "^1.37.0",
     "@nuxt/fonts": "^0.14.0",
     "@tailwindcss/vite": "^4.2.2",
