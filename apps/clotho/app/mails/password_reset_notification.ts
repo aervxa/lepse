@@ -2,7 +2,6 @@ import type User from '#models/user'
 import { BaseMail } from '@adonisjs/mail'
 import { urlFor } from '@adonisjs/core/services/url_builder'
 import { appUrl } from '#config/app'
-import config from '@adonisjs/core/services/config'
 
 export default class PasswordResetNotification extends BaseMail {
   subject = ''
@@ -25,7 +24,7 @@ export default class PasswordResetNotification extends BaseMail {
     }
     this.message
       .to(this.user.email)
-      .subject(`Reset your ${config.get('mail.globals.brandName')} password`)
+      .subject(`Reset your Lepse password`)
       .htmlView('emails/password_reset_html', data)
       .textView('emails/password_reset_text', data)
   }
