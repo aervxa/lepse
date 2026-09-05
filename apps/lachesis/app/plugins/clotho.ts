@@ -38,7 +38,11 @@ export default defineNuxtPlugin({
         persistQueryClient({
           queryClient,
           maxAge: 1000 * 60 * 60 * 24 * 7,
-          persister: createAsyncStoragePersister({ storage: localStorage }),
+          // NOTE: This is cleared on logout, any changes must modify code there as well
+          persister: createAsyncStoragePersister({
+            storage: localStorage,
+            key: 'QUERY_OFFLINE_CACHE',
+          }),
         }),
     })
 

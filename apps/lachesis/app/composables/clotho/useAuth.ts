@@ -29,6 +29,8 @@ export const useAuth = () => {
     $api.auth.accessToken.destroy.mutationOptions({
       onSuccess: () => {
         token.value = null
+        localStorage.removeItem('QUERY_OFFLINE_CACHE') // clear offline cache form localstorage
+        $queryClient.clear() // clear anything on memory
         $queryClient.resetQueries({ queryKey: $api.account.profile.show.queryKey() })
       },
     })
