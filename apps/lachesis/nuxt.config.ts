@@ -25,14 +25,6 @@ export default defineNuxtConfig({
 
   devtools: { enabled: true },
 
-  fonts: {
-    defaults: {
-      weights: ['100 900'],
-      styles: ['normal', 'italic'],
-    },
-    families: [{ name: 'Outfit' }, { name: 'DM Mono' }],
-  },
-
   // Avoids error [unhandledRejection] EMFILE: too many open files, watch
   ignore: ['**/src-tauri/**'],
 
@@ -40,13 +32,7 @@ export default defineNuxtConfig({
     dirs: ['~/composables/**'],
   },
 
-  modules: [
-    '@nuxt/fonts',
-    'motion-v/nuxt',
-    'shadcn-nuxt',
-    'vue-sonner/nuxt',
-    'nitro-cloudflare-dev',
-  ],
+  modules: ['motion-v/nuxt', 'shadcn-nuxt', 'vue-sonner/nuxt', 'nitro-cloudflare-dev'],
 
   runtimeConfig: {
     public: {
