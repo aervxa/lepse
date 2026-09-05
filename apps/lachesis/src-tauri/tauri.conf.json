@@ -1,5 +1,5 @@
 {
-  "$schema": "../../../node_modules/@tauri-apps/cli/config.schema.json",
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "lepse",
   "version": "../package.json",
   "identifier": "lepse",
@@ -48,6 +48,13 @@
     },
     "macOS": {
       "signingIdentity": "-"
+    },
+    "linux": {
+      "deb": {
+        "files": {
+          "/usr/share/metainfo/app.lepse.Lepse.metainfo.xml": "./app.lepse.Lepse.metainfo.xml"
+        }
+      }
     }
   },
   "plugins": {

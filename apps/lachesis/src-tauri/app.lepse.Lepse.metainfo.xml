@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+    <id>app.lepse.Lepse</id>
+    <launchable type="desktop-id">app.lepse.Lepse.desktop</launchable>
+    <name>Lepse</name>
+    <developer id="io.github.aervxa">
+        <name>zorvi</name>
+    </developer>
+    <keywords>
+        <keyword>aesthetic</keyword>
+        <keyword>productivity</keyword>
+        <keyword>timer</keyword>
+    </keywords>
+    <summary>A personal organization/productivity tool that maps your daily tasks to meaningful goals. and is aesthetic as hell.</summary>
+
+    <metadata_license>MIT</metadata_license>
+    <project_license>LicenseRef-Komorebi</project_license>
+    <url type="homepage">https://github.com/aervxa/lepse</url>
+
+    <description>
+        <p>
+            A personal organization/productivity tool that maps your daily tasks to meaningful goals. and is aesthetic as hell.
+        </p>
+    </description>
+</component>
