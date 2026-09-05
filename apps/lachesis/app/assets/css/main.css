@@ -3,6 +3,12 @@
 @import 'shadcn-vue/tailwind.css';
 @import './themes.css';
 
+@font-face {
+  font-family: 'fallback';
+  src: url('/fonts/colon-fallback.woff2') format('woff2');
+  unicode-range: U+A789 /* ꞉ (modifier colon) */;
+}
+
 @custom-variant dark (&);
 @custom-variant fixed-color-clock (&:where([data-fixed-color-clock] *));
 
@@ -52,8 +58,8 @@
 }
 
 @theme {
-  --font-outfit: 'Outfit', sans-serif;
-  --font-dm-mono: 'DM Mono', monospace;
+  --font-outfit: 'Outfit', 'fallback', sans-serif;
+  --font-dm-mono: 'DM Mono', 'fallback', , monospace;
 
   --font-sans: var(--font-outfit);
   --font-mono: var(--font-dm-mono);
