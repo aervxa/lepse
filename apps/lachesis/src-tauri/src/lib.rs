@@ -1,7 +1,8 @@
 use tauri::{
   menu::{Menu, MenuItem, PredefinedMenuItem},
   tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconBuilder, TrayIconEvent},
-  AppHandle, Manager, Result, Runtime,
+  window::{Effect, EffectsBuilder},
+  AppHandle, Manager, Result, Runtime, WebviewUrl, WebviewWindowBuilder,
 };
 use tauri_plugin_store::StoreExt;
 
@@ -33,18 +34,30 @@ pub fn run() {
         )?;
       }
 
-      // if nativeDecorations is true, set native decors to true
-      if app
+      // Windows options
+      let debug = std::env::var("DEBUG").map_or(false, |v| v == "1");
+      let native_decorations = app
         .store("settings.json")
         .ok()
         .and_then(|store| store.get("nativeDecorations"))
         .and_then(|v| v.as_bool())
-        .unwrap_or(false)
-      {
-        let _ = app
-          .get_webview_window("main")
-          .map(|window| window.set_decorations(true));
-      }
+        .unwrap_or(false);
+
+      // Create main window
+      WebviewWindowBuilder::new(app, "main", WebviewUrl::default())
+        .devtools(debug) // Devtools only in debug mode
+        .decorations(native_decorations) // native decorations only if preferred by user
+        .title("Lepse")
+        .inner_size(1280.0, 768.0) // default app size
+        .min_inner_size(448.0, 512.0) // minimum forced size
+        .effects(
+          EffectsBuilder::new()
+            .effects(vec![Effect::Acrylic, Effect::Titlebar])
+            .build(),
+        ) // effects for Windows and MacOS respectively
+        .transparent(cfg!(not(feature = "cef"))) // disable transparency only on cef since it's not supported (https://github.com/tauri-apps/tauri/issues/15718)
+        .visible(false) // hide by default to wait until content loads?
+        .build()?;
 
       setup_tray(app.app_handle())?;
       Ok(())

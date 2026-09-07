@@ -62,9 +62,7 @@ onBeforeUnmount(() => {
 <template>
   <main
     class="flex h-dvh flex-col [--titlebar-height:--spacing(8)]"
-    :class="[
-      windowTransparency ? (os === 'windows' ? 'bg-transparent' : 'bg-sidebar/60') : 'bg-sidebar',
-    ]"
+    :class="[windowTransparency ? 'bg-sidebar/60' : 'bg-sidebar']"
   >
     <div
       v-if="isApp && !hideCustomDecorations"

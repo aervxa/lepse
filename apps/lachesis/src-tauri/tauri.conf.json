@@ -10,23 +10,6 @@
     "beforeBuildCommand": "npm run generate"
   },
   "app": {
-    "windows": [
-      {
-        "title": "Lepse",
-        "width": 1280,
-        "height": 768,
-        "minWidth": 448,
-        "minHeight": 512,
-        "resizable": true,
-        "fullscreen": false,
-        "decorations": false,
-        "transparent": true,
-        "windowEffects": {
-          "effects": ["mica", "titlebar"]
-        },
-        "visible": false
-      }
-    ],
     "security": {
       "csp": null
     },
