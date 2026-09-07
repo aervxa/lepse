@@ -60,7 +60,8 @@ pub fn run() {
         ) // effects for Windows and MacOS respectively
         .visible(false); // hide by default to wait until content loads?
 
-      if commands::can_transparent() {
+      #[cfg(all(not(feature = "cef"), not(target_os = "macos")))]
+      {
         builder = builder.transparent(true)
       }
 
