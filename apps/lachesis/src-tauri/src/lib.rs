@@ -47,7 +47,7 @@ pub fn run() {
         .unwrap_or(false);
 
       // Create main window
-      WebviewWindowBuilder::new(app, "main", WebviewUrl::default())
+      let mut builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::default())
         .devtools(debug) // Devtools only in debug mode
         .decorations(native_decorations) // native decorations only if preferred by user
         .title("Lepse")
@@ -58,9 +58,13 @@ pub fn run() {
             .effects(vec![Effect::Acrylic, Effect::Titlebar])
             .build(),
         ) // effects for Windows and MacOS respectively
-        .transparent(commands::can_transparent())
-        .visible(false) // hide by default to wait until content loads?
-        .build()?;
+        .visible(false); // hide by default to wait until content loads?
+
+      if commands::can_transparent() {
+        builder = builder.transparent(true)
+      }
+
+      builder.build()?;
 
       setup_tray(app.app_handle())?;
       Ok(())
