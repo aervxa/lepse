@@ -56,35 +56,6 @@ export default defineNuxtConfig({
     // Additional environment variables can be found at
     // https://v2.tauri.app/reference/environment-variables/
     envPrefix: ['VITE_', 'TAURI_'],
-    optimizeDeps: {
-      include: [
-        '@lucide/vue',
-        '@tanstack/vue-form',
-        '@tauri-apps/api/app',
-        '@tauri-apps/api/core',
-        '@tauri-apps/api/webviewWindow',
-        '@tauri-apps/plugin-notification',
-        '@tauri-apps/plugin-os',
-        '@tauri-apps/plugin-process',
-        '@tauri-apps/plugin-store',
-        '@tauri-apps/plugin-updater',
-        '@tuyau/core/client',
-        '@tanstack/query-async-storage-persister',
-        '@tanstack/query-persist-client-core',
-        '@tanstack/vue-query',
-        '@tuyau/vue-query',
-        '@vue/devtools-core',
-        '@vue/devtools-kit',
-        '@vueuse/core',
-        'change-case',
-        'class-variance-authority',
-        'clsx',
-        'reka-ui',
-        'tailwind-merge',
-        'vaul-vue',
-        'zod',
-      ],
-    },
     plugins: [tailwindcss()],
     server: {
       // Tauri requires a consistent port
