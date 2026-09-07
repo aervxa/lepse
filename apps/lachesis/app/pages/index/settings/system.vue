@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { isTauri } from '@tauri-apps/api/core'
+import { invoke, isTauri } from '@tauri-apps/api/core'
 
 definePageMeta({
   validate: isTauri,
@@ -26,11 +26,20 @@ const groups = {
 }
 
 const { windowTransparency, nativeDecorations, minimizeToTray } = useSettings()
+
+let canTransparent = ref(false)
+
+onMounted(() => {
+  invoke<boolean>('can_transparent').then((v) => (canTransparent.value = v))
+})
 </script>
 
 <template>
   <SettingsPrimitive :groups v-slot="{ setting }">
-    <Switch v-if="setting.key === 'windowTransparency'" v-model="windowTransparency" />
+    <Switch
+      v-if="canTransparent && setting.key === 'windowTransparency'"
+      v-model="windowTransparency"
+    />
     <Switch v-if="setting.key === 'nativeDecorations'" v-model="nativeDecorations" />
     <Switch v-if="setting.key === 'minimizeToTray'" v-model="minimizeToTray" />
   </SettingsPrimitive>

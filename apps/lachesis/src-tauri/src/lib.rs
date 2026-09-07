@@ -19,7 +19,10 @@ pub fn run() {
   let builder = tauri::Builder::default().plugin(tauri_plugin_notification::init());
 
   builder
-    .invoke_handler(tauri::generate_handler![commands::get_os])
+    .invoke_handler(tauri::generate_handler![
+      commands::get_os,
+      commands::can_transparent
+    ])
     .plugin(tauri_plugin_updater::Builder::new().build())
     .plugin(tauri_plugin_opener::init())
     .plugin(tauri_plugin_os::init())
@@ -55,7 +58,7 @@ pub fn run() {
             .effects(vec![Effect::Acrylic, Effect::Titlebar])
             .build(),
         ) // effects for Windows and MacOS respectively
-        .transparent(cfg!(not(feature = "cef"))) // disable transparency only on cef since it's not supported (https://github.com/tauri-apps/tauri/issues/15718)
+        .transparent(commands::can_transparent())
         .visible(false) // hide by default to wait until content loads?
         .build()?;
 
