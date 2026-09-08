@@ -27,7 +27,8 @@ export const useAuth = () => {
 
   const logoutMutation = useMutation(
     $api.auth.accessToken.destroy.mutationOptions({
-      onSuccess: () => {
+      // logout should never fail, and should fallback to be able to be done offline
+      onSettled: () => {
         token.value = null
         $queryClient.resetQueries() // NOTE: needs to be called before clear
         $queryClient.clear() // clear everything (persisted cache too)
