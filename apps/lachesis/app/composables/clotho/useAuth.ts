@@ -4,7 +4,11 @@ export const useAuth = () => {
   const { $api, $queryClient } = useNuxtApp()
 
   const token = useCookie('auth_token', { maxAge: 60 * 60 * 24 * 365 /* one  year */ })
-  const userQuery = useQuery($api.account.profile.show.queryOptions())
+  const userQuery = useQuery(
+    $api.account.profile.show.queryOptions(undefined, {
+      refetchOnWindowFocus: (query) => query.state.data?.data?.emailVerified !== true,
+    })
+  )
   const user = computed(() => userQuery.data.value?.data)
 
   const loginMutation = useMutation(
