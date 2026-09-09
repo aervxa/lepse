@@ -60,6 +60,12 @@ pub fn run() {
         ) // effects for Windows and MacOS respectively
         .visible(false); // hide by default to wait until content loads?
 
+      // Override devtools to true in dev
+      #[cfg(dev)]
+      {
+        builder = builder.devtools(true)
+      }
+
       #[cfg(all(not(feature = "cef"), not(target_os = "macos")))]
       {
         builder = builder.transparent(true)
