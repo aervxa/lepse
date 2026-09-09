@@ -9,6 +9,13 @@ import type { NextFn } from '@adonisjs/core/types/http'
  */
 export default class SilentAuthMiddleware {
   async handle(ctx: HttpContext, next: NextFn) {
+    // Set token from cookie onto Authorization header (overrides a sent authorization header)
+    // NOTE: doesn't work when set straightly inside auth_middleware, maybe since this runs first
+    const cookieToken = ctx.request.cookie('auth_token')
+    if (cookieToken) {
+      ctx.request.request.headers['authorization'] = `Bearer ${cookieToken}`
+    }
+
     await ctx.auth.check()
 
     return next()
