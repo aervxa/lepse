@@ -5,12 +5,12 @@ import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persi
 import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query'
 import { createTuyauVueQueryClient } from '@tuyau/vue-query'
 import { toast } from 'vue-sonner'
+import { isTauri } from '@tauri-apps/api/core'
 
 export default defineNuxtPlugin({
   name: 'clotho',
   async setup(app) {
     const config = useRuntimeConfig()
-    const token = useCookie('auth_token')
 
     // Use tanstack/vue-query
     const queryClient = new QueryClient({
@@ -49,11 +49,19 @@ export default defineNuxtPlugin({
     const client = createTuyau({
       baseUrl: config.public.apiUrl,
       registry,
+      credentials: 'include',
       hooks: {
         beforeRequest: [
-          (request) => {
-            if (token.value) {
-              request.headers.set('Authorization', `Bearer ${token.value}`)
+          async (request) => {
+            // Run only if in a good vue instance (not for requests that happen BEFORE the app mounts)
+            if (getCurrentInstance()) {
+              const email = useAuth().user.value?.email
+              if (isTauri() && email) {
+                const token = await useSecret(email).get()
+                if (token) {
+                  request.headers.set('Authorization', `Bearer ${token}`)
+                }
+              }
             }
             request.headers.set('x-client-date', getClientDate())
           },

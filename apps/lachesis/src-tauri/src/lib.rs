@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use tauri::{
   menu::{Menu, MenuItem, PredefinedMenuItem},
   tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconBuilder, TrayIconEvent},
@@ -7,22 +9,29 @@ use tauri::{
 use tauri_plugin_store::StoreExt;
 
 mod commands;
+mod keyring;
 
 #[cfg(feature = "cef")]
 use tauri_runtime_cef::CefRuntime;
+#[cfg(not(feature = "cef"))]
+use tauri_runtime_wry::WryRuntime;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
   #[cfg(feature = "cef")]
   let builder = tauri::Builder::<CefRuntime<_>>::new();
   #[cfg(not(feature = "cef"))]
-  let builder = tauri::Builder::default().plugin(tauri_plugin_notification::init());
+  let builder = tauri::Builder::<WryRuntime<_>>::new();
 
   builder
     .invoke_handler(tauri::generate_handler![
+      keyring::get_secret,
+      keyring::set_secret,
+      keyring::delete_secret,
       commands::get_os,
       commands::can_transparent
     ])
+    .plugin(tauri_plugin_notification::init())
     .plugin(tauri_plugin_updater::Builder::new().build())
     .plugin(tauri_plugin_opener::init())
     .plugin(tauri_plugin_os::init())
@@ -36,6 +45,9 @@ pub fn run() {
             .build(),
         )?;
       }
+
+      // TODO: Handle errors (native dialogs maybe?)
+      keyring::init_keyring_store(&HashMap::new())?;
 
       // Windows options
       let debug = std::env::var("DEBUG").map_or(false, |v| v == "1");

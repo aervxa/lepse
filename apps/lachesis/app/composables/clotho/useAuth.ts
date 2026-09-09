@@ -3,14 +3,15 @@ import { useMutation, useQuery } from '@tanstack/vue-query'
 export const useAuth = () => {
   const { $api, $queryClient } = useNuxtApp()
 
-  const token = useCookie('auth_token', { maxAge: 60 * 60 * 24 * 365 /* one  year */ })
   const userQuery = useQuery($api.account.profile.show.queryOptions())
   const user = computed(() => userQuery.data.value?.data)
 
   const loginMutation = useMutation(
     $api.auth.accessToken.store.mutationOptions({
       onSuccess: ({ data }) => {
-        token.value = data.token
+        if (data.token) {
+          useSecret(data.user.email).set(data.token)
+        }
         $queryClient.setQueryData($api.account.profile.show.queryKey(), { data: data.user })
       },
     })
@@ -19,7 +20,9 @@ export const useAuth = () => {
   const signupMutation = useMutation(
     $api.auth.newAccount.store.mutationOptions({
       onSuccess: ({ data }) => {
-        token.value = data.token
+        if (data.token) {
+          useSecret(data.user.email).set(data.token)
+        }
         $queryClient.setQueryData($api.account.profile.show.queryKey(), { data: data.user })
       },
     })
@@ -29,7 +32,8 @@ export const useAuth = () => {
     $api.auth.accessToken.destroy.mutationOptions({
       // logout should never fail, and should fallback to be able to be done offline
       onSettled: () => {
-        token.value = null
+        const email = useAuth().user.value?.email
+        email && useSecret(email).del()
         $queryClient.resetQueries() // NOTE: needs to be called before clear
         $queryClient.clear() // clear everything (persisted cache too)
       },

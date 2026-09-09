@@ -4,7 +4,7 @@ description = "A personal life operating system for top-down \"productivity\"."
 authors = ["zorvi"]
 repository = "https://github.com/aervxa/lepse"
 edition = "2021"
-rust-version = "1.77.2"
+rust-version = "1.93"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -19,20 +19,42 @@ tauri-build = { git = "https://github.com/tauri-apps/tauri", branch = "feat/cef"
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 log = "0.4"
-tauri = { git = "https://github.com/tauri-apps/tauri", branch = "feat/cef", features = [ "tray-icon", "image-png", "devtools" ] }
+tauri = { git = "https://github.com/tauri-apps/tauri", branch = "feat/cef", default-features = false, features = [ "tray-icon", "image-png", "devtools" ] }
+tauri-runtime-wry = { git = "https://github.com/tauri-apps/tauri", branch = "feat/cef", optional = true }
+tauri-runtime-cef = { git = "https://github.com/tauri-apps/tauri", branch = "feat/cef", optional = true }
+tauri-plugin-log = "2"
+tauri-plugin-os = "2"
+tauri-plugin-store = "2"
+tauri-plugin-opener = "2"
+tauri-plugin-process = "2"
+tauri-plugin-notification = "2"
+keyring-core = "1.0.0"
+
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+tauri-plugin-updater = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "feat/cef" }
+
+[target.'cfg(any(target_os = "macos", target_os = "ios"))'.dependencies]
+apple-native-keyring-store = "1.0.2"
+
+[target.'cfg(target_os = "windows")'.dependencies]
+windows-native-keyring-store = "1.1.0"
+
+[target.'cfg(all(unix, not(any(target_os = "macos", target_os = "ios", target_os = "android"))))'.dependencies]
+zbus-secret-service-keyring-store = { version = "1.0.1", features = ["crypto-rust"] }
+
+[features]
+default = ["wry"]
+wry = ["dep:tauri-runtime-wry"]
+cef = ["dep:tauri-runtime-cef"]
+
+[patch.crates-io]
+tauri = { git = "https://github.com/tauri-apps/tauri", branch = "feat/cef" }
+tauri-runtime-wry = { git = "https://github.com/tauri-apps/tauri", branch = "feat/cef" }
+tauri-runtime-cef = { git = "https://github.com/tauri-apps/tauri", branch = "feat/cef" }
+tauri-plugin = { git = "https://github.com/tauri-apps/tauri", branch = "feat/cef" }
 tauri-plugin-log = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "feat/cef" }
 tauri-plugin-os = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "feat/cef" }
 tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "feat/cef" }
 tauri-plugin-opener = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "feat/cef" }
 tauri-plugin-process = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "feat/cef" }
 tauri-plugin-notification = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "feat/cef" }
-
-[patch.crates-io]
-tauri = { git = "https://github.com/tauri-apps/tauri", branch = "feat/cef" }
-tauri-plugin = { git = "https://github.com/tauri-apps/tauri", branch = "feat/cef" }
-
-[features]
-cef = ["tauri/cef"]
-
-[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
-tauri-plugin-updater = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "feat/cef" }
