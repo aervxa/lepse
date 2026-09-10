@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { focusManager } from '@tanstack/vue-query'
+import { isTauri } from '@tauri-apps/api/core'
 import { getCurrentWindow } from '@tauri-apps/api/window'
 import { TuyauHTTPError } from '@tuyau/core/client'
 import { onKeyStroke, useFullscreen } from '@vueuse/core'
@@ -13,6 +14,7 @@ const { user, logoutMutation } = useAuth()
 // manage tanstack/vue-query's window focusManger to be handled by tauri
 // NOTE: On linux, focusChanged runs as true on blur when using alt+tab? (can be ignored since refetchOnFocus is never enabled for everything or something all the time)
 onMounted(() => {
+  if (!isTauri()) return
   focusManager.setEventListener((handleFocus) => {
     const unlistenPromise = getCurrentWindow().onFocusChanged(({ payload: focused }) => {
       handleFocus(focused)
