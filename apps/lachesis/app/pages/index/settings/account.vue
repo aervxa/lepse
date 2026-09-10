@@ -7,6 +7,13 @@ const isEmailVisible = ref(false)
 </script>
 
 <template>
+  <Gatekeep
+    :check="!!user"
+    title="You don't have an account."
+    action-label="Login"
+    :action="() => navigateTo('/login')"
+  />
+
   <div class="flex flex-col">
     <p class="mb-2 font-mono text-[10px] font-medium tracking-widest uppercase opacity-80">Info</p>
     <Item size="xs" class="px-0">

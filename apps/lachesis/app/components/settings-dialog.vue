@@ -4,18 +4,47 @@ import { invoke, isTauri } from '@tauri-apps/api/core'
 import { platform } from '@tauri-apps/plugin-os'
 import { Image, MonitorCog, Palette, Pencil, User } from '@lucide/vue'
 
-const headerItem = { name: 'Edit profile', path: '/settings/profile', icon: Pencil }
+const route = useRoute()
+const { user } = useAuth()
+const container = useTemplateRef('container')
+
+const headerItem = {
+  name: 'Edit profile',
+  path: '/settings/profile',
+  icon: Pencil,
+  disabled: computed(() => user.value === undefined),
+}
 const items = [
-  { name: 'Account', path: '/settings/account', icon: User },
-  { name: 'Appearance', path: '/settings/appearance', icon: Palette },
-  { name: 'Backgrounds', path: '/settings/background', icon: Image },
+  {
+    name: 'Account',
+    path: '/settings/account',
+    icon: User,
+    disabled: computed(() => user.value === undefined),
+  },
+  {
+    name: 'Appearance',
+    path: '/settings/appearance',
+    icon: Palette,
+    disabled: computed(() => false),
+  },
+  {
+    name: 'Backgrounds',
+    path: '/settings/background',
+    icon: Image,
+    disabled: computed(() => user.value === undefined),
+  },
   ...(isTauri()
-    ? [{ name: `System (${platform()})`, path: '/settings/system', icon: MonitorCog }]
+    ? [
+        {
+          name: `System (${platform()})`,
+          path: '/settings/system',
+          icon: MonitorCog,
+          disabled: computed(() => false),
+        },
+      ]
     : []),
 ]
 const item = computed(() => [...items, headerItem].find((i) => route.path.startsWith(i.path)))
-
-const route = useRoute()
 
 const open = computed({
   get: () => route.path.startsWith('/settings'),
@@ -26,9 +55,6 @@ const open = computed({
     return !value
   },
 })
-
-const { user } = useAuth()
-const container = useTemplateRef('container')
 
 // Open the sidebar on mobile only when coming "generally", and not to a specific page (/settings is written to redirect into /account)
 const defaultMobileOpen = ref(false)
@@ -77,16 +103,17 @@ onMounted(async () => {
                 :is-active="route.path.startsWith(headerItem.path)"
                 close-mobile-on-click
                 as-child
+                :aria-disabled="headerItem.disabled.value"
               >
-                <NuxtLink :to="headerItem.path">
+                <NuxtLink :to="!headerItem.disabled.value ? headerItem.path : undefined">
                   <Avatar size="lg">
                     <AvatarImage :src="user?.avatarUrl ?? ''" />
                     <AvatarFallback :delay-ms="SKELETON_DELAY_MS">
-                      {{ user?.initials }}
+                      {{ user?.initials ?? 'X' }}
                     </AvatarFallback>
                   </Avatar>
                   <div class="flex flex-1 flex-col gap-1">
-                    <span class="truncate text-xs tracking-wide">{{ user?.name }}</span>
+                    <span class="truncate text-xs tracking-wide">{{ user?.name ?? 'wraith' }}</span>
                     <div
                       class="group-hover:text-foreground text-muted-foreground flex items-center gap-1 text-xs leading-none font-light"
                     >
@@ -104,11 +131,12 @@ onMounted(async () => {
                   <SidebarMenu>
                     <SidebarMenuItem v-for="item in items" :key="item.name">
                       <SidebarMenuButton
+                        :aria-disabled="item.disabled.value"
                         :is-active="route.path.startsWith(item.path)"
                         close-mobile-on-click
                         as-child
                       >
-                        <NuxtLink :to="item.path">
+                        <NuxtLink :to="!item.disabled.value ? item.path : undefined">
                           <component :is="item.icon" />
                           <span>{{ item.name }}</span>
                         </NuxtLink>

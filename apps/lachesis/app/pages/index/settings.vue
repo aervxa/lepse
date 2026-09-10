@@ -1,8 +1,8 @@
 <script setup lang="ts">
-definePageMeta({
-  validate: () => useAuth().user.value !== undefined,
-  redirect: () => '/settings/account',
-})
+useRoute().path === '/settings' &&
+  navigateTo(useAuth().user.value ? '/settings/account' : '/settings/appearance', {
+    replace: true,
+  })
 </script>
 
 <template>

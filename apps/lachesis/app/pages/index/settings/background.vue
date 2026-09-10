@@ -27,8 +27,16 @@ const select = (id: number) => {
 
 <template>
   <Gatekeep
+    v-if="user"
     :check="user?.emailVerified"
     title="Please verify your email to change your background."
+  />
+  <Gatekeep
+    v-else
+    :check="false"
+    title="You don't have an account."
+    action-label="Login"
+    :action="() => navigateTo('/login')"
   />
 
   <div class="2xs:grid-cols-2 grid grid-cols-1 gap-2">

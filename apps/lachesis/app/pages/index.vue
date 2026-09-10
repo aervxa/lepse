@@ -6,6 +6,7 @@ import {
   Lightbulb,
   LightbulbOff,
   MoreHorizontal,
+  Settings,
   Shrink,
 } from '@lucide/vue'
 import { useFullscreen, useLocalStorage, useWindowSize } from '@vueuse/core'
@@ -81,15 +82,20 @@ const { width } = useWindowSize()
           'from-background/40 via-background/20 -m-2 rounded-xs rounded-tr-2xl bg-linear-to-l to-transparent p-2 ps-3 backdrop-blur-sm rtl:rounded-tl-2xl rtl:bg-linear-to-r',
       ]"
     >
+      <SettingsDialog />
       <template v-if="user">
         <FocusSessions v-if="user.emailVerified" />
         <EmailVerifyButton v-else class="-mr-2" />
         <Profile />
-        <SettingsDialog />
       </template>
       <div v-else class="flex gap-2">
         <Button variant="outline" @click="navigateTo('/signup')">Sign Up</Button>
         <Button @click="navigateTo('/login')">Login</Button>
+        <Button variant="outline" size="icon-sm" as-child>
+          <NuxtLink to="/settings">
+            <Settings />
+          </NuxtLink>
+        </Button>
       </div>
 
       <Item
