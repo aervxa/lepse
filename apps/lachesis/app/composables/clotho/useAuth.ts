@@ -4,7 +4,11 @@ import { isTauri } from '@tauri-apps/api/core'
 export const useAuth = () => {
   const { $api, $queryClient } = useNuxtApp()
 
-  const userQuery = useQuery($api.account.profile.show.queryOptions())
+  const userQuery = useQuery(
+    $api.account.profile.show.queryOptions(undefined, {
+      refetchOnWindowFocus: (q) => !!q.state.data?.data.emailVerified, // refetch when window is focused if the email is not verified
+    })
+  )
   const user = computed(() => userQuery.data.value?.data)
 
   const loginMutation = useMutation(
