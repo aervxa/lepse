@@ -2,10 +2,15 @@ use std::collections::HashMap;
 
 const KEYRING_SERVICE: &str = "app.lepse.Lepse";
 
+#[cfg(target_os = "linux")]
+type Error = std::io::Error;
+#[cfg(not(target_os = "linux"))]
+type Error = keyring_core::Error;
+
 /**
  * `config` is for all OS except Linux
  */
-pub fn init_keyring_store(config: &HashMap<&str, &str>) -> Result<(), keyring_core::Error> {
+pub fn init_keyring_store(config: &HashMap<&str, &str>) -> Result<(), Error> {
   #[cfg(target_os = "windows")]
   {
     keyring_core::set_default_store(windows_native_keyring_store::Store::new_with_configuration(
