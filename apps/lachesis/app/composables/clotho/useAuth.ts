@@ -1,4 +1,5 @@
-import { useMutation, useQuery } from '@tanstack/vue-query'
+import { hashKey, Query, useMutation, useQuery } from '@tanstack/vue-query'
+import { isTauri } from '@tauri-apps/api/core'
 
 export const useAuth = () => {
   const { $api, $queryClient } = useNuxtApp()
@@ -9,7 +10,7 @@ export const useAuth = () => {
   const loginMutation = useMutation(
     $api.auth.accessToken.store.mutationOptions({
       onSuccess: ({ data }) => {
-        if (data.token) {
+        if (isTauri() && data.token) {
           useSecret(data.user.email).set(data.token)
         }
         $queryClient.setQueryData($api.account.profile.show.queryKey(), { data: data.user })
@@ -20,7 +21,7 @@ export const useAuth = () => {
   const signupMutation = useMutation(
     $api.auth.newAccount.store.mutationOptions({
       onSuccess: ({ data }) => {
-        if (data.token) {
+        if (isTauri() && data.token) {
           useSecret(data.user.email).set(data.token)
         }
         $queryClient.setQueryData($api.account.profile.show.queryKey(), { data: data.user })
@@ -32,10 +33,18 @@ export const useAuth = () => {
     $api.auth.accessToken.destroy.mutationOptions({
       // logout should never fail, and should fallback to be able to be done offline
       onSettled: () => {
-        const email = user.value?.email
-        email && useSecret(email).del()
-        $queryClient.resetQueries() // NOTE: needs to be called before clear
-        $queryClient.clear() // clear everything (persisted cache too)
+        if (isTauri()) {
+          const email = user.value?.email
+          email && useSecret(email).del()
+        }
+
+        const safeQueries = (query: Query) => {
+          return hashKey(query.queryKey) === hashKey($api.backgrounds.index.queryKey())
+        }
+
+        // NOTE: reset needs to run BEFORE remove
+        $queryClient.resetQueries({ predicate: (q) => !safeQueries(q) })
+        $queryClient.removeQueries({ predicate: (q) => !safeQueries(q) })
       },
     })
   )
