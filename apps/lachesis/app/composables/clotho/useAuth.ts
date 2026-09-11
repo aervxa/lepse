@@ -6,7 +6,8 @@ export const useAuth = () => {
 
   const userQuery = useQuery(
     $api.account.profile.show.queryOptions(undefined, {
-      refetchOnWindowFocus: (q) => !!q.state.data?.data.emailVerified, // refetch when window is focused if the email is not verified
+      // refetch when window is focused if the email is not verified
+      refetchOnWindowFocus: (q) => (q.state.data ? !q.state.data?.data.emailVerified : false),
     })
   )
   const user = computed(() => userQuery.data.value?.data)
