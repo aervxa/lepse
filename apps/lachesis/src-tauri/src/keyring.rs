@@ -11,6 +11,11 @@ type Error = keyring_core::Error;
  * `config` is for all OS except Linux
  */
 pub fn init_keyring_store(config: &HashMap<&str, &str>) -> Result<(), Error> {
+  #[cfg(target_os = "linux")]
+  {
+    let _ = config; // to prevent unused_variables error (config not used on linux)
+    Ok(())
+  }
   #[cfg(target_os = "windows")]
   {
     keyring_core::set_default_store(windows_native_keyring_store::Store::new_with_configuration(
@@ -25,14 +30,9 @@ pub fn init_keyring_store(config: &HashMap<&str, &str>) -> Result<(), Error> {
     );
     Ok(())
   }
-  #[cfg(target_os = "linux")]
-  {
-    let _ = config; // to prevent unused_variables error (config not used on linux)
-    Ok(())
-  }
   #[cfg(all(
     unix,
-    // Omit all other unix alr handled (mobile not handled, nor supported)
+    // Omit all other unix alr handled (mobile not handled, nor supported *here*)
     not(any(target_os = "linux", target_os = "macos", target_os = "ios", target_os = "android"))
   ))]
   {
