@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/vue-query'
 
-export const useBackgrounds = () => {
+export const useBackgroundsOld = () => {
   const { $api, $queryClient } = useNuxtApp()
 
   const backgroundsQuery = useQuery($api.backgrounds.index.queryOptions())
