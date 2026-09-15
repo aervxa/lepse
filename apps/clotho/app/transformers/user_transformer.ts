@@ -12,7 +12,6 @@ export default class UserTransformer extends BaseTransformer<User> {
         'createdAt',
         'updatedAt',
         'initials',
-        'backgroundId',
         'emailVerified',
       ]),
       avatarUrl: this.resource.avatar ? await drive.use().getUrl(this.resource.avatar) : null,

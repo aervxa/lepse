@@ -14,9 +14,7 @@ import { DATE_REGEX } from '../app/lib/util/date.ts'
 import { apiThrottle, throttle } from './limiter.ts'
 import limiter from '@adonisjs/limiter/services/main'
 
-router
-  .on('/ping')
-  .setHandler(() => 'pong')
+router.on('/ping').setHandler(() => 'pong')
 
 // WEB ROUTES (routes that users access on the server)
 router
@@ -57,9 +55,6 @@ router
       .post('verify/password-reset/request', [controllers.PasswordReset, 'store'])
       .as('reset.password.request')
 
-    // Backgrounds (index only)
-    router.get('backgrounds', [controllers.Backgrounds, 'index'])
-
     // Authenticated users only
     router
       .group(() => {
@@ -70,11 +65,6 @@ router
           })
           .prefix('account')
           .as('account')
-
-        // Backgrounds (select only)
-        router
-          .patch('backgrounds/select', [controllers.Backgrounds, 'select'])
-          .use(middleware.verifiedEmail())
 
         // Verified users only (main app features)
         router

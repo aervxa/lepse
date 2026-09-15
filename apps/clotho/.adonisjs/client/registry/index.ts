@@ -42,12 +42,6 @@ const routes = {
     tokens: [{"old":"/api/v1/verify/password-reset/request","type":0,"val":"api","end":""},{"old":"/api/v1/verify/password-reset/request","type":0,"val":"v1","end":""},{"old":"/api/v1/verify/password-reset/request","type":0,"val":"verify","end":""},{"old":"/api/v1/verify/password-reset/request","type":0,"val":"password-reset","end":""},{"old":"/api/v1/verify/password-reset/request","type":0,"val":"request","end":""}],
     types: placeholder as Registry['reset.password.request']['types'],
   },
-  'backgrounds.index': {
-    methods: ["GET","HEAD"],
-    pattern: '/api/v1/backgrounds',
-    tokens: [{"old":"/api/v1/backgrounds","type":0,"val":"api","end":""},{"old":"/api/v1/backgrounds","type":0,"val":"v1","end":""},{"old":"/api/v1/backgrounds","type":0,"val":"backgrounds","end":""}],
-    types: placeholder as Registry['backgrounds.index']['types'],
-  },
   'account.profile.show': {
     methods: ["GET","HEAD"],
     pattern: '/api/v1/account/profile',
@@ -59,12 +53,6 @@ const routes = {
     pattern: '/api/v1/account/profile',
     tokens: [{"old":"/api/v1/account/profile","type":0,"val":"api","end":""},{"old":"/api/v1/account/profile","type":0,"val":"v1","end":""},{"old":"/api/v1/account/profile","type":0,"val":"account","end":""},{"old":"/api/v1/account/profile","type":0,"val":"profile","end":""}],
     types: placeholder as Registry['account.profile.update']['types'],
-  },
-  'backgrounds.select': {
-    methods: ["PATCH"],
-    pattern: '/api/v1/backgrounds/select',
-    tokens: [{"old":"/api/v1/backgrounds/select","type":0,"val":"api","end":""},{"old":"/api/v1/backgrounds/select","type":0,"val":"v1","end":""},{"old":"/api/v1/backgrounds/select","type":0,"val":"backgrounds","end":""},{"old":"/api/v1/backgrounds/select","type":0,"val":"select","end":""}],
-    types: placeholder as Registry['backgrounds.select']['types'],
   },
   'day.tasks.index': {
     methods: ["GET","HEAD"],

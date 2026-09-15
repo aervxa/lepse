@@ -5,7 +5,6 @@
 
 /// <reference path="./manifest.d.ts" />
 import type { InferData, InferVariants } from '@adonisjs/core/types/transformers'
-import type BackgroundTransformer from '#transformers/background_transformer'
 import type FocusSessionTransformer from '#transformers/focus_session_transformer'
 import type GoalTransformer from '#transformers/goal_transformer'
 import type HabitPeriodTransformer from '#transformers/habit_period_transformer'
@@ -17,10 +16,6 @@ import type TaskTransformer from '#transformers/task_transformer'
 import type UserTransformer from '#transformers/user_transformer'
 
 export namespace Data {
-  export type Background = InferData<BackgroundTransformer>
-  export namespace Background {
-    export type Variants = InferVariants<BackgroundTransformer>
-  }
   export type FocusSession = InferData<FocusSessionTransformer>
   export namespace FocusSession {
     export type Variants = InferVariants<FocusSessionTransformer>

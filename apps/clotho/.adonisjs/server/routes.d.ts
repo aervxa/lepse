@@ -14,10 +14,8 @@ export type ScannedRoutes = {
     'auth.access_token.destroy': { paramsTuple?: []; params?: {} }
     'verify.email.request': { paramsTuple?: []; params?: {} }
     'reset.password.request': { paramsTuple?: []; params?: {} }
-    'backgrounds.index': { paramsTuple?: []; params?: {} }
     'account.profile.show': { paramsTuple?: []; params?: {} }
     'account.profile.update': { paramsTuple?: []; params?: {} }
-    'backgrounds.select': { paramsTuple?: []; params?: {} }
     'day.tasks.index': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'day.tasks.store': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'day.tasks.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'date': ParamValue,'id': ParamValue} }
@@ -47,7 +45,6 @@ export type ScannedRoutes = {
     'web.home': { paramsTuple?: []; params?: {} }
     'web.verify.email': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
     'web.verify.password-reset': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
-    'backgrounds.index': { paramsTuple?: []; params?: {} }
     'account.profile.show': { paramsTuple?: []; params?: {} }
     'day.tasks.index': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'day.session.show': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
@@ -66,7 +63,6 @@ export type ScannedRoutes = {
     'web.home': { paramsTuple?: []; params?: {} }
     'web.verify.email': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
     'web.verify.password-reset': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
-    'backgrounds.index': { paramsTuple?: []; params?: {} }
     'account.profile.show': { paramsTuple?: []; params?: {} }
     'day.tasks.index': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'day.session.show': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
@@ -94,7 +90,6 @@ export type ScannedRoutes = {
   }
   PATCH: {
     'account.profile.update': { paramsTuple?: []; params?: {} }
-    'backgrounds.select': { paramsTuple?: []; params?: {} }
     'day.session.update': { paramsTuple: [ParamValue]; params: {'date': ParamValue} }
     'tasks.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'goals.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

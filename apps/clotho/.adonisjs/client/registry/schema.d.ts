@@ -79,18 +79,6 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/password_reset_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
-  'backgrounds.index': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/backgrounds'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/backgrounds_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/backgrounds_controller').default['index']>>>
-    }
-  }
   'account.profile.show': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/account/profile'
@@ -113,18 +101,6 @@ export interface Registry {
       query: ExtractQuery<InferInput<(typeof import('#validators/profile').updateValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/profile_controller').default['update']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/profile_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
-    }
-  }
-  'backgrounds.select': {
-    methods: ["PATCH"]
-    pattern: '/api/v1/backgrounds/select'
-    types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/background').selectBackgroundValidator)>>
-      paramsTuple: []
-      params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/background').selectBackgroundValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/backgrounds_controller').default['select']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/backgrounds_controller').default['select']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'day.tasks.index': {

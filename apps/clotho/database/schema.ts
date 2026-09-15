@@ -54,25 +54,6 @@ export class TursoInternalSeqTursoInternalAutoincrementAuthAccessTokenSchema ext
   declare value: number
 }
 
-export class TursoInternalSeqTursoInternalAutoincrementBackgroundSchema extends BaseModel {
-  static $columns = ['cycle', 'inc', 'isCalled', 'max', 'min', 'start', 'value'] as const
-  $columns = TursoInternalSeqTursoInternalAutoincrementBackgroundSchema.$columns
-  @column()
-  declare cycle: number | null
-  @column()
-  declare inc: number | null
-  @column()
-  declare isCalled: number | null
-  @column()
-  declare max: number | null
-  @column()
-  declare min: number | null
-  @column()
-  declare start: number | null
-  @column({ isPrimary: true })
-  declare value: number
-}
-
 export class TursoInternalSeqTursoInternalAutoincrementFocusSessionSchema extends BaseModel {
   static $columns = ['cycle', 'inc', 'isCalled', 'max', 'min', 'start', 'value'] as const
   $columns = TursoInternalSeqTursoInternalAutoincrementFocusSessionSchema.$columns
@@ -288,23 +269,6 @@ export class AuthAccessTokenSchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
-export class BackgroundSchema extends BaseModel {
-  static $columns = ['createdAt', 'id', 'key', 'name', 'style', 'updatedAt'] as const
-  $columns = BackgroundSchema.$columns
-  @column.dateTime({ autoCreate: true })
-  declare createdAt: DateTime | null
-  @column({ isPrimary: true })
-  declare id: number
-  @column()
-  declare key: string
-  @column()
-  declare name: string
-  @column()
-  declare style: string
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare updatedAt: DateTime | null
-}
-
 export class FocusSessionSchema extends BaseModel {
   static $columns = ['createdAt', 'date', 'id', 'pomoCount', 'stopwatchMs', 'updatedAt', 'userId'] as const
   $columns = FocusSessionSchema.$columns
@@ -481,12 +445,10 @@ export class TaskSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = ['avatar', 'backgroundId', 'createdAt', 'email', 'emailVerified', 'id', 'name', 'password', 'updatedAt'] as const
+  static $columns = ['avatar', 'createdAt', 'email', 'emailVerified', 'id', 'name', 'password', 'updatedAt'] as const
   $columns = UserSchema.$columns
   @column()
   declare avatar: string | null
-  @column()
-  declare backgroundId: number | null
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
   @column()

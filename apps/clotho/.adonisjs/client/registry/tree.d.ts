@@ -26,10 +26,6 @@ export interface ApiDefinition {
       request: typeof routes['reset.password.request']
     }
   }
-  backgrounds: {
-    index: typeof routes['backgrounds.index']
-    select: typeof routes['backgrounds.select']
-  }
   account: {
     profile: {
       show: typeof routes['account.profile.show']

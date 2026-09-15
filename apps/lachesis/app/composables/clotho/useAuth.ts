@@ -44,7 +44,7 @@ export const useAuth = () => {
         }
 
         const safeQueries = (query: Query) => {
-          return hashKey(query.queryKey) === hashKey($api.backgrounds.index.queryKey())
+          return [''].includes(hashKey(query.queryKey))
         }
 
         // NOTE: reset needs to run BEFORE remove
