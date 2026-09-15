@@ -6,6 +6,10 @@ export const BACKGROUNDS = [
     name: 'blue-lines',
     style: 'abstract',
     url: '/images/backgrounds/lines-blue.webp',
+    credit: {
+      handle: '@loganvoss',
+      url: 'https://unsplash.com/@loganvoss',
+    },
   },
   {
     id: 6125,
@@ -13,6 +17,10 @@ export const BACKGROUNDS = [
     name: 'pink-lines',
     style: 'abstract',
     url: '/images/backgrounds/lines-pink.webp',
+    credit: {
+      handle: '@loganvoss',
+      url: 'https://unsplash.com/@loganvoss',
+    },
   },
   {
     id: 6165,
@@ -20,6 +28,10 @@ export const BACKGROUNDS = [
     name: 'purple-lines',
     style: 'abstract',
     url: '/images/backgrounds/lines-purple.webp',
+    credit: {
+      handle: '@loganvoss',
+      url: 'https://unsplash.com/@loganvoss',
+    },
   },
   {
     id: 3898,
@@ -27,6 +39,10 @@ export const BACKGROUNDS = [
     name: 'red-lines',
     style: 'abstract',
     url: '/images/backgrounds/lines-red.webp',
+    credit: {
+      handle: '@loganvoss',
+      url: 'https://unsplash.com/@loganvoss',
+    },
   },
   {
     id: 4084,
@@ -34,6 +50,10 @@ export const BACKGROUNDS = [
     name: 'teal-lines',
     style: 'abstract',
     url: '/images/backgrounds/lines-teal.webp',
+    credit: {
+      handle: '@loganvoss',
+      url: 'https://unsplash.com/@loganvoss',
+    },
   },
   {
     id: 7492,
@@ -41,5 +61,9 @@ export const BACKGROUNDS = [
     name: 'yellow-lines',
     style: 'abstract',
     url: '/images/backgrounds/lines-yellow.webp',
+    credit: {
+      handle: '@loganvoss',
+      url: 'https://unsplash.com/@loganvoss',
+    },
   },
 ]
