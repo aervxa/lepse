@@ -31,7 +31,7 @@ const items = [
     name: 'Backgrounds',
     path: '/settings/background',
     icon: Image,
-    disabled: computed(() => user.value === undefined),
+    disabled: computed(() => false),
   },
   ...(isTauri()
     ? [

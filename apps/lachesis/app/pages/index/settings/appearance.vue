@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const groups = {
+const rawGroups = {
   general: [
     {
       key: 'theme' as const,
@@ -12,9 +12,31 @@ const groups = {
       description: 'Control which texts are accented.',
     },
   ],
-}
+  background: [
+    {
+      key: 'blurBackground' as const,
+      title: 'Blur background',
+      description: 'Some backgrounds may be too distracting under text.',
+    },
+    {
+      key: 'darkenBackground' as const,
+      title: 'Darken background',
+      description: 'Some background may be too bright.',
+    },
+  ],
+} as const
+type SettingItem = (typeof rawGroups)[keyof typeof rawGroups][number]
+const groups: Record<string, readonly SettingItem[]> = rawGroups
 
-const { THEMES, theme, THEME_OPTIONS, THEME_OPTION_LABELS, themeOptions } = useSettings()
+const {
+  THEMES,
+  theme,
+  THEME_OPTIONS,
+  THEME_OPTION_LABELS,
+  themeOptions,
+  blurBackground,
+  darkenBackground,
+} = useSettings()
 </script>
 
 <template>
@@ -45,5 +67,8 @@ const { THEMES, theme, THEME_OPTIONS, THEME_OPTION_LABELS, themeOptions } = useS
         </SelectGroup>
       </SelectContent>
     </Select>
+
+    <Switch v-if="setting.key === 'blurBackground'" v-model="blurBackground" />
+    <Switch v-if="setting.key === 'darkenBackground'" v-model="darkenBackground" />
   </SettingsPrimitive>
 </template>

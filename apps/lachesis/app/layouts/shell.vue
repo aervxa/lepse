@@ -7,7 +7,7 @@ import type { UnlistenFn } from '@tauri-apps/api/event'
 import { useFullscreen } from '@vueuse/core'
 
 const { activeBackground } = useBackgrounds()
-const { windowTransparency, nativeDecorations } = useSettings()
+const { windowTransparency, nativeDecorations, blurBackground, darkenBackground } = useSettings()
 const { isFullscreen } = useFullscreen()
 
 const showSkeleton = ref(false)
@@ -121,6 +121,7 @@ onBeforeUnmount(() => {
         <Image
           :src="activeBackground.url"
           class="pointer-events-none -z-10 size-full object-cover"
+          :class="{ 'blur-xs': blurBackground, 'brightness-75': darkenBackground }"
         />
       </div>
 
