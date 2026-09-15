@@ -1,44 +1,19 @@
 <script setup lang="ts">
-import { toast } from 'vue-sonner'
+import { BACKGROUNDS } from '~/lib/backgrounds'
 
-const { user } = useAuth()
-const { backgrounds, backgroundSelectMutation } = useBackgrounds()
+const { selectedBackgroundId } = useBackgrounds()
 
 const groupedBackgrounds = computed(() =>
   Object.entries(
-    backgrounds.value?.reduce<Record<string, typeof backgrounds.value>>((acc, bg) => {
+    BACKGROUNDS.reduce<Record<string, typeof BACKGROUNDS>>((acc, bg) => {
       ;(acc[bg.style] ??= []).push(bg)
       return acc
     }, {}) ?? {}
   ).sort(([style1], [style2]) => style1.localeCompare(style2))
 )
-
-const select = (id: number) => {
-  backgroundSelectMutation.mutate(
-    { body: { id } },
-    {
-      onError: (err) => {
-        toast.error('Failed to update background!', { description: err.message })
-      },
-    }
-  )
-}
 </script>
 
 <template>
-  <Gatekeep
-    v-if="user"
-    :check="user?.emailVerified"
-    title="Please verify your email to change your background."
-  />
-  <Gatekeep
-    v-else
-    :check="false"
-    title="You don't have an account."
-    action-label="Login"
-    :action="() => navigateTo('/login')"
-  />
-
   <div class="2xs:grid-cols-2 grid grid-cols-1 gap-2">
     <template v-for="([style, backgrounds], index) in groupedBackgrounds" :key="index">
       <p
@@ -47,13 +22,13 @@ const select = (id: number) => {
         {{ style }}
       </p>
       <Button
-        v-for="background in backgrounds"
+        v-for="background in backgrounds.toSorted((a, b) => a.weight - b.weight)"
         :key="background.id"
         variant="ghost"
         class="flex h-auto flex-col gap-2 rounded-2xl p-2"
-        :class="[background.id === user?.backgroundId && 'bg-muted!']"
-        :disabled="background.id === user?.backgroundId"
-        @click="select(background.id)"
+        :class="[background.id === selectedBackgroundId && 'bg-muted!']"
+        :disabled="background.id === selectedBackgroundId"
+        @click="selectedBackgroundId = background.id"
       >
         <img
           :src="background.url"
