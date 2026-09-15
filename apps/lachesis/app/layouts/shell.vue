@@ -6,9 +6,8 @@ import { getCurrentWebviewWindow, type WebviewWindow } from '@tauri-apps/api/web
 import type { UnlistenFn } from '@tauri-apps/api/event'
 import { useFullscreen } from '@vueuse/core'
 
-const { user } = useAuth()
-const { backgrounds } = useBackgrounds()
-const { windowTransparency, nativeDecorations } = useSettings()
+const { activeBackground } = useBackgrounds()
+const { windowTransparency, nativeDecorations, blurBackground, darkenBackground } = useSettings()
 const { isFullscreen } = useFullscreen()
 
 const showSkeleton = ref(false)
@@ -120,10 +119,9 @@ onBeforeUnmount(() => {
     >
       <div class="absolute inset-0 -z-10">
         <Image
-          v-if="backgrounds"
-          :src="backgrounds.find((b) => b.id === (user?.backgroundId ?? 7))?.url"
-          :data-a="JSON.stringify(backgrounds)"
+          :src="activeBackground.url"
           class="pointer-events-none -z-10 size-full object-cover"
+          :class="{ 'blur-xs': blurBackground, 'brightness-75': darkenBackground }"
         />
       </div>
 

@@ -36,7 +36,18 @@ export const useSettings = () => {
     'data-fixed-color-clock'
   )
 
-  const appearanceSettings = { THEMES, theme, THEME_OPTIONS, THEME_OPTION_LABELS, themeOptions }
+  const blurBackground = useLocalStorage('blurBackground', true)
+  const darkenBackground = useLocalStorage('darkenBackground', true)
+
+  const appearanceSettings = {
+    THEMES,
+    theme,
+    THEME_OPTIONS,
+    THEME_OPTION_LABELS,
+    themeOptions,
+    blurBackground,
+    darkenBackground,
+  }
 
   // App settings
   const windowTransparency = useLocalStorage('windowTransparency', false)
