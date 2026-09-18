@@ -14,8 +14,11 @@ export default defineApp([
   },
   render(Document, [
     route('/', () => (
-      <h2 style={{ textAlign: 'center' }}>
-        A work in progress, please go to <a href="https://os.lepse.app">os.lepse.app</a>
+      <h2 className="text-center">
+        A work in progress, please go to{' '}
+        <a href="https://os.lepse.app" className="underline">
+          os.lepse.app
+        </a>
       </h2>
     )),
   ]),

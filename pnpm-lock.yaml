@@ -25,6 +25,9 @@ importers:
 
   apps/atropos:
     dependencies:
+      '@tailwindcss/vite':
+        specifier: ^4.3.3
+        version: 4.3.3(vite@8.2.2(@types/node@26.1.2)(esbuild@0.28.2)(jiti@2.7.0)(stylus@0.57.0)(terser@5.51.2))
       react:
         specifier: 19.2.8
         version: 19.2.8
@@ -37,6 +40,9 @@ importers:
       rwsdk:
         specifier: 1.7.3
         version: 1.7.3(@cloudflare/vite-plugin@1.50.0(vite@8.2.2(@types/node@26.1.2)(esbuild@0.28.2)(jiti@2.7.0)(stylus@0.57.0)(terser@5.51.2))(wrangler@4.118.0(@cloudflare/workers-types@5.20260801.1)))(react-dom@19.2.8(react@19.2.8))(react-server-dom-webpack@19.2.8(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(webpack@5.110.3(esbuild@0.28.2)))(react@19.2.8)(typescript@7.0.2)(vite@8.2.2(@types/node@26.1.2)(esbuild@0.28.2)(jiti@2.7.0)(stylus@0.57.0)(terser@5.51.2))(wrangler@4.118.0(@cloudflare/workers-types@5.20260801.1))(yauzl@3.4.0)
+      tailwindcss:
+        specifier: ^4.3.3
+        version: 4.3.3
     devDependencies:
       '@cloudflare/vite-plugin':
         specifier: 1.50.0
