@@ -4,9 +4,10 @@ pub fn get_os() -> String {
   format!(
     "{} {}",
     match platform {
-      // Get distro name preferrably over plain "linux"
-      p @ tauri_plugin_os::OsType::Linux => std::fs::read_to_string("/etc/os-release")
-        .ok()
+      // Get distro name preferrably over plain "linux" (/run/* is for the bind-mounts inside a flatpak)
+      p @ tauri_plugin_os::OsType::Linux => ["/run/host/os-release", "/etc/os-release"]
+        .iter()
+        .find_map(|p| std::fs::read_to_string(p).ok())
         .and_then(|str| {
           str
             .lines()
