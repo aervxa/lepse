@@ -12,14 +12,17 @@ const close = () => {
 <template>
   <ContextMenu v-model:open="open">
     <ContextMenuTrigger
-      as-child
-      class="transition-[filter] ease-out"
+      class="relative transition-[filter] ease-out"
       :class="[open ? 'blur-xs brightness-75 duration-500' : 'duration-300']"
     >
       <slot />
     </ContextMenuTrigger>
     <ContextMenuContent
-    @interact-outside="(e) => { e.target}"
+      @interact-outside="
+        (e) => {
+          e.target
+        }
+      "
       style="--radius: calc(var(--spacing) * 14)"
       class="pointer-events-none size-[calc(var(--radius)*2)] min-w-0 -translate-1/2 animate-none! overflow-visible rounded-full bg-transparent shadow-none ring-0 backdrop-blur-none"
     >
