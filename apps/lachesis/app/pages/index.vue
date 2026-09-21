@@ -12,7 +12,6 @@ import {
 import { useFullscreen, useLocalStorage, useWindowSize } from '@vueuse/core'
 import { toast } from 'vue-sonner'
 import EmailVerifyButton from '~/components/email-verify-button.vue'
-import { getDailyQuote } from '~/lib/quotes'
 
 definePageMeta({
   layout: 'shell',
@@ -20,6 +19,7 @@ definePageMeta({
 
 const route = useRoute()
 const { user } = useAuth()
+const { activeQuote } = useQuotes()
 
 const inFocus = ref(false)
 const focusMethod = useLocalStorage<'stopwatch' | 'pomodoro'>('focus_method', 'stopwatch')
@@ -138,15 +138,24 @@ const { width } = useWindowSize()
           ref="quote"
           class="fixed-color-clock:text-foreground text-foreground-fixed sm:from-background/40 sm:via-background/20 via-background/40 -m-2 w-[28ch] max-w-[80%] rounded-xs bg-linear-to-r from-transparent to-transparent px-3 py-2 text-lg font-medium text-pretty italic opacity-80 backdrop-blur-sm max-sm:absolute max-sm:bottom-1/5 max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:translate-y-1/2 max-sm:text-center sm:rounded-bl-2xl sm:text-xl 2xl:text-2xl 2xl:font-semibold rtl:bg-linear-to-l sm:rtl:rounded-br-2xl"
         >
-          "{{ getDailyQuote() }}"
+          "{{ activeQuote.quote }}"
         </p>
       </ContextMenuTrigger>
 
-      <ContextMenuContent>
+      <ContextMenuContent align="end">
+        <p class="text-muted-foreground px-1.5 py-1 text-xs">Author: {{ activeQuote.author }}</p>
+        <ContextMenuSeparator />
+
         <ContextMenuItem @select="copyQuote">
           <Copy />
-          Copy
+          Copy quote
         </ContextMenuItem>
+
+        <ContextMenuSeparator />
+        <p class="text-muted-foreground px-1.5 py-1 text-xs">
+          Quote provided by
+          <a :href="activeQuote.credit.url" target="_blank">{{ activeQuote.credit.handle }}</a>
+        </p>
       </ContextMenuContent>
     </ContextMenu>
 

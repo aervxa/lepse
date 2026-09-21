@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useDebounceFn, useIntervalFn, useLocalStorage, useNow } from '@vueuse/core'
+import { useDebounceFn, useIntervalFn, useLocalStorage } from '@vueuse/core'
 import { ChevronsUpDown, FastForward, Pause, Play, RefreshCw, X } from '@lucide/vue'
 import { toast } from 'vue-sonner'
 import { getGreeting } from '~/lib/greetings'
@@ -22,7 +22,7 @@ watch(
 
 const { send, requestPermission } = useNotification(false)
 const { user } = useAuth()
-const now = useNow()
+const now = useSharedNow()
 const nowStr = computed(() => now.value.toLocaleTimeString([], { timeStyle: 'short' }))
 
 const date = getClientDate()
