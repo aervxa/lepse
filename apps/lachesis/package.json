@@ -12,6 +12,7 @@
     "generate": "nuxt generate",
     "preview": "npm run generate && wrangler dev",
     "postinstall": "nuxt prepare",
+    "tauri": "tauri",
     "deploy": "npm run generate && wrangler deploy",
     "cf-typegen": "wrangler types"
   },
