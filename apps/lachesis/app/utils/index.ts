@@ -1,3 +1,4 @@
+import { createSharedComposable, useNow } from '@vueuse/core'
 import type { ClassValue } from 'clsx'
 import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
@@ -47,3 +48,5 @@ export const BREAKPOINTS = {
 export function pickRandom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)]!
 }
+
+export const useSharedNow = createSharedComposable(useNow)
