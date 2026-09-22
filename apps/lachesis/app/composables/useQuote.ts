@@ -1,7 +1,7 @@
 import { useLocalStorage } from '@vueuse/core'
 import { QUOTES } from '~/lib/quotes'
 
-export const useQuotes = () => {
+export const useQuote = () => {
   const now = useSharedNow()
   const today = computed(() => now.value.toDateString())
 

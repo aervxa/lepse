@@ -19,7 +19,7 @@ definePageMeta({
 
 const route = useRoute()
 const { user } = useAuth()
-const { activeQuote } = useQuotes()
+const { activeQuote } = useQuote()
 
 const inFocus = ref(false)
 const focusMethod = useLocalStorage<'stopwatch' | 'pomodoro'>('focus_method', 'stopwatch')
