@@ -8,6 +8,7 @@ import {
   MoreHorizontal,
   Settings,
   Shrink,
+  X,
 } from '@lucide/vue'
 import { useFullscreen, useLocalStorage, useWindowSize } from '@vueuse/core'
 import { toast } from 'vue-sonner'
@@ -20,6 +21,8 @@ definePageMeta({
 const route = useRoute()
 const { user } = useAuth()
 const { activeQuote } = useQuote()
+
+const ignoreLogin = ref(false)
 
 const inFocus = ref(false)
 const focusMethod = useLocalStorage<'stopwatch' | 'pomodoro'>('focus_method', 'stopwatch')
@@ -98,31 +101,42 @@ const { width } = useWindowSize()
         </Button>
       </div>
 
-      <Item
-        v-if="!user || !user.emailVerified"
-        variant="outline"
-        class="bg-card/80 absolute top-full right-0 -z-10 w-max translate-y-3 backdrop-blur-lg rtl:left-0"
+      <Transition
+        leave-active-class="animate-out ltr:slide-out-to-right-100 rtl:slide-out-to-left-100"
       >
-        <ItemMedia variant="icon">
-          <CircleAlert />
-        </ItemMedia>
-        <ItemContent class="mr-2">
-          <ItemTitle>
-            {{
-              !user
-                ? 'Login to unlock all features!'
-                : !user?.emailVerified && 'Verify your email to unlock all features!'
-            }}
-          </ItemTitle>
-          <ItemDescription>
-            {{
-              !user
-                ? 'You can create an account too.'
-                : !user?.emailVerified && 'Check if we already sent you a link'
-            }}
-          </ItemDescription>
-        </ItemContent>
-      </Item>
+        <Item
+          v-if="!ignoreLogin && (!user || !user.emailVerified)"
+          variant="outline"
+          class="bg-card/80 absolute top-full right-0 w-max translate-y-3 backdrop-blur-lg rtl:left-0"
+        >
+          <div
+            class="absolute top-0 left-0 -translate-y-1/3 ltr:-translate-x-1/3 rtl:right-0 rtl:translate-x-1/3"
+          >
+            <Button variant="secondary" size="icon-xs" @click="ignoreLogin = true">
+              <X />
+            </Button>
+          </div>
+          <ItemMedia variant="icon">
+            <CircleAlert />
+          </ItemMedia>
+          <ItemContent class="mr-2">
+            <ItemTitle>
+              {{
+                !user
+                  ? 'Login to unlock all features!'
+                  : !user?.emailVerified && 'Verify your email to unlock all features!'
+              }}
+            </ItemTitle>
+            <ItemDescription>
+              {{
+                !user
+                  ? 'You can create an account too.'
+                  : !user?.emailVerified && 'Check if we already sent you a link'
+              }}
+            </ItemDescription>
+          </ItemContent>
+        </Item>
+      </Transition>
     </div>
   </div>
 
