@@ -2,7 +2,6 @@
 import { useDebounceFn, useIntervalFn, useLocalStorage } from '@vueuse/core'
 import { ChevronsUpDown, FastForward, Pause, Play, RefreshCw, X } from '@lucide/vue'
 import { toast } from 'vue-sonner'
-import { getGreeting } from '~/lib/greetings'
 import { formatDuration, Stopwatch } from '~/lib/time'
 import { toBreakMessages, toLongBreakMessages, toWorkMessages } from '~/lib/pomoMessages'
 
@@ -24,6 +23,7 @@ const { send, requestPermission } = useNotification(false)
 const { user } = useAuth()
 const now = useSharedNow()
 const nowStr = computed(() => now.value.toLocaleTimeString([], { timeStyle: 'short' }))
+const { activeGreeting } = useGreeting()
 
 const date = getClientDate()
 const { focusSession, updateFocusSessionMutation } = useDay(date)
@@ -281,7 +281,7 @@ watch(stopwatch.elapsed, () => {
         v-if="!inFocus"
         class="fixed-color-clock:text-foreground text-foreground-fixed max-w-xs text-center text-lg leading-relaxed font-medium text-pretty sm:max-w-sm sm:text-xl md:text-2xl 2xl:text-3xl"
       >
-        {{ getGreeting(now).replace('{name}', user?.name ?? 'wraith') }}
+        {{ activeGreeting.replace('{name}', user?.name ?? 'wraith') }}
       </p>
     </div>
 
