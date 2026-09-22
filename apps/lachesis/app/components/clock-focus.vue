@@ -210,7 +210,7 @@ watch(stopwatch.elapsed, () => {
 
 <template>
   <div
-    class="mx-auto grid flex-1 grid-rows-[minmax(160px,1fr)_auto_minmax(160px,1fr)] gap-8 *:first:self-end *:last:self-start"
+    class="mx-auto grid flex-1 grid-rows-[minmax(160px,1fr)_auto_minmax(160px,1fr)] place-items-center gap-8 *:first:self-end *:last:self-start"
   >
     <!-- Div wrapper to hold children together as one row -->
     <div class="flex flex-col items-center">
@@ -279,7 +279,7 @@ watch(stopwatch.elapsed, () => {
       <!-- Out of focus greeting title -->
       <p
         v-if="!inFocus"
-        class="fixed-color-clock:text-foreground text-foreground-fixed max-w-xs text-center text-lg leading-relaxed font-medium text-pretty sm:max-w-sm sm:text-xl md:text-2xl 2xl:text-3xl"
+        class="fixed-color-clock:text-foreground text-foreground-fixed max-w-xs text-center text-base font-medium text-balance sm:max-w-sm sm:text-lg md:text-xl 2xl:text-2xl"
       >
         {{ activeGreeting.replace('{name}', user?.name ?? 'wraith') }}
       </p>
