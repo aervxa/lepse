@@ -53,7 +53,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "^2.11.1",
+    "@tauri-apps/cli": "3.0.0-alpha.2",
     "@vue/devtools-api": "^8.2.1",
     "nitro-cloudflare-dev": "^0.2.2",
     "prettier": "^3.8.3",
