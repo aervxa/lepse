@@ -11,19 +11,15 @@ use tauri_plugin_store::StoreExt;
 mod commands;
 mod keyring;
 
-#[cfg(feature = "cef")]
-use tauri_runtime_cef::CefRuntime;
-#[cfg(not(feature = "cef"))]
-use tauri_runtime_wry::WryRuntime;
-
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
   #[cfg(feature = "cef")]
-  let builder = tauri::Builder::<CefRuntime<_>>::new();
+  let runtime = tauri_runtime_cef::Cef::default();
   #[cfg(not(feature = "cef"))]
-  let builder = tauri::Builder::<WryRuntime<_>>::new();
+  let runtime = tauri_runtime_wry::Wry::default();
 
-  builder
+  tauri::Builder::default()
+    .runtime(runtime)
     .invoke_handler(tauri::generate_handler![
       keyring::get_secret,
       keyring::set_secret,
