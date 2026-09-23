@@ -5,12 +5,18 @@ definePageMeta({
   validate: isTauri,
 })
 
-const groups = {
+let canTransparent = ref(false)
+onMounted(() => {
+  invoke<boolean>('can_transparent').then((v) => (canTransparent.value = v))
+})
+
+const groups = computed(() => ({
   general: [
     {
       key: 'windowTransparency' as const,
       title: 'Enable window transparency',
       description: "If your OS doesn't have a blur effect, this will look off.",
+      disabled: !canTransparent.value,
     },
     {
       key: 'nativeDecorations' as const,
@@ -23,23 +29,14 @@ const groups = {
       description: 'Closing (clicking X) will minimize to tray instead of fully exiting the app.',
     },
   ],
-}
+}))
 
 const { windowTransparency, nativeDecorations, minimizeToTray } = useSettings()
-
-let canTransparent = ref(false)
-
-onMounted(() => {
-  invoke<boolean>('can_transparent').then((v) => (canTransparent.value = v))
-})
 </script>
 
 <template>
   <SettingsPrimitive :groups v-slot="{ setting }">
-    <Switch
-      v-if="canTransparent && setting.key === 'windowTransparency'"
-      v-model="windowTransparency"
-    />
+    <Switch v-if="setting.key === 'windowTransparency'" v-model="windowTransparency" />
     <Switch v-if="setting.key === 'nativeDecorations'" v-model="nativeDecorations" />
     <Switch v-if="setting.key === 'minimizeToTray'" v-model="minimizeToTray" />
   </SettingsPrimitive>
