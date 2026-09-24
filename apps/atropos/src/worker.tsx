@@ -4,13 +4,17 @@ import { defineApp } from 'rwsdk/worker'
 import { Document } from '@/app/document'
 import { setCommonHeaders } from '@/app/headers'
 
-export type AppContext = {}
+export interface AppContext {
+  theme: 'dark' | 'light' | 'system'
+}
 
 export default defineApp([
   setCommonHeaders(),
-  ({ ctx }) => {
-    // setup ctx here
-    ctx
+  ({ ctx, request }) => {
+    // Read theme from cookie
+    const cookie = request.headers.get('Cookie')
+    const match = cookie?.match(/theme=([^;]+)/)
+    ctx.theme = (match?.[1] as 'dark' | 'light' | 'system') || 'system'
   },
   render(Document, [
     route('/', () => (
