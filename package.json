@@ -2,7 +2,7 @@
   "name": "lepse",
   "private": true,
   "type": "module",
-  "description": "A batteries-included AdonisJS starter kit for building modern APIs with type-safe frontend integration",
+  "description": "The complete monorepo for everything Lepse is built with",
   "license": "SEE LICENSE IN LICENSE.md",
   "engines": {
     "node": ">=24.0.0"
@@ -20,6 +20,7 @@
   "devDependencies": {
     "@adonisjs/prettier-config": "^1.4.5",
     "prettier": "^3.8.1",
+    "prettier-plugin-tailwindcss": "^0.8.1",
     "turbo": "^2.8.21"
   },
   "packageManager": "pnpm@10.25.0"
