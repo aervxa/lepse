@@ -44,7 +44,7 @@ if (skipGen) {
     execSync('which magick', { stdio: 'ignore' })
     console.log(styleText('italic', styleText('gray', 'found magick!')))
     execSync(
-      'magick packages/assets/favicon/favicon-96x96.png -resize 52x52 -gravity center -background none -extent 64x64 apps/lachesis/src-tauri/icons/tray-icon.png'
+      'magick packages/assets/favicon/favicon-96x96.png -resize 48x48 -gravity center -background none -extent 64x64 apps/lachesis/src-tauri/icons/tray-icon.png'
     )
     console.log(styleText('gray', 'Generated tray-icon!'))
   } catch (err) {
