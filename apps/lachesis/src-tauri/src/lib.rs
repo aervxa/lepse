@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
 use tauri::{
+  image::Image,
   menu::{Menu, MenuItem, PredefinedMenuItem},
   tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconBuilder, TrayIconEvent},
   window::{Effect, EffectsBuilder},
@@ -107,9 +108,15 @@ pub fn run() {
 }
 
 fn setup_tray<R: Runtime>(app: &AppHandle<R>) -> Result<TrayIcon<R>> {
+  #[cfg(target_os = "macos")]
+  let icon_bytes = include_bytes!("../icons/tray-icon-template.png");
+  #[cfg(not(target_os = "macos"))]
+  let icon_bytes = include_bytes!("../icons/tray-icon.png");
+
   Ok(
     TrayIconBuilder::new()
-      .icon(app.default_window_icon().unwrap().clone())
+      .icon(Image::from_bytes(icon_bytes)?)
+      .icon_as_template(true)
       .menu(&Menu::with_items(
         app,
         &[
