@@ -11,6 +11,8 @@ import { execSync } from 'child_process'
 import { cpSync, readFileSync } from 'fs'
 import { styleText } from 'util'
 
+const skipGen = process.argv.includes('--skip-gen')
+
 // Copy over to Atropos site
 console.log(styleText('gray', 'Copying favicons... (atropos)'))
 cpSync('packages/assets/favicon', 'apps/atropos/public', { recursive: true })
@@ -21,30 +23,42 @@ console.log(styleText('gray', 'Copying favicons... (lachesis)'))
 cpSync('packages/assets/favicon', 'apps/lachesis/public', { recursive: true })
 console.log(styleText('green', 'Copied favicons! (lachesis)'))
 
-// Generate icons for Lachesis tauri app
-console.log(styleText('gray', 'Generating icons... (lachesis/app)')) // Extract color from site.webmaniefest
-const THEME_COLOR = JSON.parse(readFileSync('packages/assets/favicon/site.webmanifest')).theme_color
-execSync(`pnpm tauri icon ../../packages/assets/favicon/favicon.svg --ios-color '${THEME_COLOR}'`, {
-  cwd: 'apps/lachesis',
-  stdio: 'pipe',
-})
-// Generate tray-icon
-try {
-  console.log(styleText('gray', 'checking for magick...'))
-  execSync('which magick', { stdio: 'ignore' })
-  console.log(styleText('italic', styleText('gray', 'found magick!')))
+if (skipGen) {
+  console.log(styleText('yellow', 'Skipping icon generation... (--skip-gen)'))
+} else {
+  // Generate icons for Lachesis tauri app
+  console.log(styleText('gray', 'Generating icons... (lachesis/app)')) // Extract color from site.webmaniefest
+  const THEME_COLOR = JSON.parse(
+    readFileSync('packages/assets/favicon/site.webmanifest')
+  ).theme_color
   execSync(
-    'magick packages/assets/favicon/favicon-96x96.png -resize 52x52 -gravity center -background none -extent 64x64 apps/lachesis/src-tauri/icons/tray-icon.png'
+    `pnpm tauri icon ../../packages/assets/favicon/favicon.svg --ios-color '${THEME_COLOR}'`,
+    {
+      cwd: 'apps/lachesis',
+      stdio: 'pipe',
+    }
   )
-  console.log(styleText('gray', 'Generated tray-icon!'))
-} catch (err) {
-  console.log(styleText('yellow', 'magick not found! using favicon-96x96 as tray-icon'))
-  cpSync('packages/assets/favicon/favicon-96x96.png', 'apps/lachesis/src-tauri/icons/tray-icon.png')
-  console.log(styleText('gray', 'Used favicon-96x96 as tray-icon!'))
+  // Generate tray-icon
+  try {
+    console.log(styleText('gray', 'checking for magick...'))
+    execSync('which magick', { stdio: 'ignore' })
+    console.log(styleText('italic', styleText('gray', 'found magick!')))
+    execSync(
+      'magick packages/assets/favicon/favicon-96x96.png -resize 52x52 -gravity center -background none -extent 64x64 apps/lachesis/src-tauri/icons/tray-icon.png'
+    )
+    console.log(styleText('gray', 'Generated tray-icon!'))
+  } catch (err) {
+    console.log(styleText('yellow', 'magick not found! using favicon-96x96 as tray-icon'))
+    cpSync(
+      'packages/assets/favicon/favicon-96x96.png',
+      'apps/lachesis/src-tauri/icons/tray-icon.png'
+    )
+    console.log(styleText('gray', 'Used favicon-96x96 as tray-icon!'))
+  }
+  // Generate tray-icon-template
+  execSync('magick tray-icon.png -channel RGB -evaluate set 0 tray-icon-template.png', {
+    cwd: 'apps/lachesis/src-tauri/icons',
+  })
+  console.log(styleText('gray', 'Generated tray-icon-template!'))
+  console.log(styleText('green', 'Generated icons! (lachesis/app)'))
 }
-// Generate tray-icon-template
-execSync('magick tray-icon.png -channel RGB -evaluate set 0 tray-icon-template.png', {
-  cwd: 'apps/lachesis/src-tauri/icons',
-})
-console.log(styleText('gray', 'Generated tray-icon-template!'))
-console.log(styleText('green', 'Generated icons! (lachesis/app)'))
