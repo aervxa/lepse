@@ -28,4 +28,23 @@ execSync(`pnpm tauri icon ../../packages/assets/favicon/favicon.svg --ios-color 
   cwd: 'apps/lachesis',
   stdio: 'pipe',
 })
+// Generate tray-icon
+try {
+  console.log(styleText('gray', 'checking for magick...'))
+  execSync('which magick', { stdio: 'ignore' })
+  console.log(styleText('italic', styleText('gray', 'found magick!')))
+  execSync(
+    'magick packages/assets/favicon/favicon-96x96.png -resize 52x52 -gravity center -background none -extent 64x64 apps/lachesis/src-tauri/icons/tray-icon.png'
+  )
+  console.log(styleText('gray', 'Generated tray-icon!'))
+} catch (err) {
+  console.log(styleText('yellow', 'magick not found! using favicon-96x96 as tray-icon'))
+  cpSync('packages/assets/favicon/favicon-96x96.png', 'apps/lachesis/src-tauri/icons/tray-icon.png')
+  console.log(styleText('gray', 'Used favicon-96x96 as tray-icon!'))
+}
+// Generate tray-icon-template
+execSync('magick tray-icon.png -channel RGB -evaluate set 0 tray-icon-template.png', {
+  cwd: 'apps/lachesis/src-tauri/icons',
+})
+console.log(styleText('gray', 'Generated tray-icon-template!'))
 console.log(styleText('green', 'Generated icons! (lachesis/app)'))
