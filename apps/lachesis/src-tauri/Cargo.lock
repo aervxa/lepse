@@ -3172,6 +3172,30 @@ dependencies = [
 ]
 
 [[package]]
+name = "libappindicator"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "03589b9607c868cc7ae54c0b2a22c8dc03dd41692d48f2d7df73615c6a95dc0a"
+dependencies = [
+ "glib 0.18.5",
+ "gtk",
+ "gtk-sys",
+ "libappindicator-sys",
+ "log",
+]
+
+[[package]]
+name = "libappindicator-sys"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6e9ec52138abedcc58dc17a7c6c0c00a2bdb4f3427c7f63fa97fd0d859155caf"
+dependencies = [
+ "gtk-sys",
+ "libloading 0.7.4",
+ "once_cell",
+]
+
+[[package]]
 name = "libbz2-rs-sys"
 version = "0.2.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3190,6 +3214,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "328c4789d42200f1eeec05bd86c9c13c7f091d2ba9a6ea35acdf51f31bc0f043"
 dependencies = [
  "pkg-config",
+]
+
+[[package]]
+name = "libloading"
+version = "0.7.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b67380fd3b2fbe7527a606e18729d21c6f3951633d0500574c4dc22d2d638b9f"
+dependencies = [
+ "cfg-if",
+ "winapi",
 ]
 
 [[package]]
@@ -3481,9 +3515,9 @@ checksum = "72ef4a56884ca558e5ddb05a1d1e7e1bfd9a68d9ed024c21704cc98872dae1bb"
 
 [[package]]
 name = "notify-rust"
-version = "4.18.0"
+version = "4.18.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c5b4c1b4f2aa9f25f63a7a49d3dd0ed567b3670da15330a66b29434be899b891"
+checksum = "fe430c879247371c47fdedd328ad4e301e6b30b533c5fd5db1c06d75253d0e46"
 dependencies = [
  "futures-lite",
  "log",
@@ -5152,9 +5186,9 @@ dependencies = [
 
 [[package]]
 name = "serde_with"
-version = "3.23.0"
+version = "3.24.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "935177bb8c0cd8ca1a4e6d1a2ac8988bea69cab4f9d3a31311e012ad27868ea4"
+checksum = "df9adc193c780ef8f159aee8b61e2d5801aaa555e6eb0947fe45530ec506296f"
 dependencies = [
  "base64 0.23.1",
  "bs58",
@@ -5173,9 +5207,9 @@ dependencies = [
 
 [[package]]
 name = "serde_with_macros"
-version = "3.23.0"
+version = "3.24.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1d607aa01a3cb0ad757d6fd216136910db3c97b102fe686585689615a02dbcdc"
+checksum = "3e17bbc68e28663bbbb90df47e058aa7eda4fb445b89fe70457bb94fbccf6e49"
 dependencies = [
  "darling",
  "proc-macro2",
@@ -5582,9 +5616,9 @@ dependencies = [
 
 [[package]]
 name = "tao"
-version = "0.37.0"
+version = "0.37.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5d12c8607b01516c5d4a37e471a9cfb40b4a25cebce8fecbc6a559e125e51b6b"
+checksum = "f37f381f4e048e6cdf038b5705f8cf14ad108279d46eb968140a7b291aba9400"
 dependencies = [
  "bitflags 2.13.2",
  "block2",
@@ -5608,7 +5642,6 @@ dependencies = [
  "objc2-app-kit",
  "objc2-foundation",
  "objc2-ui-kit",
- "once_cell",
  "parking_lot",
  "percent-encoding",
  "raw-window-handle",
@@ -5666,9 +5699,9 @@ dependencies = [
 
 [[package]]
 name = "tauri"
-version = "3.0.0-alpha.2"
+version = "3.0.0-alpha.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "06e490f11a21054d15fd8edde909d8843c13fe4ad7cc36f1d274f12ebcadd831"
+checksum = "e3ae853d3f394d1ca416eb94f3e4d88d5e1bcab1c8c9f506c1ba6b7fb2940875"
 dependencies = [
  "anyhow",
  "bytes",
@@ -5716,9 +5749,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-build"
-version = "3.0.0-alpha.1"
+version = "3.0.0-alpha.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "65816522469fce4bc810340b4727843e69de83871f8954ed47f9b527512d0604"
+checksum = "c59f5c6b92965567915dd7b62c60d7f5c82f74f389a19947a6cc59ac81492f4d"
 dependencies = [
  "anyhow",
  "cargo_toml",
@@ -5737,9 +5770,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-codegen"
-version = "3.0.0-alpha.1"
+version = "3.0.0-alpha.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e73e30ecc62ae079d8a0f2c0d33963d7c360396e7795d748e005497e9276cab4"
+checksum = "964ad7cc8121b78bc215c7818f05636fc6e0c3a117dd618cd828e1af51a6c4df"
 dependencies = [
  "base64 0.22.1",
  "brotli",
@@ -5764,9 +5797,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-macros"
-version = "3.0.0-alpha.1"
+version = "3.0.0-alpha.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b2888398d11f20f7f74a242100ec6aac1359190ef42c0d8a9696af8cf2ba4ac9"
+checksum = "a5730bac38b75155d3da22340f63e82c0efb08c19fa38a1a1d8cf1eb4a5b4c8c"
 dependencies = [
  "heck 0.5.0",
  "proc-macro2",
@@ -5778,9 +5811,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-plugin"
-version = "3.0.0-alpha.1"
+version = "3.0.0-alpha.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "21e132af07e95ca264ccae4607e6f32cf9683c2c83c264951a39577b0f5729bf"
+checksum = "9f97c8e24a22f44596b198cf00b3ecbd63ab89512d7cab4fa647a19f891f5679"
 dependencies = [
  "anyhow",
  "glob",
@@ -5933,9 +5966,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-runtime"
-version = "3.0.0-alpha.1"
+version = "3.0.0-alpha.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "06d32c597716b7078ff9af8fb77a52bf555a94a792d5665f310f897fb0e8d068"
+checksum = "31413f4fa4250beb88a49c4b9031ad8c87e9e237f0504b9c7706e7cc1d66f9fb"
 dependencies = [
  "cookie",
  "dpi",
@@ -5954,9 +5987,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-runtime-cef"
-version = "3.0.0-alpha.2"
+version = "3.0.0-alpha.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2ae9ce583d147537ed7240977a4d1c644665acf3aab5aa2823f68b1a051d0c7f"
+checksum = "ca96a46db587d7dab24f064e64ca5a6ef757863717e17793951b4c8782b4a239"
 dependencies = [
  "base64 0.22.1",
  "cef",
@@ -5993,9 +6026,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-runtime-wry"
-version = "3.0.0-alpha.2"
+version = "3.0.0-alpha.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "98a7fdf583b81859c39015c2df8847e26e08cbee80dd3da6b3193dc51531c6e2"
+checksum = "a5ca8dabc8e0a645fb7c6c5ba64c399efb25fbd03f4aa34d879a4d8c237f1186"
 dependencies = [
  "gtk",
  "http",
@@ -6021,9 +6054,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-utils"
-version = "3.0.0-alpha.1"
+version = "3.0.0-alpha.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "643fe91e92f59e637be07901565e0a5c11bc3355f74b78281de77b4e964f9a0c"
+checksum = "350c94d3851cf71e441834805c26357f3fbfa7c217d909866070dc30390f367c"
 dependencies = [
  "anyhow",
  "brotli",
@@ -6141,12 +6174,12 @@ dependencies = [
 
 [[package]]
 name = "tauri-winrt-notification"
-version = "0.7.3"
+version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9ed071c670382e85fc2f48ae706492d8c338f4f89bf72520d32f8abfe880aade"
+checksum = "f37a6c354fd28fc9e322ed9bd47e3959576dad28c9d58ea1cf888cce1c7ccb36"
 dependencies = [
  "thiserror 2.0.21",
- "windows 0.61.3",
+ "windows 0.62.2",
  "windows-version",
 ]
 
@@ -6301,9 +6334,9 @@ dependencies = [
 
 [[package]]
 name = "tokio-rustls"
-version = "0.26.5"
+version = "0.26.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b0c85f2c3ef0b1cd58b36682f4b17aaa995f0e5db534d85692b4903abce21f67"
+checksum = "c9cc2678c2cdd569ef8215e2afd7954ada2ae20b4fdd2c5fe6139a3b02d105db"
 dependencies = [
  "rustls",
  "tokio",
@@ -6502,7 +6535,9 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b2b9c52859a94554803ccd4a24b98f74148ebc73b90676d783f3490b1bff9d72"
 dependencies = [
  "crossbeam-channel",
+ "dirs 7.0.0",
  "ksni",
+ "libappindicator",
  "muda",
  "objc2",
  "objc2-app-kit",
@@ -7031,16 +7066,17 @@ checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
 
 [[package]]
 name = "window-vibrancy"
-version = "0.6.0"
+version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d9bec5a31f3f9362f2258fd0e9c9dd61a9ca432e7306cc78c444258f0dce9a9c"
+checksum = "111e51caca442cafd9bab396628ac4d814880eaea4e63dfd76a12e9f342b5580"
 dependencies = [
  "objc2",
  "objc2-app-kit",
  "objc2-core-foundation",
  "objc2-foundation",
+ "objc2-quartz-core",
  "raw-window-handle",
- "windows-sys 0.59.0",
+ "windows-sys 0.61.2",
  "windows-version",
 ]
 
