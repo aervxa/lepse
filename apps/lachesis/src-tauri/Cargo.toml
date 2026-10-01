@@ -51,3 +51,6 @@ zbus-secret-service-keyring-store = { version = "1.0.1", features = ["crypto-rus
 default = ["wry"]
 wry = ["dep:tauri-runtime-wry"]
 cef = ["dep:tauri-runtime-cef"]
+
+[patch.crates-io]
+tray-icon = { git = "https://github.com/aervxa/tray-icon", rev = "d2212b4baf8556ee0fe3d3ea65966b506f95a2b7" }
