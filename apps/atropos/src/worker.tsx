@@ -1,8 +1,12 @@
 import { render, route } from 'rwsdk/router'
 import { defineApp } from 'rwsdk/worker'
 
-import { Document } from '@/app/document'
 import { setCommonHeaders } from '@/app/headers'
+import { Document } from '@/app/document'
+import { Shell } from '@/app/layouts/shell'
+
+import { HomePage } from '@/app/pages/HomePage'
+
 import { Button } from '@/app/components/ui/button'
 
 export interface AppContext {
@@ -29,4 +33,5 @@ export default defineApp([
       </div>
     )),
   ]),
+  render(Shell, [route('/home', HomePage)]),
 ])
