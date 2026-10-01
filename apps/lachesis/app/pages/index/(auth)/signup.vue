@@ -54,7 +54,6 @@ const {
                 }
               } else {
                 toast.error('Something went wrong!', { description: err.message })
-                validationError = 'Signup failed!'
               }
             },
           }

@@ -62,7 +62,6 @@ const {
                 }
               } else {
                 toast.error('Something went wrong!', { description: err.message })
-                validationError = 'Creating task failed!'
               }
             },
           }

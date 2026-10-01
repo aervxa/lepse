@@ -34,14 +34,12 @@ const {
                     email: errors.email?.message,
                   },
                 }
-              } else {
-                if (err.isStatus(404)) {
-                  toast.error('Something went wrong!', {
-                    description: 'Please check the email address you entered.',
-                  })
-                } else toast.error('Something went wrong!', { description: err.message })
-                validationError = 'Password reset request failed!'
-              }
+              } else if (err.isStatus(404)) {
+                toast.error('Something went wrong!', {
+                  description: 'Please check the email address you entered.',
+                })
+                validationError = 'Incorrect email address!'
+              } else toast.error('Something went wrong!', { description: err.message })
             },
           }
         )
