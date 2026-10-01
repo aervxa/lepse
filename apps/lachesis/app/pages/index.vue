@@ -85,7 +85,6 @@ const { width } = useWindowSize()
           'from-background/40 via-background/20 -m-2 rounded-xs rounded-tr-2xl bg-linear-to-l to-transparent p-2 ps-3 backdrop-blur-sm rtl:rounded-tl-2xl rtl:bg-linear-to-r',
       ]"
     >
-      <SettingsDialog />
       <template v-if="user">
         <FocusSessions v-if="user.emailVerified" />
         <EmailVerifyButton v-else class="-mr-2" />
@@ -100,6 +99,7 @@ const { width } = useWindowSize()
           </NuxtLink>
         </Button>
       </div>
+      <SettingsDialog />
 
       <Transition
         leave-active-class="animate-out ltr:slide-out-to-right-100 rtl:slide-out-to-left-100"

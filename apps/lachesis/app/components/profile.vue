@@ -75,6 +75,7 @@ const [DefineAvatar, ReuseAvatar] = createReusableTemplate<{ state: 'after' | 'b
               <NuxtLink
                 to="/settings/profile"
                 class="focus absolute inset-0 rounded-full **:transition-all"
+                @click="open = false"
               >
                 <div
                   class="bg-background/50 group-hover:bg-muted/50 group-focus-within:bg-muted/50 absolute right-[14.645%] bottom-[14.645%] translate-1/2 rounded-full p-2 backdrop-blur-lg"
@@ -88,7 +89,7 @@ const [DefineAvatar, ReuseAvatar] = createReusableTemplate<{ state: 'after' | 'b
 
           <div class="flex items-end justify-between gap-2">
             <div class="flex gap-2">
-              <Button variant="outline" size="sm" as-child>
+              <Button variant="outline" size="sm" as-child @click="open = false">
                 <NuxtLink to="/settings">
                   <Settings />
                   Settings
