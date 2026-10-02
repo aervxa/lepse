@@ -21,8 +21,8 @@
     </keywords>
 
     <releases>
-      <release version="0.2.7" date="2026-10-02">
-        <url type="details">https://github.com/aervxa/lepse/releases/tag/v0.2.7</url>
+      <release version="0.2.8" date="2026-10-02">
+        <url type="details">https://github.com/aervxa/lepse/releases/tag/v0.2.8</url>
         <description>
           <p>Please look at the github release for what changed in this version.</p>
         </description>
@@ -55,11 +55,24 @@
       <!-- Possible ads -->
       <content_attribute id="money-advertising">mild</content_attribute>
     </content_rating>
-    <url type="homepage">https://github.com/aervxa/lepse</url>
+    <supports>
+      <control>keyboard</control>
+      <control>pointing</control>
+      <control>touch</control>
+    </supports>
+    <requires>
+      <display_length compare="ge">320</display_length>
+    </requires>
+    <url type="homepage">https://lepse.app</url>
+    <url type="vcs-browser">https://github.com/aervxa/lepse</url>
     <url type="bugtracker">https://github.com/aervxa/lepse/issues</url>
     <metadata_license>MIT</metadata_license>
     <project_license>LicenseRef-Komorebi</project_license>
     <developer id="io.github.aervxa">
         <name>zorvi</name>
     </developer>
+    <branding>
+      <color type="primary" scheme_preference="light">#9fe3bb</color>
+      <color type="primary" scheme_preference="dark">#12301f</color>
+    </branding>
 </component>
