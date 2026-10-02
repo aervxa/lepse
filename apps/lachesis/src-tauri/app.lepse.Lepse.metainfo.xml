@@ -3,23 +3,63 @@
     <id>app.lepse.Lepse</id>
     <launchable type="desktop-id">app.lepse.Lepse.desktop</launchable>
     <name>Lepse</name>
-    <developer id="io.github.aervxa">
-        <name>zorvi</name>
-    </developer>
+    <summary>Aesthetic productivity made easy</summary>
+    <description>
+        <p>
+            Lepse is a personal organization/productivity tool that maps your daily tasks to meaningful goals. and is aesthetic as hell.
+        </p>
+    </description>
     <keywords>
         <keyword>aesthetic</keyword>
         <keyword>productivity</keyword>
+        <keyword>clock</keyword>
+        <keyword>calendar</keyword>
+        <keyword>pomodoro</keyword>
         <keyword>timer</keyword>
+        <keyword>focus</keyword>
+        <keyword>habits</keyword>
     </keywords>
-    <summary>A personal organization/productivity tool that maps your daily tasks to meaningful goals. and is aesthetic as hell.</summary>
 
+    <releases>
+      <release version="0.2.7" date="2026-10-02">
+        <url type="details">https://github.com/aervxa/lepse/releases/tag/v0.2.7</url>
+        <description>
+          <p>Please look at the github release for what changed in this version.</p>
+        </description>
+      </release>
+    </releases>
+
+    <screenshots>
+      <screenshot type="default">
+        <caption>The home screen with the main clock</caption>
+        <image>https://cdn.lepse.app/lachesis-app-screenshots/lepse-home.png</image>
+      </screenshot>
+      <screenshot>
+        <caption>The focus screen with a pomodoro timer</caption>
+        <image>https://cdn.lepse.app/lachesis-app-screenshots/lepse-pomo.png</image>
+      </screenshot>
+      <screenshot>
+        <caption>A settings dialog of the app</caption>
+        <image>https://cdn.lepse.app/lachesis-app-screenshots/lepse-settings.png</image>
+      </screenshot>
+      <screenshot>
+        <caption>A color picker to select your favorite accent color</caption>
+        <image>https://cdn.lepse.app/lachesis-app-screenshots/lepse-color.png</image>
+      </screenshot>
+    </screenshots>
+    <content_rating type="oars-1.1">
+      <!-- Public users (username, pfp, or such) -->
+      <content_attribute id="social-chat">mild</content_attribute>
+      <!-- Possible asking for donation -->
+      <content_attribute id="money-purchasing">mild</content_attribute>
+      <!-- Possible ads -->
+      <content_attribute id="money-advertising">mild</content_attribute>
+    </content_rating>
+    <url type="homepage">https://github.com/aervxa/lepse</url>
+    <url type="bugtracker">https://github.com/aervxa/lepse/issues</url>
     <metadata_license>MIT</metadata_license>
     <project_license>LicenseRef-Komorebi</project_license>
-    <url type="homepage">https://github.com/aervxa/lepse</url>
-
-    <description>
-        <p>
-            A personal organization/productivity tool that maps your daily tasks to meaningful goals. and is aesthetic as hell.
-        </p>
-    </description>
+    <developer id="io.github.aervxa">
+        <name>zorvi</name>
+    </developer>
 </component>
