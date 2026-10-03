@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import type { Button } from '@lepse/ui/app/components/ui/button'
 import { LoaderCircle } from '@lucide/vue'
-import { Button } from './ui/button'
 
 type ButtonProps = InstanceType<typeof Button>['$props']
 interface Props extends /* @vue-ignore */ ButtonProps {

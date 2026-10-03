@@ -11,7 +11,6 @@ import {
   X,
 } from '@lucide/vue'
 import { useFullscreen, useLocalStorage, useWindowSize } from '@vueuse/core'
-import { toast } from 'vue-sonner'
 import EmailVerifyButton from '~/components/email-verify-button.vue'
 
 definePageMeta({

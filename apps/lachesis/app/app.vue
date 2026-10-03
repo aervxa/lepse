@@ -76,11 +76,10 @@ onMounted(() => {
     <Link rel="manifest" href="/site.webmanifest?v=20260926" />
   </Head>
 
-  <TooltipProvider>
+  <UIProvider>
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
-  </TooltipProvider>
-  <Toaster position="top-center" richColors class="font-[inherit]! **:pointer-events-auto" />
+  </UIProvider>
   <DialogRenderer />
 </template>

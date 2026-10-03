@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Pencil, Trash } from '@lucide/vue'
-import { toast } from 'vue-sonner'
 
 const { user, updateProfileMutation } = useAuth()
 

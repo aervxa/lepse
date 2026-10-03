@@ -12,6 +12,8 @@ export default defineNuxtConfig({
 
   devtools: { enabled: true },
 
+  extends: ['@lepse/ui'],
+
   // Avoids error [unhandledRejection] EMFILE: too many open files, watch
   ignore: ['**/src-tauri/**'],
 

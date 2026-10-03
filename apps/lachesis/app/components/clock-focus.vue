@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useDebounceFn, useIntervalFn, useLocalStorage } from '@vueuse/core'
 import { ChevronsUpDown, FastForward, Pause, Play, RefreshCw, X } from '@lucide/vue'
-import { toast } from 'vue-sonner'
 import { formatDuration, Stopwatch } from '~/lib/time'
 import { toBreakMessages, toLongBreakMessages, toWorkMessages } from '~/lib/pomoMessages'
 
