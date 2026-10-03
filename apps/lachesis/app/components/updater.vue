@@ -3,7 +3,6 @@ import { check, type Update } from '@tauri-apps/plugin-updater'
 import { relaunch } from '@tauri-apps/plugin-process'
 import { Download, Loader2 } from '@lucide/vue'
 import { platform } from '@tauri-apps/plugin-os'
-import { toast } from 'vue-sonner'
 
 const isUpdatable = ref(false)
 let updateHandler: Update | null

@@ -13,7 +13,6 @@ import {
   Trash,
   X,
 } from '@lucide/vue'
-import { toast } from 'vue-sonner'
 import { formatDuration } from '~/lib/time'
 
 definePageMeta({

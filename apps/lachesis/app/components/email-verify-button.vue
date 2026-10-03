@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useCountdown } from '@vueuse/core'
-import { toast } from 'vue-sonner'
 
 const emits = defineEmits(['success'])
 

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ChevronDown } from '@lucide/vue'
 import type { DropdownMenuContentProps } from 'reka-ui'
-import { toast } from 'vue-sonner'
 
 defineProps<{
   id: number

@@ -4,7 +4,6 @@ import { persistQueryClient } from '@tanstack/query-persist-client-core'
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
 import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query'
 import { createTuyauVueQueryClient } from '@tuyau/vue-query'
-import { toast } from 'vue-sonner'
 import { isTauri } from '@tauri-apps/api/core'
 
 export default defineNuxtPlugin({

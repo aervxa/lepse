@@ -2,7 +2,6 @@
 import { revalidateLogic, useForm } from '@tanstack/vue-form'
 import { ChevronRight, Loader2, Plus, X } from '@lucide/vue'
 import { PopoverClose } from 'reka-ui'
-import { toast } from 'vue-sonner'
 import z from 'zod'
 
 const source = inject(bubbleNavSourceKey)
