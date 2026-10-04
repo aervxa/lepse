@@ -1,5 +1,3 @@
-import tailwindcss from '@tailwindcss/vite'
-
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -21,7 +19,7 @@ export default defineNuxtConfig({
     dirs: ['~/composables/**'],
   },
 
-  modules: ['motion-v/nuxt', 'shadcn-nuxt', 'vue-sonner/nuxt', 'nitro-cloudflare-dev'],
+  modules: ['motion-v/nuxt'],
 
   runtimeConfig: {
     public: {
@@ -45,7 +43,6 @@ export default defineNuxtConfig({
     // Additional environment variables can be found at
     // https://v2.tauri.app/reference/environment-variables/
     envPrefix: ['VITE_', 'TAURI_'],
-    plugins: [tailwindcss()],
     server: {
       // Tauri requires a consistent port
       strictPort: true,
