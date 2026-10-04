@@ -8,6 +8,6 @@ export default defineNuxtConfig({
   },
 
   devtools: { enabled: true },
-
   extends: ['@lepse/ui'],
+  modules: ['@nuxtjs/color-mode'],
 })

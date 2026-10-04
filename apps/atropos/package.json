@@ -10,7 +10,9 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@fontsource-variable/outfit": "^5.3.0",
     "@lepse/ui": "workspace:*",
+    "@nuxtjs/color-mode": "4.0.1",
     "nuxt": "^4.5.2",
     "vue": "^3.5.43",
     "vue-router": "^5.3.1"
