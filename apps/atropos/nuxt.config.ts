@@ -8,6 +8,12 @@ export default defineNuxtConfig({
   },
 
   devtools: { enabled: true },
+
   extends: ['@lepse/ui'],
+
+  nitro: {
+    preset: 'cloudflare_module',
+  },
+
   modules: ['@nuxtjs/color-mode'],
 })
