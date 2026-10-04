@@ -71,8 +71,8 @@ onBeforeUnmount(() => {
       class="-mb-2 flex h-(--titlebar-height) items-center justify-between"
       @pointerdown.stop
     >
-      <div class="pointer-events-none px-2">
-        <img src="/favicon.svg" class="size-5 brightness-150 grayscale" />
+      <div class="pointer-events-none pe-2 ps-3">
+        <img src="/favicon.svg" class="size-4" />
       </div>
       <div
         v-if="appWindow"
