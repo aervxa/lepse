@@ -1,6 +1,17 @@
 export const BACKGROUNDS = [
   // Abstract
   {
+    id: 5672,
+    weight: 1071,
+    name: 'green-lines',
+    style: 'abstract',
+    url: '/images/backgrounds/lines-green.webp',
+    credit: {
+      handle: '@loganvoss',
+      url: 'https://unsplash.com/@loganvoss',
+    },
+  },
+  {
     id: 2551,
     weight: 1072,
     name: 'blue-lines',
