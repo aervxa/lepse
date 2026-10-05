@@ -3,7 +3,7 @@
 @import 'shadcn-vue/tailwind.css';
 @source '../../';
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
   --radius: 0.625rem;
