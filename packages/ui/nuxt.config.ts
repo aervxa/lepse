@@ -13,7 +13,7 @@ import { fileURLToPath } from 'url'
  */
 
 export default defineNuxtConfig({
-  modules: ['shadcn-nuxt'],
+  modules: ['shadcn-nuxt', 'vue-sonner/nuxt'],
   shadcn: {
     prefix: '',
     componentDir: fileURLToPath(new URL('./app/components/ui', import.meta.url)),
