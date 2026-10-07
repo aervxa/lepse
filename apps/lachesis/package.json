@@ -8,7 +8,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "postinstall": "nuxt prepare",
-    "tdev": "tauri dev",
+    "tdev": "WEBKIT_USE_SKIA_FOR_COMPOSITION=0 tauri dev",
     "tdev:cef": "tauri dev -- --no-default-features --features cef",
     "tbuild": "tauri build",
     "tbuild:cef": "tauri build -- --no-default-features --features cef",
