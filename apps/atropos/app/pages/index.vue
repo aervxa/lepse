@@ -191,7 +191,7 @@ const platformDownloads = computed(() => [
         Download Lepse
       </p>
 
-      <p class="text-muted-foreground -mt-2 sm:text-lg">
+      <p class="text-muted-foreground -mt-2 text-center sm:text-lg">
         Our app is available for all desktop platforms, choose your desired platform.
       </p>
 
@@ -210,10 +210,10 @@ const platformDownloads = computed(() => [
         </Button>
       </div>
 
-      <div class="mt-4 grid grid-cols-3">
+      <div class="mt-4 grid sm:grid-cols-2 sm:max-lg:gap-y-4 lg:grid-cols-3">
         <div
           v-for="p in platformDownloads"
-          class="flex aspect-5/4 h-64 flex-col items-center-safe justify-center border-r-2 last:border-r-0"
+          class="flex aspect-square h-60 flex-col items-center-safe justify-center justify-self-center transition-all last:border-0 max-sm:border-b-2 sm:aspect-5/4 sm:border-r-2 sm:max-lg:last:col-span-2 sm:max-lg:nth-last-2:border-r-0 md:h-64"
         >
           <component :is="p.logo" class="size-24 fill-current" />
           <p class="mt-1 text-lg font-semibold tracking-wide">{{ p.name }}</p>
