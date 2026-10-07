@@ -106,7 +106,7 @@ const platformDownloads = computed(() => [
       <img src="/images/hero-dark.jpg" class="not-dark:hidden" />
       <img src="/images/hero-light.jpg" class="dark:hidden" />
     </div>
-    <div class="contents *:rotate-180 *:mask-t-from-40% *:mask-t-to-60% *:mask-b-from-0%">
+    <div class="contents *:rotate-180 *:mask-t-from-40% *:mask-t-to-50% *:mask-b-from-0%">
       <img src="/images/hero-dark.jpg" class="not-dark:hidden" />
       <img src="/images/hero-light.jpg" class="dark:hidden" />
     </div>
@@ -162,6 +162,25 @@ const platformDownloads = computed(() => [
         draggable="false"
         class="bg-accent aspect-16/10 w-full max-w-5xl rounded-xl border select-none"
       />
+    </div>
+
+    <!-- Features -->
+    <div class="mt-12 flex flex-col items-center-safe gap-12">
+      <p class="text-3xl font-medium md:text-4xl lg:text-5xl">Productivity meets aesthetics</p>
+      <p
+        class="text-muted-foreground -mt-8 text-sm tracking-wide sm:text-base md:text-lg lg:-mt-6 lg:text-xl"
+      >
+        Powerful and beautiful for all your needs
+      </p>
+
+      <Card class="bg-card/60 w-full max-w-3xl">
+        <Empty>
+          <EmptyHeader>
+            <EmptyTitle>Features</EmptyTitle>
+            <EmptyDescription>Coming soon.</EmptyDescription>
+          </EmptyHeader>
+        </Empty>
+      </Card>
     </div>
 
     <!-- Downloads -->
