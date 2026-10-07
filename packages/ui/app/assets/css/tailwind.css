@@ -130,4 +130,7 @@
   .focus {
     @apply focus-visible:border-ring focus-visible:ring-ring/50 transition-all outline-none focus-visible:ring-[3px];
   }
+  p {
+    @apply leading-normal;
+  }
 }
