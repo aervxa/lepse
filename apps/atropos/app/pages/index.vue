@@ -106,15 +106,17 @@ const platformDownloads = computed(() => [
       <img src="/images/hero-dark.jpg" class="not-dark:hidden" />
       <img src="/images/hero-light.jpg" class="dark:hidden" />
     </div>
-    <div class="contents *:rotate-180 *:mask-t-from-40% *:mask-t-to-50% *:mask-b-from-0%">
+    <div
+      class="contents *:rotate-180 *:mask-t-from-35% *:mask-t-to-60% *:mask-b-from-0% sm:*:mask-t-to-45% lg:*:mask-t-to-50%"
+    >
       <img src="/images/hero-dark.jpg" class="not-dark:hidden" />
       <img src="/images/hero-light.jpg" class="dark:hidden" />
     </div>
   </div>
 
-  <div class="flex flex-col gap-24 p-6">
+  <div class="flex flex-col gap-24 *:p-6">
     <!-- Hero -->
-    <div class="flex flex-col items-center-safe gap-8 p-6 pt-44 md:pt-40 xl:pt-36">
+    <div class="flex flex-col items-center-safe gap-8 pt-44 sm:pt-40 md:pt-36 lg:pt-32">
       <Button variant="outline" size="xs" class="-mb-4">
         <span class="bg-primary mr-1 size-2 rounded-full" />
         What is Lepse?
@@ -158,17 +160,33 @@ const platformDownloads = computed(() => [
 
       <!-- TODO: make a 6.7% chance of the 67 version to load instead -->
       <img
-        src="/images/app-homepage.webp"
+        src="/images/app-mobile.webp"
         draggable="false"
-        class="bg-accent aspect-16/10 w-full max-w-5xl rounded-xl border select-none"
+        class="bg-accent aspect-6/13 max-h-192 max-w-full rounded-xl border object-contain select-none sm:hidden"
       />
+      <img
+        src="/images/app-tablet.webp"
+        draggable="false"
+        class="bg-accent aspect-3/4 max-h-156 max-w-full rounded-xl border object-contain select-none max-sm:hidden lg:hidden"
+      />
+      <img
+        src="/images/app-desktop.webp"
+        draggable="false"
+        class="bg-accent aspect-16/10 w-full max-w-5xl rounded-xl border select-none max-lg:hidden"
+      />
+
+      <p class="text-muted-foreground -mt-2 -mb-6 h-0 text-center text-xs lg:hidden">
+        * Resized desktop app. A mobile app doesn't exist just <i>yet</i>.
+      </p>
     </div>
 
     <!-- Features -->
     <div class="mt-12 flex flex-col items-center-safe gap-12">
-      <p class="text-3xl font-medium md:text-4xl lg:text-5xl">Productivity meets aesthetics</p>
+      <p class="text-center text-3xl font-medium md:text-4xl lg:text-5xl">
+        Productivity meets aesthetics
+      </p>
       <p
-        class="text-muted-foreground -mt-8 text-sm tracking-wide sm:text-base md:text-lg lg:-mt-6 lg:text-xl"
+        class="text-muted-foreground -mt-8 text-center text-sm tracking-wide sm:text-base md:text-lg lg:-mt-6 lg:text-xl"
       >
         Powerful and beautiful for all your needs
       </p>
@@ -184,7 +202,7 @@ const platformDownloads = computed(() => [
     </div>
 
     <!-- Downloads -->
-    <div ref="downloads" class="mt-8 flex flex-col items-center-safe gap-6">
+    <div ref="downloads" class="flex flex-col items-center-safe gap-6">
       <p
         class="max-w-[15ch] text-center text-2xl leading-tight font-medium sm:text-3xl md:text-4xl lg:text-5xl"
       >
@@ -267,6 +285,9 @@ const platformDownloads = computed(() => [
     </div>
 
     <!-- Extra bottom padding for now -->
-    <div class="h-64"></div>
+    <div class="bg-card grid h-64 place-content-center p-0">
+      <!-- TODO: footer -->
+      <p class="text-muted-foreground text-sm">TODO: Footer</p>
+    </div>
   </div>
 </template>
