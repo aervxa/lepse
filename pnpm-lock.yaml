@@ -190,9 +190,15 @@ importers:
       '@lepse/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@lucide/vue':
+        specifier: ^1.51.0
+        version: 1.51.0(vue@3.5.43(typescript@6.0.3))
       '@nuxtjs/color-mode':
         specifier: 4.0.1
         version: 4.0.1(magic-string@1.2.3)(magicast@0.5.4)(rolldown@1.2.7)(unplugin@3.3.0(esbuild@0.28.2)(rolldown@1.2.7)(rollup@4.63.1)(vite@8.2.2(@types/node@26.1.2)(esbuild@0.28.2)(jiti@2.7.0)(stylus@0.57.0(supports-color@10.2.2))(terser@5.51.2))(webpack@5.110.3(@napi-rs/image@1.14.0)(@swc/core@1.15.47(@swc/helpers@0.5.23))(cssnano@8.0.10(postcss@8.5.26))(csso@5.0.5)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.26)(sharp@0.35.2)(svgo@4.1.0)))
+      '@nuxtjs/device':
+        specifier: 4.0.0
+        version: 4.0.0
       nuxt:
         specifier: ^4.5.2
         version: 4.5.2(1bcba871a963a1fa66260ac47086fe20)
@@ -2117,6 +2123,11 @@ packages:
     peerDependencies:
       vue: '>=3.0.1'
 
+  '@lucide/vue@1.51.0':
+    resolution: {integrity: sha512-zMkTAMP8OsPESz/GDedsZfr3VUF2IiHlj25mBZG6Pc8A8J8BdygkE8k1HhRFXEUNzytp5DqxiBQNm3RG/U2bVg==}
+    peerDependencies:
+      vue: '>=3.0.1'
+
   '@mapbox/node-pre-gyp@2.0.3':
     resolution: {integrity: sha512-uwPAhccfFJlsfCxMYTwOdVfOz3xqyj8xYL3zJj8f0pb30tLohnnFPhLuqp4/qoEz8sNxe4SESZedcBojRefIzg==}
     engines: {node: '>=18'}
@@ -2332,6 +2343,9 @@ packages:
 
   '@nuxtjs/color-mode@4.0.1':
     resolution: {integrity: sha512-eiA7hWXi5zNHaYKyJFCGF6i0wFZtuvR7KDXZ6jiSvwxjCpRFwphrw0MOSmNfArTSSsT1wpW+/2H92cejeVfUlg==}
+
+  '@nuxtjs/device@4.0.0':
+    resolution: {integrity: sha512-Tkbvde/GInmigbS/n3X3X+qXJWi6hsYrViKpZrakaBBYY3NbGYJb0c8aVxd3vI636HBbOhu0I39rv7MSjP7w8Q==}
 
   '@one-ini/wasm@0.1.1':
     resolution: {integrity: sha512-XuySG1E38YScSJoMlqovLru4KTUNSjgVTIjyh7qMX6aNN5HY5Ct5LhRJdxO79JtTzKfzV/bnWpz+zquYrISsvw==}
@@ -9887,6 +9901,10 @@ snapshots:
     dependencies:
       vue: 3.5.43(typescript@6.0.3)
 
+  '@lucide/vue@1.51.0(vue@3.5.43(typescript@6.0.3))':
+    dependencies:
+      vue: 3.5.43(typescript@6.0.3)
+
   '@mapbox/node-pre-gyp@2.0.3(supports-color@10.2.2)':
     dependencies:
       consola: 3.4.2
@@ -10537,6 +10555,10 @@ snapshots:
       - oxc-parser
       - rolldown
       - unplugin
+
+  '@nuxtjs/device@4.0.0':
+    dependencies:
+      defu: 6.1.7
 
   '@one-ini/wasm@0.1.1': {}
 

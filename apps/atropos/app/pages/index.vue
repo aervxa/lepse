@@ -1,7 +1,100 @@
 <script setup lang="ts">
+import { ChevronDown, ChevronsDown, X } from '@lucide/vue'
+import LogosApple from '@/components/logos/apple.vue'
+import LogosArchLinux from '@/components/logos/arch-linux.vue'
+import LogosFedora from '@/components/logos/fedora.vue'
+import LogosFlathub from '@/components/logos/flathub.vue'
+import LogosLinux from '@/components/logos/linux.vue'
+import LogosMicosoftStore from '@/components/logos/microsoft-store.vue'
+import LogosUbuntu from '@/components/logos/ubuntu.vue'
+import LogosWindows from '@/components/logos/windows.vue'
+
 definePageMeta({
   layout: 'shell',
 })
+
+/* ------------------------------------ DOWNLOADS ------------------------------------  */
+
+const { data: release } = useFetch('/api/release')
+const { isWindows, isLinux, isMacOS } = useDevice()
+
+const downloadsRef = useTemplateRef('downloads')
+const scrollToDownloads = () => {
+  downloadsRef.value?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+}
+
+let arch = ref<'x64' | 'a64'>('x64')
+const platformDownloads = computed(() => [
+  {
+    name: 'Windows',
+    logo: LogosWindows,
+    actions: [
+      {
+        label: 'Download &nbsp;.exe',
+        icon: LogosWindows,
+        action: 'download',
+        link: release.value?.assets['x64.exe'],
+        supportedArches: ['x64'],
+      },
+      // TODO: Microsoft Store (need to wait until Tauri supports .msix)
+      // {
+      //   label: 'Microsoft Store',
+      //   icon: LogosMicosoftStore,
+      //   action: 'open',
+      //   link: 'https://apps.microsoft.com/detail/xxxxxxxxxxxxxxxx',
+      //   supportedArches: ['x64', 'a64'],
+      // },
+    ],
+  },
+  {
+    name: 'Linux*',
+    logo: LogosLinux,
+    actions: [
+      {
+        label: 'Get it on Flathub',
+        icon: LogosFlathub,
+        action: 'open',
+        link: 'https://flathub.org/en/apps/app.lepse.Lepse',
+        supportedArches: ['x64', 'a64'],
+      },
+      {
+        label: 'Download &nbsp;.deb',
+        icon: LogosUbuntu,
+        action: 'download',
+        link: release.value?.assets[arch.value === 'x64' ? 'x64.deb' : 'a64.deb'],
+        supportedArches: ['x64', 'a64'],
+      },
+      {
+        label: 'Download &nbsp;.rpm',
+        icon: LogosFedora,
+        action: 'download',
+        link: release.value?.assets[arch.value === 'x64' ? 'x64.rpm' : 'a64.rpm'],
+        supportedArches: ['x64', 'a64'],
+      },
+      // TODO: AUR
+      // {
+      //   label: 'Get it on the AUR',
+      //   icon: LogosArchLinux,
+      //   action: 'open',
+      //   link: 'https://aur.archlinux.org/packages/lepse-bin',
+      //   supportedArches: ['x64'],
+      // },
+    ],
+  },
+  {
+    name: 'macOS',
+    logo: LogosApple,
+    actions: [
+      {
+        label: 'Download &nbsp;.dmg',
+        icon: LogosApple,
+        action: 'download',
+        link: release.value?.assets[arch.value === 'x64' ? 'x64.dmg' : 'a64.dmg'],
+        supportedArches: ['x64', 'a64'],
+      },
+    ],
+  },
+])
 </script>
 
 <template>
@@ -19,27 +112,139 @@ definePageMeta({
     </div>
   </div>
 
-  <!-- Content -->
-  <div class="flex flex-col items-center-safe gap-8 p-6 pt-44 pb-96 md:pt-40 xl:pt-36">
-    <Button variant="outline" size="xs" class="-mb-4">
-      <span class="bg-primary mr-1 size-2 rounded-full" />
-      What is Lepse?
-    </Button>
-    <p
-      class="max-w-[15ch] text-center text-4xl leading-tight font-medium sm:text-5xl md:text-6xl lg:text-7xl"
-    >
-      Aesthetic productivity made easy
-    </p>
+  <div class="flex flex-col gap-24 p-6">
+    <!-- Hero -->
+    <div class="flex flex-col items-center-safe gap-8 p-6 pt-44 md:pt-40 xl:pt-36">
+      <Button variant="outline" size="xs" class="-mb-4">
+        <span class="bg-primary mr-1 size-2 rounded-full" />
+        What is Lepse?
+      </Button>
+      <p
+        class="max-w-[15ch] text-center text-4xl leading-tight font-medium sm:text-5xl md:text-6xl lg:text-7xl"
+      >
+        Aesthetic productivity made easy
+      </p>
 
-    <!-- Dowload buttons -->
-    <div class="flex flex-wrap justify-center gap-2">
-      <!-- TODO: Platform -->
-      <Button size="xl">Download Lepse</Button>
-      <Button variant="outline" size="xl">Open in browser</Button>
+      <!-- Dowload buttons -->
+      <div class="flex flex-wrap justify-center gap-2">
+        <ButtonGroup aria-label="Download options">
+          <Button size="xl" @click="isLinux && scrollToDownloads()" :as-child="!isLinux">
+            <component
+              :is="isLinux ? 'div' : 'a'"
+              :href="
+                platformDownloads.find(
+                  (p) => p.name === (isWindows ? 'Windows' : isMacOS ? 'macOS' : '')
+                )?.actions[0]?.link
+              "
+              :class="{ contents: isLinux }"
+            >
+              <component
+                :is="
+                  isWindows ? LogosWindows : isLinux ? LogosLinux : isMacOS ? LogosApple : undefined
+                "
+              />
+              Download Lepse
+            </component>
+          </Button>
+          <Button v-if="!isLinux" size="icon-xl" @click="scrollToDownloads">
+            <ChevronsDown />
+          </Button>
+        </ButtonGroup>
+        <Button variant="outline" size="xl">Open in browser</Button>
+      </div>
+      <p class="text-muted-foreground mt-4 text-sm">Enjoy being productive once again.</p>
+
+      <!-- TODO: make a 6.7% chance of the 67 version to load instead -->
+      <img
+        src="/images/app-homepage.webp"
+        class="bg-accent aspect-16/10 w-full max-w-5xl rounded-xl border"
+      />
     </div>
-    <p class="text-muted-foreground mt-4 text-sm">Enjoy being productive once again.</p>
 
-    <!-- TODO: make a 6.7% chance of the 67 version to load instead -->
-    <img src="/images/app-homepage.webp" class="bg-accent w-full max-w-5xl rounded-xl border" />
+    <!-- Downloads -->
+    <div ref="downloads" class="mt-8 flex flex-col items-center-safe gap-6">
+      <p
+        class="max-w-[15ch] text-center text-2xl leading-tight font-medium sm:text-3xl md:text-4xl lg:text-5xl"
+      >
+        Download Lepse
+      </p>
+
+      <p class="text-muted-foreground -mt-2 sm:text-lg">
+        Our app is available for all desktop platforms, choose your desired platform.
+      </p>
+
+      <div
+        class="bg-accent/80 -mb-4 flex gap-1 rounded-full p-1 backdrop-blur-sm [&>button]:backdrop-blur-none"
+      >
+        <Button
+          v-for="a in ['x64', 'a64']"
+          :key="a"
+          :variant="arch === a ? 'default' : 'ghost'"
+          size="sm"
+          :class="arch === a ? 'font-medium opacity-100!' : 'opacity-60'"
+          @click="arch = a"
+        >
+          {{ a === 'x64' ? 'x64_86' : 'aarch64' }}
+        </Button>
+      </div>
+
+      <div class="mt-4 grid grid-cols-3">
+        <div
+          v-for="p in platformDownloads"
+          class="flex aspect-5/4 h-64 flex-col items-center-safe justify-center border-r-2 last:border-r-0"
+        >
+          <component :is="p.logo" class="size-24 fill-current" />
+          <p class="mt-1 text-lg font-semibold tracking-wide">{{ p.name }}</p>
+          <ButtonGroup class="mt-4">
+            <!-- If download options exist (to check when to show arch not supported) -->
+            <template v-if="p.actions.find((a) => a.supportedArches.includes(arch))">
+              <Button size="lg" as-child>
+                <a
+                  :href="p.actions[0]!.link"
+                  :target="p.actions[0]!.action === 'open' ? '_blank' : '_self'"
+                >
+                  <component :is="p.actions[0]!.icon" class="size-6 fill-current opacity-80" />
+                  <span v-html="p.actions[0]!.label" />
+                </a>
+              </Button>
+
+              <DropdownMenu v-if="p.actions.length > 1">
+                <DropdownMenuTrigger as-child>
+                  <Button size="icon-lg">
+                    <ChevronDown />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <template v-for="a in p.actions.slice(1)" :key="a.label">
+                    <DropdownMenuItem v-if="a.supportedArches.includes(arch)" as-child>
+                      <a :href="a.link" :target="a.action === 'open' ? '_blank' : '_self'">
+                        <component :is="a.icon" class="fill-current" />
+                        <span v-html="a.label" />
+                      </a>
+                    </DropdownMenuItem>
+                  </template>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </template>
+            <template v-else>
+              <Button variant="link" size="lg" disabled>
+                <X class="text-destructive" />
+                <p class="">{{ arch === 'x64' ? 'x64_86' : 'aarch64' }} not supported</p>
+              </Button>
+            </template>
+          </ButtonGroup>
+        </div>
+      </div>
+
+      <p
+        class="text-muted-foreground mt-2 max-w-prose text-center text-xs font-light tracking-wide"
+      >
+        * [Linux] Flathub is the recommended way to install Lepse. The others may be unstable since
+        it will always use the system webview.
+      </p>
+    </div>
+
+    <!-- Extra bottom padding for now -->
+    <div class="h-64"></div>
   </div>
 </template>
