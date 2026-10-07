@@ -72,7 +72,7 @@ onBeforeUnmount(() => {
       @pointerdown.stop
     >
       <div class="pointer-events-none pe-2 ps-3">
-        <img src="/favicon.svg" class="size-4" />
+        <img src="/logo.svg" class="h-4" />
       </div>
       <div
         v-if="appWindow"
