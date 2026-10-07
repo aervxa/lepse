@@ -22,8 +22,9 @@
       <!-- TODO: Mobile breakpoint -->
       <!-- Action -->
       <div class="flex place-content-end gap-2">
-        <Button variant="outline" size="sm" class="font-medium"> Open in browser </Button>
-        <Button size="sm" class="font-medium"> Download now </Button>
+        <Button size="sm">
+          <a href="/web">Open Lepse</a>
+        </Button>
       </div>
     </nav>
 

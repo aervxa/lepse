@@ -150,14 +150,17 @@ const platformDownloads = computed(() => [
             <ChevronsDown />
           </Button>
         </ButtonGroup>
-        <Button variant="outline" size="xl">Open in browser</Button>
+        <Button variant="outline" size="xl" as-child>
+          <a href="/web">Open in browser</a>
+        </Button>
       </div>
       <p class="text-muted-foreground mt-4 text-sm">Enjoy being productive once again.</p>
 
       <!-- TODO: make a 6.7% chance of the 67 version to load instead -->
       <img
         src="/images/app-homepage.webp"
-        class="bg-accent aspect-16/10 w-full max-w-5xl rounded-xl border"
+        draggable="false"
+        class="bg-accent aspect-16/10 w-full max-w-5xl rounded-xl border select-none"
       />
     </div>
 

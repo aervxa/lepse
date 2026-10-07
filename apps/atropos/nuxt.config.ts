@@ -21,4 +21,10 @@ export default defineNuxtConfig({
   },
 
   modules: ['@nuxtjs/color-mode', '@nuxtjs/device'],
+
+  runtimeConfig: {
+    public: {
+      webUrl: process.env.NUXT_PUBLIC_WEB_URL || 'https://os.lepse.app',
+    },
+  },
 })
