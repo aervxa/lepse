@@ -3,7 +3,11 @@ export default defineCachedEventHandler(
     const res = await $fetch<{
       tag_name: string
       assets: { label: string; browser_download_url: string }[]
-    }>(`https://api.github.com/repos/aervxa/lepse/releases/latest`)
+    }>(`https://api.github.com/repos/aervxa/lepse/releases/latest`, {
+      headers: {
+        'User-Agent': 'lepse-ssr',
+      },
+    })
 
     return {
       version: res.tag_name as string,
