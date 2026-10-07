@@ -4,8 +4,10 @@ import LogosApple from '@/components/logos/apple.vue'
 import LogosArchLinux from '@/components/logos/arch-linux.vue'
 import LogosFedora from '@/components/logos/fedora.vue'
 import LogosFlathub from '@/components/logos/flathub.vue'
+import LogosGithub from '@/components/logos/github.vue'
 import LogosLinux from '@/components/logos/linux.vue'
 import LogosMicosoftStore from '@/components/logos/microsoft-store.vue'
+import LogosReddit from '@/components/logos/reddit.vue'
 import LogosUbuntu from '@/components/logos/ubuntu.vue'
 import LogosWindows from '@/components/logos/windows.vue'
 
@@ -114,9 +116,9 @@ const platformDownloads = computed(() => [
     </div>
   </div>
 
-  <div class="flex flex-col gap-24 *:p-6">
+  <div class="flex flex-col gap-24">
     <!-- Hero -->
-    <div class="flex flex-col items-center-safe gap-8 pt-44 sm:pt-40 md:pt-36 lg:pt-32">
+    <div class="flex flex-col items-center-safe gap-8 p-6 pt-44 sm:pt-40 md:pt-36 lg:pt-32">
       <Button variant="outline" size="xs" class="-mb-4">
         <span class="bg-primary mr-1 size-2 rounded-full" />
         What is Lepse?
@@ -181,7 +183,7 @@ const platformDownloads = computed(() => [
     </div>
 
     <!-- Features -->
-    <div class="mt-12 flex flex-col items-center-safe gap-12">
+    <div class="mt-12 flex flex-col items-center-safe gap-12 p-6">
       <p class="text-center text-3xl font-medium md:text-4xl lg:text-5xl">
         Productivity meets aesthetics
       </p>
@@ -202,7 +204,7 @@ const platformDownloads = computed(() => [
     </div>
 
     <!-- Downloads -->
-    <div ref="downloads" class="flex flex-col items-center-safe gap-6">
+    <div ref="downloads" class="flex flex-col items-center-safe gap-6 p-6">
       <p
         class="max-w-[15ch] text-center text-2xl leading-tight font-medium sm:text-3xl md:text-4xl lg:text-5xl"
       >
@@ -284,10 +286,61 @@ const platformDownloads = computed(() => [
       </p>
     </div>
 
-    <!-- Extra bottom padding for now -->
-    <div class="bg-card grid h-64 place-content-center p-0">
-      <!-- TODO: footer -->
-      <p class="text-muted-foreground text-sm">TODO: Footer</p>
+    <!-- Footer -->
+    <div class="from-primary/16 bg-muted/32 border-t bg-linear-to-b p-8 pb-4 sm:bg-linear-to-br">
+      <div class="mx-auto flex w-full max-w-5xl flex-col">
+        <div class="flex gap-x-8 gap-y-4 max-sm:flex-col max-sm:items-center sm:justify-between">
+          <img src="/logo.svg" class="h-8 w-fit" />
+
+          <div class="flex gap-1">
+            <Tooltip
+              v-for="(r, i) in [
+                { label: 'Github', href: 'https://github.com/aervxa/lepse', icon: LogosGithub },
+                { label: 'Reddit', href: 'https://reddit.com/r/lepse', icon: LogosReddit },
+              ]"
+              :key="i"
+            >
+              <TooltipTrigger>
+                <Button variant="ghost" size="icon" as-child>
+                  <a :href="r.href" target="_blank">
+                    <component :is="r.icon" class="size-6 fill-current" />
+                  </a>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>{{ r.label }}</TooltipContent>
+            </Tooltip>
+          </div>
+        </div>
+
+        <div class="text-muted-foreground mt-4 flex flex-col gap-2 max-sm:items-center-safe">
+          <p>
+            Lepse is
+            <a
+              href="https://github.com/aervxa/lepse"
+              target="_blank"
+              class="text-primary hover:underline"
+              >open source</a
+            >.*
+          </p>
+          <div class="flex justify-between gap-1 text-sm">
+            <p>© 2026 Lepse.</p>
+            <p class="italic">
+              built by
+              <a
+                href="https://github.com/aervxa"
+                target="_blank"
+                class="text-primary hover:underline"
+                >aervxa</a
+              >.
+            </p>
+          </div>
+        </div>
+
+        <div class="text-muted-foreground mt-8 text-center text-xs">
+          <p>*All of the code is public and contributions are appreciated.</p>
+          <p>The license doesn't allow commercial use, so technically it's Source Available.</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
