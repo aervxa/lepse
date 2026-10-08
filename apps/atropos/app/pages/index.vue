@@ -11,9 +11,7 @@ import LogosReddit from '@/components/logos/reddit.vue'
 import LogosUbuntu from '@/components/logos/ubuntu.vue'
 import LogosWindows from '@/components/logos/windows.vue'
 
-definePageMeta({
-  layout: 'shell',
-})
+definePageMeta({ layout: 'shell' })
 
 /* ------------------------------------ DOWNLOADS ------------------------------------  */
 

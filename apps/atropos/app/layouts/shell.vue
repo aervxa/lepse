@@ -1,22 +1,46 @@
+<script setup lang="ts">
+const navItems = [
+  { label: 'Home', href: '/' },
+  { label: 'About', href: '/about' },
+  { label: 'News', href: '/news' },
+]
+</script>
+
 <template>
   <main class="bg-sidebar flex h-dvh flex-col">
     <!-- Navbar -->
     <nav class="mx-auto grid h-12 w-full max-w-6xl grid-cols-3 items-center px-4">
       <a href="/" class="flex items-center gap-2 select-none">
-        <img src="/favicon.svg" class="size-6" />
-        <p class="text-xl font-medium">lepse</p>
+        <img src="/logo.svg" class="h-6" />
       </a>
 
       <div class="flex place-content-center gap-2">
-        <Button variant="link">
-          <a href="/">Home</a>
-        </Button>
-        <Button variant="link">
-          <a href="/">About</a>
-        </Button>
-        <Button variant="link">
-          <a href="/">Contact us</a>
-        </Button>
+        <NuxtLink
+          v-slot="{ href, navigate, prefetch, shouldPrefetch, isExactActive }"
+          v-for="i in navItems"
+          :key="i.label"
+          :to="i.href"
+          custom
+        >
+          <Button
+            :variant="isExactActive ? 'default' : 'link'"
+            :class="{
+              'bg-primary/20 hover:bg-primary/30 text-primary saturate-150 hover:brightness-110':
+                isExactActive,
+            }"
+            size="sm"
+            as-child
+          >
+            <a
+              :href="href || ''"
+              @click="navigate"
+              @pointerenter="shouldPrefetch('interaction') && prefetch()"
+              @focus="shouldPrefetch('interaction') && prefetch()"
+            >
+              {{ i.label }}
+            </a>
+          </Button>
+        </NuxtLink>
       </div>
 
       <!-- TODO: Mobile breakpoint -->
