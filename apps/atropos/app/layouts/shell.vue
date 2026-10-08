@@ -50,7 +50,7 @@ const [DefineNavItem, ReuseNavItem] = createReusableTemplate<{
 
       <!-- Notch for navitems for mobile + centered navigation -->
       <div
-        class="bg-sidebar before:bg-sidebar border-muted z-10 flex gap-2 place-self-center rounded-b-2xl border-2 border-t-0 p-1 before:absolute before:bottom-full before:h-2 before:w-full max-sm:translate-y-12 max-sm:self-start sm:border-transparent"
+        class="bg-sidebar before:bg-sidebar border-muted relative z-10 flex gap-2 place-self-center rounded-b-2xl border-2 border-t-0 p-1 before:absolute before:bottom-full before:h-2 before:w-full max-sm:translate-y-12 max-sm:self-start sm:border-transparent"
       >
         <div
           class="absolute top-0 left-0 h-6 w-8 -translate-x-full -translate-y-0.5 *:rounded-tr-xl"
