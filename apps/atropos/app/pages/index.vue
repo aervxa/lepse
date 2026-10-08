@@ -95,6 +95,13 @@ const platformDownloads = computed(() => [
     ],
   },
 ])
+
+/* ------------------------------------ NEWS ------------------------------------  */
+
+const newsRef = useTemplateRef('news')
+const scrollToNews = () => {
+  newsRef.value?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+}
 </script>
 
 <template>
@@ -117,7 +124,7 @@ const platformDownloads = computed(() => [
   <div class="flex flex-col gap-24">
     <!-- Hero -->
     <div class="flex flex-col items-center-safe gap-8 p-6 pt-44 sm:pt-40 md:pt-36 lg:pt-32">
-      <Button variant="outline" size="xs" class="-mb-4">
+      <Button variant="outline" size="xs" class="-mb-4" @click="scrollToNews">
         <span class="bg-primary mr-1 size-2 rounded-full" />
         What is Lepse?
       </Button>
@@ -202,7 +209,7 @@ const platformDownloads = computed(() => [
     </div>
 
     <!-- Downloads -->
-    <div ref="downloads" class="flex flex-col items-center-safe gap-6 p-6">
+    <div ref="downloads" class="bg-card/80 -my-4 flex flex-col items-center-safe gap-6 p-6 py-10">
       <p
         class="max-w-[15ch] text-center text-2xl leading-tight font-medium sm:text-3xl md:text-4xl lg:text-5xl"
       >
@@ -282,6 +289,24 @@ const platformDownloads = computed(() => [
         * [Linux] Flathub is the recommended way to install Lepse. The others may be unstable since
         it will always use the system webview.
       </p>
+    </div>
+
+    <!-- News -->
+    <div ref="news" class="flex flex-col items-center-safe gap-12 px-6">
+      <p class="text-center text-3xl font-medium md:text-4xl lg:text-5xl">Latest from Lepse</p>
+
+      <Card class="bg-card/60 w-full max-w-xs">
+        <Empty>
+          <EmptyHeader>
+            <EmptyTitle>News</EmptyTitle>
+            <EmptyDescription>Coming soon.</EmptyDescription>
+          </EmptyHeader>
+        </Empty>
+      </Card>
+
+      <Button size="lg" as-child>
+        <NuxtLink to="/news">See all news</NuxtLink>
+      </Button>
     </div>
 
     <!-- Footer -->
