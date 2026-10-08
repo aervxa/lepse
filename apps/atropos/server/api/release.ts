@@ -1,11 +1,14 @@
 export default defineCachedEventHandler(
-  async () => {
+  async (event) => {
+    const { githubToken } = useRuntimeConfig(event)
+
     const res = await $fetch<{
       tag_name: string
       assets: { label: string; browser_download_url: string }[]
     }>(`https://api.github.com/repos/aervxa/lepse/releases/latest`, {
       headers: {
         'User-Agent': 'lepse-ssr',
+        ...(githubToken && { Authorization: `Bearer ${githubToken}` }),
       },
     })
 

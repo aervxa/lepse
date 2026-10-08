@@ -26,5 +26,6 @@ export default defineNuxtConfig({
     public: {
       webUrl: process.env.NUXT_PUBLIC_WEB_URL || 'https://os.lepse.app',
     },
+    githubToken: '',
   },
 })
