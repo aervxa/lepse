@@ -199,6 +199,9 @@ importers:
       '@nuxtjs/device':
         specifier: 4.0.0
         version: 4.0.0
+      '@vueuse/core':
+        specifier: ^15.0.0
+        version: 15.0.0(vue@3.5.43(typescript@6.0.3))
       nuxt:
         specifier: ^4.5.2
         version: 4.5.2(1bcba871a963a1fa66260ac47086fe20)
