@@ -38,7 +38,7 @@ if (skipGen) {
     console.log(styleText('italic', styleText('gray', 'found magick!')))
     // Generate source icon
     execSync(
-      'magick -background none favicon.svg -resize 896x896 -gravity center -background none -extent 1024x1024 icon-source.png',
+      'magick -background none favicon.svg -resize 832x832 -gravity center -background none -extent 1024x1024 icon-source.png',
       { cwd: 'packages/assets/favicon' }
     )
     // Generate all tauri icons
