@@ -13,6 +13,9 @@ import { styleText } from 'util'
 
 const skipGen = process.argv.includes('--skip-gen')
 
+// Enter root dir
+process.chdir(execSync('git rev-parse --show-toplevel').toString().trim())
+
 // Copy over to Atropos site
 console.log(styleText('gray', 'Copying favicons... (atropos)'))
 cpSync('packages/assets/favicon', 'apps/atropos/public', { recursive: true })
