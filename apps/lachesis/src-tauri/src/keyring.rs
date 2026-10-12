@@ -4,7 +4,7 @@ const KEYRING_SERVICE: &str = "app.lepse.Lepse";
 
 #[cfg(target_os = "linux")]
 type Error = std::io::Error;
-#[cfg(not(target_os = "linux"))]
+#[cfg(any(target_os = "windows", target_os = "macos"))]
 type Error = keyring_core::Error;
 
 /**
@@ -13,7 +13,7 @@ type Error = keyring_core::Error;
 pub fn init_keyring_store(config: &HashMap<&str, &str>) -> Result<(), Error> {
   #[cfg(target_os = "linux")]
   {
-    let _ = config; // to prevent unused_variables error (config not used on linux)
+    let _ = config; // to prevent unused_variables error (config doesn't exist for the oo7 that linux uses)
     Ok(())
   }
   #[cfg(target_os = "windows")]
@@ -27,17 +27,6 @@ pub fn init_keyring_store(config: &HashMap<&str, &str>) -> Result<(), Error> {
   {
     keyring_core::set_default_store(
       apple_native_keyring_store::keychain::Store::new_with_configuration(config)?,
-    );
-    Ok(())
-  }
-  #[cfg(all(
-    unix,
-    // Omit all other unix alr handled (mobile not handled, nor supported *here*)
-    not(any(target_os = "linux", target_os = "macos", target_os = "ios", target_os = "android"))
-  ))]
-  {
-    keyring_core::set_default_store(
-      zbus_secret_service_keyring_store::Store::new_with_configuration(config)?,
     );
     Ok(())
   }
@@ -68,7 +57,7 @@ pub async fn get_secret(key: &str) -> Result<String, String> {
 
     Ok(secret_str)
   }
-  #[cfg(not(target_os = "linux"))]
+  #[cfg(any(target_os = "windows", target_os = "macos"))]
   {
     let e = keyring_core::Entry::new(KEYRING_SERVICE, key).map_err(|e| e.to_string())?;
     e.get_password().map_err(|e| e.to_string())
@@ -94,7 +83,7 @@ pub async fn set_secret(key: &str, password: &str) -> Result<(), String> {
 
     Ok(())
   }
-  #[cfg(not(target_os = "linux"))]
+  #[cfg(any(target_os = "windows", target_os = "macos"))]
   {
     let e = keyring_core::Entry::new(KEYRING_SERVICE, key).map_err(|e| e.to_string())?;
     e.set_password(password).map_err(|e| e.to_string())
@@ -121,7 +110,7 @@ pub async fn delete_secret(key: &str) -> Result<(), String> {
 
     Ok(())
   }
-  #[cfg(not(target_os = "linux"))]
+  #[cfg(any(target_os = "windows", target_os = "macos"))]
   {
     let e = keyring_core::Entry::new(KEYRING_SERVICE, key).map_err(|e| e.to_string())?;
     e.delete_credential().map_err(|e| e.to_string())
