@@ -6,7 +6,7 @@ const dbConfig = defineConfig({
   /**
    * Default connection used for all queries.
    */
-  connection: 'libsql',
+  connection: 'postgres',
 
   connections: {
     /**
@@ -53,25 +53,18 @@ const dbConfig = defineConfig({
      * PostgreSQL connection.
      * Install package to switch: npm install pg
      */
-    // pg: {
-    //   client: 'pg',
-    //   connection: {
-    //     host: env.get('DB_HOST'),
-    //     port: env.get('DB_PORT'),
-    //     user: env.get('DB_USER'),
-    //     password: env.get('DB_PASSWORD'),
-    //     database: env.get('DB_DATABASE'),
-    //     ssl: true,
-    //   },
-    //   pool: {
-    //     min: 0,
-    //   },
-    //   migrations: {
-    //     naturalSort: true,
-    //     paths: ['database/migrations'],
-    //   },
-    //   debug: app.inDev,
-    // },
+    postgres: {
+      client: 'pg',
+      connection: {
+        connectionString: env.get('DATABASE_URL'),
+      },
+      pool: { min: 0 }, // https://knexjs.org/guide/#pool:~:text=It%20is%20recommended%20to%20set%20min%3A%200%20so%20all%20idle%20connections%20can%20be%20terminated
+      migrations: {
+        naturalSort: true,
+        paths: ['database/migrations'],
+      },
+      debug: app.inDev,
+    },
 
     /**
      * MySQL / MariaDB connection.
@@ -117,18 +110,18 @@ const dbConfig = defineConfig({
      * libSQL (Turso) connection.
      * Install package to switch: npm install @libsql/sqlite3
      */
-    libsql: {
-      client: 'libsql',
-      connection: {
-        filename: env.get('LIBSQL_HTTP_URL'),
-      },
-      useNullAsDefault: true,
-      migrations: {
-        naturalSort: true,
-        paths: ['database/migrations'],
-      },
-      debug: app.inDev,
-    },
+    // libsql: {
+    //   client: 'libsql',
+    //   connection: {
+    //     filename: env.get('LIBSQL_HTTP_URL'),
+    //   },
+    //   useNullAsDefault: true,
+    //   migrations: {
+    //     naturalSort: true,
+    //     paths: ['database/migrations'],
+    //   },
+    //   debug: app.inDev,
+    // },
   },
 })
 

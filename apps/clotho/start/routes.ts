@@ -136,4 +136,5 @@ router
   })
   .prefix('/api/v1')
   .use(middleware.forceJsonResponse())
+  .use(middleware.silentAuth())
   .use(apiThrottle)
