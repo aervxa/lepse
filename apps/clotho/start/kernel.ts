@@ -38,7 +38,6 @@ router.use([
   () => import('@adonisjs/session/session_middleware'),
   () => import('@adonisjs/shield/shield_middleware'),
   () => import('@adonisjs/auth/initialize_auth_middleware'),
-  () => import('#middleware/silent_auth_middleware'),
   () => import('#middleware/initialize_bouncer_middleware'),
   () => import('#middleware/silent_is_app_middleware'),
 ])
@@ -52,4 +51,5 @@ export const middleware = router.named({
   verifiedEmail: () => import('#middleware/verified_email_middleware'),
   clientDate: () => import('#middleware/client_date_middleware'),
   auth: () => import('#middleware/auth_middleware'),
+  silentAuth: () => import('#middleware/silent_auth_middleware'),
 })
