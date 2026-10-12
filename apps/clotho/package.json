@@ -6,6 +6,7 @@
     "./data": "./.adonisjs/client/data.d.ts",
     "./registry": "./.adonisjs/client/registry/index.ts"
   },
+  "files": ["build"],
   "scripts": {
     "start": "node bin/server.js",
     "build": "node ace build",
