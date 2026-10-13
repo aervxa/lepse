@@ -29,6 +29,10 @@
   </keywords>
 
   <releases>
+    <release version="0.2.9" date="2026-10-09">
+      <url type="details">https://github.com/aervxa/lepse/releases/tag/v0.2.9</url>
+      <description />
+    </release>
     <release version="0.2.8" date="2026-10-02">
       <url type="details">https://github.com/aervxa/lepse/releases/tag/v0.2.8</url>
       <description />
