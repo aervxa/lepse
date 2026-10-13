@@ -1,7 +1,7 @@
 import { useLocalStorage } from '@vueuse/core'
 import { BACKGROUNDS } from '~/lib/backgrounds'
 
-const DEFAULT_BACKGROUND_ID = 3898 /* red-lines */
+const DEFAULT_BACKGROUND_ID = 5672 /* green-lines */
 
 export const useBackgrounds = () => {
   const selectedBackgroundId = useLocalStorage<number>(
