@@ -57,7 +57,6 @@ pub fn run() {
 
       // Create main window
       let mut builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::default())
-        .devtools(debug) // Devtools only in debug mode
         .decorations(native_decorations) // native decorations only if preferred by user
         .title("Lepse")
         .inner_size(1280.0, 768.0) // default app size
@@ -69,13 +68,12 @@ pub fn run() {
         ) // effects for Windows and MacOS respectively
         .visible(false); // hide by default to wait until content loads?
 
-      // Override devtools to true in dev
-      #[cfg(dev)]
+      #[cfg(not(not(debug_assertions)))]
       {
-        builder = builder.devtools(true)
+        builder = builder.devtools(debug) // Devtools only in debug mode
       }
 
-      #[cfg(all(not(feature = "cef"), not(target_os = "macos")))]
+      #[cfg(not(feature = "cef"))]
       {
         builder = builder.transparent(true)
       }
