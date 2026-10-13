@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Eye, EyeOff } from '@lucide/vue'
 import { revalidateLogic, useForm } from '@tanstack/vue-form'
 import { z } from 'zod'
 
@@ -68,6 +69,8 @@ const {
     navigateTo('/')
   },
 })
+
+const passwordVisible = ref(false)
 </script>
 
 <template>
@@ -120,7 +123,7 @@ const {
             <Field :data-invalid="!field.state.meta.isValid">
               <FieldLabel :for="field.name">Password</FieldLabel>
               <Input
-                type="password"
+                :type="passwordVisible ? 'text' : 'password'"
                 :id="field.name"
                 :name="field.name"
                 :model-value="field.state.value"
@@ -135,16 +138,27 @@ const {
           <FormField name="passwordConfirmation" v-slot="{ field }">
             <Field :data-invalid="!field.state.meta.isValid">
               <FieldLabel :for="field.name">Confirm Password</FieldLabel>
-              <Input
-                type="password"
-                :id="field.name"
-                :name="field.name"
-                :model-value="field.state.value"
-                :aria-invalid="!field.state.meta.isValid"
-                autocomplete="new-password"
-                @blur="field.handleBlur"
-                @input="field.handleChange($event.target.value)"
-              />
+              <InputGroup>
+                <InputGroupInput
+                  :type="passwordVisible ? 'text' : 'password'"
+                  :id="field.name"
+                  :name="field.name"
+                  :model-value="field.state.value"
+                  :aria-invalid="!field.state.meta.isValid"
+                  autocomplete="new-password"
+                  @blur="field.handleBlur"
+                  @input="field.handleChange($event.target.value)"
+                />
+                <InputGroupAddon align="inline-end">
+                  <InputGroupButton
+                    aria-label="Toggle password visibility"
+                    size="icon-xs"
+                    @click="passwordVisible = !passwordVisible"
+                  >
+                    <component :is="passwordVisible ? Eye : EyeOff" />
+                  </InputGroupButton>
+                </InputGroupAddon>
+              </InputGroup>
             </Field>
           </FormField>
         </div>
