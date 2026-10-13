@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Minus, SquareDashedTopSolid, SquaresIntersect, X } from '@lucide/vue'
 import { isTauri } from '@tauri-apps/api/core'
-import { platform, type Platform } from '@tauri-apps/plugin-os'
 import { getCurrentWebviewWindow, type WebviewWindow } from '@tauri-apps/api/webviewWindow'
 import type { UnlistenFn } from '@tauri-apps/api/event'
 import { useFullscreen } from '@vueuse/core'
@@ -35,13 +34,11 @@ onMounted(() => {
 
 const isApp = isTauri()
 const isAppMaximized = ref(false)
-let os: Platform | undefined
 let appWindow: WebviewWindow | undefined
 let unlisten: UnlistenFn | undefined
 
 onBeforeMount(async () => {
   if (isApp) {
-    os = platform()
     appWindow = getCurrentWebviewWindow()
     isAppMaximized.value = await appWindow.isMaximized()
 
@@ -61,7 +58,7 @@ onBeforeUnmount(() => {
 <template>
   <main
     class="flex h-dvh flex-col [--titlebar-height:--spacing(8)]"
-    :class="[windowTransparency ? 'bg-sidebar/60' : 'bg-sidebar']"
+    :class="[windowTransparency ? 'bg-sidebar/80' : 'bg-sidebar']"
   >
     <div
       v-if="isApp && !hideCustomDecorations"
@@ -71,7 +68,7 @@ onBeforeUnmount(() => {
       class="-mb-2 flex h-(--titlebar-height) items-center justify-between"
       @pointerdown.stop
     >
-      <div class="pointer-events-none pe-2 ps-3">
+      <div class="pointer-events-none ps-3 pe-2">
         <img src="/logo.svg" class="h-4" />
       </div>
       <div
@@ -104,7 +101,7 @@ onBeforeUnmount(() => {
           size="icon-sm"
           tabindex="-1"
           @click="appWindow.close()"
-          class="text-muted-foreground hover:text-destructive w-10 pr-2 hover:[&>svg]:stroke-3"
+          class="text-muted-foreground hover:text-destructive w-9 pr-1 hover:[&>svg]:stroke-3"
         >
           <X />
         </Button>
