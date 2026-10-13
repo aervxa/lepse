@@ -92,8 +92,8 @@ const linkGoal = (goalId: number, unlink?: boolean) => {
   }
 }
 
-const createNewGoal = async (search: string) => {
-  await createGoalMutation
+const createNewGoal = async (search: string) =>
+  createGoalMutation
     .mutateAsync(
       { body: { name: search } },
       {
@@ -101,7 +101,6 @@ const createNewGoal = async (search: string) => {
       }
     )
     .catch(() => {})
-}
 
 const deleteTask = () => {
   dialog({

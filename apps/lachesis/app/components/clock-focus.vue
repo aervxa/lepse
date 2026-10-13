@@ -74,14 +74,13 @@ const selectTask = (id: number) => {
   }
 }
 
-const createNewTask = async (search: string) => {
-  createTaskMutation.mutate(
+const createNewTask = async (search: string) =>
+  createTaskMutation.mutateAsync(
     { body: { name: search } },
     {
       onError: (err) => toast.error('Failed to create task!', { description: err.message }),
     }
   )
-}
 
 // ─── Shared stopwatch class ─────────────────────────────────────────────────
 
