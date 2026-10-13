@@ -64,11 +64,19 @@ export const useTasks = () => {
 
   const destroyTaskMutation = useMutation(
     $api.tasks.destroy.mutationOptions({
-      onSuccess: (_, { params: { id } }) => {
+      onMutate: async ({ params }) => {
+        await $queryClient.cancelQueries({ queryKey: queryKey })
+        const old = $queryClient.getQueryData(queryKey)
+
         $queryClient.setQueryData(
           queryKey,
-          (old) => old && { ...old, data: old.data.filter((i) => i.id !== id) }
+          (old) => old && { ...old, data: old.data.filter((i) => i.id !== params.id) }
         )
+
+        return { old }
+      },
+      onError: (_err, _vars, onMutateResult) => {
+        $queryClient.setQueryData(queryKey, onMutateResult?.old)
       },
     })
   )

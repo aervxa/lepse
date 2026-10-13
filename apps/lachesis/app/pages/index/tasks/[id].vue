@@ -108,20 +108,17 @@ const deleteTask = () => {
     title: 'Are you sure?',
     description: "This task will forever be lost. (linked goals won't be affected)",
     action: 'Delete',
-  }).then(
-    (v) =>
-      v &&
-      destroyTaskMutation.mutate(
-        { params: { id: Number(id) } },
-        {
-          onError: (err) => toast.error('Failed to delete task.', { description: err.message }),
-          onSuccess: () => {
-            toast.success('Task deleted successfully.')
-            navigateBack()
-          },
-        }
-      )
-  )
+  }).then((v) => {
+    if (v) {
+      destroyTaskMutation
+        // Mutate async because then/catch is needed so the toast runs after navigateBack unmounts
+        .mutateAsync({ params: { id: Number(id) } })
+        .then(() => toast.success('Task deleted successfully.'))
+        .catch((err) => toast.error('Failed to delete task.', { description: err.message }))
+
+      navigateBack()
+    }
+  })
 }
 
 const resetTaskTime = () => {

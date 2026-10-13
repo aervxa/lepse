@@ -89,20 +89,17 @@ const deleteGoal = () => {
     title: 'Are you sure?',
     description: "This goal will forever be lost. (linked tasks won't be affected)",
     action: 'Delete',
-  }).then(
-    (v) =>
-      v &&
-      destroyGoalMutation.mutate(
-        { params: { id: Number(id) } },
-        {
-          onError: (err) => toast.error('Failed to delete goal.', { description: err.message }),
-          onSuccess: () => {
-            toast.success('Goal deleted successfully.')
-            navigateBack()
-          },
-        }
-      )
-  )
+  }).then((v) => {
+    if (v) {
+      destroyGoalMutation
+        // Mutate async because then/catch is needed so the toast runs after navigateBack unmounts
+        .mutateAsync({ params: { id: Number(id) } })
+        .then(() => toast.success('Goal deleted successfully.'))
+        .catch((err) => toast.error('Failed to delete goal.', { description: err.message }))
+
+      navigateBack()
+    }
+  })
 }
 </script>
 
