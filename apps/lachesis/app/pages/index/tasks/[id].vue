@@ -236,6 +236,7 @@ const focusTask = () => {
           :create="createNewGoal"
           empty="No goals found."
           placeholder="Search a goal"
+          prevent-select
         >
           <Button variant="ghost" size="icon-xs">
             <Plus />

@@ -197,6 +197,7 @@ const deleteGoal = () => {
                 empty="No tasks found."
                 placeholder="Search a task"
                 align="end"
+                prevent-select
               >
                 <Button variant="secondary" size="icon-xs">
                   <Plus />

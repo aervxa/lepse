@@ -14,6 +14,7 @@ const props = withDefaults(
     placeholder?: string
     align?: ComboboxContentProps['align']
     create?: (search: string) => Promise<unknown>
+    preventSelect?: boolean
   }>(),
   { align: 'start' }
 )
@@ -86,7 +87,9 @@ const create = async () => {
             v-for="item in filteredItems"
             :key="item.id"
             :value="item.id"
-            @select="((open = false), emit('select', item))"
+            @select="
+              (preventSelect && $event.preventDefault(), (open = false), emit('select', item))
+            "
           >
             {{ item.name }}
             <ComboboxItemIndicator>
