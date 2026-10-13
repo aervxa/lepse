@@ -190,7 +190,7 @@ const deleteGoal = () => {
                 </div>
               </div>
 
-              <Combobox
+              <ComboboxCreate
                 :items="tasks?.filter((task) => !task.goalIds.includes(goal?.id ?? -1))"
                 @select="(t) => linkTask(t.id)"
                 :create="createNewTask"
@@ -201,7 +201,7 @@ const deleteGoal = () => {
                 <Button variant="secondary" size="icon-xs">
                   <Plus />
                 </Button>
-              </Combobox>
+              </ComboboxCreate>
             </div>
             <CollapsibleContent>
               <div class="flex flex-col pt-2">

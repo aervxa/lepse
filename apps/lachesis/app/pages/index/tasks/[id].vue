@@ -226,7 +226,7 @@ const focusTask = () => {
             </Button>
           </NuxtLink>
         </Badge>
-        <Combobox
+        <ComboboxCreate
           :items="goals?.filter((g) => !taskGoals?.includes(g))"
           @select="
             (item) => {
@@ -240,7 +240,7 @@ const focusTask = () => {
           <Button variant="ghost" size="icon-xs">
             <Plus />
           </Button>
-        </Combobox>
+        </ComboboxCreate>
       </div>
       <!-- Time spent on task -->
       <div class="flex items-center gap-2">

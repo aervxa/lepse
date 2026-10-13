@@ -44,7 +44,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
   </PopoverPortal>
 </template>
 
-<style>
+<style scoped>
 [data-reka-popper-content-wrapper] {
   pointer-events: none;
 }

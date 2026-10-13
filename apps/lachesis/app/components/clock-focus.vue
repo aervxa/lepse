@@ -230,7 +230,7 @@ watch(stopwatch.elapsed, () => {
             <X class="translate-x-1/5 -translate-y-1/5" />
           </Button>
           <p class="font-mono text-[10px] tracking-widest uppercase opacity-60">working on</p>
-          <Combobox
+          <ComboboxCreate
             :items="tasks"
             @select="(i) => selectTask(i.id)"
             :create="createNewTask"
@@ -252,7 +252,7 @@ watch(stopwatch.elapsed, () => {
                 <ChevronsUpDown v-if="!task" class="size-4 opacity-60" />
               </p>
             </div>
-          </Combobox>
+          </ComboboxCreate>
         </div>
 
         <!-- Pomo-specific state tabs -->
