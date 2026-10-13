@@ -77,4 +77,15 @@ export const BACKGROUNDS = [
       url: 'https://unsplash.com/@loganvoss',
     },
   },
+  {
+    id: 5499,
+    weight: 1078,
+    name: 'green-lines',
+    style: 'abstract',
+    url: '/images/backgrounds/lines-white.webp',
+    credit: {
+      handle: '@loganvoss',
+      url: 'https://unsplash.com/@loganvoss',
+    },
+  },
 ]
