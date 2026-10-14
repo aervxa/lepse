@@ -67,7 +67,6 @@ pub fn run() {
       keyring::init_keyring_store(&HashMap::new())?;
 
       // Windows options
-      let debug = std::env::var("DEBUG").map_or(false, |v| v == "1");
       let native_decorations = app
         .store("settings.json")
         .ok()
@@ -88,8 +87,9 @@ pub fn run() {
         ) // effects for Windows and MacOS respectively
         .visible(false); // hide by default to wait until content loads?
 
-      #[cfg(not(not(debug_assertions)))]
+      #[cfg(not(debug_assertions))]
       {
+        let debug = std::env::var("DEBUG").map_or(false, |v| v == "1");
         builder = builder.devtools(debug) // Devtools only in debug mode
       }
 
