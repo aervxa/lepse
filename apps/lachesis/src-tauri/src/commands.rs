@@ -25,6 +25,5 @@ pub fn get_os() -> String {
 #[tauri::command]
 pub fn can_transparent() -> bool {
   // disable transparency on cef since it's not supported (https://github.com/tauri-apps/tauri/issues/15718)
-  // disable transparency on macos due to macos-private-api (https://v2.tauri.app/reference/config/#transparent)
-  cfg!(all(not(feature = "cef"), not(target_os = "macos")))
+  cfg!(not(feature = "cef"))
 }
