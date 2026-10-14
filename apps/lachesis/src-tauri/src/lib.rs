@@ -48,11 +48,11 @@ pub fn run() {
   builder
     .runtime(runtime)
     .invoke_handler(tauri::generate_handler![
-      keyring::get_secret,
-      keyring::set_secret,
-      keyring::delete_secret,
-      commands::get_os,
-      commands::can_transparent
+      keyring::commands::get_secret,
+      keyring::commands::set_secret,
+      keyring::commands::delete_secret,
+      commands::other::get_os,
+      commands::other::can_transparent
     ])
     .setup(|app| {
       if cfg!(debug_assertions) {
