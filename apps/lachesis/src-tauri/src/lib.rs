@@ -14,12 +14,38 @@ mod keyring;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+  let mut builder = tauri::Builder::default();
+
   #[cfg(feature = "cef")]
   let runtime = tauri_runtime_cef::Cef::default();
   #[cfg(not(feature = "cef"))]
   let runtime = tauri_runtime_wry::Wry::default();
 
-  tauri::Builder::default()
+  #[cfg(desktop)]
+  {
+    // IMPORTANT: tauri_plugin_single_instance MUST be the first plugin loaded
+    builder = builder.plugin(
+      tauri_plugin_single_instance::Builder::new()
+        .dbus_id("app.lepse.Lepse")
+        .callback(|app, _args, _cwd| {
+          let _ = app
+            .get_webview_window("main")
+            .expect("no main window")
+            .set_focus();
+        })
+        .build(),
+    );
+  }
+
+  builder = builder
+    .plugin(tauri_plugin_notification::init())
+    .plugin(tauri_plugin_updater::Builder::new().build())
+    .plugin(tauri_plugin_opener::init())
+    .plugin(tauri_plugin_os::init())
+    .plugin(tauri_plugin_process::init())
+    .plugin(tauri_plugin_store::Builder::new().build());
+
+  builder
     .runtime(runtime)
     .invoke_handler(tauri::generate_handler![
       keyring::get_secret,
@@ -28,12 +54,6 @@ pub fn run() {
       commands::get_os,
       commands::can_transparent
     ])
-    .plugin(tauri_plugin_notification::init())
-    .plugin(tauri_plugin_updater::Builder::new().build())
-    .plugin(tauri_plugin_opener::init())
-    .plugin(tauri_plugin_os::init())
-    .plugin(tauri_plugin_process::init())
-    .plugin(tauri_plugin_store::Builder::new().build())
     .setup(|app| {
       if cfg!(debug_assertions) {
         app.handle().plugin(
