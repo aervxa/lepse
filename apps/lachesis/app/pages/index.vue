@@ -13,6 +13,7 @@ import {
 } from '@lucide/vue'
 import { invoke, isTauri } from '@tauri-apps/api/core'
 import { listen } from '@tauri-apps/api/event'
+import { TuyauHTTPError } from '@tuyau/core/client'
 import { onKeyStroke, useFullscreen, useLocalStorage, useWindowSize } from '@vueuse/core'
 import EmailVerifyButton from '~/components/email-verify-button.vue'
 
@@ -21,8 +22,14 @@ definePageMeta({
 })
 
 const route = useRoute()
-const { user } = useAuth()
+const { user, logoutMutation } = useAuth()
+const { $queryClient, $api } = useNuxtApp()
 const { activeQuote } = useQuote()
+
+// Refetch to bypass userQuery and logout if server responds with a 401 and user value exists
+$queryClient.fetchQuery($api.account.profile.show.queryOptions({}, { retry: 0 })).catch((error) => {
+  error instanceof TuyauHTTPError && error.isStatus(401) && user.value && logoutMutation.mutate({})
+})
 
 const ignoreLogin = ref(false)
 
