@@ -33,23 +33,33 @@ $queryClient.fetchQuery($api.account.profile.show.queryOptions({}, { retry: 0 })
 
 const ignoreLogin = ref(false)
 
+useFocusSyncServer()
 const inFocus = ref(false)
-provide(enterFocusKey, () => {
-  inFocus.value = true
-})
+const enterFocus = () => {
+  toggleFocus(true)
+}
+provide(enterFocusKey, enterFocus)
 const focusRef = useTemplateRef('focus')
-const toggleFocus = () => {
-  if (isPopoutOpen.value) {
-    openPopout()
-    return
-  }
-  const r = () => (inFocus.value = !inFocus.value)
-  if (focusRef.value?.focusDirty) {
-    dialog({ title: 'Are you sure?', description: 'Leaving will reset your timer.' }).then(
-      (v) => v && r()
-    )
-  } else {
-    r()
+const focusDirty = useLocalStorage('focus_dirty', false) // from clock-focus
+const toggleFocus = (value?: boolean) => {
+  // Value is the NEW value
+  value = value ?? !inFocus.value
+  const r = () => (inFocus.value = value)
+
+  if (!value /* when trying to close */) {
+    if (focusDirty.value) {
+      dialog({ title: 'Are you sure?', description: 'Leaving will reset your timer.' }).then(
+        (v) => v && r()
+      )
+    } else {
+      r()
+    }
+  } else /* trying to open */ {
+    if (isPopoutOpen.value) {
+      openPopout()
+    } else {
+      r()
+    }
   }
 }
 
@@ -91,7 +101,7 @@ onMounted(async () => {
   }
 })
 onUnmounted(() => {
-  unlistenPopout
+  unlistenPopout?.()
 })
 
 watch(isPopoutOpen, () => {
@@ -177,7 +187,7 @@ const openPopout = () => {
 
   <!-- Center | clock -->
   <Clock v-if="!inFocus" />
-  <ClockFocus v-show="inFocus" ref="focus" />
+  <ClockFocus v-else-if="!isPopoutOpen" ref="focus" />
 
   <!-- Footer | actions -->
   <div class="flex h-16 items-end justify-between gap-4">
@@ -214,7 +224,7 @@ const openPopout = () => {
         :variant="inFocus ? 'secondary' : 'default'"
         :size="width < 448 ? 'icon' : undefined"
         class="font-mono text-[11px] tracking-widest uppercase"
-        @click="toggleFocus"
+        @click="toggleFocus()"
       >
         <SquareArrowOutUpRight v-if="isPopoutOpen" />
         <LightbulbOff v-else-if="inFocus" />

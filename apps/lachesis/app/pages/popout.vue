@@ -2,7 +2,7 @@
 import { SquareArrowOutDownLeft, X } from '@lucide/vue'
 import { isTauri } from '@tauri-apps/api/core'
 import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow'
-import { useEventListener } from '@vueuse/core'
+import { useEventListener, useLocalStorage } from '@vueuse/core'
 
 const { activeBackground } = useBackgrounds()
 const { blurBackground, darkenBackground } = useSettings()
@@ -17,6 +17,8 @@ useEventListener(main, 'mousedown', (e) => {
 })
 
 useCacheSyncQueryClient()
+
+const isPopoutOpen = useLocalStorage('popout-open', false)
 </script>
 
 <template>
@@ -47,6 +49,6 @@ useCacheSyncQueryClient()
       </p>
     </div>
 
-    <ClockFocus ref="focus" popout />
+    <ClockFocus v-if="isPopoutOpen" ref="focus" popout />
   </main>
 </template>

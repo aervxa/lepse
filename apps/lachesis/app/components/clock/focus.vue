@@ -3,8 +3,6 @@ import { useDebounceFn, useIntervalFn, useLocalStorage } from '@vueuse/core'
 import { ChevronsUpDown, FastForward, Pause, Play, RefreshCw, X } from '@lucide/vue'
 import { formatDuration, Stopwatch } from '~/lib/time'
 import { toBreakMessages, toLongBreakMessages, toWorkMessages } from '~/lib/pomoMessages'
-import { emitTo, listen, type UnlistenFn } from '@tauri-apps/api/event'
-import { isTauri } from '@tauri-apps/api/core'
 
 const { popout } = defineProps<{ popout?: boolean }>()
 
@@ -12,65 +10,19 @@ const { send, requestPermission } = useNotification(false)
 const { user } = useAuth()
 
 const date = getClientDate()
-const { focusSession, updateFocusSessionMutation } = useDay(date)
+const { focusSession } = useDay(date)
 
-// ─── Syncs ──────────────────────────────────────────────────────────────────
+// ─── Sync ───────────────────────────────────────────────────────────────────
 
-type UpdateOptions = {
-  stopwatchMs?: number
-  pomoCount?: number
-}
+const { updateSession, updateTask } = useFocusSyncClient(popout)
 
-const updateSession = (options: UpdateOptions) => {
-  if (!popout) {
-    updateFocusSessionMutation.mutate({
-      params: { date },
-      body: options,
-    })
-  } else if (isTauri()) {
-    emitTo<{ options: UpdateOptions }>('main', 'focus:update-session', { options })
-  }
-}
-
-const updateTask = (id: number, options: UpdateOptions) => {
-  if (!popout) {
-    updateTaskMutation.mutate({ params: { id }, body: options })
-  } else if (isTauri()) {
-    emitTo<{ id: number; options: UpdateOptions }>('main', 'focus:update-task', { id, options })
-  }
-}
-
-let unlistenSession: UnlistenFn
-let unlistenTask: UnlistenFn
-onMounted(async () => {
-  // Set listeners to run syncs when popout send emits
-  if (!popout && isTauri()) {
-    unlistenSession = await listen<{ options: UpdateOptions }>(
-      'focus:update-session',
-      ({ payload }) => {
-        console.log('[clock-focus] heard focus:update-session, updating session...')
-        updateSession(payload.options)
-      }
-    )
-    unlistenTask = await listen<{ id: number; options: UpdateOptions }>(
-      'focus:update-task',
-      ({ payload }) => {
-        console.log('[clock-focus] heard focus:update-task, updating task...')
-        updateTask(payload.id, payload.options)
-      }
-    )
-  }
-})
-onUnmounted(() => {
-  unlistenSession()
-  unlistenTask()
-})
+// TODO: mount and unmount to read and save respectively from localstorage (read MUST clear old save, so no stale)
 
 // ─── Focus ──────────────────────────────────────────────────────────────────
 
 const focusMethod = useLocalStorage<'stopwatch' | 'pomodoro'>('focus_method', 'stopwatch')
 const focusMethodToggleable = ref(true)
-const focusDirty = ref(false)
+const focusDirty = useLocalStorage('focus_dirty', false) // localstorage to expose to other contexts if there is unsaved changes
 const toggleFocusMethod = () => {
   const r = () => (focusMethod.value = focusMethod.value === 'stopwatch' ? 'pomodoro' : 'stopwatch')
   if (focusDirty.value) {
@@ -84,7 +36,7 @@ const toggleFocusMethod = () => {
 
 // ─── Task ───────────────────────────────────────────────────────────────────
 
-const { tasks, focusedTaskId, updateTaskMutation, createTaskMutation } = useTasks()
+const { tasks, focusedTaskId, createTaskMutation } = useTasks()
 const task = computed(() => tasks.value?.find((t) => t.id === focusedTaskId.value))
 
 const selectTask = (id: number) => {
@@ -250,7 +202,7 @@ watch(stopwatch.elapsed, () => {
 })
 
 // EXPOSE
-defineExpose({ focusMethod, toggleFocusMethod, focusDirty, pomoState })
+defineExpose({ focusMethod, toggleFocusMethod, pomoState })
 </script>
 
 <template>
