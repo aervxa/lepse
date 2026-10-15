@@ -75,6 +75,7 @@ pub fn run() {
         .unwrap_or(false);
 
       // Create main window
+      #[allow(unused_mut)] // mut is used inside cfg gated blocks
       let mut builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::default())
         .decorations(native_decorations) // native decorations only if preferred by user
         .title("Lepse")
@@ -93,9 +94,14 @@ pub fn run() {
         builder = builder.devtools(debug) // Devtools only in debug mode
       }
 
-      #[cfg(not(feature = "cef"))]
+      #[cfg(not(target_os = "linux"))]
       {
-        builder = builder.transparent(true)
+        /**
+         * NOTE: Transparency not supported (or partially broken)
+         * - webkitgtk compositing makes the entire windows become transparent during repaints
+         * - cef on linux does not support transparency
+         */
+        builder = builder.transparent(true);
       }
 
       builder.build()?;
