@@ -4,6 +4,8 @@ import { ChevronsUpDown, FastForward, Pause, Play, RefreshCw, X } from '@lucide/
 import { formatDuration, Stopwatch } from '~/lib/time'
 import { toBreakMessages, toLongBreakMessages, toWorkMessages } from '~/lib/pomoMessages'
 
+const { popout } = defineProps<{ popout?: boolean }>()
+
 const { send, requestPermission } = useNotification(false)
 const { user } = useAuth()
 
@@ -14,10 +16,10 @@ const { focusSession, updateFocusSessionMutation } = useDay(date)
 
 const focusMethod = useLocalStorage<'stopwatch' | 'pomodoro'>('focus_method', 'stopwatch')
 const focusMethodToggleable = ref(true)
-const focusDirty = inject(focusDirtyKey)
+const focusDirty = ref(false)
 const toggleFocusMethod = () => {
   const r = () => (focusMethod.value = focusMethod.value === 'stopwatch' ? 'pomodoro' : 'stopwatch')
-  if (focusDirty?.value) {
+  if (focusDirty.value) {
     dialog({ title: 'Are you sure?', description: 'Switching will reset your timer.' }).then(
       (v) => v && r()
     )
@@ -25,8 +27,6 @@ const toggleFocusMethod = () => {
     r()
   }
 }
-
-defineExpose({ focusMethod, toggleFocusMethod })
 
 // ─── Task ───────────────────────────────────────────────────────────────────
 
@@ -38,7 +38,7 @@ const selectTask = (id: number) => {
   const r = () => {
     focusedTaskId.value = id
   }
-  if (focusDirty?.value && focusedTaskId.value !== -1) {
+  if (focusDirty.value && focusedTaskId.value !== -1) {
     dialog({
       title: 'Are you sure?',
       description:
@@ -200,16 +200,20 @@ watch(stopwatch.elapsed, () => {
   if (focusMethod.value === 'pomodoro' && stopwatch.elapsed.value >= pomoStateDuration.value)
     skipPomo()
 })
+
+// EXPOSE
+defineExpose({ focusMethod, toggleFocusMethod, focusDirty, pomoState })
 </script>
 
 <template>
-  <ClockWrapper>
+  <ClockWrapper :popout>
     <!-- Div wrapper to hold children together as one row -->
     <div class="flex flex-col items-center">
       <!-- task selector -->
       <div
-        v-if="user?.emailVerified"
-        class="from-background/40 to-background/20 absolute top-1/6 flex -translate-y-1/2 flex-col items-center gap-1 overflow-hidden rounded-md bg-linear-to-t py-2 backdrop-blur-sm"
+        v-if="user?.emailVerified && !popout"
+        class="from-background/40 to-background/20 absolute flex flex-col items-center gap-1 overflow-hidden rounded-md bg-linear-to-t py-2 backdrop-blur-sm"
+        :class="popout ? 'top-0 rounded-t-none' : 'top-1/6 -translate-y-1/2'"
       >
         <Button
           v-if="task"
@@ -248,7 +252,7 @@ watch(stopwatch.elapsed, () => {
 
       <!-- Pomo-specific state tabs -->
       <div
-        v-if="focusMethod === 'pomodoro'"
+        v-if="focusMethod === 'pomodoro' && !popout"
         class="bg-background/40 mb-2 flex gap-1 rounded-full p-1 backdrop-blur-sm [&>button]:backdrop-blur-none"
       >
         <Button
@@ -257,7 +261,7 @@ watch(stopwatch.elapsed, () => {
           :variant="state === pomoState ? 'default' : 'ghost'"
           size="sm"
           class="px-3 font-mono text-[10px] font-light tracking-widest uppercase"
-          :class="pomoState === state ? 'font-medium opacity-100!' : 'opacity-60'"
+          :class="[pomoState === state ? 'font-medium opacity-100!' : 'opacity-60']"
           :disabled="stopwatch.running.value"
           @click="(stopwatch.reset(), (pomoState = state))"
         >
@@ -273,27 +277,32 @@ watch(stopwatch.elapsed, () => {
           ? formatted.slice(stopwatch.elapsed.value > 3600000 ? 0 : 3, -4)
           : formatted
       "
-      :sub="focusMethod !== 'pomodoro' ? formatted.slice(-3, -1) : undefined"
+      :sub="focusMethod !== 'pomodoro' && !popout ? formatted.slice(-3, -1) : undefined"
+      :popout
     />
 
     <!-- Actions -->
     <div class="mt-2 grid w-fit grid-cols-3 place-items-center gap-2 justify-self-center">
       <Button
         variant="ghost"
-        size="icon"
+        :size="popout ? 'icon-sm' : 'icon'"
         :disabled="stopwatch.elapsed.value === 0"
         @click="stopwatch.reset()"
       >
         <RefreshCw />
       </Button>
-      <Button size="icon-lg" class="size-14 rounded-full" @click="stopwatch.toggle()">
+      <Button
+        :size="popout ? 'icon-xl' : 'icon-2xl'"
+        class="rounded-full *:fill-current"
+        @click="stopwatch.toggle()"
+      >
         <Pause v-if="stopwatch.running.value" />
         <Play v-else />
       </Button>
       <Button
         v-if="focusMethod === 'pomodoro'"
         variant="ghost"
-        size="icon"
+        :size="popout ? 'icon-sm' : 'icon'"
         :disabled="!stopwatch.running.value"
         @click="skipPomo"
       >

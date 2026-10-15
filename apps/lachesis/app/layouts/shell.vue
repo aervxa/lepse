@@ -117,7 +117,7 @@ onBeforeUnmount(() => {
       <div class="absolute inset-0 -z-10">
         <Image
           :src="activeBackground.url"
-          class="pointer-events-none -z-10 size-full object-cover"
+          class="pointer-events-none -z-10 size-full bg-black object-cover"
           :class="{ 'blur-xs': blurBackground, 'brightness-75': darkenBackground }"
         />
       </div>

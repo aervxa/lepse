@@ -8,9 +8,12 @@ import {
   MoreHorizontal,
   Settings,
   Shrink,
+  SquareArrowOutUpRight,
   X,
 } from '@lucide/vue'
-import { useFullscreen, useWindowSize } from '@vueuse/core'
+import { invoke, isTauri } from '@tauri-apps/api/core'
+import { listen } from '@tauri-apps/api/event'
+import { onKeyStroke, useFullscreen, useLocalStorage, useWindowSize } from '@vueuse/core'
 import EmailVerifyButton from '~/components/email-verify-button.vue'
 
 definePageMeta({
@@ -27,11 +30,14 @@ const inFocus = ref(false)
 provide(enterFocusKey, () => {
   inFocus.value = true
 })
-const focusDirty = ref(false)
-provide(focusDirtyKey, focusDirty)
+const focusRef = useTemplateRef('focus')
 const toggleFocus = () => {
+  if (isPopoutOpen.value) {
+    openPopout()
+    return
+  }
   const r = () => (inFocus.value = !inFocus.value)
-  if (focusDirty.value) {
+  if (focusRef.value?.focusDirty) {
     dialog({ title: 'Are you sure?', description: 'Leaving will reset your timer.' }).then(
       (v) => v && r()
     )
@@ -39,13 +45,17 @@ const toggleFocus = () => {
     r()
   }
 }
-const focusRef = useTemplateRef('focus')
 
 const {
   isFullscreen,
   isSupported: isFullscreenSupported,
   toggle: toggleFullscreen,
 } = useFullscreen()
+
+onKeyStroke('F11', (e) => {
+  e.preventDefault()
+  toggleFullscreen()
+})
 
 const quote = useTemplateRef('quote')
 const copyQuote = async () => {
@@ -59,6 +69,37 @@ const copyQuote = async () => {
 }
 
 const { width } = useWindowSize()
+
+const isApp = ref(false)
+const isPopoutOpen = useLocalStorage('popout-open', false) // localstorage so state persist through window reloads
+
+onMounted(async () => {
+  isApp.value = isTauri()
+
+  if (isApp.value) {
+    const unlisten = await listen<boolean>('popout-open', ({ payload }) => {
+      isPopoutOpen.value = payload
+    })
+
+    return () => {
+      unlisten()
+    }
+  }
+})
+
+watch(isPopoutOpen, () => {
+  if (isPopoutOpen.value) {
+    inFocus.value = false
+  } else {
+    // TODO: reenter focus with state ONLY IF there is unsaved changes (focusDirty basically)
+  }
+})
+
+const openPopout = () => {
+  if (isApp.value) {
+    invoke('open_popout')
+  }
+}
 </script>
 
 <template>
@@ -129,7 +170,7 @@ const { width } = useWindowSize()
 
   <!-- Center | clock -->
   <Clock v-if="!inFocus" />
-  <ClockFocus v-else ref="focus" />
+  <ClockFocus v-else-if="!isPopoutOpen" ref="focus" />
 
   <!-- Footer | actions -->
   <div class="flex h-16 items-end justify-between gap-4">
@@ -161,30 +202,41 @@ const { width } = useWindowSize()
       </ContextMenuContent>
     </ContextMenu>
 
-    <div class="flex gap-2">
+    <div class="flex items-end gap-2">
       <Button
         :variant="inFocus ? 'secondary' : 'default'"
         :size="width < 448 ? 'icon' : undefined"
         class="font-mono text-[11px] tracking-widest uppercase"
         @click="toggleFocus"
       >
-        <LightbulbOff v-if="inFocus" />
+        <SquareArrowOutUpRight v-if="isPopoutOpen" />
+        <LightbulbOff v-else-if="inFocus" />
         <Lightbulb v-else />
         <span class="max-2xs:sr-only">{{ inFocus ? 'Exit' : 'Focus' }}</span>
       </Button>
       <template v-if="width >= 512">
         <Button
           v-if="inFocus"
-          variant="outline"
+          variant="secondary"
           class="-order-1 font-mono text-[10px] tracking-widest uppercase"
           @click="focusRef?.toggleFocusMethod()"
         >
           {{ focusRef?.focusMethod === 'stopwatch' ? 'Pomodoro' : 'Stopwatch' }}
         </Button>
-        <Button v-if="isFullscreenSupported" variant="ghost" size="icon" @click="toggleFullscreen">
-          <Shrink v-if="isFullscreen" />
-          <Expand v-else />
-        </Button>
+        <div class="flex flex-col gap-2">
+          <Button v-if="isApp && inFocus" variant="ghost" size="icon" @click="openPopout()">
+            <SquareArrowOutUpRight />
+          </Button>
+          <Button
+            v-if="isFullscreenSupported"
+            variant="ghost"
+            size="icon"
+            @click="toggleFullscreen"
+          >
+            <Shrink v-if="isFullscreen" />
+            <Expand v-else />
+          </Button>
+        </div>
       </template>
       <template v-else>
         <DropdownMenu>
@@ -197,6 +249,9 @@ const { width } = useWindowSize()
             <DropdownMenuItem v-if="inFocus" @select="focusRef?.toggleFocusMethod()">
               Use {{ focusRef?.focusMethod === 'stopwatch' ? 'Pomodoro' : 'Stopwatch' }}
             </DropdownMenuItem>
+            <DropdownMenuItem v-if="isApp && inFocus" @select="openPopout()"
+              >Open popout</DropdownMenuItem
+            >
             <DropdownMenuItem v-if="isFullscreenSupported" @select="toggleFullscreen">
               {{ isFullscreen ? 'Exit' : 'Enter' }} Fullscreen
               <DropdownMenuShortcut>F11</DropdownMenuShortcut>
