@@ -4,28 +4,29 @@ import { ChevronsUpDown, FastForward, Pause, Play, RefreshCw, X } from '@lucide/
 import { formatDuration, Stopwatch } from '~/lib/time'
 import { toBreakMessages, toLongBreakMessages, toWorkMessages } from '~/lib/pomoMessages'
 
-const hasCustomizedAccent = useLocalStorage('hasCustomizedAccent', false)
-
-const { inFocus, focusMethod } = defineProps<{
-  inFocus: boolean
-  focusMethod: 'stopwatch' | 'pomodoro'
-}>()
-
-watch(
-  () => inFocus,
-  () => {
-    stopwatch.reset()
-  }
-)
-
 const { send, requestPermission } = useNotification(false)
 const { user } = useAuth()
-const now = useSharedNow()
-const nowStr = computed(() => now.value.toLocaleTimeString([], { timeStyle: 'short' }))
-const { activeGreeting } = useGreeting()
 
 const date = getClientDate()
 const { focusSession, updateFocusSessionMutation } = useDay(date)
+
+// ─── Focus ──────────────────────────────────────────────────────────────────
+
+const focusMethod = useLocalStorage<'stopwatch' | 'pomodoro'>('focus_method', 'stopwatch')
+const focusMethodToggleable = ref(true)
+const focusDirty = inject(focusDirtyKey)
+const toggleFocusMethod = () => {
+  const r = () => (focusMethod.value = focusMethod.value === 'stopwatch' ? 'pomodoro' : 'stopwatch')
+  if (focusDirty?.value) {
+    dialog({ title: 'Are you sure?', description: 'Switching will reset your timer.' }).then(
+      (v) => v && r()
+    )
+  } else {
+    r()
+  }
+}
+
+defineExpose({ focusMethod, toggleFocusMethod })
 
 // ─── Task ───────────────────────────────────────────────────────────────────
 
@@ -46,7 +47,7 @@ const selectTask = (id: number) => {
           : 'Cancelling will result in your progress being lost.',
     }).then((v) => {
       if (v) {
-        if (focusMethod === 'stopwatch' && task.value) {
+        if (focusMethod.value === 'stopwatch' && task.value) {
           // remove from old task
           updateTaskMutation.mutate({
             params: { id: task.value.id },
@@ -84,15 +85,14 @@ const createNewTask = async (search: string) =>
 
 // ─── Shared stopwatch class ─────────────────────────────────────────────────
 
-const focusDirty = inject(focusDirtyKey)
 const stopwatch = new Stopwatch({
   onStart: () => {
-    if (focusMethod === 'stopwatch') stopwatchSyncInterval.resume()
+    if (focusMethod.value === 'stopwatch') stopwatchSyncInterval.resume()
     focusDirty && (focusDirty.value = true)
-    if (focusMethod === 'pomodoro') requestPermission()
+    if (focusMethod.value === 'pomodoro') requestPermission()
   },
   onStop: () => {
-    if (focusMethod === 'stopwatch') {
+    if (focusMethod.value === 'stopwatch') {
       syncStopwatch()
       stopwatchSyncInterval.pause()
       focusDirty && (focusDirty.value = false) // not dirty since progress synced
@@ -104,17 +104,15 @@ const stopwatch = new Stopwatch({
 })
 
 const formatted = computed(() => {
-  if (focusMethod === 'stopwatch') {
+  if (focusMethod.value === 'stopwatch') {
     return formatDuration(stopwatch.elapsed.value)
-  } else if (focusMethod === 'pomodoro') {
+  } else if (focusMethod.value === 'pomodoro') {
     const pomoElapsed = pomoStateDuration.value - stopwatch.elapsed.value
     return formatDuration(pomoElapsed, { format: 'mm:ss' })
   } else {
     return ''
   }
 })
-
-const focusMethodToggleable = inject(focusMethodToggleableKey)
 
 // Update focusMethodToggleable when stopwatch running state changes
 watch(
@@ -125,12 +123,9 @@ watch(
   { immediate: true }
 )
 // Reset stopwatch (the global stopwatch) when focusMethod changes
-watch(
-  () => focusMethod,
-  () => {
-    stopwatch.reset()
-  }
-)
+watch(focusMethod, () => {
+  stopwatch.reset()
+})
 
 // ─── Stopwatch ──────────────────────────────────────────────────────────────
 
@@ -202,124 +197,87 @@ function skipPomo() {
 }
 // Skip pomo when stopwatch reaches duration
 watch(stopwatch.elapsed, () => {
-  if (focusMethod === 'pomodoro' && stopwatch.elapsed.value >= pomoStateDuration.value) skipPomo()
+  if (focusMethod.value === 'pomodoro' && stopwatch.elapsed.value >= pomoStateDuration.value)
+    skipPomo()
 })
 </script>
 
 <template>
-  <div
-    class="mx-auto grid flex-1 grid-rows-[minmax(160px,1fr)_auto_minmax(160px,1fr)] place-items-center gap-8 *:first:self-end *:last:self-start"
-  >
+  <ClockWrapper>
     <!-- Div wrapper to hold children together as one row -->
     <div class="flex flex-col items-center">
-      <!-- inFocus specific -->
-      <template v-if="inFocus">
-        <!-- task selector -->
-        <div
-          v-if="user?.emailVerified"
-          class="from-background/40 to-background/20 absolute top-1/6 flex -translate-y-1/2 flex-col items-center gap-1 overflow-hidden rounded-md bg-linear-to-t py-2 backdrop-blur-sm"
-        >
-          <Button
-            v-if="task"
-            variant="ghost-destructive"
-            size="icon-sm"
-            class="absolute top-0 right-0 rounded-tl-none rounded-tr-none rounded-br-none border-0 not-hover:opacity-60"
-            @click.stop="() => selectTask(-1)"
-          >
-            <X class="translate-x-1/5 -translate-y-1/5" />
-          </Button>
-          <p class="font-mono text-[10px] tracking-widest uppercase opacity-60">working on</p>
-          <ComboboxCreate
-            :items="tasks"
-            @select="(i) => selectTask(i.id)"
-            :create="createNewTask"
-            :checked-item-id="task?.id"
-            empty="No tasks found."
-            placeholder="Search a task"
-            align="center"
-            class="max-w-64 sm:max-w-80"
-            :side-offset="12"
-          >
-            <div
-              class="flex max-w-sm min-w-48 cursor-pointer items-center justify-center sm:min-w-64 md:max-w-md"
-            >
-              <p
-                class="flex items-center gap-3 truncate px-6 text-center text-2xl transition-opacity hover:opacity-80"
-                :class="[task ? 'font-light' : 'font-extralight italic opacity-60']"
-              >
-                {{ task?.name ?? 'No task selected' }}
-                <ChevronsUpDown v-if="!task" class="size-4 opacity-60" />
-              </p>
-            </div>
-          </ComboboxCreate>
-        </div>
-
-        <!-- Pomo-specific state tabs -->
-        <div
-          v-if="focusMethod === 'pomodoro'"
-          class="bg-background/40 mb-2 flex gap-1 rounded-full p-1 backdrop-blur-sm [&>button]:backdrop-blur-none"
-        >
-          <Button
-            v-for="state in pomoStates"
-            :key="state"
-            :variant="state === pomoState ? 'default' : 'ghost'"
-            size="sm"
-            class="px-3 font-mono text-[10px] font-light tracking-widest uppercase"
-            :class="pomoState === state ? 'font-medium opacity-100!' : 'opacity-60'"
-            :disabled="stopwatch.running.value"
-            @click="(stopwatch.reset(), (pomoState = state))"
-          >
-            {{ state }}
-          </Button>
-        </div>
-      </template>
-
-      <!-- Out of focus greeting title -->
-      <p
-        v-if="!inFocus"
-        class="fixed-color-clock:text-foreground text-foreground-fixed max-w-xs text-center text-base font-medium text-balance sm:max-w-sm sm:text-lg md:text-xl 2xl:text-2xl"
+      <!-- task selector -->
+      <div
+        v-if="user?.emailVerified"
+        class="from-background/40 to-background/20 absolute top-1/6 flex -translate-y-1/2 flex-col items-center gap-1 overflow-hidden rounded-md bg-linear-to-t py-2 backdrop-blur-sm"
       >
-        {{ activeGreeting.replace('{name}', user?.name ?? 'wraith') }}
-      </p>
+        <Button
+          v-if="task"
+          variant="ghost-destructive"
+          size="icon-sm"
+          class="absolute top-0 right-0 rounded-tl-none rounded-tr-none rounded-br-none border-0 not-hover:opacity-60"
+          @click.stop="() => selectTask(-1)"
+        >
+          <X class="translate-x-1/5 -translate-y-1/5" />
+        </Button>
+        <p class="font-mono text-[10px] tracking-widest uppercase opacity-60">working on</p>
+        <ComboboxCreate
+          :items="tasks"
+          @select="(i) => selectTask(i.id)"
+          :create="createNewTask"
+          :checked-item-id="task?.id"
+          empty="No tasks found."
+          placeholder="Search a task"
+          align="center"
+          class="max-w-64 sm:max-w-80"
+          :side-offset="12"
+        >
+          <div
+            class="flex max-w-sm min-w-48 cursor-pointer items-center justify-center sm:min-w-64 md:max-w-md"
+          >
+            <p
+              class="flex items-center gap-3 truncate px-6 text-center text-2xl transition-opacity hover:opacity-80"
+              :class="[task ? 'font-light' : 'font-extralight italic opacity-60']"
+            >
+              {{ task?.name ?? 'No task selected' }}
+              <ChevronsUpDown v-if="!task" class="size-4 opacity-60" />
+            </p>
+          </div>
+        </ComboboxCreate>
+      </div>
+
+      <!-- Pomo-specific state tabs -->
+      <div
+        v-if="focusMethod === 'pomodoro'"
+        class="bg-background/40 mb-2 flex gap-1 rounded-full p-1 backdrop-blur-sm [&>button]:backdrop-blur-none"
+      >
+        <Button
+          v-for="state in pomoStates"
+          :key="state"
+          :variant="state === pomoState ? 'default' : 'ghost'"
+          size="sm"
+          class="px-3 font-mono text-[10px] font-light tracking-widest uppercase"
+          :class="pomoState === state ? 'font-medium opacity-100!' : 'opacity-60'"
+          :disabled="stopwatch.running.value"
+          @click="(stopwatch.reset(), (pomoState = state))"
+        >
+          {{ state }}
+        </Button>
+      </div>
     </div>
 
     <!-- Clock -->
-    <ThemePicker @update:open="hasCustomizedAccent = true">
-      <p
-        class="text-foreground-fixed relative w-fit place-self-center text-center font-semibold tabular-nums"
-      >
-        <span
-          class="2xl:text-10xl text-shadow-foreground-fixed/40 -mt-3 h-min text-8xl leading-none text-shadow-lg sm:text-9xl"
-        >
-          {{
-            (!inFocus
-              ? nowStr.slice(0, -3)
-              : focusMethod === 'stopwatch'
-                ? formatted.slice(stopwatch.elapsed.value > 3600000 ? 0 : 3, -4)
-                : formatted
-            ).replace(':', '꞉' /* modifier colon is more centered */)
-          }}
-        </span>
-        <span
-          v-if="!inFocus || focusMethod !== 'pomodoro'"
-          class="max-2xs:hidden absolute bottom-1.25 left-full translate-x-4 text-lg tracking-wider brightness-90 sm:bottom-2.25 sm:translate-x-6 sm:text-xl 2xl:bottom-3.25 2xl:text-2xl"
-        >
-          {{ !inFocus ? nowStr.slice(-2) : formatted.slice(-3, -1) }}
-        </span>
-      </p>
-      <p
-        v-if="!inFocus && !hasCustomizedAccent"
-        class="font-xs text-muted-foreground absolute top-[calc(100%+var(--spacing)*6)] left-1/2 w-max -translate-x-1/2 rounded-sm px-2 text-center font-light tracking-wide backdrop-blur-sm backdrop-brightness-75"
-      >
-        Right click to change accent
-      </p>
-    </ThemePicker>
+    <ClockTime
+      :value="
+        focusMethod === 'stopwatch'
+          ? formatted.slice(stopwatch.elapsed.value > 3600000 ? 0 : 3, -4)
+          : formatted
+      "
+      :sub="focusMethod !== 'pomodoro' ? formatted.slice(-3, -1) : undefined"
+    />
 
-    <!-- inFocus actions -->
-    <div
-      v-if="inFocus"
-      class="mt-2 grid w-fit grid-cols-3 place-items-center gap-2 justify-self-center"
-    >
+    <!-- Actions -->
+    <div class="mt-2 grid w-fit grid-cols-3 place-items-center gap-2 justify-self-center">
       <Button
         variant="ghost"
         size="icon"
@@ -342,5 +300,5 @@ watch(stopwatch.elapsed, () => {
         <FastForward />
       </Button>
     </div>
-  </div>
+  </ClockWrapper>
 </template>

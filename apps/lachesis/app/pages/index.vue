@@ -10,7 +10,7 @@ import {
   Shrink,
   X,
 } from '@lucide/vue'
-import { useFullscreen, useLocalStorage, useWindowSize } from '@vueuse/core'
+import { useFullscreen, useWindowSize } from '@vueuse/core'
 import EmailVerifyButton from '~/components/email-verify-button.vue'
 
 definePageMeta({
@@ -24,24 +24,11 @@ const { activeQuote } = useQuote()
 const ignoreLogin = ref(false)
 
 const inFocus = ref(false)
-const focusMethod = useLocalStorage<'stopwatch' | 'pomodoro'>('focus_method', 'stopwatch')
-const focusMethodToggleable = ref(true)
-provide(focusMethodToggleableKey, focusMethodToggleable)
 provide(enterFocusKey, () => {
   inFocus.value = true
 })
 const focusDirty = ref(false)
 provide(focusDirtyKey, focusDirty)
-const toggleFocusMethod = () => {
-  const r = () => (focusMethod.value = focusMethod.value === 'stopwatch' ? 'pomodoro' : 'stopwatch')
-  if (focusDirty.value) {
-    dialog({ title: 'Are you sure?', description: 'Switching will reset your timer.' }).then(
-      (v) => v && r()
-    )
-  } else {
-    r()
-  }
-}
 const toggleFocus = () => {
   const r = () => (inFocus.value = !inFocus.value)
   if (focusDirty.value) {
@@ -52,6 +39,7 @@ const toggleFocus = () => {
     r()
   }
 }
+const focusRef = useTemplateRef('focus')
 
 const {
   isFullscreen,
@@ -140,7 +128,8 @@ const { width } = useWindowSize()
   </div>
 
   <!-- Center | clock -->
-  <ClockFocus :in-focus :focus-method />
+  <Clock v-if="!inFocus" />
+  <ClockFocus v-else ref="focus" />
 
   <!-- Footer | actions -->
   <div class="flex h-16 items-end justify-between gap-4">
@@ -188,10 +177,9 @@ const { width } = useWindowSize()
           v-if="inFocus"
           variant="outline"
           class="-order-1 font-mono text-[10px] tracking-widest uppercase"
-          @click="toggleFocusMethod"
-          :disabled="!focusMethodToggleable"
+          @click="focusRef?.toggleFocusMethod()"
         >
-          {{ focusMethod === 'stopwatch' ? 'Pomodoro' : 'Stopwatch' }}
+          {{ focusRef?.focusMethod === 'stopwatch' ? 'Pomodoro' : 'Stopwatch' }}
         </Button>
         <Button v-if="isFullscreenSupported" variant="ghost" size="icon" @click="toggleFullscreen">
           <Shrink v-if="isFullscreen" />
@@ -206,8 +194,8 @@ const { width } = useWindowSize()
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem @select="toggleFocusMethod" :disabled="!focusMethodToggleable">
-              Use {{ focusMethod === 'pomodoro' ? 'Stopwatch' : 'Pomodoro' }}
+            <DropdownMenuItem v-if="inFocus" @select="focusRef?.toggleFocusMethod()">
+              Use {{ focusRef?.focusMethod === 'stopwatch' ? 'Pomodoro' : 'Stopwatch' }}
             </DropdownMenuItem>
             <DropdownMenuItem v-if="isFullscreenSupported" @select="toggleFullscreen">
               {{ isFullscreen ? 'Exit' : 'Enter' }} Fullscreen
