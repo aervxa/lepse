@@ -12,7 +12,7 @@ import {
   X,
 } from '@lucide/vue'
 import { invoke, isTauri } from '@tauri-apps/api/core'
-import { listen } from '@tauri-apps/api/event'
+import { listen, type UnlistenFn } from '@tauri-apps/api/event'
 import { TuyauHTTPError } from '@tuyau/core/client'
 import { onKeyStroke, useFullscreen, useLocalStorage, useWindowSize } from '@vueuse/core'
 import EmailVerifyButton from '~/components/email-verify-button.vue'
@@ -80,18 +80,18 @@ const { width } = useWindowSize()
 const isApp = ref(false)
 const isPopoutOpen = useLocalStorage('popout-open', false) // localstorage so state persist through window reloads
 
+let unlistenPopout: UnlistenFn
 onMounted(async () => {
   isApp.value = isTauri()
 
   if (isApp.value) {
-    const unlisten = await listen<boolean>('popout-open', ({ payload }) => {
+    unlistenPopout = await listen<boolean>('popout-open', ({ payload }) => {
       isPopoutOpen.value = payload
     })
-
-    return () => {
-      unlisten()
-    }
   }
+})
+onUnmounted(() => {
+  unlistenPopout
 })
 
 watch(isPopoutOpen, () => {
@@ -177,7 +177,7 @@ const openPopout = () => {
 
   <!-- Center | clock -->
   <Clock v-if="!inFocus" />
-  <ClockFocus v-else-if="!isPopoutOpen" ref="focus" />
+  <ClockFocus v-show="inFocus" ref="focus" />
 
   <!-- Footer | actions -->
   <div class="flex h-16 items-end justify-between gap-4">

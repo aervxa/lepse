@@ -3,6 +3,8 @@ import { useDebounceFn, useIntervalFn, useLocalStorage } from '@vueuse/core'
 import { ChevronsUpDown, FastForward, Pause, Play, RefreshCw, X } from '@lucide/vue'
 import { formatDuration, Stopwatch } from '~/lib/time'
 import { toBreakMessages, toLongBreakMessages, toWorkMessages } from '~/lib/pomoMessages'
+import { emitTo, listen, type UnlistenFn } from '@tauri-apps/api/event'
+import { isTauri } from '@tauri-apps/api/core'
 
 const { popout } = defineProps<{ popout?: boolean }>()
 
@@ -11,6 +13,58 @@ const { user } = useAuth()
 
 const date = getClientDate()
 const { focusSession, updateFocusSessionMutation } = useDay(date)
+
+// ─── Syncs ──────────────────────────────────────────────────────────────────
+
+type UpdateOptions = {
+  stopwatchMs?: number
+  pomoCount?: number
+}
+
+const updateSession = (options: UpdateOptions) => {
+  if (!popout) {
+    updateFocusSessionMutation.mutate({
+      params: { date },
+      body: options,
+    })
+  } else if (isTauri()) {
+    emitTo<{ options: UpdateOptions }>('main', 'focus:update-session', { options })
+  }
+}
+
+const updateTask = (id: number, options: UpdateOptions) => {
+  if (!popout) {
+    updateTaskMutation.mutate({ params: { id }, body: options })
+  } else if (isTauri()) {
+    emitTo<{ id: number; options: UpdateOptions }>('main', 'focus:update-task', { id, options })
+  }
+}
+
+let unlistenSession: UnlistenFn
+let unlistenTask: UnlistenFn
+onMounted(async () => {
+  // Set listeners to run syncs when popout send emits
+  if (!popout && isTauri()) {
+    unlistenSession = await listen<{ options: UpdateOptions }>(
+      'focus:update-session',
+      ({ payload }) => {
+        console.log('[clock-focus] heard focus:update-session, updating session...')
+        updateSession(payload.options)
+      }
+    )
+    unlistenTask = await listen<{ id: number; options: UpdateOptions }>(
+      'focus:update-task',
+      ({ payload }) => {
+        console.log('[clock-focus] heard focus:update-task, updating task...')
+        updateTask(payload.id, payload.options)
+      }
+    )
+  }
+})
+onUnmounted(() => {
+  unlistenSession()
+  unlistenTask()
+})
 
 // ─── Focus ──────────────────────────────────────────────────────────────────
 
@@ -43,22 +97,24 @@ const selectTask = (id: number) => {
       title: 'Are you sure?',
       description:
         id > -1
-          ? 'Switching will carry over your progress to the new task.'
-          : 'Cancelling will result in your progress being lost.',
+          ? focusMethod.value === 'pomodoro'
+            ? 'New pomodoros completed will progress on the new task.'
+            : 'Switching will carry over your progress to the new task.'
+          : focusMethod.value === 'pomodoro'
+            ? "New pomodoros completed won't be counted on this task."
+            : 'Cancelling will result in some progress being lost.',
     }).then((v) => {
       if (v) {
         if (focusMethod.value === 'stopwatch' && task.value) {
           // remove from old task
-          updateTaskMutation.mutate({
-            params: { id: task.value.id },
-            body: { stopwatchMs: Math.round(task.value.stopwatchMs - stopwatchSyncedMs) },
+          updateTask(task.value.id, {
+            stopwatchMs: Math.round(task.value.stopwatchMs - stopwatchSyncedMs),
           })
           r() // update `task`
           // If user is not cancelling, add to new task
           if (id > -1) {
-            updateTaskMutation.mutate({
-              params: { id: task.value.id },
-              body: { stopwatchMs: Math.round(task.value.stopwatchMs + stopwatchSyncedMs) },
+            updateTask(task.value.id, {
+              stopwatchMs: Math.round(task.value.stopwatchMs + stopwatchSyncedMs),
             })
           } else {
             // If user cancels, reset stopwatch
@@ -134,19 +190,13 @@ const syncStopwatch = useDebounceFn(() => {
   const elapsed = stopwatch.elapsed.value
 
   // Update focus session's stopwatchMs
-  updateFocusSessionMutation.mutate({
-    params: { date },
-    body: {
-      stopwatchMs: Math.round(
-        (focusSession.value?.stopwatchMs ?? 0) + (elapsed - stopwatchSyncedMs)
-      ),
-    },
+  updateSession({
+    stopwatchMs: Math.round((focusSession.value?.stopwatchMs ?? 0) + (elapsed - stopwatchSyncedMs)),
   })
   // Update selected task
   if (task.value)
-    updateTaskMutation.mutate({
-      params: { id: task.value.id },
-      body: { stopwatchMs: Math.round(task.value.stopwatchMs + (elapsed - stopwatchSyncedMs)) },
+    updateTask(task.value.id, {
+      stopwatchMs: Math.round(task.value.stopwatchMs + (elapsed - stopwatchSyncedMs)),
     })
 
   stopwatchSyncedMs = elapsed
@@ -174,15 +224,13 @@ function skipPomo() {
     pomoState.value = pomoCount.value % 4 === 0 ? 'long-break' : 'break'
 
     // Increment focus session's pomoCount
-    updateFocusSessionMutation.mutate({
-      params: { date },
-      body: { pomoCount: (focusSession.value?.pomoCount ?? 0) + 1 },
+    updateSession({
+      pomoCount: (focusSession.value?.pomoCount ?? 0) + 1,
     })
     // Update selected task
     if (task.value)
-      updateTaskMutation.mutate({
-        params: { id: task.value.id },
-        body: { pomoCount: task.value.pomoCount + 1 },
+      updateTask(task.value.id, {
+        pomoCount: task.value.pomoCount + 1,
       })
     send({
       title: 'Work session over!',
@@ -212,8 +260,7 @@ defineExpose({ focusMethod, toggleFocusMethod, focusDirty, pomoState })
       <!-- task selector -->
       <div
         v-if="user?.emailVerified && !popout"
-        class="from-background/40 to-background/20 absolute flex flex-col items-center gap-1 overflow-hidden rounded-md bg-linear-to-t py-2 backdrop-blur-sm"
-        :class="popout ? 'top-0 rounded-t-none' : 'top-1/6 -translate-y-1/2'"
+        class="from-background/40 to-background/20 absolute top-1/6 flex -translate-y-1/2 flex-col items-center gap-1 overflow-hidden rounded-md bg-linear-to-t py-2 backdrop-blur-sm"
       >
         <Button
           v-if="task"

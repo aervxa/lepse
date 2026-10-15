@@ -15,6 +15,8 @@ useEventListener(main, 'mousedown', (e) => {
     isTauri() && getCurrentWebviewWindow().startDragging()
   }
 })
+
+useCacheSyncQueryClient()
 </script>
 
 <template>

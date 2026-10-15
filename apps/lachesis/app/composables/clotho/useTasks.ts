@@ -1,11 +1,12 @@
 import { useMutation, useQuery } from '@tanstack/vue-query'
+import { useLocalStorage } from '@vueuse/core'
 
 export const useTasks = () => {
   const { $api, $queryClient } = useNuxtApp()
 
   const tasksQuery = useQuery($api.tasks.index.queryOptions())
   const tasks = computed(() => tasksQuery.data.value?.data)
-  const focusedTaskId = useState<number>('focusedTaskId', () => -1)
+  const focusedTaskId = useLocalStorage('focusedTaskId', -1) // localstorage so this is synced over to popout
 
   const queryKey = $api.tasks.index.queryKey()
 
