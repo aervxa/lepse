@@ -8,9 +8,20 @@ import {
   MoreHorizontal,
   Settings,
   Shrink,
+  SquareArrowOutUpRight,
   X,
 } from '@lucide/vue'
-import { useFullscreen, useLocalStorage, useWindowSize } from '@vueuse/core'
+import { invoke, isTauri } from '@tauri-apps/api/core'
+import { listen, type UnlistenFn } from '@tauri-apps/api/event'
+import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
+import { TuyauHTTPError } from '@tuyau/core/client'
+import {
+  onKeyStroke,
+  StorageSerializers,
+  useFullscreen,
+  useLocalStorage,
+  useWindowSize,
+} from '@vueuse/core'
 import EmailVerifyButton from '~/components/email-verify-button.vue'
 
 definePageMeta({
@@ -18,38 +29,52 @@ definePageMeta({
 })
 
 const route = useRoute()
-const { user } = useAuth()
+const { user, logoutMutation } = useAuth()
+const { $queryClient, $api } = useNuxtApp()
 const { activeQuote } = useQuote()
+
+// Refetch to bypass userQuery and logout if server responds with a 401 and user value exists
+$queryClient.fetchQuery($api.account.profile.show.queryOptions({}, { retry: 0 })).catch((error) => {
+  error instanceof TuyauHTTPError && error.isStatus(401) && user.value && logoutMutation.mutate({})
+})
 
 const ignoreLogin = ref(false)
 
+useFocusSyncServer()
 const inFocus = ref(false)
-const focusMethod = useLocalStorage<'stopwatch' | 'pomodoro'>('focus_method', 'stopwatch')
-const focusMethodToggleable = ref(true)
-provide(focusMethodToggleableKey, focusMethodToggleable)
-provide(enterFocusKey, () => {
-  inFocus.value = true
-})
-const focusDirty = ref(false)
-provide(focusDirtyKey, focusDirty)
-const toggleFocusMethod = () => {
-  const r = () => (focusMethod.value = focusMethod.value === 'stopwatch' ? 'pomodoro' : 'stopwatch')
-  if (focusDirty.value) {
-    dialog({ title: 'Are you sure?', description: 'Switching will reset your timer.' }).then(
-      (v) => v && r()
-    )
-  } else {
-    r()
-  }
+const enterFocus = () => {
+  toggleFocus(true)
 }
-const toggleFocus = () => {
-  const r = () => (inFocus.value = !inFocus.value)
-  if (focusDirty.value) {
-    dialog({ title: 'Are you sure?', description: 'Leaving will reset your timer.' }).then(
-      (v) => v && r()
-    )
-  } else {
-    r()
+provide(enterFocusKey, enterFocus)
+const focusRef = useTemplateRef('focus')
+const focusDirty = useLocalStorage('focus_dirty', false) // from clock-focus
+const focusHandoff = useLocalStorage<FocusHandoff>('focus_handoff', null, {
+  serializer: StorageSerializers.object,
+})
+let forceExit = false
+const toggleFocus = (value?: boolean) => {
+  // Value is the NEW value
+  value = value ?? !inFocus.value
+  const r = () => {
+    forceExit = true // set forceExit to true so listener for re-enter can ignore and not re-enter
+    focusHandoff.value = null // empty handoff
+    inFocus.value = value
+  }
+
+  if (!value /* when trying to close */) {
+    if (focusDirty.value) {
+      dialog({ title: 'Are you sure?', description: 'Leaving will reset your timer.' }).then(
+        (v) => v && r()
+      )
+    } else {
+      r()
+    }
+  } else /* trying to open */ {
+    if (isPopoutOpen.value) {
+      openPopout()
+    } else {
+      r()
+    }
   }
 }
 
@@ -58,6 +83,11 @@ const {
   isSupported: isFullscreenSupported,
   toggle: toggleFullscreen,
 } = useFullscreen()
+
+onKeyStroke('F11', (e) => {
+  e.preventDefault()
+  toggleFullscreen()
+})
 
 const quote = useTemplateRef('quote')
 const copyQuote = async () => {
@@ -71,6 +101,48 @@ const copyQuote = async () => {
 }
 
 const { width } = useWindowSize()
+
+const isApp = ref(false)
+const isPopoutOpen = useLocalStorage('popout-open', false) // localstorage so state persist through window reloads
+
+let unlistenPopout: UnlistenFn
+onMounted(async () => {
+  isApp.value = isTauri()
+
+  if (isApp.value) {
+    isPopoutOpen.value = !!(await (await WebviewWindow.getByLabel('popout'))?.isVisible())
+    unlistenPopout = await listen<boolean>('popout-open', ({ payload }) => {
+      isPopoutOpen.value = payload
+    })
+  }
+})
+onUnmounted(() => {
+  unlistenPopout?.()
+})
+
+// Listener for when to exit focus
+watch(isPopoutOpen, () => {
+  if (isPopoutOpen.value) {
+    inFocus.value = false
+  }
+})
+
+// Listener for when to re-enter focus
+watch(focusHandoff, (v) => {
+  // If forceExit (user asked to exit), don't re-enter
+  if (forceExit) {
+    forceExit = false // clear state
+  } else if (v && v.elapsed > 0 && !isPopoutOpen.value) {
+    console.log('[clock-focus:main] found handoff. entering focus...')
+    inFocus.value = true
+  }
+})
+
+const openPopout = () => {
+  if (isApp.value) {
+    invoke('open_popout')
+  }
+}
 </script>
 
 <template>
@@ -140,7 +212,8 @@ const { width } = useWindowSize()
   </div>
 
   <!-- Center | clock -->
-  <ClockFocus :in-focus :focus-method />
+  <Clock v-if="!inFocus" />
+  <ClockFocus v-else ref="focus" />
 
   <!-- Footer | actions -->
   <div class="flex h-16 items-end justify-between gap-4">
@@ -172,31 +245,41 @@ const { width } = useWindowSize()
       </ContextMenuContent>
     </ContextMenu>
 
-    <div class="flex gap-2">
+    <div class="flex items-end gap-2">
       <Button
         :variant="inFocus ? 'secondary' : 'default'"
         :size="width < 448 ? 'icon' : undefined"
         class="font-mono text-[11px] tracking-widest uppercase"
-        @click="toggleFocus"
+        @click="toggleFocus()"
       >
-        <LightbulbOff v-if="inFocus" />
+        <SquareArrowOutUpRight v-if="isPopoutOpen" />
+        <LightbulbOff v-else-if="inFocus" />
         <Lightbulb v-else />
         <span class="max-2xs:sr-only">{{ inFocus ? 'Exit' : 'Focus' }}</span>
       </Button>
       <template v-if="width >= 512">
         <Button
           v-if="inFocus"
-          variant="outline"
+          variant="secondary"
           class="-order-1 font-mono text-[10px] tracking-widest uppercase"
-          @click="toggleFocusMethod"
-          :disabled="!focusMethodToggleable"
+          @click="focusRef?.toggleFocusMethod()"
         >
-          {{ focusMethod === 'stopwatch' ? 'Pomodoro' : 'Stopwatch' }}
+          {{ focusRef?.focusMethod === 'stopwatch' ? 'Pomodoro' : 'Stopwatch' }}
         </Button>
-        <Button v-if="isFullscreenSupported" variant="ghost" size="icon" @click="toggleFullscreen">
-          <Shrink v-if="isFullscreen" />
-          <Expand v-else />
-        </Button>
+        <div class="flex flex-col gap-2">
+          <Button v-if="isApp && inFocus" variant="ghost" size="icon" @click="openPopout()">
+            <SquareArrowOutUpRight />
+          </Button>
+          <Button
+            v-if="isFullscreenSupported"
+            variant="ghost"
+            size="icon"
+            @click="toggleFullscreen"
+          >
+            <Shrink v-if="isFullscreen" />
+            <Expand v-else />
+          </Button>
+        </div>
       </template>
       <template v-else>
         <DropdownMenu>
@@ -206,9 +289,12 @@ const { width } = useWindowSize()
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem @select="toggleFocusMethod" :disabled="!focusMethodToggleable">
-              Use {{ focusMethod === 'pomodoro' ? 'Stopwatch' : 'Pomodoro' }}
+            <DropdownMenuItem v-if="inFocus" @select="focusRef?.toggleFocusMethod()">
+              Use {{ focusRef?.focusMethod === 'stopwatch' ? 'Pomodoro' : 'Stopwatch' }}
             </DropdownMenuItem>
+            <DropdownMenuItem v-if="isApp && inFocus" @select="openPopout()"
+              >Open popout</DropdownMenuItem
+            >
             <DropdownMenuItem v-if="isFullscreenSupported" @select="toggleFullscreen">
               {{ isFullscreen ? 'Exit' : 'Enter' }} Fullscreen
               <DropdownMenuShortcut>F11</DropdownMenuShortcut>

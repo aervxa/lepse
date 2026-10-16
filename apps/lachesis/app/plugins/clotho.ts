@@ -31,17 +31,17 @@ export default defineNuxtPlugin({
         },
       },
     })
+    const persistQueryClientProps = {
+      queryClient,
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      persister: createAsyncStoragePersister({
+        storage: localStorage,
+        key: QUERY_OFFLINE_CACHE,
+      }),
+    }
     app.vueApp.use(VueQueryPlugin, {
       queryClient,
-      clientPersister: (queryClient) =>
-        persistQueryClient({
-          queryClient,
-          maxAge: 1000 * 60 * 60 * 24 * 7,
-          persister: createAsyncStoragePersister({
-            storage: localStorage,
-            key: 'QUERY_OFFLINE_CACHE',
-          }),
-        }),
+      clientPersister: () => persistQueryClient(persistQueryClientProps),
     })
 
     // the tuyau client
@@ -85,6 +85,7 @@ export default defineNuxtPlugin({
     return {
       provide: {
         queryClient, // queries without context (in plugins for example)
+        persistQueryClientProps, // for useCacheSyncQueryClient
         client, // for overriding and using client directly instead of type safe options
         api, // for type-safe query and mutation options
       },

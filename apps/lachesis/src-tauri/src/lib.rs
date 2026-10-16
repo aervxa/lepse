@@ -48,11 +48,12 @@ pub fn run() {
   builder
     .runtime(runtime)
     .invoke_handler(tauri::generate_handler![
-      keyring::get_secret,
-      keyring::set_secret,
-      keyring::delete_secret,
-      commands::get_os,
-      commands::can_transparent
+      keyring::commands::get_secret,
+      keyring::commands::set_secret,
+      keyring::commands::delete_secret,
+      commands::other::get_os,
+      commands::other::can_transparent,
+      commands::popout::open_popout,
     ])
     .setup(|app| {
       if cfg!(debug_assertions) {
@@ -67,7 +68,6 @@ pub fn run() {
       keyring::init_keyring_store(&HashMap::new())?;
 
       // Windows options
-      let debug = std::env::var("DEBUG").map_or(false, |v| v == "1");
       let native_decorations = app
         .store("settings.json")
         .ok()
@@ -76,6 +76,7 @@ pub fn run() {
         .unwrap_or(false);
 
       // Create main window
+      #[allow(unused_mut)] // mut is used inside cfg gated blocks
       let mut builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::default())
         .decorations(native_decorations) // native decorations only if preferred by user
         .title("Lepse")
@@ -88,38 +89,46 @@ pub fn run() {
         ) // effects for Windows and MacOS respectively
         .visible(false); // hide by default to wait until content loads?
 
-      #[cfg(not(not(debug_assertions)))]
+      #[cfg(not(debug_assertions))]
       {
+        let debug = std::env::var("DEBUG").map_or(false, |v| v == "1");
         builder = builder.devtools(debug) // Devtools only in debug mode
       }
 
-      #[cfg(not(feature = "cef"))]
+      #[cfg(not(target_os = "linux"))]
       {
-        builder = builder.transparent(true)
+        /**
+         * NOTE: Transparency not supported (or partially broken)
+         * - webkitgtk compositing makes the entire windows become transparent during repaints
+         * - cef on linux does not support transparency
+         */
+        builder = builder.transparent(true);
       }
 
-      builder.build()?;
+      if let Ok(window) = builder.build() {
+        let w = window.clone();
+
+        window.on_window_event(move |event| {
+          if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+            // if minimizeToTray is true, prevent close
+            if w
+              .store("settings.json")
+              .ok()
+              .and_then(|store| store.get("minimizeToTray"))
+              .and_then(|v| v.as_bool())
+              .unwrap_or(false)
+            {
+              let _ = w.hide();
+              api.prevent_close();
+            } else {
+              w.app_handle().exit(0);
+            }
+          }
+        });
+      }
 
       setup_tray(app.app_handle())?;
       Ok(())
-    })
-    .on_window_event(|window, event| {
-      if let tauri::WindowEvent::CloseRequested { api, .. } = event {
-        // if minimizeToTray is true, prevent close
-        if window
-          .app_handle()
-          .store("settings.json")
-          .ok()
-          .and_then(|store| store.get("minimizeToTray"))
-          .and_then(|v| v.as_bool())
-          .unwrap_or(false)
-        {
-          let _ = window.hide();
-          api.prevent_close();
-        } else {
-          window.app_handle().exit(0);
-        }
-      }
     })
     .run(tauri::generate_context!())
     .expect("error while running tauri application");

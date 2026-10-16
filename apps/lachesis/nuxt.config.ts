@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     host: '0.0.0.0',
   },
 
-  devtools: { enabled: true },
+  devtools: { enabled: false },
 
   extends: ['@lepse/ui'],
 
