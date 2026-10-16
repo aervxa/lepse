@@ -1,6 +1,7 @@
 import { execSync } from 'child_process'
 import { readFileSync, writeFileSync } from 'fs'
 import { setTimeout } from 'timers/promises'
+import { styleText } from 'util'
 
 const BUMP = process.argv[2] ?? 'patch' // can be any pnpm supports
 
@@ -19,7 +20,7 @@ const RELEASE = `<release version="${VERSION}" date="${DATE}"><url type="details
 const METAINFO = 'apps/lachesis/src-tauri/app.lepse.Lepse.metainfo.xml'
 writeFileSync(
   METAINFO,
-  readFileSync(METAINFO).replace(
+  readFileSync(METAINFO, 'utf-8').replace(
     '<releases>',
     `<releases>${RELEASE}` /* this is to prepend the release at the topmost of `<releases>` */
   )
