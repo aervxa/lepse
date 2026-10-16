@@ -13,6 +13,7 @@ import {
 } from '@lucide/vue'
 import { invoke, isTauri } from '@tauri-apps/api/core'
 import { listen, type UnlistenFn } from '@tauri-apps/api/event'
+import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
 import { TuyauHTTPError } from '@tuyau/core/client'
 import { onKeyStroke, useFullscreen, useLocalStorage, useWindowSize } from '@vueuse/core'
 import EmailVerifyButton from '~/components/email-verify-button.vue'
@@ -95,6 +96,7 @@ onMounted(async () => {
   isApp.value = isTauri()
 
   if (isApp.value) {
+    isPopoutOpen.value = !!(await (await WebviewWindow.getByLabel('popout'))?.isVisible())
     unlistenPopout = await listen<boolean>('popout-open', ({ payload }) => {
       isPopoutOpen.value = payload
     })
