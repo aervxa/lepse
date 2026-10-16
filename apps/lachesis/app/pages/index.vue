@@ -15,7 +15,13 @@ import { invoke, isTauri } from '@tauri-apps/api/core'
 import { listen, type UnlistenFn } from '@tauri-apps/api/event'
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
 import { TuyauHTTPError } from '@tuyau/core/client'
-import { onKeyStroke, useFullscreen, useLocalStorage, useWindowSize } from '@vueuse/core'
+import {
+  onKeyStroke,
+  StorageSerializers,
+  useFullscreen,
+  useLocalStorage,
+  useWindowSize,
+} from '@vueuse/core'
 import EmailVerifyButton from '~/components/email-verify-button.vue'
 
 definePageMeta({
@@ -42,10 +48,18 @@ const enterFocus = () => {
 provide(enterFocusKey, enterFocus)
 const focusRef = useTemplateRef('focus')
 const focusDirty = useLocalStorage('focus_dirty', false) // from clock-focus
+const focusHandoff = useLocalStorage<FocusHandoff>('focus_handoff', null, {
+  serializer: StorageSerializers.object,
+})
+let forceExit = false
 const toggleFocus = (value?: boolean) => {
   // Value is the NEW value
   value = value ?? !inFocus.value
-  const r = () => (inFocus.value = value)
+  const r = () => {
+    forceExit = true // set forceExit to true so listener for re-enter can ignore and not re-enter
+    focusHandoff.value = null // empty handoff
+    inFocus.value = value
+  }
 
   if (!value /* when trying to close */) {
     if (focusDirty.value) {
@@ -106,11 +120,21 @@ onUnmounted(() => {
   unlistenPopout?.()
 })
 
+// Listener for when to exit focus
 watch(isPopoutOpen, () => {
   if (isPopoutOpen.value) {
     inFocus.value = false
-  } else {
-    // TODO: reenter focus with state ONLY IF there is unsaved changes (focusDirty basically)
+  }
+})
+
+// Listener for when to re-enter focus
+watch(focusHandoff, (v) => {
+  // If forceExit (user asked to exit), don't re-enter
+  if (forceExit) {
+    forceExit = false // clear state
+  } else if (v && v.elapsed > 0 && !isPopoutOpen.value) {
+    console.log('[clock-focus:main] found handoff. entering focus...')
+    inFocus.value = true
   }
 })
 
@@ -189,7 +213,7 @@ const openPopout = () => {
 
   <!-- Center | clock -->
   <Clock v-if="!inFocus" />
-  <ClockFocus v-else-if="!isPopoutOpen" ref="focus" />
+  <ClockFocus v-else ref="focus" />
 
   <!-- Footer | actions -->
   <div class="flex h-16 items-end justify-between gap-4">

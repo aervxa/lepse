@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useDebounceFn, useIntervalFn, useLocalStorage } from '@vueuse/core'
+import { StorageSerializers, useDebounceFn, useIntervalFn, useLocalStorage } from '@vueuse/core'
 import { ChevronsUpDown, FastForward, Pause, Play, RefreshCw, X } from '@lucide/vue'
 import { formatDuration, Stopwatch } from '~/lib/time'
 import { toBreakMessages, toLongBreakMessages, toWorkMessages } from '~/lib/pomoMessages'
@@ -11,12 +11,6 @@ const { user } = useAuth()
 
 const date = getClientDate()
 const { focusSession } = useDay(date)
-
-// ─── Sync ───────────────────────────────────────────────────────────────────
-
-const { updateSession, updateTask } = useFocusSyncClient(popout)
-
-// TODO: mount and unmount to read and save respectively from localstorage (read MUST clear old save, so no stale)
 
 // ─── Focus ──────────────────────────────────────────────────────────────────
 
@@ -93,21 +87,22 @@ const createNewTask = async (search: string) =>
 
 // ─── Shared stopwatch class ─────────────────────────────────────────────────
 
+focusDirty.value = false // initially set to false
 const stopwatch = new Stopwatch({
   onStart: () => {
     if (focusMethod.value === 'stopwatch') stopwatchSyncInterval.resume()
-    focusDirty && (focusDirty.value = true)
+    focusDirty.value = true
     if (focusMethod.value === 'pomodoro') requestPermission()
   },
   onStop: () => {
     if (focusMethod.value === 'stopwatch') {
       syncStopwatch()
       stopwatchSyncInterval.pause()
-      focusDirty && (focusDirty.value = false) // not dirty since progress synced
+      focusDirty.value = false // not dirty since progress synced
     }
   },
   onReset: () => {
-    focusDirty && (focusDirty.value = false)
+    focusDirty.value = false
   },
 })
 
@@ -200,6 +195,35 @@ watch(stopwatch.elapsed, () => {
   if (focusMethod.value === 'pomodoro' && stopwatch.elapsed.value >= pomoStateDuration.value)
     skipPomo()
 })
+
+// ─── Sync ───────────────────────────────────────────────────────────────────
+
+const { updateSession, updateTask } = useFocusSyncClient(popout)
+
+// `flush: sync` makes write sync so it works inside onBeforeUnmount
+const focusHandoff = useLocalStorage<FocusHandoff>('focus_handoff', null, {
+  flush: 'sync',
+  serializer: StorageSerializers.object,
+})
+
+// set the elapsed amount before focus unmounts
+onBeforeUnmount(() => {
+  console.log('[clock-focus] unmounting. handing off...')
+  focusHandoff.value = { elapsed: stopwatch.elapsed.value, running: stopwatch.running.value }
+})
+
+watch(
+  focusHandoff,
+  (v) => {
+    if (v) {
+      focusHandoff.value = null
+      console.log('[clock-focus] found handoff. setting values...', v)
+      stopwatch.elapsed.value = v.elapsed
+      if (v.running && !stopwatch.running.value /* this runs twice sometimes */) stopwatch.start()
+    }
+  },
+  { immediate: true }
+)
 
 // EXPOSE
 defineExpose({ focusMethod, toggleFocusMethod, pomoState })

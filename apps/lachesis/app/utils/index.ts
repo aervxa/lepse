@@ -45,3 +45,5 @@ export function pickRandom<T>(arr: T[]): T {
 export const useSharedNow = createSharedComposable(useNow)
 
 export const QUERY_OFFLINE_CACHE = 'QUERY_OFFLINE_CACHE'
+
+export type FocusHandoff = { elapsed: number; running: boolean } | null

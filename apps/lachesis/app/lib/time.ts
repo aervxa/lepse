@@ -1,5 +1,3 @@
-import { ref } from 'vue'
-
 export class Stopwatch {
   constructor({
     onStart,
@@ -54,7 +52,7 @@ export class Stopwatch {
     return this.#elapsed
   }
   get running() {
-    return this.#running
+    return readonly(this.#running)
   }
 }
 
