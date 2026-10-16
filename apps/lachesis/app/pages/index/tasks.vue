@@ -11,7 +11,7 @@ const { user } = useAuth()
 const { tasks, tasksQuery, createTaskMutation } = useTasks()
 
 onMounted(() => {
-  tasksQuery.refetch()
+  user.value && tasksQuery.refetch()
 })
 
 const inSubpage = computed(() => /tasks\/\d+/.test(route.path))

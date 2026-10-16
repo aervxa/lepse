@@ -2,10 +2,13 @@ import { useMutation, useQuery } from '@tanstack/vue-query'
 
 export const useDay = (date: string = getClientDate()) => {
   const { $api, $queryClient } = useNuxtApp()
+  const { user } = useAuth()
 
   // ─── Session ──────────────────────────────────────────────────────────────
 
-  const focusSessionQuery = useQuery($api.day.session.show.queryOptions({ params: { date } }))
+  const focusSessionQuery = useQuery(
+    $api.day.session.show.queryOptions({ params: { date } }, { enabled: !!user.value })
+  )
   const focusSession = computed(() => focusSessionQuery.data.value?.data)
 
   const sessionQueryKey = (

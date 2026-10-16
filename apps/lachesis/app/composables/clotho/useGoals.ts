@@ -2,8 +2,9 @@ import { useMutation, useQuery } from '@tanstack/vue-query'
 
 export const useGoals = () => {
   const { $api, $queryClient } = useNuxtApp()
+  const { user } = useAuth()
 
-  const goalsQuery = useQuery($api.goals.index.queryOptions())
+  const goalsQuery = useQuery($api.goals.index.queryOptions({}, { enabled: !!user.value }))
   const goals = computed(() => goalsQuery.data.value?.data)
 
   const queryKey = $api.goals.index.queryKey()

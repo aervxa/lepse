@@ -3,8 +3,9 @@ import { useLocalStorage } from '@vueuse/core'
 
 export const useTasks = () => {
   const { $api, $queryClient } = useNuxtApp()
+  const { user } = useAuth()
 
-  const tasksQuery = useQuery($api.tasks.index.queryOptions())
+  const tasksQuery = useQuery($api.tasks.index.queryOptions({}, { enabled: !!user.value }))
   const tasks = computed(() => tasksQuery.data.value?.data)
   const focusedTaskId = useLocalStorage('focusedTaskId', -1) // localstorage so this is synced over to popout
 

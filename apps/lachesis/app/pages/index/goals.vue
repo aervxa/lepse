@@ -11,7 +11,7 @@ const { user } = useAuth()
 const { goals, goalsQuery, createGoalMutation } = useGoals()
 
 onMounted(() => {
-  goalsQuery.refetch()
+  user.value && goalsQuery.refetch()
 })
 
 const inSubpage = computed(() => /goals\/\d+/.test(route.path))
