@@ -24,6 +24,8 @@ The base of the app is pretty simple, you create tasks, and when u run pomos/sto
 - [ ] **Calendar** - week/month overview of your days (tasks, mood, score, habits). **(archived for now)**
 - [ ] **Notifications** - reminders for start of day, end of day, habit reminders, and pomo cycles. **(archived for now, except the pomo updates prolly)**
 - [x] **Desktop app** - desktop app via Tauri (a single dev **cannot** do native apps) _(not me at least)_.
+- [ ] **Pets** - tba.
+- [ ] **Friends** - friends + lobby sessions
 
 > [!NOTE]
 > v0.1 will ship stable
