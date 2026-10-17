@@ -97,11 +97,9 @@ pub fn run() {
 
       #[cfg(not(target_os = "linux"))]
       {
-        /**
-         * NOTE: Transparency not supported (or partially broken)
-         * - webkitgtk compositing makes the entire windows become transparent during repaints
-         * - cef on linux does not support transparency
-         */
+        // NOTE: Transparency not supported (or partially broken)
+        // * webkitgtk compositing makes the entire windows become transparent during repaints
+        // * cef on linux does not support transparency
         builder = builder.transparent(true);
       }
 
