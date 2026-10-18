@@ -34,9 +34,14 @@ const { $queryClient, $api } = useNuxtApp()
 const { activeQuote } = useQuote()
 
 // Refetch to bypass userQuery and logout if server responds with a 401 and user value exists
-$queryClient.fetchQuery($api.account.profile.show.queryOptions({}, { retry: 0 })).catch((error) => {
-  error instanceof TuyauHTTPError && error.isStatus(401) && user.value && logoutMutation.mutate({})
-})
+$queryClient
+  .fetchQuery($api.account.profile.show.queryOptions(undefined, { retry: 0 }))
+  .catch((error) => {
+    error instanceof TuyauHTTPError &&
+      error.isStatus(401) &&
+      user.value &&
+      logoutMutation.mutate({})
+  })
 
 const ignoreLogin = ref(false)
 

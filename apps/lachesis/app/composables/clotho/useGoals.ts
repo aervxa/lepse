@@ -4,7 +4,7 @@ export const useGoals = () => {
   const { $api, $queryClient } = useNuxtApp()
   const { user } = useAuth()
 
-  const goalsQuery = useQuery($api.goals.index.queryOptions({}, { enabled: !!user.value }))
+  const goalsQuery = useQuery($api.goals.index.queryOptions(undefined, { enabled: !!user.value }))
   const goals = computed(() => goalsQuery.data.value?.data)
 
   const queryKey = $api.goals.index.queryKey()
