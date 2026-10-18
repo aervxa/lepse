@@ -143,7 +143,14 @@ const {
           <div class="absolute inset-0">
             <ScrollArea class="size-full">
               <div class="flex flex-col gap-3 p-4">
-                <Item v-for="goal in goals" :key="goal.id" variant="outline" as-child>
+                <Item
+                  v-for="goal in goals?.toSorted((g1, g2) =>
+                    (g2.createdAt ?? '').localeCompare(g1.createdAt ?? '')
+                  )"
+                  :key="goal.id"
+                  variant="outline"
+                  as-child
+                >
                   <NuxtLink :to="`/goals/${goal.id}`" @click="openSubpage">
                     <ItemContent>
                       <ItemTitle>{{ goal.name }}</ItemTitle>

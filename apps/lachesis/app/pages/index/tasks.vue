@@ -144,7 +144,15 @@ const {
           <div class="absolute inset-0">
             <ScrollArea class="size-full">
               <div class="flex flex-col gap-3 p-4">
-                <Item v-for="task in tasks" :key="task.id" variant="outline" size="sm" as-child>
+                <Item
+                  v-for="task in tasks?.toSorted((t1, t2) =>
+                    (t2.createdAt ?? '').localeCompare(t1.createdAt ?? '')
+                  )"
+                  :key="task.id"
+                  variant="outline"
+                  size="sm"
+                  as-child
+                >
                   <NuxtLink :to="`/tasks/${task.id}`" @click="openSubpage">
                     <!-- Task status  -->
                     <ItemMedia class="-my-3 -mr-1.5">
