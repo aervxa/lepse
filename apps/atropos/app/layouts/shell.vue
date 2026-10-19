@@ -45,12 +45,12 @@ const [DefineNavItem, ReuseNavItem] = createReusableTemplate<{
     <!-- Navbar -->
     <nav class="mx-auto grid h-12 w-full max-w-6xl grid-cols-3 items-center px-4">
       <a href="/" class="flex items-center gap-2 select-none">
-        <img src="/logo.svg" class="h-6" />
+        <img src="/logo.svg" alt="logo" class="h-6" />
       </a>
 
       <!-- Notch for navitems for mobile + centered navigation -->
       <div
-        class="bg-sidebar before:bg-sidebar border-muted relative z-10 flex gap-2 place-self-center rounded-b-2xl border-2 border-t-0 p-1 before:absolute before:bottom-full before:h-2 before:w-full max-sm:translate-y-12 max-sm:self-start sm:border-transparent"
+        class="bg-sidebar before:bg-sidebar border-muted relative z-10 flex gap-2 place-self-center rounded-b-2xl border-2 border-t-0 p-1 before:absolute before:bottom-full before:h-1 before:w-full max-sm:translate-y-12 max-sm:self-start sm:border-transparent"
       >
         <div
           class="absolute top-0 left-0 h-6 w-8 -translate-x-full -translate-y-0.5 *:rounded-tr-xl"
@@ -58,7 +58,7 @@ const [DefineNavItem, ReuseNavItem] = createReusableTemplate<{
           <div
             class="border-muted absolute inset-0 border-t-2 border-r-2 mask-l-from-50% mask-l-to-100% sm:border-transparent"
           ></div>
-          <div class="absolute inset-0 shadow-[8px_-8px_0_var(--color-sidebar)]"></div>
+          <div class="absolute inset-0 shadow-[8px_-4px_0_var(--color-sidebar)]"></div>
         </div>
         <div
           class="absolute top-0 right-0 h-6 w-8 translate-x-full -translate-y-0.5 *:rounded-tl-xl"
@@ -66,7 +66,7 @@ const [DefineNavItem, ReuseNavItem] = createReusableTemplate<{
           <div
             class="border-muted absolute inset-0 border-t-2 border-l-2 mask-r-from-50% mask-r-to-100% sm:border-transparent"
           ></div>
-          <div class="absolute inset-0 shadow-[-8px_-8px_0_var(--color-sidebar)]"></div>
+          <div class="absolute inset-0 shadow-[-8px_-4px_0_var(--color-sidebar)]"></div>
         </div>
 
         <template v-for="item in navItems" :key="item.label">

@@ -110,14 +110,14 @@ const scrollToNews = () => {
     class="pointer-events-none absolute -z-10 flex w-full flex-col saturate-150 select-none dark:brightness-75 [&_img]:h-224 [&_img]:object-cover"
   >
     <div class="contents *:mask-b-from-0%">
-      <img src="/images/hero-dark.jpg" class="not-dark:hidden" />
-      <img src="/images/hero-light.jpg" class="dark:hidden" />
+      <img src="/images/hero-dark.jpg" alt="background image" class="not-dark:hidden" />
+      <img src="/images/hero-light.jpg" alt="background image" class="dark:hidden" />
     </div>
     <div
       class="contents *:rotate-180 *:mask-t-from-35% *:mask-t-to-60% *:mask-b-from-0% sm:*:mask-t-to-45% lg:*:mask-t-to-50%"
     >
-      <img src="/images/hero-dark.jpg" class="not-dark:hidden" />
-      <img src="/images/hero-light.jpg" class="dark:hidden" />
+      <img src="/images/hero-dark.jpg" alt="background image" class="not-dark:hidden" />
+      <img src="/images/hero-light.jpg" alt="background image" class="dark:hidden" />
     </div>
   </div>
 
@@ -137,15 +137,19 @@ const scrollToNews = () => {
       <!-- Dowload buttons -->
       <div class="flex flex-wrap justify-center gap-2">
         <ButtonGroup aria-label="Download options">
-          <Button size="xl" @click="isLinux && scrollToDownloads()" :as-child="!isLinux">
+          <Button
+            size="xl"
+            @click="(isWindows || isMacOS) && scrollToDownloads()"
+            :as-child="isWindows || isMacOS"
+          >
             <component
-              :is="isLinux ? 'div' : 'a'"
+              :is="isWindows || isMacOS ? 'a' : 'div'"
               :href="
                 platformDownloads.find(
                   (p) => p.name === (isWindows ? 'Windows' : isMacOS ? 'macOS' : '')
                 )?.actions[0]?.link
               "
-              :class="{ contents: isLinux }"
+              :class="{ contents: !isWindows || !isMacOS }"
             >
               <component
                 :is="
@@ -155,7 +159,7 @@ const scrollToNews = () => {
               Download Lepse
             </component>
           </Button>
-          <Button v-if="!isLinux" size="icon-xl" @click="scrollToDownloads">
+          <Button size="icon-xl" aria-label="Scroll to more downloads" @click="scrollToDownloads">
             <ChevronsDown />
           </Button>
         </ButtonGroup>
@@ -168,16 +172,19 @@ const scrollToNews = () => {
       <!-- TODO: make a 6.7% chance of the 67 version to load instead -->
       <img
         src="/images/app-mobile.webp"
+        alt="mobile app screenshot"
         draggable="false"
         class="bg-accent aspect-6/13 max-h-192 max-w-full rounded-xl border object-contain select-none sm:hidden"
       />
       <img
         src="/images/app-tablet.webp"
+        alt="tablet app screenshot"
         draggable="false"
         class="bg-accent aspect-3/4 max-h-156 max-w-full rounded-xl border object-contain select-none max-sm:hidden lg:hidden"
       />
       <img
         src="/images/app-desktop.webp"
+        alt="desktop app screenshot"
         draggable="false"
         class="bg-accent aspect-16/10 w-full max-w-5xl rounded-xl border select-none max-lg:hidden"
       />
