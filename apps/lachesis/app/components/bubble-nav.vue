@@ -139,6 +139,7 @@ const { isFullscreen } = useFullscreen()
         class="aspect-4/5 max-h-[67vh] w-sm"
         :class="{ 'h-0': !open }"
         @interact-outside="focusOutside"
+        aria-label="navigation content"
       >
         <Motion
           v-if="open"

@@ -169,7 +169,7 @@ const openPopout = () => {
       <div v-else class="flex gap-2">
         <Button variant="outline" @click="navigateTo('/signup')">Sign Up</Button>
         <Button @click="navigateTo('/login')">Login</Button>
-        <Button variant="outline" size="icon-sm" as-child>
+        <Button variant="outline" size="icon-sm" aria-label="Open settings" as-child>
           <NuxtLink to="/settings">
             <Settings />
           </NuxtLink>
@@ -188,7 +188,12 @@ const openPopout = () => {
           <div
             class="absolute top-0 left-0 -translate-y-1/3 ltr:-translate-x-1/3 rtl:right-0 rtl:translate-x-1/3"
           >
-            <Button variant="secondary" size="icon-xs" @click="ignoreLogin = true">
+            <Button
+              variant="secondary"
+              size="icon-xs"
+              @click="ignoreLogin = true"
+              aria-label="close login hint"
+            >
               <X />
             </Button>
           </div>
@@ -289,7 +294,7 @@ const openPopout = () => {
       <template v-else>
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
-            <Button size="icon" variant="outline">
+            <Button size="icon" variant="outline" aria-label="more options">
               <MoreHorizontal />
             </Button>
           </DropdownMenuTrigger>
@@ -297,9 +302,9 @@ const openPopout = () => {
             <DropdownMenuItem v-if="inFocus" @select="focusRef?.toggleFocusMethod()">
               Use {{ focusRef?.focusMethod === 'stopwatch' ? 'Pomodoro' : 'Stopwatch' }}
             </DropdownMenuItem>
-            <DropdownMenuItem v-if="isApp && inFocus" @select="openPopout()"
-              >Open popout</DropdownMenuItem
-            >
+            <DropdownMenuItem v-if="isApp && inFocus" @select="openPopout()">
+              Open popout
+            </DropdownMenuItem>
             <DropdownMenuItem v-if="isFullscreenSupported" @select="toggleFullscreen">
               {{ isFullscreen ? 'Exit' : 'Enter' }} Fullscreen
               <DropdownMenuShortcut>F11</DropdownMenuShortcut>

@@ -49,7 +49,13 @@ const [DefineAvatar, ReuseAvatar] = createReusableTemplate<{ state: 'after' | 'b
 
       <PopoverAnchor class="absolute top-0 right-0 -mt-1.5 -mr-1.5 size-0" />
 
-      <PopoverContent force-mount align="end" :side-offset="0" unstyled>
+      <PopoverContent
+        force-mount
+        align="end"
+        :side-offset="0"
+        aria-label="profile popover"
+        unstyled
+      >
         <Motion
           v-if="open"
           as="div"
