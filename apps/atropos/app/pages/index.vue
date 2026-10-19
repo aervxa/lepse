@@ -110,14 +110,24 @@ const scrollToNews = () => {
     class="pointer-events-none absolute -z-10 flex w-full flex-col saturate-150 select-none dark:brightness-75 [&_img]:h-224 [&_img]:object-cover"
   >
     <div class="contents *:mask-b-from-0%">
-      <img src="/images/hero-dark.jpg" alt="background image" class="not-dark:hidden" />
-      <img src="/images/hero-light.jpg" alt="background image" class="dark:hidden" />
+      <img
+        fetchpriority="high"
+        src="/images/hero-dark.webp"
+        alt="background image"
+        class="not-dark:hidden"
+      />
+      <img
+        fetchpriority="high"
+        src="/images/hero-light.webp"
+        alt="background image"
+        class="dark:hidden"
+      />
     </div>
     <div
       class="contents *:rotate-180 *:mask-t-from-35% *:mask-t-to-60% *:mask-b-from-0% sm:*:mask-t-to-45% lg:*:mask-t-to-50%"
     >
-      <img src="/images/hero-dark.jpg" alt="background image" class="not-dark:hidden" />
-      <img src="/images/hero-light.jpg" alt="background image" class="dark:hidden" />
+      <img src="/images/hero-dark.webp" alt="background image" class="not-dark:hidden" />
+      <img src="/images/hero-light.webp" alt="background image" class="dark:hidden" />
     </div>
   </div>
 
@@ -264,7 +274,7 @@ const scrollToNews = () => {
 
               <DropdownMenu v-if="p.actions.length > 1">
                 <DropdownMenuTrigger as-child>
-                  <Button size="icon-lg">
+                  <Button size="icon-lg" aria-label="more options">
                     <ChevronDown />
                   </Button>
                 </DropdownMenuTrigger>
@@ -320,7 +330,7 @@ const scrollToNews = () => {
     <div class="from-primary/16 bg-muted/32 border-t bg-linear-to-b p-8 pb-4 sm:bg-linear-to-br">
       <div class="mx-auto flex w-full max-w-5xl flex-col">
         <div class="flex gap-x-8 gap-y-4 max-sm:flex-col max-sm:items-center sm:justify-between">
-          <img src="/logo.svg" class="h-8 w-fit" />
+          <img src="/logo.svg" alt="logo" class="h-8 w-fit" />
 
           <div class="flex gap-1">
             <Tooltip
@@ -330,8 +340,8 @@ const scrollToNews = () => {
               ]"
               :key="i"
             >
-              <TooltipTrigger>
-                <Button variant="ghost" size="icon" as-child>
+              <TooltipTrigger as-child>
+                <Button variant="ghost" size="icon" :aria-label="r.label" as-child>
                   <a :href="r.href" target="_blank">
                     <component :is="r.icon" class="size-6 fill-current" />
                   </a>
