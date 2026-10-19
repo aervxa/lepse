@@ -80,7 +80,7 @@ export const BACKGROUNDS = [
   {
     id: 5499,
     weight: 1078,
-    name: 'green-lines',
+    name: 'white-lines',
     style: 'abstract',
     url: '/images/backgrounds/lines-white.webp',
     credit: {
