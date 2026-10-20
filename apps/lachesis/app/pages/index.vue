@@ -15,13 +15,7 @@ import { invoke, isTauri } from '@tauri-apps/api/core'
 import { listen, type UnlistenFn } from '@tauri-apps/api/event'
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
 import { TuyauHTTPError } from '@tuyau/core/client'
-import {
-  onKeyStroke,
-  StorageSerializers,
-  useFullscreen,
-  useLocalStorage,
-  useWindowSize,
-} from '@vueuse/core'
+import { onKeyStroke, StorageSerializers, useLocalStorage, useWindowSize } from '@vueuse/core'
 import EmailVerifyButton from '~/components/email-verify-button.vue'
 
 definePageMeta({
@@ -87,11 +81,16 @@ const {
   isFullscreen,
   isSupported: isFullscreenSupported,
   toggle: toggleFullscreen,
+  exit: exitFullscreen,
 } = useFullscreen()
 
 onKeyStroke('F11', (e) => {
   e.preventDefault()
   toggleFullscreen()
+})
+onKeyStroke('Escape', () => {
+  // browsers already do this, but no harm
+  if (isFullscreen.value) exitFullscreen()
 })
 
 const quote = useTemplateRef('quote')

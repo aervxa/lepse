@@ -3,7 +3,6 @@ import { Minus, SquareDashedTopSolid, SquaresIntersect, X } from '@lucide/vue'
 import { isTauri } from '@tauri-apps/api/core'
 import { getCurrentWebviewWindow, type WebviewWindow } from '@tauri-apps/api/webviewWindow'
 import type { UnlistenFn } from '@tauri-apps/api/event'
-import { useFullscreen } from '@vueuse/core'
 
 const { activeBackground } = useBackgrounds()
 const { windowTransparency, nativeDecorations, blurBackground, darkenBackground } = useSettings()
