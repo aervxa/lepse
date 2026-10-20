@@ -80,7 +80,7 @@ pub fn run() {
         .decorations(native_decorations) // native decorations only if preferred by user
         .title("Lepse")
         .inner_size(1280.0, 800.0) // default app size
-        .min_inner_size(448.0, 512.0) // minimum forced size
+        .min_inner_size(448.0, 640.0) // minimum forced size
         .effects(
           EffectsBuilder::new()
             .effects(vec![Effect::Acrylic, Effect::Titlebar])
