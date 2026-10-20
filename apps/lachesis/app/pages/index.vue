@@ -169,7 +169,7 @@ const openPopout = () => {
       <div v-else class="flex gap-2">
         <Button variant="outline" @click="navigateTo('/signup')">Sign Up</Button>
         <Button @click="navigateTo('/login')">Login</Button>
-        <Button variant="outline" size="icon-sm" aria-label="Open settings" as-child>
+        <Button variant="outline" size="icon" aria-label="Open settings" as-child>
           <NuxtLink to="/settings">
             <Settings />
           </NuxtLink>
