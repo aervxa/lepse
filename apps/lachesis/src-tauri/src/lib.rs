@@ -5,7 +5,7 @@ use tauri::{
   menu::{Menu, MenuItem, PredefinedMenuItem},
   tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconBuilder, TrayIconEvent},
   window::{Effect, EffectsBuilder},
-  AppHandle, Manager, Result, Runtime, WebviewUrl, WebviewWindowBuilder,
+  AppHandle, Manager, Result, Runtime, WebviewUrl, WebviewWindowBuilder, WindowEvent,
 };
 use tauri_plugin_store::StoreExt;
 
@@ -67,13 +67,12 @@ pub fn run() {
       // TODO: Handle errors (native dialogs maybe?)
       keyring::init_keyring_store(&HashMap::new())?;
 
-      // Windows options
       let native_decorations = app
         .store("settings.json")
         .ok()
         .and_then(|store| store.get("nativeDecorations"))
         .and_then(|v| v.as_bool())
-        .unwrap_or(false);
+        .unwrap_or(cfg!(target_os = "linux"));
 
       // Create main window
       #[allow(unused_mut)] // mut is used inside cfg gated blocks
@@ -105,6 +104,7 @@ pub fn run() {
 
       if let Ok(window) = builder.build() {
         let w = window.clone();
+        let webview = window.as_ref().clone();
 
         window.on_window_event(move |event| {
           if let tauri::WindowEvent::CloseRequested { api, .. } = event {
@@ -121,6 +121,9 @@ pub fn run() {
             } else {
               w.app_handle().exit(0);
             }
+          }
+          if let WindowEvent::Focused(true) = event {
+            let _ = webview.set_focus();
           }
         });
       }
