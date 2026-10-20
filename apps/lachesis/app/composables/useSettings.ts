@@ -51,7 +51,7 @@ export const useSettings = () => {
 
   // App settings
   const windowTransparency = useLocalStorage('windowTransparency', false)
-  const nativeDecorations = useStore('nativeDecorations', false)
+  const nativeDecorations = useStore('nativeDecorations', true)
   const minimizeToTray = useStore('minimizeToTray', false)
 
   const appSettings = { windowTransparency, nativeDecorations, minimizeToTray }

@@ -15,20 +15,6 @@ onMounted(() => {
   }, SKELETON_DELAY_MS)
 })
 
-// setup to update var only once (when the app is started ideally)
-const hideCustomDecorations = ref<boolean | undefined>(undefined)
-onMounted(() => {
-  if (nativeDecorations === undefined) return
-  const stop = watch(
-    [nativeDecorations],
-    () => {
-      hideCustomDecorations.value = nativeDecorations?.value
-      if (hideCustomDecorations.value !== undefined) nextTick(() => stop()) // nexttick cuz stop is not yet defined due to immediate: true
-    },
-    { immediate: true }
-  )
-})
-
 // ─── Tauri ──────────────────────────────────────────────────────── start ───
 
 const isApp = isTauri()
@@ -60,7 +46,7 @@ onBeforeUnmount(() => {
     :class="[windowTransparency ? 'bg-sidebar/80' : 'bg-sidebar']"
   >
     <div
-      v-if="isApp && !hideCustomDecorations"
+      v-if="isApp && !nativeDecorations"
       v-show="!isFullscreen"
       data-slot="titlebar"
       data-tauri-drag-region
