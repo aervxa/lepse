@@ -11,9 +11,9 @@ pub async fn get_secret(key: &str) -> Result<String, String> {
       .search_items(&[(KEYRING_SERVICE, key)])
       .await
       .map_err(|e| e.to_string())?;
-    let item = items
-      .first()
-      .ok_or_else(|| "Secret not found".to_string())?;
+    let Some(item) = items.first() else {
+      return Ok(String::new()); // secret not found, send empty string
+    };
 
     // Extract secret from item
     let secret = item.secret().await.map_err(|e| e.to_string())?;

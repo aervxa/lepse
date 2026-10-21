@@ -52,14 +52,10 @@ export default defineNuxtPlugin({
       hooks: {
         beforeRequest: [
           async (request) => {
-            // Run only if in a good vue instance (not for requests that happen BEFORE the app mounts)
-            if (getCurrentInstance()) {
-              const email = useAuth().user.value?.email
-              if (isTauri() && email) {
-                const token = await useSecret(email).get()
-                if (token) {
-                  request.headers.set('Authorization', `Bearer ${token}`)
-                }
+            if (isTauri()) {
+              const token = await useSecret('credentials').get()
+              if (token) {
+                request.headers.set('Authorization', `Bearer ${token}`)
               }
             }
             request.headers.set('x-client-date', getClientDate())

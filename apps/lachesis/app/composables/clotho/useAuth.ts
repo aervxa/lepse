@@ -17,7 +17,7 @@ export const useAuth = () => {
     $api.auth.accessToken.store.mutationOptions({
       onSuccess: ({ data }) => {
         if (isTauri() && data.token) {
-          useSecret(data.user.email).set(data.token)
+          useSecret('credentials').set(data.token)
         }
         $queryClient.setQueryData($api.account.profile.show.queryKey(), { data: data.user })
       },
@@ -28,7 +28,7 @@ export const useAuth = () => {
     $api.auth.newAccount.store.mutationOptions({
       onSuccess: ({ data }) => {
         if (isTauri() && data.token) {
-          useSecret(data.user.email).set(data.token)
+          useSecret('credentials').set(data.token)
         }
         $queryClient.setQueryData($api.account.profile.show.queryKey(), { data: data.user })
       },
@@ -40,8 +40,7 @@ export const useAuth = () => {
       // logout should never fail, and should fallback to be able to be done offline
       onSettled: () => {
         if (isTauri()) {
-          const email = user.value?.email
-          email && useSecret(email).del()
+          useSecret('credentials').del()
         }
 
         const safeQueries = (query: Query) => {
