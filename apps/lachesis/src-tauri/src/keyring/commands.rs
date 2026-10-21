@@ -4,6 +4,7 @@ const KEYRING_SERVICE: &str = "app.lepse.Lepse";
 pub async fn get_secret(key: &str) -> Result<String, String> {
   #[cfg(target_os = "linux")]
   {
+    println!("reading {}", key);
     let keyring = oo7::Keyring::new().await.map_err(|e| e.to_string())?;
 
     // Get item, there should only be one
@@ -23,6 +24,8 @@ pub async fn get_secret(key: &str) -> Result<String, String> {
     }
     .to_string();
 
+    println!("reading {}", secret_str);
+
     Ok(secret_str)
   }
   #[cfg(any(target_os = "windows", target_os = "macos"))]
@@ -36,6 +39,7 @@ pub async fn get_secret(key: &str) -> Result<String, String> {
 pub async fn set_secret(key: &str, password: &str) -> Result<(), String> {
   #[cfg(target_os = "linux")]
   {
+    println!("setting {}", key);
     let keyring = oo7::Keyring::new().await.map_err(|e| e.to_string())?;
 
     // Create item
@@ -48,6 +52,8 @@ pub async fn set_secret(key: &str, password: &str) -> Result<(), String> {
       )
       .await
       .map_err(|e| e.to_string())?;
+
+    println!("setted {}", key);
 
     Ok(())
   }
