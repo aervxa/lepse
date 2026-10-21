@@ -23,7 +23,7 @@ definePageMeta({
 })
 
 const route = useRoute()
-const { user, logoutMutation } = useAuth()
+const { user, userQuery, logoutMutation } = useAuth()
 const { $queryClient, $api } = useNuxtApp()
 const { activeQuote } = useQuote()
 
@@ -160,6 +160,7 @@ const openPopout = () => {
           'from-background/40 via-background/20 -m-2 rounded-xs rounded-tr-2xl bg-linear-to-l to-transparent p-2 ps-3 backdrop-blur-sm rtl:rounded-tl-2xl rtl:bg-linear-to-r',
       ]"
     >
+      <Button v-if="import.meta.dev" @click="userQuery.refetch()">RefetchAuth</Button>
       <template v-if="user">
         <FocusSessions v-if="user.emailVerified" />
         <EmailVerifyButton v-else class="-mr-2" />
