@@ -12,13 +12,15 @@ export default class AccessTokenController {
     const token = await User.accessTokens.create(user)
     const tokenValue = token.value!.release()
 
-    response.cookie('auth_token', tokenValue, {
-      path: '/',
-      httpOnly: true,
-      secure: app.inProduction, // NOTE: for working in development
-      sameSite: 'lax', // NOTE: for developemnt, the backend must be running on the same host as the frontend
-      maxAge: '1y',
-    })
+    if (!isApp) {
+      response.cookie('auth_token', tokenValue, {
+        path: '/',
+        httpOnly: true,
+        secure: app.inProduction, // NOTE: for working in development
+        sameSite: 'lax', // NOTE: for developemnt, the backend must be running on the same host as the frontend
+        maxAge: '1y',
+      })
+    }
 
     return serialize({
       user: UserTransformer.transform(user),
