@@ -85,13 +85,18 @@ pub fn run() {
           EffectsBuilder::new()
             .effects(vec![Effect::Acrylic, Effect::Titlebar])
             .build(),
-        ) // effects for Windows and MacOS respectively
-        .visible(false); // hide by default to wait until content loads?
+        ); // effects for Windows and MacOS respectively
 
       #[cfg(not(debug_assertions))]
       {
         let debug = std::env::var("DEBUG").map_or(false, |v| v == "1");
         builder = builder.devtools(debug) // Devtools only in debug mode
+      }
+
+      #[cfg(not(all(feature = "cef", target_os = "linux")))]
+      {
+        // NOTE: CEF on Linux loses X focus on window tabbing when started with visible false
+        builder = builder.visible(false); // hide by default to wait until content loads?
       }
 
       #[cfg(not(target_os = "linux"))]
