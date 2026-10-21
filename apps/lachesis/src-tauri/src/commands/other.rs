@@ -23,3 +23,8 @@ pub fn can_transparent() -> bool {
   // see lib.rs note when setting initial transparency
   cfg!(not(target_os = "linux"))
 }
+
+#[tauri::command]
+pub fn debug_log(msg: String) {
+  println!("[js] {msg}");
+}

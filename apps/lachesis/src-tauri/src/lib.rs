@@ -53,6 +53,7 @@ pub fn run() {
       keyring::commands::delete_secret,
       commands::other::get_os,
       commands::other::can_transparent,
+      commands::other::debug_log,
       commands::popout::open_popout,
     ])
     .setup(|app| {

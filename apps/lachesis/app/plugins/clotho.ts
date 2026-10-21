@@ -4,7 +4,7 @@ import { persistQueryClient } from '@tanstack/query-persist-client-core'
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
 import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query'
 import { createTuyauVueQueryClient } from '@tuyau/vue-query'
-import { isTauri } from '@tauri-apps/api/core'
+import { invoke, isTauri } from '@tauri-apps/api/core'
 
 export default defineNuxtPlugin({
   name: 'clotho',
@@ -53,8 +53,13 @@ export default defineNuxtPlugin({
         beforeRequest: [
           async (request) => {
             // Run only if in a good vue instance (not for requests that happen BEFORE the app mounts)
+            const inst = !!getCurrentInstance()
+            invoke('debug_log', { msg: JSON.stringify({ url: request.url, inst }) })
             if (getCurrentInstance()) {
               const email = useAuth().user.value?.email
+              invoke('debug_log', {
+                msg: JSON.stringify({ url: request.url, email, tauri: isTauri() }),
+              })
               if (isTauri() && email) {
                 const token = await useSecret(email).get()
                 if (token) {
