@@ -5,6 +5,7 @@ import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persi
 import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query'
 import { createTuyauVueQueryClient } from '@tuyau/vue-query'
 import { invoke, isTauri } from '@tauri-apps/api/core'
+import { useLocalStorage } from '@vueuse/core'
 
 export default defineNuxtPlugin({
   name: 'clotho',
@@ -52,19 +53,15 @@ export default defineNuxtPlugin({
       hooks: {
         beforeRequest: [
           async (request) => {
-            // Run only if in a good vue instance (not for requests that happen BEFORE the app mounts)
-            const inst = !!getCurrentInstance()
-            invoke('debug_log', { msg: JSON.stringify({ url: request.url, inst }) })
-            if (getCurrentInstance()) {
-              const email = useAuth().user.value?.email
+            const email = useLocalStorage('user-email', '')
+            isTauri() &&
               invoke('debug_log', {
-                msg: JSON.stringify({ url: request.url, email, tauri: isTauri() }),
+                msg: JSON.stringify({ url: request.url, email: email.value, tauri: isTauri() }),
               })
-              if (isTauri() && email) {
-                const token = await useSecret(email).get()
-                if (token) {
-                  request.headers.set('Authorization', `Bearer ${token}`)
-                }
+            if (isTauri() && email.value) {
+              const token = await useSecret(email.value).get()
+              if (token) {
+                request.headers.set('Authorization', `Bearer ${token}`)
               }
             }
             request.headers.set('x-client-date', getClientDate())
