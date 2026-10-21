@@ -47,9 +47,8 @@ export const useAuth = () => {
           return [''].includes(hashKey(query.queryKey))
         }
 
-        // NOTE: reset needs to run BEFORE remove
+        // Reset queries to remove all data
         $queryClient.resetQueries({ predicate: (q) => !safeQueries(q) })
-        $queryClient.removeQueries({ predicate: (q) => !safeQueries(q) })
       },
     })
   )
