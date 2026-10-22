@@ -80,4 +80,4 @@ If you want to fork this repository for your own purposes, please read the [copy
 
 ## License
 
-All apps and packages in this repository are licensed under the Komorebi License 2.0.0, which is found in the LICENSE.md file at the root of this repository.
+All packages in this repository are licensed under their respective licenses. Refer to the [copying guidelines](COPYING.md) for more information, including the use of the Lepse name and branding.

@@ -97,7 +97,7 @@
   <url type="vcs-browser">https://github.com/aervxa/lepse</url>
   <url type="bugtracker">https://github.com/aervxa/lepse/issues</url>
   <metadata_license>MIT</metadata_license>
-  <project_license>LicenseRef-Komorebi</project_license>
+  <project_license>AGPL-3.0-only</project_license>
   <developer id="io.github.aervxa">
     <name>zorvi</name>
   </developer>

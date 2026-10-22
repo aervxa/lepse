@@ -3,7 +3,6 @@
   "private": true,
   "type": "module",
   "description": "The complete monorepo for everything Lepse is built with",
-  "license": "SEE LICENSE IN LICENSE.md",
   "engines": {
     "node": ">=24.0.0"
   },

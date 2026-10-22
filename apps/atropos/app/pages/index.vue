@@ -378,7 +378,7 @@ const scrollToNews = () => {
 
         <div class="text-muted-foreground mt-8 text-center text-xs">
           <p>*All of the code is public and contributions are appreciated.</p>
-          <p>The license doesn't allow commercial use, so technically it's Source Available.</p>
+          <p>The app is fully open source, the rest are technically Source Available.</p>
         </div>
       </div>
     </div>
