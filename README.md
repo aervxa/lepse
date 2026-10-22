@@ -1,43 +1,83 @@
-# Lepse (/lɛps/)
+<picture>
+	<source media="(prefers-color-scheme: light)" srcset=".github/assets/banner-light.webp">
+	<img alt="Lepse Cover" src=".github/assets/banner-dark.webp">
+</picture>
 
-> Name derivation: Lepse _(from lapse)_, is a play on words because lepse would help you to **prevent** yourself from lapsing (somewhat)
+<h1 align="center">Lepse <i>(/lɛps/)</i></h1>
+
+<div align="center">
+  <a href="https://flathub.org/apps/app.lepse.Lepse">
+    <picture>
+      <source media="(prefers-color-scheme: light)" srcset="https://img.shields.io/flathub/v/app.lepse.Lepse?color=0f2d1d&style=for-the-badge">
+      <img alt="Flathub" src="https://img.shields.io/flathub/v/app.lepse.Lepse?color=d3efdf&style=for-the-badge">
+    </picture>
+  </a>
+</div>
+
+<br />
+
+<p align="center"><i>Your</i>&nbsp;<b>Personal focus companion</b><p>
+
+<!-- TODO: Screenshot in GIF -->
+<img src="https://cdn.lepse.app/lachesis-app-screenshots/lepse-home.png" />
+
+Lepse is a minimal and aesthetic productivity tool to help you focus on what matters and work toward your goals. Its aim is to make being productive simpler, more enjoyable, comfortable, and easy.
+
+> I've tried other apps, but I always got overwhelmed, so I created Lepse. (ps. During breaks, I always found myself staring at a clock, shout-out [relaxingclock](https://relaxingclock-com.netlify.app/))
+
+Instead of creating tasks and then completing them in a mindless loop, link tasks to the goals they enable so that each task actually means something. Start a Pomodoro timer or stopwatch on any task, and every second is tracked to that task, so you can see how much time you've spent on it.
+
+Not focusing, or just needing rest? Let the clock keep you company.
+
+## Lepse Monorepo
+
+Welcome to the monorepo! All components that enable Lepse to work how it does are in here!
+
+If you're not a developer and/or are looking for the main page, [here](https://lepse.app) it is.
+
+# Installation
+
+If you've somehow stumbled here, it is recommended to download Lepse from the [homepage](https://lepse.app). Downloads are also available in the [latest release](https://github.com/aervxa/lepse/releases/latest).
+
+<!-- TODO: app to AUR and show that -->
 
 > [!NOTE]
-> I would _gladly_ take any feedback or contributions/contributors (u can find my discord on my GitHub profile)
+> More is coming :> ps. I'm open to feedback. (options to contact me are on my GitHub profile)
 
-### What is Lepse?
+## Roadmap
 
-Lepse is an aesthetic clock + simple productivity tool to help u focus. Have a simple clock for when you are AFK or on an unused monitor, a pomo/stopwatch for when you're in a work/study session.
-
-Lepse's aim is to make being productive simpler and more enjoyable/comfortable. I've tried other tools/apps and it was a tremendous amount of work to setup/use, hence why I started Lepse. (and also I always found myself having an AFK clock, shout-out [relaxingclock.com](https://relaxingclock-com.netlify.app/))
-
-The base of the app is pretty simple, you create tasks, and when u run pomos/stopwatches, you can select a task, and the time spend on the task will be tracked for u to see. You could optionally conect tasks to a bigger goal (something big, like a project, goal in life, etc). highly recommended so that you would constantly know exactly what you are doing.
-
-## Features
-
-- [x] **Goals** - goals, not associated with time, so things like projects, hobbies, etc (tasks are for deadlines and work sessions).
+- [x] **Goals** - goals, not associated with time, so things like projects, hobbies, etc. (tasks are for deadlines and work sessions).
 - [x] **Tasks** - any task, or _optionally_ connected to a goal (u could think of it as goals broken down into tasks).
 - [ ] **Habits** - habits that can recur daily or only on certain days. **(archived for now)**
 - [ ] **Day lifecycle** - a day is a day, for score counting and journal mapping. **(archived for now)**
 - [x] **Focus screen** - AFK screen (clock), or pomo/stopwatch for work sessions, which can connect to a specific task to track time on said task.
-- [ ] **Journal & Scribbles** - journals ares for daily reflection, scribbles are for random notes not connected to a specific day. **(archived for now)**
+- [ ] **Journal & Scribbles** - journals are for daily reflection; scribbles are for random notes not connected to a specific day. **(archived for now)**
 - [ ] **Calendar** - week/month overview of your days (tasks, mood, score, habits). **(archived for now)**
-- [ ] **Notifications** - reminders for start of day, end of day, habit reminders, and pomo cycles. **(archived for now, except the pomo updates prolly)**
+- [ ] **Notifications** - reminders for start of day, end of day, habit reminders, and Pomodoro cycles. **(archived for now, except the pomo updates prolly)**
 - [x] **Desktop app** - desktop app via Tauri (a single dev **cannot** do native apps) _(not me at least)_.
 - [ ] **Pets** - tba.
-- [ ] **Friends** - friends + lobby sessions
+- [ ] **Friends** - friends + lobby sessions (invite-only, not public lobbies)
 
-> [!NOTE]
-> v0.1 will ship stable
+## Development
 
-### Inspirations
+> more _"documentation"_ of the codebase can be found in the [deepwiki](https://deepwiki.com/aervxa/lepse).
 
-- The clock: [relaxingclock.com](https://relaxingclock-com.netlify.app/)
-- Fancy naming conventions: [modrinth](https://github.com/modrinth/code) _(I actually figured out later I accidentally used the same ones as them, hence the rename)_
+This monorepo contains multiple projects. There is more detailed information in each of their READMEs about their own development:
 
-> [!TIP]
-> Zero AI slop! (Sad to have to even say this), so actually think before throwing assumptions/accusations
+| Project     | Directory       |
+| ----------- | --------------- |
+| Website     | `apps/atropos`  |
+| App         | `apps/lachesis` |
+| Backend/API | `apps/clotho`   |
 
-### License
+Shared libraries live in `packages/`. Scripts live in `scripts/` and are preferably written in NodeJS.
+
+### Contributing
+
+All contributions are very much appreciated! Before submitting one, please read the [contributing guidelines](CONTRIBUTING.md).
+
+If you want to fork this repository for your own purposes, please read the [copying guidelines](COPYING.md).
+
+## License
 
 All apps and packages in this repository are licensed under the Komorebi License 2.0.0, which is found in the LICENSE.md file at the root of this repository.
