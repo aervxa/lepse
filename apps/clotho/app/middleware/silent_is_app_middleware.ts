@@ -10,7 +10,7 @@ export default class SilentIsAppMiddleware {
     const origin = ctx.request.header('Origin')
 
     // Share app origins as isApp
-    ctx.isApp = ['http://tauri.localhost', 'tauri://localhost'].includes(origin || '') || app.inDev // in development, treat everything as app
+    ctx.isApp = ['http://tauri.localhost', 'tauri://localhost'].includes(origin || '')
 
     return next()
   }
