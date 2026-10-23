@@ -113,21 +113,21 @@ const scrollToNews = () => {
       <img
         fetchpriority="high"
         src="/images/hero-dark.webp"
-        alt="background image"
+        alt=""
         class="not-dark:hidden"
       />
       <img
         fetchpriority="high"
         src="/images/hero-light.webp"
-        alt="background image"
+        alt=""
         class="dark:hidden"
       />
     </div>
     <div
       class="contents *:rotate-180 *:mask-t-from-35% *:mask-t-to-60% *:mask-b-from-0% sm:*:mask-t-to-45% lg:*:mask-t-to-50%"
     >
-      <img src="/images/hero-dark.webp" alt="background image" class="not-dark:hidden" />
-      <img src="/images/hero-light.webp" alt="background image" class="dark:hidden" />
+      <img src="/images/hero-dark.webp" alt="" class="not-dark:hidden" />
+      <img src="/images/hero-light.webp" alt="" class="dark:hidden" />
     </div>
   </div>
 
