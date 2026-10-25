@@ -3,6 +3,9 @@ import { focusManager } from '@tanstack/vue-query'
 import { isTauri } from '@tauri-apps/api/core'
 import { getCurrentWindow } from '@tauri-apps/api/window'
 import { camelCase } from 'change-case'
+import { provideSocket, socket } from '~/lib/clotho/socket'
+
+provideSocket(socket, { owned: true })
 
 const { theme, THEME_OPTIONS, themeOptions } = useSettings()
 
