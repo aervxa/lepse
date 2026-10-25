@@ -5,7 +5,8 @@
   "exports": {
     "./data": "./.adonisjs/client/data.d.ts",
     "./registry": "./.adonisjs/client/registry/index.ts",
-    "./socket": "./.adonisjs/client/socket.ts"
+    "./socket": "./.adonisjs/client/socket.ts",
+    "./types": "./app/types/index.ts"
   },
   "files": [
     "build"

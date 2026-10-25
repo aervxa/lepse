@@ -14,7 +14,7 @@ export interface AppSocket {
 
       readonly handlers: {
 
-        readonly 'lounge:send': 'sendMessage'
+        readonly 'lounge:sync': 'sendMessage'
 
       }
 

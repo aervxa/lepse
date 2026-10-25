@@ -6,6 +6,7 @@ import { type AccessToken, DbAccessTokensProvider } from '@adonisjs/auth/access_
 import mail from '@adonisjs/mail/services/main'
 import VerifyEmailNotification from '#mails/verify_email_notification'
 import token_service from '#services/token_service'
+import drive from '@adonisjs/drive/services/main'
 
 export default class User extends compose(UserSchema, withAuthFinder(hash)) {
   static accessTokens = DbAccessTokensProvider.forModel(User)
@@ -22,5 +23,9 @@ export default class User extends compose(UserSchema, withAuthFinder(hash)) {
   async sendVerifyEmail() {
     const token = token_service.createEmailVerificationToken(this.id)
     await mail.sendLater(new VerifyEmailNotification(this, token))
+  }
+
+  async getAvatarUrl() {
+    return this.avatar ? await drive.use().getUrl(this.avatar) : null
   }
 }
