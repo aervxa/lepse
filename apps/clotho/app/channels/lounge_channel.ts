@@ -1,4 +1,4 @@
-import { LoungeTimer } from '#types/index'
+import { LoungePeer } from '#types/index'
 import { PublicUser } from '#types/user'
 import { BaseChannel } from '@rlanz/socket'
 import { onMessage } from '@rlanz/socket/decorators'
@@ -6,7 +6,7 @@ import type { AuthenticatedSocket, PresenceInfo } from '@rlanz/socket/types'
 
 type ServerEvents = {
   'lounge:resync': null
-  'lounge:timer': LoungeTimer
+  'lounge:timer': LoungePeer
 }
 
 export default class LoungeChannel extends BaseChannel<PublicUser, ServerEvents> {
@@ -30,8 +30,8 @@ export default class LoungeChannel extends BaseChannel<PublicUser, ServerEvents>
   @onMessage('lounge:sync')
   async sendMessage(
     socket: AuthenticatedSocket<PublicUser>,
-    { timer }: Omit<LoungeTimer, 'user'>
-  ): Promise<LoungeTimer> {
+    { timer }: Pick<LoungePeer, 'timer'>
+  ): Promise<LoungePeer> {
     const user = socket.getUserOrFail()
 
     const data = {
