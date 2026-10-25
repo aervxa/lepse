@@ -63,6 +63,10 @@ export default defineConfig({
     () => import('@adonisjs/limiter/limiter_provider'),
     () => import('@adonisjs/vite/vite_provider'),
     () => import('@adonisjs/static/static_provider'),
+    {
+      file: () => import('@rlanz/socket/provider'),
+      environment: ['web', 'test'],
+    },
   ],
 
   /*
@@ -131,6 +135,7 @@ export default defineConfig({
       }),
       generateRegistry({ routes: { except: [(n) => n.startsWith('web')] } }),
       indexPolicies(),
+      () => import('@rlanz/socket/assembler_hook'),
     ],
     buildStarting: [() => import('@adonisjs/vite/build_hook')],
   },

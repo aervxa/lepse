@@ -1,5 +1,5 @@
-import app from '@adonisjs/core/services/app'
 import { defineConfig } from '@adonisjs/cors'
+import { allowedOrigins } from '../app/lib/util/origin.ts'
 
 /**
  * Configuration options to tweak the CORS policy. The following
@@ -18,14 +18,7 @@ const corsConfig = defineConfig({
    * In production, keep an explicit allowlist (empty by default, so no
    * cross-origin browser access is allowed until configured).
    */
-  origin: app.inDev
-    ? true
-    : [
-        'tauri://localhost', // tauri
-        'http://tauri.localhost', // cuz windows and android can't do tauri:// ig
-        'http://localhost:3000', // for dev
-        'https://os.lepse.app', // for prod
-      ],
+  origin: allowedOrigins,
 
   /**
    * HTTP methods accepted for cross-origin requests.
