@@ -23,8 +23,8 @@ export default class LoungeChannel extends BaseChannel<PublicUser, ServerEvents>
   }
 
   // Support asking resync when the user connects (even on another client)
-  async onJoin() {
-    this.broadcast('lounge:resync', null)
+  async onJoin(socket: AuthenticatedSocket<PublicUser>) {
+    this.broadcastExcept(socket.id, 'lounge:resync', null)
   }
 
   @onMessage('lounge:sync')
