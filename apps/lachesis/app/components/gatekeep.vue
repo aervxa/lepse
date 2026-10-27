@@ -1,7 +1,6 @@
 <script setup lang="ts">
 withDefaults(
   defineProps<{
-    check?: boolean | number
     title?: string
     actionLabel?: string
     action?: () => void
@@ -15,7 +14,6 @@ withDefaults(
 
 <template>
   <div
-    v-if="!check"
     class="absolute inset-0 z-50 grid place-content-center bg-black/80 backdrop-blur-xs"
   >
     <Empty>

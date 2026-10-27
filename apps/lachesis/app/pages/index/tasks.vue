@@ -80,17 +80,12 @@ const {
 
 <template>
   <Gatekeep
-    v-if="user"
-    :check="user?.emailVerified"
-    title="Please verify your email to create tasks."
-  />
-  <Gatekeep
-    v-else
-    :check="false"
+    v-if="!user"
     title="You must be logged in to create tasks."
     action-label="Login"
     :action="async () => (await navigateTo('/'), await navigateTo('/login'))"
   />
+  <Gatekeep v-else-if="!user.emailVerified" title="Please verify your email to create tasks." />
 
   <div class="flex size-full flex-1 flex-col" :class="[source === 'drawer' && 'mx-auto max-w-sm']">
     <AnimatePresence mode="popLayout">
