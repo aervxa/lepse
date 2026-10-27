@@ -9,11 +9,8 @@ interface Props extends /* @vue-ignore */ ButtonProps {
   forceSlot?: boolean
 }
 const props = defineProps<Props>()
-if (props.action && props.loading) {
-  throw new Error('loading-button: you should pass either `action` or `loading`, not both')
-}
-if (props.action === undefined && props.loading === undefined) {
-  throw new Error('loading-button: you have to pass one of either `action` or `loading`')
+if ((props.action === undefined) === (props.loading === undefined)) {
+  throw new Error('loading-button: pass exactly one of `action` or `loading`')
 }
 
 const isLoading = ref(false)
