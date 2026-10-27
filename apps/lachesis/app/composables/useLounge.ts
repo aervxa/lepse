@@ -3,7 +3,7 @@ import type { LoungePeer } from '@lepse/clotho/types'
 import { socket } from '~/lib/clotho/socket'
 import type { WatchHandle } from 'vue'
 
-type LoungePeers = { [key: string]: LoungePeer } // key is id
+export type LoungePeers = { [key: string]: LoungePeer } // key is id
 type Timer = LoungePeer['timer']
 type Connection = 'disconnected' | 'connecting' | 'connected'
 

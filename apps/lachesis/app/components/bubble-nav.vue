@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { useWindowSize } from '@vueuse/core'
-import { Goal, ListTodo } from '@lucide/vue'
+import { Goal, ListTodo, Sofa } from '@lucide/vue'
 import type { FocusOutsideEvent } from 'reka-ui'
 
 const items = [
   { name: 'tasks', path: '/tasks', icon: ListTodo },
   { name: 'goals', path: '/goals', icon: Goal },
+  { name: 'lounge', path: '/lounge', icon: Sofa },
 ]
 type Item = (typeof items)[number]
 

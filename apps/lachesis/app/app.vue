@@ -7,6 +7,8 @@ import { provideSocket, socket } from '~/lib/clotho/socket'
 
 provideSocket(socket, { owned: true })
 
+useLoungeServer()
+
 const { theme, THEME_OPTIONS, themeOptions } = useSettings()
 
 // manage tanstack/vue-query's window focusManger to be handled by tauri
