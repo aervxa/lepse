@@ -39,6 +39,8 @@ export type ScannedRoutes = {
     'goals.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'tasks.attach_goal': { paramsTuple: [ParamValue,ParamValue]; params: {'taskId': ParamValue,'goalId': ParamValue} }
     'tasks.detach_goal': { paramsTuple: [ParamValue,ParamValue]; params: {'taskId': ParamValue,'goalId': ParamValue} }
+    'lounges.store': { paramsTuple?: []; params?: {} }
+    'lounges.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   GET: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
@@ -87,6 +89,7 @@ export type ScannedRoutes = {
     'tasks.store': { paramsTuple?: []; params?: {} }
     'goals.store': { paramsTuple?: []; params?: {} }
     'tasks.attach_goal': { paramsTuple: [ParamValue,ParamValue]; params: {'taskId': ParamValue,'goalId': ParamValue} }
+    'lounges.store': { paramsTuple?: []; params?: {} }
   }
   PATCH: {
     'account.profile.update': { paramsTuple?: []; params?: {} }
@@ -100,6 +103,7 @@ export type ScannedRoutes = {
     'tasks.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'goals.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'tasks.detach_goal': { paramsTuple: [ParamValue,ParamValue]; params: {'taskId': ParamValue,'goalId': ParamValue} }
+    'lounges.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   PUT: {
     'tasks.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

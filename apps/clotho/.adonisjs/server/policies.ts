@@ -5,5 +5,6 @@ export const policies = {
   ScribblePolicy: () => import('#policies/scribble_policy'),
   TaskDayPolicy: () => import('#policies/task_day_policy'),
   TaskPolicy: () => import('#policies/task_policy'),
+  LoungePolicy: () => import('#policies/lounge_policy'),
 }
 
