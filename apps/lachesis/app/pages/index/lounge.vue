@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { X } from '@lucide/vue'
 import { PopoverClose } from 'reka-ui'
-import { useSocketState } from '~/lib/clotho/socket'
+
+const { $useSocketState } = useNuxtApp()
 
 const source = inject(bubbleNavSourceKey)
 
 const { user } = useAuth()
 
 const { connection, join, leave, peers } = useLoungeClient()
-const { state } = useSocketState()
+const { state } = $useSocketState()
 </script>
 
 <template>

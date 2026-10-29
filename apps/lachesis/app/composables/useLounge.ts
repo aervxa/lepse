@@ -1,6 +1,5 @@
 import { createSharedComposable, useLocalStorage } from '@vueuse/core'
 import type { LoungePeer } from '@lepse/clotho/types'
-import { socket } from '~/lib/clotho/socket'
 import type { WatchHandle } from 'vue'
 
 export type LoungePeers = { [key: string]: LoungePeer } // key is id
@@ -42,6 +41,8 @@ export const useLoungeServer = createSharedComposable(() => {
   const timer = useLocalStorage<Timer>(LOUNGE_TIMER_KEY, null)
   const connection = useLocalStorage<Connection>(LOUNGE_CONNECTION_KEY, 'disconnected')
 
+  const { $socket } = useNuxtApp()
+
   loungeId.value = null // reset connected lounge (to handle with stale connects)
   peers.value = {}
   connection.value = 'disconnected'
@@ -52,7 +53,7 @@ export const useLoungeServer = createSharedComposable(() => {
     connection.value = 'disconnected'
 
     if (!id) return
-    const channel = socket.channel('lounge/:id', { id })
+    const channel = $socket.channel('lounge/:id', { id })
     const sync = () => channel.send('lounge:sync', { timer: timer.value })
     let handle: WatchHandle | undefined // watch handle that watches timer
 
@@ -74,6 +75,7 @@ export const useLoungeServer = createSharedComposable(() => {
         // set new list
         peers.value = list
       })
+      .listen('lounge:closed', () => channel.unsubscribe())
       .listen('lounge:resync', sync)
       .listen('lounge:timer', (p) => {
         peers.value[p.user.id] = p // update the whole peer
@@ -92,9 +94,14 @@ export const useLoungeServer = createSharedComposable(() => {
         if (!channel.subscribed) return // `.subscribed` is false when the subscribe was rejected due to an unsubscribe
         console.error(err)
 
+        if (err instanceof Error && err.message.startsWith('404')) {
+          toast.error('Lounge unavailable! It may have been closed!')
+        } else {
+          toast.error('Failed to connect to lounge, Please try again later!')
+        }
+
         // reset lounge (lounge reset alr sets connection.value to 'disconnected')
         loungeId.value = null
-        toast('Failed to connect to lounge, Please try again later!')
       })
 
     // runs before the watch fires again (user leaves or joins another)
