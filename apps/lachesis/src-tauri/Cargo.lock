@@ -5516,7 +5516,7 @@ dependencies = [
  "swift-rs",
  "tauri-build 3.0.0-alpha.4 (git+https://github.com/lepsehq/tauri?rev=0434538e89ef9586187674754ad46c8b19600407)",
  "tauri-macros",
- "tauri-runtime 3.0.0-alpha.4 (git+https://github.com/lepsehq/tauri?rev=0434538e89ef9586187674754ad46c8b19600407)",
+ "tauri-runtime",
  "tauri-utils 3.0.0-alpha.4 (git+https://github.com/lepsehq/tauri?rev=0434538e89ef9586187674754ad46c8b19600407)",
  "thiserror 2.0.21",
  "tokio",
@@ -5786,27 +5786,6 @@ dependencies = [
 [[package]]
 name = "tauri-runtime"
 version = "3.0.0-alpha.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "37d33186aff00f285828a7d1a63ac040c2384e6b63a3f1c1d2c4aac492cc0a10"
-dependencies = [
- "cookie",
- "dpi",
- "http",
- "jni 0.21.1",
- "objc2",
- "objc2-ui-kit",
- "raw-window-handle",
- "serde",
- "serde_json",
- "tauri-utils 3.0.0-alpha.4 (registry+https://github.com/rust-lang/crates.io-index)",
- "thiserror 2.0.21",
- "url",
- "windows",
-]
-
-[[package]]
-name = "tauri-runtime"
-version = "3.0.0-alpha.4"
 source = "git+https://github.com/lepsehq/tauri?rev=0434538e89ef9586187674754ad46c8b19600407#0434538e89ef9586187674754ad46c8b19600407"
 dependencies = [
  "cookie",
@@ -5854,7 +5833,7 @@ dependencies = [
  "softbuffer",
  "tauri",
  "tauri-macros",
- "tauri-runtime 3.0.0-alpha.4 (git+https://github.com/lepsehq/tauri?rev=0434538e89ef9586187674754ad46c8b19600407)",
+ "tauri-runtime",
  "tauri-utils 3.0.0-alpha.4 (git+https://github.com/lepsehq/tauri?rev=0434538e89ef9586187674754ad46c8b19600407)",
  "tauri-winit",
  "url",
@@ -5865,8 +5844,7 @@ dependencies = [
 [[package]]
 name = "tauri-runtime-wry"
 version = "3.0.0-alpha.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d7afdc42aba986b11cd2c9b592c33c688bf71a9cd0db0d5eb1a97addfdefc287"
+source = "git+https://github.com/lepsehq/tauri?rev=0434538e89ef9586187674754ad46c8b19600407#0434538e89ef9586187674754ad46c8b19600407"
 dependencies = [
  "gtk",
  "http",
@@ -5881,8 +5859,8 @@ dependencies = [
  "softbuffer",
  "tao",
  "tauri",
- "tauri-runtime 3.0.0-alpha.4 (registry+https://github.com/rust-lang/crates.io-index)",
- "tauri-utils 3.0.0-alpha.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "tauri-runtime",
+ "tauri-utils 3.0.0-alpha.4 (git+https://github.com/lepsehq/tauri?rev=0434538e89ef9586187674754ad46c8b19600407)",
  "url",
  "webkit2gtk",
  "webview2-com",

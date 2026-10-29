@@ -54,5 +54,6 @@ cef = ["dep:tauri-runtime-cef"]
 
 [patch.crates-io]
 tauri = { git = "https://github.com/lepsehq/tauri", rev = "0434538e89ef9586187674754ad46c8b19600407" }             # v3.0.0-alpha.5+lepse
+tauri-runtime-wry = { git = "https://github.com/lepsehq/tauri", rev = "0434538e89ef9586187674754ad46c8b19600407" } # v3.0.0-alpha.5+lepse
 tauri-runtime-cef = { git = "https://github.com/lepsehq/tauri", rev = "0434538e89ef9586187674754ad46c8b19600407" } # v3.0.0-alpha.5+lepse
 tray-icon = { git = "https://github.com/aervxa/tray-icon", rev = "d2212b4baf8556ee0fe3d3ea65966b506f95a2b7" }
