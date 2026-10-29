@@ -122,6 +122,7 @@ const { isFullscreen } = useFullscreen()
       <Button
         :variant="mode === 'drawer-bottom' ? 'secondary' : 'ghost'"
         :size="mode !== 'drawer-bottom' ? 'icon' : undefined"
+        :class="{ 'bg-transparent!': activeItem?.name === item.name }"
         @click="openNav(item)"
       >
         <component :is="item.icon" />
