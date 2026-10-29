@@ -14,28 +14,30 @@ import { ArrowUpRight, Download, Info } from '@lucide/vue'
     </ContextMenuTrigger>
 
     <ContextMenuContent>
-      <!-- TODO: Link actual homepage -->
-      <ContextMenuItem disabled>
-        <ArrowUpRight />
-        Open homepage in new tab
+      <ContextMenuItem as-child>
+        <a href="https://lepse.app" target="_blank">
+          <ArrowUpRight />
+          Open homepage in new tab
+        </a>
       </ContextMenuItem>
       <ContextMenuItem as-child>
-        <a href="https://os.lepse.app/logo.svg" target="_blank">
+        <a href="https://lepse.app/logo.svg" target="_blank">
           <Download />
           Download logo
         </a>
       </ContextMenuItem>
       <ContextMenuItem as-child>
-        <a href="https://os.lepse.app/favicon-96x96.png" target="_blank">
+        <a href="https://lepse.app/favicon-96x96.png" target="_blank">
           <Download />
           Download favicon
         </a>
       </ContextMenuItem>
       <ContextMenuSeparator />
-      <!-- TODO: Link actual about page -->
-      <ContextMenuItem disabled>
-        <Info />
-        About
+      <ContextMenuItem as-child>
+        <a href="https://lepse.app/about" target="_blank">
+          <Info />
+          About
+        </a>
       </ContextMenuItem>
     </ContextMenuContent>
   </ContextMenu>
