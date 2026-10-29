@@ -37,7 +37,7 @@ If you're not a developer and/or are looking for the main page, [here](https://l
 
 # Installation
 
-If you've somehow stumbled here, it is recommended to download Lepse from the [homepage](https://lepse.app). Downloads are also available in the [latest release](https://github.com/aervxa/lepse/releases/latest).
+If you've somehow stumbled here, it is recommended to download Lepse from the [homepage](https://lepse.app). Downloads are also available in the [latest release](https://github.com/lepsehq/lepse/releases/latest).
 
 <!-- TODO: app to AUR and show that -->
 
@@ -60,7 +60,7 @@ If you've somehow stumbled here, it is recommended to download Lepse from the [h
 
 ## Development
 
-> more _"documentation"_ of the codebase can be found in the [deepwiki](https://deepwiki.com/aervxa/lepse).
+> more _"documentation"_ of the codebase can be found in the [deepwiki](https://deepwiki.com/lepsehq/lepse).
 
 This monorepo contains multiple projects. There is more detailed information in each of their READMEs about their own development:
 

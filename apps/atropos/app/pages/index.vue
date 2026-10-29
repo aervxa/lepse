@@ -335,7 +335,7 @@ const scrollToNews = () => {
           <div class="flex gap-1">
             <Tooltip
               v-for="(r, i) in [
-                { label: 'Github', href: 'https://github.com/aervxa/lepse', icon: LogosGithub },
+                { label: 'Github', href: 'https://github.com/lepsehq/lepse', icon: LogosGithub },
                 { label: 'Reddit', href: 'https://reddit.com/r/lepse', icon: LogosReddit },
               ]"
               :key="i"
@@ -356,7 +356,7 @@ const scrollToNews = () => {
           <p>
             Lepse is
             <a
-              href="https://github.com/aervxa/lepse"
+              href="https://github.com/lepsehq/lepse"
               target="_blank"
               class="text-primary hover:underline"
               >open source</a

@@ -2,7 +2,7 @@
 name = "lepse"
 description = "A personal life operating system for top-down \"productivity\"."
 authors = ["zorvi"]
-repository = "https://github.com/aervxa/lepse"
+repository = "https://github.com/lepsehq/lepse"
 edition = "2021"
 rust-version = "1.93"
 

@@ -14,7 +14,7 @@ execSync(`cd apps/lachesis && pnpm version ${BUMP} --no-git-tag-version`)
 // Prepare release string
 const VERSION = JSON.parse(readFileSync('apps/lachesis/package.json', 'utf8')).version
 const DATE = new Date().toISOString().split('T')[0]
-const RELEASE = `<release version="${VERSION}" date="${DATE}"><url type="details">https://github.com/aervxa/lepse/releases/tag/v${VERSION}</url><description /></release>`
+const RELEASE = `<release version="${VERSION}" date="${DATE}"><url type="details">https://github.com/lepsehq/lepse/releases/tag/v${VERSION}</url><description /></release>`
 
 // Write release string to metainfo
 const METAINFO = 'apps/lachesis/src-tauri/app.lepse.Lepse.metainfo.xml'

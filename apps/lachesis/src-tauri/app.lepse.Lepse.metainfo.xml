@@ -30,31 +30,31 @@
 
   <releases>
     <release version="0.3.4" date="2026-10-21">
-      <url type="details">https://github.com/aervxa/lepse/releases/tag/v0.3.4</url>
+      <url type="details">https://github.com/lepsehq/lepse/releases/tag/v0.3.4</url>
       <description />
     </release>
     <release version="0.3.3" date="2026-10-20">
-      <url type="details">https://github.com/aervxa/lepse/releases/tag/v0.3.3</url>
+      <url type="details">https://github.com/lepsehq/lepse/releases/tag/v0.3.3</url>
       <description />
     </release>
     <release version="0.3.2" date="2026-10-20">
-      <url type="details">https://github.com/aervxa/lepse/releases/tag/v0.3.2</url>
+      <url type="details">https://github.com/lepsehq/lepse/releases/tag/v0.3.2</url>
       <description />
     </release>
     <release version="0.3.1" date="2026-10-18">
-      <url type="details">https://github.com/aervxa/lepse/releases/tag/v0.3.1</url>
+      <url type="details">https://github.com/lepsehq/lepse/releases/tag/v0.3.1</url>
       <description />
     </release>
     <release version="0.3.0" date="2026-10-17">
-      <url type="details">https://github.com/aervxa/lepse/releases/tag/v0.3.0</url>
+      <url type="details">https://github.com/lepsehq/lepse/releases/tag/v0.3.0</url>
       <description />
     </release>
     <release version="0.2.9" date="2026-10-09">
-      <url type="details">https://github.com/aervxa/lepse/releases/tag/v0.2.9</url>
+      <url type="details">https://github.com/lepsehq/lepse/releases/tag/v0.2.9</url>
       <description />
     </release>
     <release version="0.2.8" date="2026-10-02">
-      <url type="details">https://github.com/aervxa/lepse/releases/tag/v0.2.8</url>
+      <url type="details">https://github.com/lepsehq/lepse/releases/tag/v0.2.8</url>
       <description />
     </release>
   </releases>
@@ -94,8 +94,8 @@
     <display_length compare="ge">320</display_length>
   </requires>
   <url type="homepage">https://lepse.app</url>
-  <url type="vcs-browser">https://github.com/aervxa/lepse</url>
-  <url type="bugtracker">https://github.com/aervxa/lepse/issues</url>
+  <url type="vcs-browser">https://github.com/lepsehq/lepse</url>
+  <url type="bugtracker">https://github.com/lepsehq/lepse/issues</url>
   <metadata_license>MIT</metadata_license>
   <project_license>AGPL-3.0-only</project_license>
   <developer id="io.github.aervxa">

@@ -43,7 +43,7 @@
   "plugins": {
     "updater": {
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEQyNjU4MDFCNDEwRkREM0MKUldRODNROUJHNEJsMHBvTjJUWjd1elFYYjg3YUNvUlNGRGU4L1FUTTBJMERZNk1nT3ZOZGQ3emMK",
-      "endpoints": ["https://github.com/aervxa/lepse/releases/latest/download/latest.json"]
+      "endpoints": ["https://github.com/lepsehq/lepse/releases/latest/download/latest.json"]
     }
   }
 }

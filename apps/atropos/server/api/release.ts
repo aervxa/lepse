@@ -5,7 +5,7 @@ export default defineCachedEventHandler(
     const res = await $fetch<{
       tag_name: string
       assets: { label: string; browser_download_url: string }[]
-    }>(`https://api.github.com/repos/aervxa/lepse/releases/latest`, {
+    }>(`https://api.github.com/repos/lepsehq/lepse/releases/latest`, {
       headers: {
         'User-Agent': 'lepse-ssr',
         ...(githubToken && { Authorization: `Bearer ${githubToken}` }),

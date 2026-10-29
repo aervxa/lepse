@@ -9,7 +9,7 @@ All packages enabling Lepse to function have their code publicly available in th
 
 Most of Lepse is written in JavaScript and the Rust language, either vanilla (Node.js), or with frameworks ([Nuxt](https://nuxt.com/)/[Tauri](https://tauri.app)), but other languages/frameworks may also be used in little.
 
-The code starts at the root of the monorepo, which you can find [here](https://github.com/aervxa/lepse). The monorepo is managed by [Turborepo](https://turborepo.org), but usually you would just run scripts from `package.json`.
+The code starts at the root of the monorepo, which you can find [here](https://github.com/lepsehq/lepse). The monorepo is managed by [Turborepo](https://turborepo.org), but usually you would just run scripts from `package.json`.
 
 Each package has its own development dependencies and requirements to get started, please refer to the respective `README.md` file.
 
