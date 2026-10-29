@@ -31,9 +31,15 @@ pub fn open_popout(app_handle: AppHandle) {
 
     if let Ok(window) = builder.build() {
       let w = window.clone();
+      let app = app_handle.clone();
 
       window.on_window_event(move |event| {
         if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+          // Open main window after popout "closes"
+          if let Some(window) = app.get_webview_window("main") {
+            let _ = window.show();
+          }
+
           // prevent close
           let _ = w.hide();
           api.prevent_close();
@@ -46,6 +52,11 @@ pub fn open_popout(app_handle: AppHandle) {
         }
       });
     }
+  }
+
+  // Close main window when popout opens
+  if let Some(window) = app_handle.get_webview_window("main") {
+    let _ = window.hide();
   }
 
   let _ = app_handle.emit_filter("popout-open", true, |t| match t {
