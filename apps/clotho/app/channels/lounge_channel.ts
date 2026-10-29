@@ -26,10 +26,15 @@ export default class LoungeChannel extends BaseChannel<PublicUser, ServerEvents>
 
       if (!lounge) {
         throw new SocketResponseError('404: Lounge does not exist')
+      } else if (ctx.socket.raw.data.hostId === undefined) {
+        // ctx.socket.raw.data.hostId = lounge.userId
+        // this
       }
       await next()
     },
   ]
+
+  #hostId: number | undefined
 
   getPresenceInfo(socket: AuthenticatedSocket<PublicUser>): PresenceInfo {
     const { id, ...data } = socket.getUserOrFail()
@@ -42,6 +47,12 @@ export default class LoungeChannel extends BaseChannel<PublicUser, ServerEvents>
 
   // Support asking resync when the user connects (even on another client)
   async onJoin(socket: AuthenticatedSocket<PublicUser>) {
+    // Read lounge only once and set it
+    if (!this.#hostId) {
+      const lounge = await Lounge.find(this.params.id)
+      this.#hostId = lounge?.userId
+    }
+
     this.broadcastExcept(socket.id, 'lounge:resync', null)
   }
 
@@ -53,8 +64,13 @@ export default class LoungeChannel extends BaseChannel<PublicUser, ServerEvents>
     }
   }
 
+  @onMessage('lounge:host')
+  async sendHost(): Promise<number | undefined> {
+    return this.#hostId
+  }
+
   @onMessage('lounge:sync')
-  async sendMessage(
+  async syncTimer(
     socket: AuthenticatedSocket<PublicUser>,
     { timer }: Pick<LoungePeer, 'timer'>
   ): Promise<LoungePeer> {
