@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { Copy, X } from '@lucide/vue'
+import { Check, Copy, X } from '@lucide/vue'
+import { useClipboard } from '@vueuse/core'
 import { PopoverClose } from 'reka-ui'
 
 const source = inject(bubbleNavSourceKey)
@@ -28,6 +29,8 @@ const copyId = () => {
       toast.success('Lounge code copied!')
     })
 }
+
+const { copy, copied } = useClipboard()
 </script>
 
 <template>
@@ -76,9 +79,19 @@ const copyId = () => {
               <InputGroup>
                 <InputGroupInput v-model="censoredId" readonly class="text-foreground" />
                 <InputGroupAddon align="inline-end">
-                  <InputGroupButton @click="copyId">
-                    <Copy />
-                  </InputGroupButton>
+                  <Tooltip :open="copied">
+                    <TooltipTrigger as-child>
+                      <InputGroupButton
+                        size="icon-xs"
+                        @click="id && copy(id)"
+                        :disabled="copied"
+                        aria-label="Copy lounge code"
+                      >
+                        <component :is="copied ? Check : Copy" />
+                      </InputGroupButton>
+                    </TooltipTrigger>
+                    <TooltipContent>Copied!</TooltipContent>
+                  </Tooltip>
                 </InputGroupAddon>
               </InputGroup>
 
