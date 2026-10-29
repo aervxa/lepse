@@ -10,11 +10,11 @@ import type GoalTransformer from '#transformers/goal_transformer'
 import type HabitPeriodTransformer from '#transformers/habit_period_transformer'
 import type HabitTransformer from '#transformers/habit_transformer'
 import type JournalTransformer from '#transformers/journal_transformer'
+import type LoungeTransformer from '#transformers/lounge_transformer'
 import type ScribbleTransformer from '#transformers/scribble_transformer'
 import type TaskDayTransformer from '#transformers/task_day_transformer'
 import type TaskTransformer from '#transformers/task_transformer'
 import type UserTransformer from '#transformers/user_transformer'
-import type LoungeTransformer from '#transformers/lounge_transformer'
 
 export namespace Data {
   export type FocusSession = InferData<FocusSessionTransformer>
@@ -37,6 +37,10 @@ export namespace Data {
   export namespace Journal {
     export type Variants = InferVariants<JournalTransformer>
   }
+  export type Lounge = InferData<LoungeTransformer>
+  export namespace Lounge {
+    export type Variants = InferVariants<LoungeTransformer>
+  }
   export type Scribble = InferData<ScribbleTransformer>
   export namespace Scribble {
     export type Variants = InferVariants<ScribbleTransformer>
@@ -52,9 +56,5 @@ export namespace Data {
   export type User = InferData<UserTransformer>
   export namespace User {
     export type Variants = InferVariants<UserTransformer>
-  }
-  export type Lounge = InferData<LoungeTransformer>
-  export namespace Lounge {
-    export type Variants = InferVariants<LoungeTransformer>
   }
 }

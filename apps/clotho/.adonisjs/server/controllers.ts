@@ -10,6 +10,7 @@ export const controllers = {
   HabitPeriods: () => import('#controllers/habit_periods_controller'),
   Habits: () => import('#controllers/habits_controller'),
   Journals: () => import('#controllers/journals_controller'),
+  Lounges: () => import('#controllers/lounges_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
   PasswordReset: () => import('#controllers/password_reset_controller'),
   Profile: () => import('#controllers/profile_controller'),
@@ -17,5 +18,4 @@ export const controllers = {
   TaskDays: () => import('#controllers/task_days_controller'),
   Tasks: () => import('#controllers/tasks_controller'),
   VerifyEmail: () => import('#controllers/verify_email_controller'),
-  Lounges: () => import('#controllers/lounges_controller'),
 }
