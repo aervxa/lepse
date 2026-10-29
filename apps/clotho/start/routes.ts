@@ -15,12 +15,11 @@ import { apiThrottle, throttle } from './limiter.ts'
 import limiter from '@adonisjs/limiter/services/main'
 
 router.on('/ping').setHandler(() => 'pong')
+router.on('/').redirectToPath('https://lepse.app')
 
 // WEB ROUTES (routes that users access on the server)
 router
   .group(() => {
-    // TODO: redirect to actual homepage later on (atropos)
-    router.on('/').render('pages/home').as('home').use(throttle)
     router.get('verify/email/:token', [controllers.VerifyEmail, 'index']).as('verify.email')
     router
       .get('verify/password-reset/:token', [controllers.PasswordReset, 'index'])

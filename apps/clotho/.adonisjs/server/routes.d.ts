@@ -5,7 +5,6 @@ type ParamValue = string | number | bigint | boolean
 export type ScannedRoutes = {
   ALL: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
-    'web.home': { paramsTuple?: []; params?: {} }
     'web.verify.email': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
     'web.verify.password-reset': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
     'web.reset-password': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
@@ -44,7 +43,6 @@ export type ScannedRoutes = {
   }
   GET: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
-    'web.home': { paramsTuple?: []; params?: {} }
     'web.verify.email': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
     'web.verify.password-reset': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
     'account.profile.show': { paramsTuple?: []; params?: {} }
@@ -62,7 +60,6 @@ export type ScannedRoutes = {
   }
   HEAD: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
-    'web.home': { paramsTuple?: []; params?: {} }
     'web.verify.email': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
     'web.verify.password-reset': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
     'account.profile.show': { paramsTuple?: []; params?: {} }
