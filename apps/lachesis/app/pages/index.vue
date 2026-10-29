@@ -147,8 +147,6 @@ const openPopout = () => {
     invoke('open_popout')
   }
 }
-
-const { peers } = useLoungeClient()
 </script>
 
 <template>
@@ -316,7 +314,7 @@ const { peers } = useLoungeClient()
     </div>
   </div>
 
-  <LoungePeers :peers="peers" />
+  <LoungePeers floating />
 
   <!-- overrides for overlays that don't have nested routes
        for nested routes, it's own component is better for route handling

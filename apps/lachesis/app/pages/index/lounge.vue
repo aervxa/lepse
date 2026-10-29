@@ -1,15 +1,33 @@
 <script setup lang="ts">
-import { X } from '@lucide/vue'
+import { Copy, X } from '@lucide/vue'
 import { PopoverClose } from 'reka-ui'
-
-const { $useSocketState } = useNuxtApp()
 
 const source = inject(bubbleNavSourceKey)
 
 const { user } = useAuth()
-
-const { connection, join, leave, peers } = useLoungeClient()
+const { $useSocketState, $client } = useNuxtApp()
+const { id, connection, join, leave } = useLoungeClient()
 const { state } = $useSocketState()
+
+const loungeId = ref('') // just for joining
+const censoredId = computed(() => (id.value || '').replace(/[^-](?<=-.*)/g, '*'))
+
+const createLounge = () =>
+  $client.api.lounges
+    .store({})
+    .then(({ data: { id } }) => {
+      join(id)
+    })
+    .catch((err) => {
+      toast.error('Failed to create Lounge!', { description: err.message })
+    })
+
+const copyId = () => {
+  id.value &&
+    navigator.clipboard.writeText(id.value).then(() => {
+      toast.success('Lounge code copied!')
+    })
+}
 </script>
 
 <template>
@@ -52,33 +70,56 @@ const { state } = $useSocketState()
           <PopoverDescription>Invite your friends to hangout.</PopoverDescription>
         </PopoverHeader>
 
-        <div class="flex flex-1 flex-col justify-between p-4">
-          <div class="flex justify-between">
-            <LoadingButton @click="join('123')" :loading="connection === 'connecting'" force-slot>
-              Join test lobby
-            </LoadingButton>
-            <Button
-              variant="ghost-destructive"
-              @click="leave()"
-              :disabled="connection !== 'connected'"
-            >
-              Leave test lobby
-            </Button>
-          </div>
+        <div class="flex flex-1 flex-col gap-4 p-4">
+          <template v-if="id">
+            <div class="flex gap-2">
+              <InputGroup>
+                <InputGroupInput v-model="censoredId" readonly class="text-foreground" />
+                <InputGroupAddon align="inline-end">
+                  <InputGroupButton @click="copyId">
+                    <Copy />
+                  </InputGroupButton>
+                </InputGroupAddon>
+              </InputGroup>
 
-          <!-- Connected users -->
-          <div v-if="connection === 'connected'" class="flex flex-col gap-2">
-            <p class="mb-2">connected users:</p>
-            <div v-for="p in peers" class="flex gap-2">
-              <Avatar size="lg">
-                <AvatarImage :src="p.user.avatarUrl ?? ''" />
-                <AvatarFallback :delay-ms="SKELETON_DELAY_MS">
-                  {{ p.user.initials ?? 'X' }}
-                </AvatarFallback>
-              </Avatar>
-              <p>{{ p.user.name }}</p>
+              <Button variant="ghost-destructive" @click="leave">Leave</Button>
             </div>
-          </div>
+            <Separator />
+
+            <div class="relative flex-1">
+              <div class="absolute inset-0">
+                <ScrollArea class="size-full">
+                  <LoungePeers />
+                </ScrollArea>
+              </div>
+            </div>
+          </template>
+
+          <template v-else>
+            <Empty>
+              <EmptyHeader>
+                <EmptyTitle>It's quiet in here</EmptyTitle>
+                <EmptyDescription>Create a lobby or join one.</EmptyDescription>
+              </EmptyHeader>
+              <EmptyContent>
+                <LoadingButton variant="outline" :action="createLounge">
+                  Create Lounge
+                </LoadingButton>
+              </EmptyContent>
+            </Empty>
+
+            <ButtonGroup class="w-full">
+              <Input v-model="loungeId" placeholder="Enter Lounge ID..." />
+              <LoadingButton
+                @click="join(loungeId)"
+                :loading="connection === 'connecting'"
+                force-slot
+                :disabled="loungeId.length === 0"
+              >
+                Join Lounge
+              </LoadingButton>
+            </ButtonGroup>
+          </template>
         </div>
       </Motion>
     </AnimatePresence>

@@ -1,31 +1,76 @@
 <script setup lang="ts">
-const props = defineProps<{ peers: LoungePeers }>()
+import { Crown } from '@lucide/vue'
+import { createReusableTemplate } from '@vueuse/core'
 
-watch(
-  () => props.peers,
-  () => {
-    console.log('peer-lounge', props.peers)
-  }
-)
+const MAX_SHOWN_PEERS = 4
+
+const props = defineProps<{ floating?: boolean }>()
+
+const { peers, hostId } = useLoungeClient()
+const peersArray = computed(() => Object.values(peers.value))
+
+const [DefinePeers, ReusePeers] = createReusableTemplate<{ dialog?: boolean }>()
 </script>
 
 <template>
-  <!-- TODO: Handle better case when more peers exist (like opening a small dialog to view everyone) -->
-  <div
-    class="group/lounge-peers absolute top-1/2 flex -translate-y-1/2 flex-col gap-2 pe-4 max-sm:left-0 sm:right-0 lg:max-w-64"
-  >
-    <div v-for="p in peers" class="flex items-center-safe justify-end gap-3">
-      <p
-        class="truncate opacity-60 transition-opacity group-hover/lounge-peers:opacity-80 max-lg:hidden"
+  <DefinePeers v-slot="{ dialog }">
+    <template v-for="(p, i) in peersArray" :key="p.user.id">
+      <div
+        v-if="dialog || !floating || i < MAX_SHOWN_PEERS"
+        class="group/lounge-peer flex items-center-safe justify-start gap-3"
+        :class="{ 'flex-row-reverse': floating && !dialog }"
+        :data-dialog="dialog"
       >
-        {{ p.user.name }}
-      </p>
-      <Avatar>
-        <AvatarImage :src="p.user.avatarUrl ?? ''" />
-        <AvatarFallback :delay-ms="SKELETON_DELAY_MS">
-          {{ p.user.initials ?? 'X' }}
-        </AvatarFallback>
-      </Avatar>
-    </div>
+        <Avatar class="opacity-80 group-hover/lounge-peer:opacity-100">
+          <AvatarImage :src="p.user.avatarUrl ?? ''" />
+          <AvatarFallback :delay-ms="SKELETON_DELAY_MS">
+            {{ p.user.initials ?? 'X' }}
+          </AvatarFallback>
+        </Avatar>
+        <p
+          class="flex items-center gap-1.5 truncate opacity-60 transition-opacity group-hover/lounge-peer:opacity-100 max-lg:hidden"
+          :class="{ 'flex-row-reverse': floating && !dialog }"
+        >
+          {{ p.user.name }}
+          <Crown v-if="String(p.user.id) === hostId" class="fill-primary text-primary size-3.5" />
+        </p>
+      </div>
+    </template>
+  </DefinePeers>
+
+  <div
+    class="flex max-h-full flex-col gap-3"
+    :class="{
+      'absolute top-1/2 -translate-y-1/2 pe-4 max-sm:left-0 sm:right-0 lg:max-w-64': floating,
+    }"
+  >
+    <ReusePeers />
+
+    <template v-if="floating && peersArray.length > MAX_SHOWN_PEERS">
+      <Dialog>
+        <DialogTrigger as-child>
+          <Button variant="outline" size="xs" class="self-end">
+            +{{ peersArray.length - MAX_SHOWN_PEERS }} more
+          </Button>
+        </DialogTrigger>
+        <DialogContent
+          class="max-w-64 gap-0 overflow-hidden p-0 sm:max-w-64"
+          :aria-describedby="undefined"
+        >
+          <DialogHeader class="border-b p-6">
+            <DialogTitle>Lounge members</DialogTitle>
+          </DialogHeader>
+          <div class="relative h-48">
+            <div class="absolute inset-0">
+              <ScrollArea class="size-full">
+                <div class="flex flex-col gap-3 p-6 pt-4">
+                  <ReusePeers :dialog="true" />
+                </div>
+              </ScrollArea>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </template>
   </div>
 </template>

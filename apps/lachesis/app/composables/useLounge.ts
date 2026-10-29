@@ -7,6 +7,7 @@ type Timer = LoungePeer['timer']
 type Connection = 'disconnected' | 'connecting' | 'connected'
 
 const LOUNGE_ID_KEY = 'lounge-id'
+const LOUNGE_HOST_ID_KEY = 'lounge-host-id'
 const LOUNGE_PEERS_KEY = 'lounge-peers'
 const LOUNGE_TIMER_KEY = 'lounge-timer'
 const LOUNGE_CONNECTION_KEY = 'lounge-connection' // not to be confused with socket connection
@@ -17,6 +18,7 @@ const LOUNGE_CONNECTION_KEY = 'lounge-connection' // not to be confused with soc
  */
 export const useLoungeClient = () => {
   const loungeId = useLocalStorage<string | null>(LOUNGE_ID_KEY, null)
+  const loungeHostId = useLocalStorage<string | null>(LOUNGE_HOST_ID_KEY, null)
   const peers = useLocalStorage<LoungePeers>(LOUNGE_PEERS_KEY, {})
   const timer = useLocalStorage<Timer>(LOUNGE_TIMER_KEY, null)
   const connection = useLocalStorage<Connection>(LOUNGE_CONNECTION_KEY, 'disconnected')
@@ -26,7 +28,7 @@ export const useLoungeClient = () => {
 
   const sync = (t: Timer) => (timer.value = t)
 
-  return { peers, connection, join, leave, sync }
+  return { id: loungeId, hostId: loungeHostId, peers, connection, join, leave, sync }
 }
 
 /**
@@ -37,6 +39,7 @@ export const useLoungeClient = () => {
  */
 export const useLoungeServer = createSharedComposable(() => {
   const loungeId = useLocalStorage<string | null>(LOUNGE_ID_KEY, null)
+  const loungeHostId = useLocalStorage<string | null>(LOUNGE_HOST_ID_KEY, null)
   const peers = useLocalStorage<LoungePeers>(LOUNGE_PEERS_KEY, {})
   const timer = useLocalStorage<Timer>(LOUNGE_TIMER_KEY, null)
   const connection = useLocalStorage<Connection>(LOUNGE_CONNECTION_KEY, 'disconnected')
@@ -44,6 +47,7 @@ export const useLoungeServer = createSharedComposable(() => {
   const { $socket } = useNuxtApp()
 
   loungeId.value = null // reset connected lounge (to handle with stale connects)
+  loungeHostId.value = null
   peers.value = {}
   connection.value = 'disconnected'
 
@@ -89,6 +93,12 @@ export const useLoungeServer = createSharedComposable(() => {
         connection.value = 'connected'
         handle = watch(timer, sync) // watch timer, which the client will update and run server sync
         sync() // send timer to server
+        channel
+          .sendWithAck('lounge:host')
+          .then((id) => (loungeHostId.value = String(id)))
+          .catch(() => {
+            toast.warning('Failed to fetch host!')
+          })
       })
       .catch((err) => {
         if (!channel.subscribed) return // `.subscribed` is false when the subscribe was rejected due to an unsubscribe
