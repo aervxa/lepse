@@ -314,6 +314,8 @@ const openPopout = () => {
     </div>
   </div>
 
+  <LoungePeers floating />
+
   <!-- overrides for overlays that don't have nested routes
        for nested routes, it's own component is better for route handling
    -->

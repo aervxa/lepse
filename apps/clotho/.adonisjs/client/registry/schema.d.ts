@@ -379,4 +379,28 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/tasks_controller').default['detachGoal']>>>
     }
   }
+  'lounges.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/lounges'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/lounges_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/lounges_controller').default['store']>>>
+    }
+  }
+  'lounges.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/lounges/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/lounges_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/lounges_controller').default['destroy']>>>
+    }
+  }
 }

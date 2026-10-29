@@ -146,6 +146,19 @@ export class JournalSchema extends BaseModel {
   declare userId: number
 }
 
+export class LoungeSchema extends BaseModel {
+  static $columns = ['createdAt', 'id', 'updatedAt', 'userId'] as const
+  $columns = LoungeSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column({ isPrimary: true })
+  declare id: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
+}
+
 export class ScribbleSchema extends BaseModel {
   static $columns = ['body', 'createdAt', 'id', 'title', 'updatedAt', 'userId'] as const
   $columns = ScribbleSchema.$columns

@@ -67,4 +67,8 @@ export interface ApiDefinition {
     update: typeof routes['goals.update']
     destroy: typeof routes['goals.destroy']
   }
+  lounges: {
+    store: typeof routes['lounges.store']
+    destroy: typeof routes['lounges.destroy']
+  }
 }

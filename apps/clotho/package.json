@@ -4,9 +4,13 @@
   "type": "module",
   "exports": {
     "./data": "./.adonisjs/client/data.d.ts",
-    "./registry": "./.adonisjs/client/registry/index.ts"
+    "./registry": "./.adonisjs/client/registry/index.ts",
+    "./socket": "./.adonisjs/client/socket.ts",
+    "./types": "./app/types/index.ts"
   },
-  "files": ["build"],
+  "files": [
+    "build"
+  ],
   "scripts": {
     "start": "node bin/server.js",
     "build": "node ace build",
@@ -34,7 +38,9 @@
     "#database/*": "./database/*.js",
     "#tests/*": "./tests/*.js",
     "#start/*": "./start/*.js",
-    "#config/*": "./config/*.js"
+    "#config/*": "./config/*.js",
+    "#channels/*": "./app/channels/*.js",
+    "#types/*": "./app/types/*.js"
   },
   "devDependencies": {
     "@adonisjs/assembler": "^8.3.0",
@@ -60,7 +66,7 @@
   "dependencies": {
     "@adonisjs/auth": "^10.0.0",
     "@adonisjs/bouncer": "^4.0.0",
-    "@adonisjs/core": "^7.3.0",
+    "@adonisjs/core": "^7.6.0",
     "@adonisjs/cors": "^3.0.0",
     "@adonisjs/drive": "^4.0.0",
     "@adonisjs/limiter": "^3.0.1",
@@ -74,6 +80,7 @@
     "@aws-sdk/s3-request-presigner": "^3.1079.0",
     "@japa/api-client": "^3.2.1",
     "@napi-rs/image": "^1.14.0",
+    "@rlanz/socket": "^0.2.4",
     "@tuyau/core": "^1.2.2",
     "@vinejs/vine": "^4.3.0",
     "better-sqlite3": "^12.8.0",

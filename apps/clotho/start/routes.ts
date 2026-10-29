@@ -129,6 +129,10 @@ router
             // Task Goal linking
             router.post('tasks/:taskId/goals/:goalId', [controllers.Tasks, 'attachGoal'])
             router.delete('tasks/:taskId/goals/:goalId', [controllers.Tasks, 'detachGoal'])
+
+            // Lounges
+            router.post('lounges', [controllers.Lounges, 'store'])
+            router.delete('lounges/:id', [controllers.Lounges, 'destroy'])
           })
           .use(middleware.verifiedEmail())
       })

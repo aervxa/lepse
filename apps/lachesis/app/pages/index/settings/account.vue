@@ -8,7 +8,7 @@ const isEmailVisible = ref(false)
 
 <template>
   <Gatekeep
-    :check="!!user"
+    v-if="!user"
     title="You don't have an account."
     action-label="Login"
     :action="() => navigateTo('/login')"

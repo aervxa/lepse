@@ -4,6 +4,12 @@ import { isTauri } from '@tauri-apps/api/core'
 import { getCurrentWindow } from '@tauri-apps/api/window'
 import { camelCase } from 'change-case'
 
+const { $provideSocket, $socket } = useNuxtApp()
+
+$provideSocket($socket, { owned: true })
+
+useLoungeServer()
+
 const { theme, THEME_OPTIONS, themeOptions } = useSettings()
 
 // manage tanstack/vue-query's window focusManger to be handled by tauri

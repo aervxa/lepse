@@ -65,16 +65,14 @@ const save = async () => {
 
 <template>
   <Gatekeep
-    v-if="user"
-    :check="user?.emailVerified"
-    title="Please verify your email to edit your profile."
-  />
-  <Gatekeep
-    v-else
-    :check="false"
+    v-if="!user"
     title="You don't have an account."
     action-label="Login"
     :action="() => navigateTo('/login')"
+  />
+  <Gatekeep
+    v-else-if="!user.emailVerified"
+    title="Please verify your email to edit your profile."
   />
 
   <!-- Avatar -->

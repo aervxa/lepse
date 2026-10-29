@@ -192,6 +192,18 @@ const routes = {
     tokens: [{"old":"/api/v1/tasks/:taskId/goals/:goalId","type":0,"val":"api","end":""},{"old":"/api/v1/tasks/:taskId/goals/:goalId","type":0,"val":"v1","end":""},{"old":"/api/v1/tasks/:taskId/goals/:goalId","type":0,"val":"tasks","end":""},{"old":"/api/v1/tasks/:taskId/goals/:goalId","type":1,"val":"taskId","end":""},{"old":"/api/v1/tasks/:taskId/goals/:goalId","type":0,"val":"goals","end":""},{"old":"/api/v1/tasks/:taskId/goals/:goalId","type":1,"val":"goalId","end":""}],
     types: placeholder as Registry['tasks.detach_goal']['types'],
   },
+  'lounges.store': {
+    methods: ["POST"],
+    pattern: '/api/v1/lounges',
+    tokens: [{"old":"/api/v1/lounges","type":0,"val":"api","end":""},{"old":"/api/v1/lounges","type":0,"val":"v1","end":""},{"old":"/api/v1/lounges","type":0,"val":"lounges","end":""}],
+    types: placeholder as Registry['lounges.store']['types'],
+  },
+  'lounges.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/lounges/:id',
+    tokens: [{"old":"/api/v1/lounges/:id","type":0,"val":"api","end":""},{"old":"/api/v1/lounges/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/lounges/:id","type":0,"val":"lounges","end":""},{"old":"/api/v1/lounges/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['lounges.destroy']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }
