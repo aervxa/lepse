@@ -12,6 +12,27 @@ const { user } = useAuth()
 const date = getClientDate()
 const { focusSession } = useDay(date)
 
+// ─── Lounge ─────────────────────────────────────────────────────────────────
+
+const { sync, onUpdateSync } = useLoungeClient()
+
+const updateLoungeSync = (starting?: boolean) => {
+  sync(
+    stopwatch.elapsed.value === 0 && !starting
+      ? null
+      : {
+          elapsed: stopwatch.elapsed.value,
+          running: stopwatch.running.value,
+          duration: focusMethod.value === 'pomodoro' ? pomoStateDuration.value : undefined,
+        }
+  )
+}
+
+onUpdateSync(() => {
+  console.log('lounge:clock-focus: heard resync request, resyncing...')
+  updateLoungeSync()
+}, popout)
+
 // ─── Focus ──────────────────────────────────────────────────────────────────
 
 const focusMethod = useLocalStorage<'stopwatch' | 'pomodoro'>('focus_method', 'stopwatch')
@@ -93,6 +114,7 @@ const stopwatch = new Stopwatch({
     if (focusMethod.value === 'stopwatch') stopwatchSyncInterval.resume()
     focusDirty.value = true
     if (focusMethod.value === 'pomodoro') requestPermission()
+    updateLoungeSync(true) // call fn to update states accordingly
   },
   onStop: () => {
     if (focusMethod.value === 'stopwatch') {
@@ -100,9 +122,11 @@ const stopwatch = new Stopwatch({
       stopwatchSyncInterval.pause()
       focusDirty.value = false // not dirty since progress synced
     }
+    updateLoungeSync() // call fn to update states accordingly
   },
   onReset: () => {
     focusDirty.value = false
+    updateLoungeSync() // call fn to update states accordingly
   },
 })
 

@@ -6,7 +6,8 @@ const MAX_SHOWN_PEERS = 4
 
 const props = defineProps<{ floating?: boolean }>()
 
-const { peers, hostId } = useLoungeClient()
+const { user } = useAuth()
+const { peers, hostId, timer } = useLoungeClient()
 const peersArray = computed(() => Object.values(peers.value))
 
 const [DefinePeers, ReusePeers] = createReusableTemplate<{ dialog?: boolean }>()
@@ -21,12 +22,14 @@ const [DefinePeers, ReusePeers] = createReusableTemplate<{ dialog?: boolean }>()
         :class="{ 'flex-row-reverse': floating && !dialog }"
         :data-dialog="dialog"
       >
-        <Avatar class="opacity-80 group-hover/lounge-peer:opacity-100">
-          <AvatarImage :src="p.user.avatarUrl ?? ''" />
-          <AvatarFallback :delay-ms="SKELETON_DELAY_MS">
-            {{ p.user.initials ?? 'X' }}
-          </AvatarFallback>
-        </Avatar>
+        <LoungeTimer :timer="user?.id === p.user.id ? timer : p.timer">
+          <Avatar class="opacity-80 group-hover/lounge-peer:opacity-100">
+            <AvatarImage :src="p.user.avatarUrl ?? ''" />
+            <AvatarFallback :delay-ms="SKELETON_DELAY_MS">
+              {{ p.user.initials ?? 'X' }}
+            </AvatarFallback>
+          </Avatar>
+        </LoungeTimer>
         <p
           class="flex items-center gap-1.5 truncate opacity-60 transition-opacity group-hover/lounge-peer:opacity-100 max-lg:hidden"
           :class="{ 'flex-row-reverse': floating && !dialog }"
@@ -41,7 +44,8 @@ const [DefinePeers, ReusePeers] = createReusableTemplate<{ dialog?: boolean }>()
   <div
     class="flex max-h-full flex-col gap-3"
     :class="{
-      'absolute top-1/2 -translate-y-1/2 pe-4 max-sm:left-0 sm:right-0 lg:max-w-64': floating,
+      'absolute top-1/2 -translate-y-1/2 pl-4 max-sm:left-0 sm:right-0 sm:pr-4 lg:max-w-64':
+        floating,
     }"
   >
     <ReusePeers />

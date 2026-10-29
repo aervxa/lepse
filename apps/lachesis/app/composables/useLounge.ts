@@ -1,10 +1,21 @@
-import { createSharedComposable, useLocalStorage } from '@vueuse/core'
+import {
+  createSharedComposable,
+  StorageSerializers,
+  useEventBus,
+  useLocalStorage,
+  type EventBusKey,
+} from '@vueuse/core'
+import { emitTo, listen, type UnlistenFn } from '@tauri-apps/api/event'
+import { isTauri } from '@tauri-apps/api/core'
 import type { LoungePeer } from '@lepse/clotho/types'
 import type { WatchHandle } from 'vue'
 
 export type LoungePeers = { [key: string]: LoungePeer } // key is id
 type Timer = LoungePeer['timer']
 type Connection = 'disconnected' | 'connecting' | 'connected'
+
+const LOUNGE_RESYNC = 'lounge:resync'
+const loungeResyncKey: EventBusKey<void> = Symbol(LOUNGE_RESYNC)
 
 const LOUNGE_ID_KEY = 'lounge-id'
 const LOUNGE_HOST_ID_KEY = 'lounge-host-id'
@@ -20,7 +31,9 @@ export const useLoungeClient = () => {
   const loungeId = useLocalStorage<string | null>(LOUNGE_ID_KEY, null)
   const loungeHostId = useLocalStorage<string | null>(LOUNGE_HOST_ID_KEY, null)
   const peers = useLocalStorage<LoungePeers>(LOUNGE_PEERS_KEY, {})
-  const timer = useLocalStorage<Timer>(LOUNGE_TIMER_KEY, null)
+  const timer = useLocalStorage<Timer>(LOUNGE_TIMER_KEY, null, {
+    serializer: StorageSerializers.object,
+  })
   const connection = useLocalStorage<Connection>(LOUNGE_CONNECTION_KEY, 'disconnected')
 
   const join = (id: string) => (loungeId.value = id)
@@ -28,7 +41,31 @@ export const useLoungeClient = () => {
 
   const sync = (t: Timer) => (timer.value = t)
 
-  return { id: loungeId, hostId: loungeHostId, peers, connection, join, leave, sync }
+  const onUpdateSync = (callback: () => void, popout?: boolean) => {
+    useEventBus(loungeResyncKey).on(callback)
+
+    let unlistenResync: UnlistenFn
+    onMounted(async () => {
+      if (isTauri() && popout) {
+        unlistenResync = await listen(LOUNGE_RESYNC, callback)
+      }
+    })
+    onScopeDispose(() => {
+      unlistenResync?.()
+    })
+  }
+
+  return {
+    id: loungeId,
+    hostId: loungeHostId,
+    peers,
+    timer,
+    connection,
+    join,
+    leave,
+    sync,
+    onUpdateSync,
+  }
 }
 
 /**
@@ -41,13 +78,16 @@ export const useLoungeServer = createSharedComposable(() => {
   const loungeId = useLocalStorage<string | null>(LOUNGE_ID_KEY, null)
   const loungeHostId = useLocalStorage<string | null>(LOUNGE_HOST_ID_KEY, null)
   const peers = useLocalStorage<LoungePeers>(LOUNGE_PEERS_KEY, {})
-  const timer = useLocalStorage<Timer>(LOUNGE_TIMER_KEY, null)
+  const timer = useLocalStorage<Timer>(LOUNGE_TIMER_KEY, null, {
+    serializer: StorageSerializers.object,
+  })
   const connection = useLocalStorage<Connection>(LOUNGE_CONNECTION_KEY, 'disconnected')
 
   const { $socket } = useNuxtApp()
 
   loungeId.value = null // reset connected lounge (to handle with stale connects)
   loungeHostId.value = null
+  timer.value = null
   peers.value = {}
   connection.value = 'disconnected'
 
@@ -58,7 +98,13 @@ export const useLoungeServer = createSharedComposable(() => {
 
     if (!id) return
     const channel = $socket.channel('lounge/:id', { id })
-    const sync = () => channel.send('lounge:sync', { timer: timer.value })
+    const sync = (re?: boolean) => {
+      channel.send('lounge:sync', { timer: timer.value })
+      if (re) {
+        useEventBus(loungeResyncKey).emit()
+        if (isTauri()) emitTo('popout', LOUNGE_RESYNC)
+      }
+    }
     let handle: WatchHandle | undefined // watch handle that watches timer
 
     channel
@@ -80,7 +126,7 @@ export const useLoungeServer = createSharedComposable(() => {
         peers.value = list
       })
       .listen('lounge:closed', () => channel.unsubscribe())
-      .listen('lounge:resync', sync)
+      .listen('lounge:resync', () => sync(true)) // resync will initiate giving the server the current saved timer, AND resync to update to latest
       .listen('lounge:timer', (p) => {
         peers.value[p.user.id] = p // update the whole peer
       })
@@ -91,7 +137,7 @@ export const useLoungeServer = createSharedComposable(() => {
       // NOTE: .then never runs after .unsubscribe (pending subscribe is rejected on unsubscribe)
       .then(() => {
         connection.value = 'connected'
-        handle = watch(timer, sync) // watch timer, which the client will update and run server sync
+        handle = watch(timer, () => sync()) // watch timer, which the client will update and run server sync
         sync() // send timer to server
         channel
           .sendWithAck('lounge:host')
