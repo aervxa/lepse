@@ -2995,7 +2995,7 @@ dependencies = [
  "serde",
  "serde_json",
  "tauri",
- "tauri-build",
+ "tauri-build 3.0.0-alpha.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "tauri-plugin-log",
  "tauri-plugin-notification",
  "tauri-plugin-opener",
@@ -5480,8 +5480,7 @@ dependencies = [
 [[package]]
 name = "tauri"
 version = "3.0.0-alpha.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f5a9b34042b264a9ecd402aa8aa3e825a4c95e77097a45b0737e02d86509c43b"
+source = "git+https://github.com/lepsehq/tauri?rev=0434538e89ef9586187674754ad46c8b19600407#0434538e89ef9586187674754ad46c8b19600407"
 dependencies = [
  "anyhow",
  "bytes",
@@ -5515,10 +5514,10 @@ dependencies = [
  "serde_repr",
  "serialize-to-javascript",
  "swift-rs",
- "tauri-build",
+ "tauri-build 3.0.0-alpha.4 (git+https://github.com/lepsehq/tauri?rev=0434538e89ef9586187674754ad46c8b19600407)",
  "tauri-macros",
- "tauri-runtime",
- "tauri-utils",
+ "tauri-runtime 3.0.0-alpha.4 (git+https://github.com/lepsehq/tauri?rev=0434538e89ef9586187674754ad46c8b19600407)",
+ "tauri-utils 3.0.0-alpha.4 (git+https://github.com/lepsehq/tauri?rev=0434538e89ef9586187674754ad46c8b19600407)",
  "thiserror 2.0.21",
  "tokio",
  "tray-icon",
@@ -5545,7 +5544,29 @@ dependencies = [
  "serde_json",
  "static_vcruntime",
  "strsim",
- "tauri-utils",
+ "tauri-utils 3.0.0-alpha.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "tauri-winres",
+ "walkdir",
+]
+
+[[package]]
+name = "tauri-build"
+version = "3.0.0-alpha.4"
+source = "git+https://github.com/lepsehq/tauri?rev=0434538e89ef9586187674754ad46c8b19600407#0434538e89ef9586187674754ad46c8b19600407"
+dependencies = [
+ "anyhow",
+ "cargo_toml",
+ "dirs 7.0.0",
+ "glob",
+ "heck 0.5.0",
+ "json-patch",
+ "schemars 1.2.2",
+ "semver",
+ "serde",
+ "serde_json",
+ "static_vcruntime",
+ "strsim",
+ "tauri-utils 3.0.0-alpha.4 (git+https://github.com/lepsehq/tauri?rev=0434538e89ef9586187674754ad46c8b19600407)",
  "tauri-winres",
  "walkdir",
 ]
@@ -5553,8 +5574,7 @@ dependencies = [
 [[package]]
 name = "tauri-codegen"
 version = "3.0.0-alpha.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "00a131939ec52c5ddc649b9f027018ac7272426fbd343d91c45589d40b8f46ce"
+source = "git+https://github.com/lepsehq/tauri?rev=0434538e89ef9586187674754ad46c8b19600407#0434538e89ef9586187674754ad46c8b19600407"
 dependencies = [
  "base64 0.23.1",
  "brotli",
@@ -5569,7 +5589,7 @@ dependencies = [
  "serde_json",
  "sha2",
  "syn 2.0.119",
- "tauri-utils",
+ "tauri-utils 3.0.0-alpha.4 (git+https://github.com/lepsehq/tauri?rev=0434538e89ef9586187674754ad46c8b19600407)",
  "thiserror 2.0.21",
  "time",
  "url",
@@ -5580,15 +5600,14 @@ dependencies = [
 [[package]]
 name = "tauri-macros"
 version = "3.0.0-alpha.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a80c303997eb5937b21a3d88864bd97a16509839e0502eed784bece0e56f0b72"
+source = "git+https://github.com/lepsehq/tauri?rev=0434538e89ef9586187674754ad46c8b19600407#0434538e89ef9586187674754ad46c8b19600407"
 dependencies = [
  "heck 0.5.0",
  "proc-macro2",
  "quote",
  "syn 2.0.119",
  "tauri-codegen",
- "tauri-utils",
+ "tauri-utils 3.0.0-alpha.4 (git+https://github.com/lepsehq/tauri?rev=0434538e89ef9586187674754ad46c8b19600407)",
 ]
 
 [[package]]
@@ -5603,7 +5622,7 @@ dependencies = [
  "schemars 1.2.2",
  "serde",
  "serde_json",
- "tauri-utils",
+ "tauri-utils 3.0.0-alpha.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "walkdir",
 ]
 
@@ -5779,7 +5798,27 @@ dependencies = [
  "raw-window-handle",
  "serde",
  "serde_json",
- "tauri-utils",
+ "tauri-utils 3.0.0-alpha.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "thiserror 2.0.21",
+ "url",
+ "windows",
+]
+
+[[package]]
+name = "tauri-runtime"
+version = "3.0.0-alpha.4"
+source = "git+https://github.com/lepsehq/tauri?rev=0434538e89ef9586187674754ad46c8b19600407#0434538e89ef9586187674754ad46c8b19600407"
+dependencies = [
+ "cookie",
+ "dpi",
+ "http",
+ "jni 0.21.1",
+ "objc2",
+ "objc2-ui-kit",
+ "raw-window-handle",
+ "serde",
+ "serde_json",
+ "tauri-utils 3.0.0-alpha.4 (git+https://github.com/lepsehq/tauri?rev=0434538e89ef9586187674754ad46c8b19600407)",
  "thiserror 2.0.21",
  "url",
  "windows",
@@ -5788,8 +5827,7 @@ dependencies = [
 [[package]]
 name = "tauri-runtime-cef"
 version = "3.0.0-alpha.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1fc02ef8f4295b0036b1d6cbe99111e263b587c870f0d54d9bc386602f10b947"
+source = "git+https://github.com/lepsehq/tauri?rev=0434538e89ef9586187674754ad46c8b19600407#0434538e89ef9586187674754ad46c8b19600407"
 dependencies = [
  "base64 0.22.1",
  "cef",
@@ -5816,8 +5854,8 @@ dependencies = [
  "softbuffer",
  "tauri",
  "tauri-macros",
- "tauri-runtime",
- "tauri-utils",
+ "tauri-runtime 3.0.0-alpha.4 (git+https://github.com/lepsehq/tauri?rev=0434538e89ef9586187674754ad46c8b19600407)",
+ "tauri-utils 3.0.0-alpha.4 (git+https://github.com/lepsehq/tauri?rev=0434538e89ef9586187674754ad46c8b19600407)",
  "tauri-winit",
  "url",
  "windows",
@@ -5843,8 +5881,8 @@ dependencies = [
  "softbuffer",
  "tao",
  "tauri",
- "tauri-runtime",
- "tauri-utils",
+ "tauri-runtime 3.0.0-alpha.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "tauri-utils 3.0.0-alpha.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "url",
  "webkit2gtk",
  "webview2-com",
@@ -5857,6 +5895,42 @@ name = "tauri-utils"
 version = "3.0.0-alpha.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9c3cdcb9197912803ec66bc303844b68ffd374c52d225344f7eb03d14bc23aa7"
+dependencies = [
+ "anyhow",
+ "cargo_metadata 0.19.2",
+ "ctor",
+ "dom_query",
+ "dunce",
+ "glob",
+ "http",
+ "infer",
+ "json-patch",
+ "log",
+ "memchr",
+ "phf 0.13.1",
+ "plist",
+ "proc-macro2",
+ "quote",
+ "regex",
+ "schemars 1.2.2",
+ "semver",
+ "serde",
+ "serde-untagged",
+ "serde_json",
+ "serde_with",
+ "swift-rs",
+ "thiserror 2.0.21",
+ "toml 1.1.6+spec-1.1.0",
+ "url",
+ "urlpattern",
+ "uuid",
+ "walkdir",
+]
+
+[[package]]
+name = "tauri-utils"
+version = "3.0.0-alpha.4"
+source = "git+https://github.com/lepsehq/tauri?rev=0434538e89ef9586187674754ad46c8b19600407#0434538e89ef9586187674754ad46c8b19600407"
 dependencies = [
  "anyhow",
  "brotli",

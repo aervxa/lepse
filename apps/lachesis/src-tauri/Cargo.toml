@@ -19,7 +19,11 @@ tauri-build = { version = "3.0.0-alpha.4", features = [] }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 log = "0.4"
-tauri = { version = "3.0.0-alpha.5", features = [ "tray-icon", "image-png", "devtools" ] }
+tauri = { version = "3.0.0-alpha.5", features = [
+  "tray-icon",
+  "image-png",
+  "devtools",
+] }
 tauri-runtime-wry = { version = "3.0.0-alpha.5", optional = true }
 tauri-runtime-cef = { version = "3.0.0-alpha.6", optional = true }
 tauri-plugin-log = "3.0.0-alpha.3"
@@ -49,4 +53,6 @@ wry = ["dep:tauri-runtime-wry"]
 cef = ["dep:tauri-runtime-cef"]
 
 [patch.crates-io]
+tauri = { git = "https://github.com/lepsehq/tauri", rev = "0434538e89ef9586187674754ad46c8b19600407" }             # v3.0.0-alpha.5+lepse
+tauri-runtime-cef = { git = "https://github.com/lepsehq/tauri", rev = "0434538e89ef9586187674754ad46c8b19600407" } # v3.0.0-alpha.5+lepse
 tray-icon = { git = "https://github.com/aervxa/tray-icon", rev = "d2212b4baf8556ee0fe3d3ea65966b506f95a2b7" }
