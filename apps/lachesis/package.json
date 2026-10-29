@@ -11,8 +11,8 @@
     "tdev": "WEBKIT_USE_SKIA_FOR_COMPOSITION=0 tauri dev",
     "tdev:cef": "tauri dev -- --no-default-features --features cef",
     "tauri": "tauri",
-    "preview": "npm run generate && wrangler dev",
-    "deploy": "npm run generate && wrangler deploy",
+    "preview": "pnpm generate && wrangler dev",
+    "deploy": "pnpm generate && wrangler deploy",
     "cf-typegen": "wrangler types"
   },
   "dependencies": {
