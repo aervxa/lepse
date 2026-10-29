@@ -8,7 +8,7 @@ interface Props extends /* @vue-ignore */ ButtonProps {
   loading?: boolean
   forceSlot?: boolean
 }
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), { loading: undefined })
 if ((props.action === undefined) === (props.loading === undefined)) {
   throw new Error('loading-button: pass exactly one of `action` or `loading`')
 }
